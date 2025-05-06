@@ -1,7 +1,7 @@
 #!/bin/bash
 apt install -y python3 python3-pip python3-venv
-mkdir ~/fastapi_app
-cd ~/fastapi_app
+mkdir /opt/hydrosyn
+cd  /opt/hydrosyn
 python3 -m venv venv
 source venv/bin/activate
 pip install fastapi uvicorn
