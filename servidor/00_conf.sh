@@ -6,15 +6,15 @@ CONFIG_FILE="config.env"
 if [[ -f "$CONFIG_FILE" ]]; then
   source "$CONFIG_FILE"
 else
-  echo "Archivo de configuración $CONFIG_FILE no encontrado."
+ echo -e "\e[30;41mArchivo de configuración $CONFIG_FILE no encontrado.\e[0m"
   exit 1
 fi
 
-echo "Configurando idioma del sistema a $IDIOMA..."
+echo -e "\e[30;43mConfigurando idioma del sistema a $IDIOMA...\e[0m"
 locale-gen "$IDIOMA"
 update-locale LANG="$IDIOMA"
 
-echo "Estableciendo zona horaria a $ZONA_HORARIA..."
+echo -e "\e[46mEstableciendo zona horaria a $ZONA_HORARIA...\e[0m"
 timedatectl set-timezone "$ZONA_HORARIA"
 
 echo "Activando sincronización automática de hora con NTP..."
