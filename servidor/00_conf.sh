@@ -11,6 +11,7 @@ else
 fi
 
 echo -e "\e[30;43mConfigurando idioma del sistema a $IDIOMA...\e[0m"
+apt install locales
 locale-gen "$IDIOMA"
 update-locale LANG="$IDIOMA"
 
