@@ -5,7 +5,7 @@ LIBRARY_FILE="funciones.sh"
 # Leer configuración desde archivo
 
 if [[ -f "$CONFIG_FILE" ]]; then
-  source "$CONFIG_FILE"
+  export $(cat ./config.env | xargs)  
 else
  echo -e "\e[30;41mArchivo de configuración $CONFIG_FILE no encontrado.\e[0m"
   exit 1
@@ -20,7 +20,7 @@ else
   exit 1
 fi
 
-
+  
 
 echo -e "\e[30;43mConfigurando idioma del sistema a $IDIOMA...\e[0m"
 apt install locales
