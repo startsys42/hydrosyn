@@ -2,10 +2,22 @@
 set -e  # Salir si hay error
 CONFIG_FILE="config.env"
 LIBRARY_FILE="funciones.sh"
+BASHRC="/root/.bashrc"
+MARKER="# === VARS_FROM_CONF_ENV ==="
+
 # Leer configuración desde archivo
 
 if [[ -f "$CONFIG_FILE" ]]; then
-  export $(cat ./config.env | xargs)  
+  if ! grep -q "$MARKER" "$BASHRC"; then
+  {
+    echo -e "\n$MARKER"
+    cat "$CONFIG_FILE"
+    echo "# === END_VARS_FROM_CONF_ENV ==="
+  } >> "$BASHRC"
+  echo "Variables añadidas a $BASHRC"
+else
+  echo "Las variables ya están presentes en $BASHRC"
+fi
 else
  echo -e "\e[30;41mArchivo de configuración $CONFIG_FILE no encontrado.\e[0m"
   exit 1
