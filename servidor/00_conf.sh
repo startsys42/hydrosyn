@@ -3,15 +3,15 @@ set -e  # Salir si hay error
 CONFIG_FILE="config.env"
 LIBRARY_FILE="funciones.sh"
 BASHRC="/root/.bashrc"
-MARKER="# === VARS_FROM_CONF_ENV ==="
+
 
 # Leer configuración desde archivo
 
 if [[ -f "$CONFIG_FILE" ]]; then
 source "$CONFIG_FILE"
-  if ! grep -q "$MARKER" "$BASHRC"; then
+  if ! grep -q "$MARKER_INI" "$BASHRC"; then
   {
-    echo -e "\n# === VARS_FROM_CONF_ENV ===" && cat "$CONFIG_FILE" && echo "\n# === END_VARS_FROM_CONF_ENV ==="
+    echo -e "\n$MARKER_INI" && cat "$CONFIG_FILE" 
   } >> "$BASHRC"
   
  echo -e "\e[30;46mVariables añadidas a $BASHRC\e[0m"
@@ -28,6 +28,17 @@ fi
 
 if [[ -f "$LIBRARY_FILE" ]]; then
   source "$LIBRARY_FILE"
+   if ! grep -q "$MARKER_END" "$BASHRC"; then
+  
+echo "if [ -f $FUNCIONES ]; then" >> "$BASHRC" && \
+echo "    source $FUNCIONES" >> "$BASHRC" && \
+echo 'fi' >> "$BASHRC" &&\
+echo -e "\n$MARKER_END" >> "$BASHRC"
+echo -e "\e[30;43mFunciones  añadidas a $BASHRC\e[0m"
+else
+echo -e "\e[30;43mLas funciones ya están presentes en $BASHRC\e[0m"
+fi
+source "$BASHRC"
 else
  echo -e "\e[30;41mArchivo de funciones $LIBRARY_FILE no encontrado.\e[0m"
   exit 1
@@ -35,12 +46,12 @@ fi
 
   
 
-echo -e "\e[30;43mConfigurando idioma del sistema a $IDIOMA...\e[0m"
+echo -e "\e[30;46mConfigurando idioma del sistema a $IDIOMA...\e[0m"
 apt install locales
 locale-gen "$IDIOMA"
 update-locale LANG="$IDIOMA"
 
-echo -e "\e[46mEstableciendo zona horaria a $ZONA_HORARIA...\e[0m"
+echo -e "\e[43mEstableciendo zona horaria a $ZONA_HORARIA...\e[0m"
 timedatectl set-timezone "$ZONA_HORARIA"
 
 echo "Activando sincronización automática de hora con NTP..."
