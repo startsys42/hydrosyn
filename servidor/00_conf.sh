@@ -8,6 +8,7 @@ MARKER="# === VARS_FROM_CONF_ENV ==="
 # Leer configuración desde archivo
 
 if [[ -f "$CONFIG_FILE" ]]; then
+source "$CONFIG_FILE"
   if ! grep -q "$MARKER" "$BASHRC"; then
   {
     echo -e "\n$MARKER"
