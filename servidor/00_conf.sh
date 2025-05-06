@@ -25,18 +25,10 @@ timedatectl
 locale | grep LANG
 
 
+echo "Configurando los repositorios de APT en $REPO_FILE..."
 
-REPO_FILE="/etc/apt/sources.list"
-
-# Respaldar el archivo actual de repositorios
-echo "Creando una copia de seguridad del archivo de repositorios..."
-cp $REPO_FILE $REPO_FILE.bak
-
-# Configuración de los repositorios de Debian 12
-echo "Configurando los repositorios para Debian 12 (Bullseye)..."
-
-cat <<EOL > $REPO_FILE
-# Repositorios principales para Debian 12 (Bullseye)
+cat <<EOF > $REPO_FILE
+# Repositorios principales para Debian 12 (Bookworm)
 deb http://deb.debian.org/debian/ bookworm main contrib non-free
 deb-src http://deb.debian.org/debian/ bookworm main contrib non-free
 
@@ -47,11 +39,15 @@ deb-src http://security.debian.org/debian-security/ bookworm-security main contr
 # Repositorios de actualizaciones
 deb http://deb.debian.org/debian/ bookworm-updates main contrib non-free
 deb-src http://deb.debian.org/debian/ bookworm-updates main contrib non-free
-EOL
+EOF
 
 # Actualizar la lista de paquetes
 echo "Actualizando la lista de paquetes..."
 apt update
+apt upgrade
+
+echo "Configuración aplicada exitosamente."
+
 
 ## nombre
 
