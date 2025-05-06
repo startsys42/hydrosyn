@@ -15,9 +15,9 @@ source "$CONFIG_FILE"
     cat "$CONFIG_FILE"
     echo "# === END_VARS_FROM_CONF_ENV ==="
   } >> "$BASHRC"
-  echo "Variables añadidas a $BASHRC"
+ echo -e "\e[30;46mVariables añadidas a $BASHRC\e[0m"
 else
-  echo "Las variables ya están presentes en $BASHRC"
+echo -e "\e[30;46mLas variables ya están presentes en $BASHRC\e[0m"
 fi
 else
  echo -e "\e[30;41mArchivo de configuración $CONFIG_FILE no encontrado.\e[0m"
