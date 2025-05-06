@@ -1,14 +1,26 @@
 #!/bin/bash
 set -e  # Salir si hay error
-
-# Leer configuración desde archivo
 CONFIG_FILE="config.env"
+LIBRARY_FILE="funciones.sh"
+# Leer configuración desde archivo
+
 if [[ -f "$CONFIG_FILE" ]]; then
   source "$CONFIG_FILE"
 else
  echo -e "\e[30;41mArchivo de configuración $CONFIG_FILE no encontrado.\e[0m"
   exit 1
 fi
+
+# Leer script funciones
+
+if [[ -f "$LIBRARY_FILE" ]]; then
+  source "$LIBRARY_FILE"
+else
+ echo -e "\e[30;41mArchivo de funciones $LIBRARY_FILE no encontrado.\e[0m"
+  exit 1
+fi
+
+
 
 echo -e "\e[30;43mConfigurando idioma del sistema a $IDIOMA...\e[0m"
 apt install locales
