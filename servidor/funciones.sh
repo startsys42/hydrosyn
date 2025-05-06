@@ -11,7 +11,8 @@ instalar_paquete() {
   # Verificar si la instalación fue exitosa
   if [ $? -ne 0 ]; then
 
-    echo -e "\e[31mError: No se pudo instalar el paquete '$PAQUETE'.\e[0m"
+    echo -e "\e[30;41mError: No se pudo instalar el paquete '$PAQUETE'.\e[0m"
+
     exit 1 
   fi
 }
