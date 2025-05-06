@@ -11,14 +11,14 @@ if [[ -f "$CONFIG_FILE" ]]; then
 source "$CONFIG_FILE"
   if ! grep -q "$MARKER" "$BASHRC"; then
   {
-    echo -e "\n$MARKER"
-    cat "$CONFIG_FILE"
-    echo "# === END_VARS_FROM_CONF_ENV ==="
+    echo -e "\n# === VARS_FROM_CONF_ENV ===" && cat "$CONFIG_FILE" && echo "\n# === END_VARS_FROM_CONF_ENV ==="
   } >> "$BASHRC"
+  
  echo -e "\e[30;46mVariables añadidas a $BASHRC\e[0m"
 else
 echo -e "\e[30;46mLas variables ya están presentes en $BASHRC\e[0m"
 fi
+source "$BASHRC"
 else
  echo -e "\e[30;41mArchivo de configuración $CONFIG_FILE no encontrado.\e[0m"
   exit 1
