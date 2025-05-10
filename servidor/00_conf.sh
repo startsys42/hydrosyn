@@ -26,8 +26,8 @@ fi
 
 # Leer script funciones
 
-if [[ -f "$LIBRARY_FILE" ]]; then
-  source "$LIBRARY_FILE"
+if [[ -f "$FUNCIONES" ]]; then
+  source "$FUNCIONES"
    if ! grep -q "$MARKER_END" "$BASHRC"; then
   
 echo "if [ -f $FUNCIONES ]; then" >> "$BASHRC" && \
@@ -40,7 +40,7 @@ echo -e "\e[30;43mLas funciones ya están presentes en $BASHRC\e[0m"
 fi
 source "$BASHRC"
 else
- echo -e "\e[30;41mArchivo de funciones $LIBRARY_FILE no encontrado.\e[0m"
+ echo -e "\e[30;41mArchivo de funciones $FUNCIONES no encontrado.\e[0m"
   exit 1
 fi
 
