@@ -48,7 +48,7 @@ fi
 #Idioma y hora
 
 echo -e "\e[30;46mConfigurando idioma del sistema a $IDIOMA...\e[0m"
-apt install locales >/dev/null
+instalar_paquete locales
 locale-gen "$IDIOMA"
 update-locale LANG="$IDIOMA"
 
@@ -81,8 +81,8 @@ EOF
 
 # Actualizar la lista de paquetes
 echo "Actualizando la lista de paquetes..."
-apt update
-apt upgrade
+apt update -y
+apt upgrade -y
 
 echo "Configuración aplicada exitosamente."
 
