@@ -52,7 +52,7 @@ instalar_paquete locales
 locale-gen "$IDIOMA"
 update-locale LANG="$IDIOMA"
 
-echo -e "\e[43mEstableciendo zona horaria a $ZONA_HORARIA...\e[0m"
+echo -e "\e[30;43mEstableciendo zona horaria a $ZONA_HORARIA...\e[0m"
 timedatectl set-timezone "$ZONA_HORARIA"
 
 echo "Activando sincronización automática de hora con NTP..."
@@ -67,24 +67,24 @@ echo "Configurando los repositorios de APT en $REPO_FILE..."
 
 cat <<EOF > $REPO_FILE
 # Repositorios principales para Debian 12 (Bookworm)
-deb http://deb.debian.org/debian/ bookworm main contrib non-free
-deb-src http://deb.debian.org/debian/ bookworm main contrib non-free
+deb http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
+deb-src http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
 
 # Repositorios de seguridad
-deb http://security.debian.org/debian-security/ bookworm-security main contrib non-free
-deb-src http://security.debian.org/debian-security/ bookworm-security main contrib non-free
+deb http://security.debian.org/debian-security/ bookworm-security main contrib non-free non-free-firmware
+deb-src http://security.debian.org/debian-security/ bookworm-security main contrib non-free non-free-firmware
 
 # Repositorios de actualizaciones
-deb http://deb.debian.org/debian/ bookworm-updates main contrib non-free
-deb-src http://deb.debian.org/debian/ bookworm-updates main contrib non-free
+deb http://deb.debian.org/debian/ bookworm-updates main contrib non-free non-free-firmware
+deb-src http://deb.debian.org/debian/ bookworm-updates main contrib non-free non-free-firmware
 EOF
 
 # Actualizar la lista de paquetes
-echo "Actualizando la lista de paquetes..."
-apt update -y
-apt upgrade -y
 
-echo "Configuración aplicada exitosamente."
+apt update -y > /dev/null
+apt upgrade -y > /dev/null
+
+
 
 
 ## nombre
