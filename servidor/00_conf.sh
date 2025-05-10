@@ -96,9 +96,18 @@ echo "$HOSTNAME" > /etc/hostname
 sed -i "s/127\.0\.1\.1.*/127.0.1.1 $HOSTNAME/" /etc/hosts
 
 ## info ocultar
+# Reemplazar el contenido de /etc/issue (pantalla de login local)
+echo "$ISSUE" > /etc/issue
+
+# Si existe el archivo /etc/issue.net 
+if [ -f /etc/issue.net ]; then
+    echo "$ISSUE" > /etc/issue.net
+else
+    echo "No se ha encontrado el archivo /etc/issue.net."
+fi
 
 
-## Nucleos
+
 
 ## red
 
