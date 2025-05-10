@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e  # Salir si hay error
 CONFIG_FILE="config.env"
-LIBRARY_FILE="funciones.sh"
+#LIBRARY_FILE="funciones.sh"
 #BASHRC="/root/.bashrc"
 
 
@@ -44,10 +44,11 @@ else
   exit 1
 fi
 
-  
+
+#Idioma y hora
 
 echo -e "\e[30;46mConfigurando idioma del sistema a $IDIOMA...\e[0m"
-apt install locales
+apt install locales >/dev/null
 locale-gen "$IDIOMA"
 update-locale LANG="$IDIOMA"
 
@@ -61,7 +62,7 @@ echo "Configuración aplicada:"
 timedatectl
 locale | grep LANG
 
-
+## repositorios
 echo "Configurando los repositorios de APT en $REPO_FILE..."
 
 cat <<EOF > $REPO_FILE
@@ -88,9 +89,16 @@ echo "Configuración aplicada exitosamente."
 
 ## nombre
 
+# Cambia el hostname permanente (archivos del sistema)
+echo "$HOSTNAME" > /etc/hostname
+
+#  actualizar /etc/hosts
+sed -i "s/127\.0\.1\.1.*/127.0.1.1 $HOSTNAME/" /etc/hosts
+
 ## info ocultar
 
-## repositorios
+
+## Nucleos
 
 ## red
 
