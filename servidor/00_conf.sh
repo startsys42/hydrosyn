@@ -47,23 +47,49 @@ fi
 
 #Idioma y hora
 
-echo -e "\e[30;46mConfigurando idioma del sistema a $IDIOMA...\e[0m"
+
 instalar_paquete locales
 locale-gen "$IDIOMA"
 update-locale LANG="$IDIOMA"
 
-echo -e "\e[30;43mEstableciendo zona horaria a $ZONA_HORARIA...\e[0m"
+
+# Verificar directamente si la configuración se realizó correctamente
+if locale | grep -q "LANG=$IDIOMA"; then
+    echo -e "\e[30;46mEl idioma se ha configurado correctamente a $IDIOMA.\e[0m"
+else
+    echo -e "\e[30;41mHubo un error al configurar el idioma.\e[0m"
+    exit 1
+fi
+
+
+
 timedatectl set-timezone "$ZONA_HORARIA"
 
-echo "Activando sincronización automática de hora con NTP..."
+if timedatectl | grep -q "Time zone: $ZONA_HORARIA"; then
+    echo -e "\e[30;43mLa zona horaria se ha configurado correctamente a $ZONA_HORARIA.\e[0m"
+else
+    echo -e "\e[30;41mHubo un error al configurar la zona horaria.\e[0m"
+    exit 1
+fi
+
+
+
 timedatectl set-ntp true
 
-echo "Configuración aplicada:"
-timedatectl
-locale | grep LANG
+
+if timedatectl | grep -q "NTP synchronized: yes"; then
+    echo -e "\e[30;46mLa sincronización NTP está activada correctamente.\e[0m"
+else
+    echo -e "\e[30;41mHubo un error al activar la sincronización NTP.\e[0m"
+    exit 1
+fi
+
+
+
+
 
 ## repositorios
-echo "Configurando los repositorios de APT en $REPO_FILE..."
+
 
 cat <<EOF > $REPO_FILE
 # Repositorios principales para Debian 12 (Bookworm)
@@ -85,7 +111,7 @@ apt update -y > /dev/null
 apt upgrade -y > /dev/null
 
 
-
+   echo -e "\e[30;43mConfigurados los repositorios de APT en $REPO_FILE.\e[0m"
 
 ## nombre
 
