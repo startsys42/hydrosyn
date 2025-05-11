@@ -3,7 +3,8 @@ set -e  # Salir si hay error
 CONFIG_FILE="config.env"
 #LIBRARY_FILE="funciones.sh"
 #BASHRC="/root/.bashrc"
-
+COLOR_BG_IMPAR="46"
+COLOR_BG_PAR="41"
 
 # Leer configuración desde archivo
 
@@ -14,9 +15,9 @@ source "$CONFIG_FILE"
     echo -e "\n$MARKER_INI" && cat "$CONFIG_FILE" 
   } >> "$BASHRC"
   
- echo -e "\e[30;46mVariables añadidas a $BASHRC\e[0m"
+ echo -e "\e[30;${COLOR_BG_IMPAR}mVariables añadidas a $BASHRC\e[0m"
 else
-echo -e "\e[30;46mLas variables ya están presentes en $BASHRC\e[0m"
+echo -e "\e[30;${COLOR_BG_IMPAR}mLas variables ya están presentes en $BASHRC\e[0m"
 fi
 source "$BASHRC"
 else
@@ -34,9 +35,9 @@ echo "if [ -f $FUNCIONES ]; then" >> "$BASHRC" && \
 echo "    source $FUNCIONES" >> "$BASHRC" && \
 echo 'fi' >> "$BASHRC" &&\
 echo -e "\n$MARKER_END" >> "$BASHRC"
-echo -e "\e[30;43mFunciones  añadidas a $BASHRC\e[0m"
+echo -e "\e[30;${COLOR_BG_PAR}mFunciones  añadidas a $BASHRC\e[0m"
 else
-echo -e "\e[30;43mLas funciones ya están presentes en $BASHRC\e[0m"
+echo -e "\e[30;${COLOR_BG_PAR}mLas funciones ya están presentes en $BASHRC\e[0m"
 fi
 source "$BASHRC"
 else
@@ -55,7 +56,7 @@ update-locale LANG="$IDIOMA"
 
 # Verificar directamente si la configuración se realizó correctamente
 if locale | grep -q "LANG=$IDIOMA"; then
-    echo -e "\e[30;46mEl idioma se ha configurado correctamente a $IDIOMA.\e[0m"
+    echo -e "\e[30;${COLOR_BG_IMPAR}mEl idioma se ha configurado correctamente a $IDIOMA.\e[0m"
 else
     echo -e "\e[30;41mHubo un error al configurar el idioma.\e[0m"
     exit 1
@@ -66,7 +67,7 @@ fi
 timedatectl set-timezone "$ZONA_HORARIA"
 
 if timedatectl | grep -q "Time zone: $ZONA_HORARIA"; then
-    echo -e "\e[30;43mLa zona horaria se ha configurado correctamente a $ZONA_HORARIA.\e[0m"
+    echo -e "\e[30;${COLOR_BG_PAR}mLa zona horaria se ha configurado correctamente a $ZONA_HORARIA.\e[0m"
 else
     echo -e "\e[30;41mHubo un error al configurar la zona horaria.\e[0m"
     exit 1
@@ -78,7 +79,7 @@ timedatectl set-ntp true
 
 
 if timedatectl | grep -q "NTP synchronized: yes"; then
-    echo -e "\e[30;46mLa sincronización NTP está activada correctamente.\e[0m"
+    echo -e "\e[30;${COLOR_BG_IMPAR}mLa sincronización NTP está activada correctamente.\e[0m"
 else
     echo -e "\e[30;41mHubo un error al activar la sincronización NTP.\e[0m"
     exit 1
@@ -111,7 +112,7 @@ apt update -y > /dev/null
 apt upgrade -y > /dev/null
 
 
-   echo -e "\e[30;43mConfigurados los repositorios de APT en $REPO_FILE.\e[0m"
+   echo -e "\e[30;${COLOR_BG_PAR}mConfigurados los repositorios de APT en $REPO_FILE.\e[0m"
 
 ## nombre
 
