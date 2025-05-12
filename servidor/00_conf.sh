@@ -4,7 +4,7 @@ CONFIG_FILE="config.env"
 #LIBRARY_FILE="funciones.sh"
 #BASHRC="/root/.bashrc"
 COLOR_BG_IMPAR="46"
-COLOR_BG_PAR="41"
+COLOR_BG_PAR="43"
 
 # Leer configuración desde archivo
 
