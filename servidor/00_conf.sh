@@ -134,7 +134,8 @@ else
 fi
 
 
-
+instalar_paquete hdhfdh
+echo "HHHHHHHHHHH"
 
 ## red
 
