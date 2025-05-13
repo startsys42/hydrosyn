@@ -1,1 +1,4 @@
+#!/bin/bash
+COLOR_BG_IMPAR="46"
+COLOR_BG_PAR="43"
 
