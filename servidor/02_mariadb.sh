@@ -4,32 +4,23 @@ COLOR_BG_PAR="43"
 
 
 # Actualizar el sistema
-echo "Actualizando el sistema..."
- apt update && sudo apt upgrade -y
 
-# Instalar MariaDB
-echo "Instalando MariaDB..."
- apt install mariadb-server mariadb-client -y
+instalar_paquete mariadb-server
+instalar_paquete mariadb-client 
 
-# Verificar si MariaDB está corriendo
-echo "Verificando el estado de MariaDB..."
+
 systemctl status mariadb
 
-# Habilitar MariaDB para que inicie al arrancar
-echo "Habilitando MariaDB para que inicie al arrancar..."
-sudo systemctl enable mariadb
+systemctl enable mariadb
 
-# Iniciar el servicio de MariaDB si no está en ejecución
-echo "Iniciando MariaDB..."
-sudo systemctl start mariadb
 
-# Configurar MariaDB para mayor seguridad
-echo "Configurando seguridad en MariaDB..."
-sudo mysql_secure_installation
+systemctl start mariadb
 
-# Instalar mariadb-backup (si no está instalado)
-echo "Instalando mariadb-backup..."
-sudo apt install mariadb-backup -y
+
+ mysql_secure_installation
+
+
+instalar_paquete  install mariadb-backup
 
 # Verificar instalación de mariabackup
 echo "Verificando la instalación de mariabackup..."
