@@ -1,5 +1,8 @@
 
 #!/bin/bash
+COLOR_BG_IMPAR="46"
+COLOR_BG_PAR="43"
+
 
 # Actualizar los repositorios y paquetes del sistema
 echo "Actualizando el sistema..."
