@@ -4,10 +4,10 @@ COLOR_BG_IMPAR="46"
 COLOR_BG_PAR="43"
 
 
-# Actualizar los repositorios y paquetes del sistema
-echo "Actualizando el sistema..."
-apt update -y
-apt upgrade -y
+
+apt-get update -y > /dev/null
+apt-get upgrade -y > /dev/null
+
 
 instalar_paquete openssh-server 
 instalar_paquete openssh-client
