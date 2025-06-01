@@ -5,8 +5,8 @@ COLOR_BG_PAR="43"
 
 # Actualizar el sistema
 
-instalar_paquete mariadb-server
-instalar_paquete mariadb-client 
+ins-paq mariadb-server
+ins-paq mariadb-client 
 
 
 systemctl status mariadb
@@ -20,7 +20,7 @@ systemctl start mariadb
  mysql_secure_installation
 
 
-instalar_paquete  install mariadb-backup
+ins-paq mariadb-backup
 
 # Verificar instalación de mariabackup
 echo "Verificando la instalación de mariabackup..."
