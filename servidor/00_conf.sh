@@ -52,6 +52,11 @@ fi
 
 
 ins-paq locales
+if [ $? -ne 0 ]; then
+ 
+    exit 1
+fi
+
 locale-gen "$IDIOMA"
 update-locale LANG="$IDIOMA"
 source /etc/default/locale
