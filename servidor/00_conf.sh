@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e  # Salir si hay error
+
 CONFIG_FILE="config.env"
 #LIBRARY_FILE="funciones.sh"
 #BASHRC="/root/.bashrc"
