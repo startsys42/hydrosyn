@@ -142,7 +142,7 @@ echo "$ISSUE" > /etc/issue
 if [ -f /etc/issue.net ]; then
     echo "$ISSUE" > /etc/issue.net
 else
-    echo "No se ha encontrado el archivo /etc/issue.net."
+   "\e[30;42mNo se ha encontrado el archivo /etc/issue.net.\e[0m"
 fi
 
 
