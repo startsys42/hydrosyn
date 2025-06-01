@@ -4,8 +4,11 @@ COLOR_BG_PAR="43"
 
 
 # Instalar Nginx
-instalar_paquete nginx 
-
+ins-paq nginx 
+if [ $? -ne 0 ]; then
+ 
+    exit 1
+fi
 systemctl enable nginx
 systemctl start nginx
 
