@@ -2,7 +2,7 @@
 
 # Definir la función en este script
 instalar_paquete() {
-  PAQUETE="$1"
+  local PAQUETE="$1"
 
   # Instalar el paquete
 
