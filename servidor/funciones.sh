@@ -13,6 +13,6 @@ ins-paq() {
 
     echo -e "\e[30;41mError: No se pudo instalar el paquete '$PAQUETE'.\e[0m"
 
-   exit 1 
+   return 1 
   fi
 }
