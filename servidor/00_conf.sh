@@ -142,7 +142,7 @@ fi
 
 instalar_paquete hdhfdh
 echo "HHHHHHHHHHH"
-
+exit 1
 ## red
 
 ## usuarios
