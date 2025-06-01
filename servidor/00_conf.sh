@@ -114,8 +114,8 @@ EOF
 
 # Actualizar la lista de paquetes
 
-apt update -y > /dev/null
-apt upgrade -y > /dev/null
+apt-get update -y > /dev/null
+apt-get upgrade -y > /dev/null
 
 
    echo -e "\e[30;${COLOR_BG_PAR}mConfigurados los repositorios de APT en $REPO_FILE.\e[0m"
