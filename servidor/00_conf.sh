@@ -53,7 +53,7 @@ fi
 instalar_paquete locales
 locale-gen "$IDIOMA"
 update-locale LANG="$IDIOMA"
-
+source /etc/default/locale
 
 # Verificar directamente si la configuración se realizó correctamente
 if locale | grep -q "LANG=$IDIOMA"; then
@@ -79,13 +79,18 @@ fi
 timedatectl set-ntp true
 
 
-if timedatectl | grep -q "NTP synchronized: yes"; then
-    echo -e "\e[30;${COLOR_BG_IMPAR}mLa sincronización NTP está activada correctamente.\e[0m"
+sleep 2  # esperar un poco a que se sincronice
+
+# Verificar NTP habilitado y sincronizado
+NTP_ENABLED=$(timedatectl show -p NTP --value)
+NTP_SYNCED=$(timedatectl show -p NTPSynchronized --value)
+
+if [[ "$NTP_ENABLED" == "yes" && "$NTP_SYNCED" == "yes" ]]; then
+    echo -e "\e[30;${COLOR_BG_IMPAR}mLa sincronización NTP está activada y funcionando.\e[0m"
 else
-    echo -e "\e[30;41mHubo un error al activar la sincronización NTP.\e[0m"
+    echo -e "\e[30;41mHubo un error al activar o sincronizar el NTP.\e[0m"
     exit 1
 fi
-
 
 
 
