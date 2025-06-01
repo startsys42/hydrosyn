@@ -141,9 +141,7 @@ else
 fi
 
 
-ins-paq hdhfdh
-echo "HHHHHHHHHHH"
-exit 1
+
 ## red
 
 ## usuarios
