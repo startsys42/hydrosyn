@@ -17,7 +17,40 @@ systemctl enable mariadb
 systemctl start mariadb
 
 
- mysql_secure_installation
+#mysql_secure_installation
+
+
+MYSQL="$(which mysql)"
+
+# 1. Establecer contraseña de root (solo si es primera vez)
+$MYSQL -u root <<EOF
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$MYSQL_ROOT_PASSWORD';
+FLUSH PRIVILEGES;
+EOF
+
+# 2. Eliminar usuarios anónimos
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD" <<EOF
+DELETE FROM mysql.user WHERE User='';
+EOF
+
+# 3. Deshabilitar acceso remoto del root
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD" <<EOF
+DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost');
+EOF
+
+# 4. Eliminar base de datos de prueba
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD" <<EOF
+DROP DATABASE IF EXISTS test;
+DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
+EOF
+
+# 5. Recargar privilegios
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD" <<EOF
+FLUSH PRIVILEGES;
+EOF
+
+echo -e "\e[32mMySQL asegurado correctamente.\e[0m"
+ 
 
 
 ins-paq mariadb-backup
