@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Definir la función en este script
-instalar_paquete() {
+ins-paq() {
   local PAQUETE="$1"
 
   # Instalar el paquete
