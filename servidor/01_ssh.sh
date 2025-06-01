@@ -8,7 +8,7 @@ COLOR_BG_PAR="43"
 apt-get update -y > /dev/null
 apt-get upgrade -y > /dev/null
 
-ins-paq install libpam-google-authenticator
+ins-paq libpam-google-authenticator
 if [ $? -ne 0 ]; then
  
     exit 1
