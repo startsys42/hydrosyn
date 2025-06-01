@@ -9,8 +9,8 @@ apt-get update -y > /dev/null
 apt-get upgrade -y > /dev/null
 
 
-instalar_paquete openssh-server 
-instalar_paquete openssh-client
+ins-paq openssh-server 
+ins-paq openssh-client
 
 
 systemctl enable ssh
