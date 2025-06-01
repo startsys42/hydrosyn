@@ -68,7 +68,7 @@ LoginGraceTime 30
 ClientAliveInterval 60
 ClientAliveCountMax 3
 PermitEmptyPasswords no
-AllowUsers tu_usuario
+AllowUsers tu_usuario #cambair los usuarios permitidos
 Banner /etc/issue.net
 LogLevel VERBOSE
 SyslogFacility AUTHPRIV
