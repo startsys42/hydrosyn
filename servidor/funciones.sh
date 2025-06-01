@@ -17,4 +17,4 @@ ins-paq() {
   fi
 }
 
-ins_paq "$@"
+ins-paq "$@"
