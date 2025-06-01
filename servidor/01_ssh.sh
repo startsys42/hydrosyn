@@ -53,7 +53,7 @@ EOF
 cat <<EOF > /etc/ssh/sshd_config
 # Configuración segura para servidor SSH
 
-Port 3748
+Port $SSH_PORT
 Protocol 2
 PermitRootLogin no
 PasswordAuthentication no
