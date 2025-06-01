@@ -6,8 +6,15 @@ COLOR_BG_PAR="43"
 # Actualizar el sistema
 
 ins-paq mariadb-server
+if [ $? -ne 0 ]; then
+ 
+    exit 1
+fi
 ins-paq mariadb-client 
-
+if [ $? -ne 0 ]; then
+ 
+    exit 1
+fi
 
 systemctl status mariadb
 
