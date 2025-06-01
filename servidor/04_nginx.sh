@@ -16,4 +16,4 @@ systemctl status nginx --no-pager
 
 
 
-echo "🚀 Nginx instalado y en funcionamiento."
+
