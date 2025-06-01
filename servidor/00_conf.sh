@@ -51,7 +51,7 @@ fi
 #Idioma y hora
 
 
-instalar_paquete locales
+ins-paq locales
 locale-gen "$IDIOMA"
 update-locale LANG="$IDIOMA"
 source /etc/default/locale
@@ -141,7 +141,7 @@ else
 fi
 
 
-instalar_paquete hdhfdh
+ins-paq hdhfdh
 echo "HHHHHHHHHHH"
 exit 1
 ## red
