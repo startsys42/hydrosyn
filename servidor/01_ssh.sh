@@ -10,8 +10,15 @@ apt-get upgrade -y > /dev/null
 
 
 ins-paq openssh-server 
+if [ $? -ne 0 ]; then
+ 
+    exit 1
+fi
 ins-paq openssh-client
-
+if [ $? -ne 0 ]; then
+ 
+    exit 1
+fi
 
 systemctl enable ssh
 
