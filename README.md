@@ -1,4 +1,11 @@
-#
+# Hydrosyn V1.0
+
+## ¿Qué es Hydrosyn)
+
+ENLACE MANUAL INSTALACION
+ENLACE MANUAL USUARIO
+
+
 
 ##
 - esp32
@@ -38,3 +45,6 @@ else
  echo -e "\e[30;41mArchivo de funciones $FUNCIONES no encontrado.\e[0m"
   exit 1
 fi
+
+
+
