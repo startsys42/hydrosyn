@@ -13,7 +13,7 @@ if [[ -f "$CONFIG_FILE" ]]; then
 source "$CONFIG_FILE"
   if ! grep -q "$MARKER_INI" "$BASHRC"; then
   {
-    echo -e "\n$MARKER_INI" && cat "$CONFIG_FILE" 
+    echo -e "\n$MARKER_INI" && cat "$CONFIG_FILE" && echo -e "\n$MARKER_END"
   } >> "$BASHRC"
   
  echo -e "\e[30;${COLOR_BG_IMPAR}mVariables añadidas a $BASHRC\e[0m"
@@ -28,23 +28,24 @@ fi
 
 # Leer script funciones
 
-if [[ -f "$FUNCIONES" ]]; then
-  source "$FUNCIONES"
-   if ! grep -q "$MARKER_END" "$BASHRC"; then
-  
-echo "if [ -f $FUNCIONES ]; then" >> "$BASHRC" && \
-echo "    source $FUNCIONES" >> "$BASHRC" && \
-echo 'fi' >> "$BASHRC" &&\
-echo -e "\n$MARKER_END" >> "$BASHRC"
-echo -e "\e[30;${COLOR_BG_PAR}mFunciones  añadidas a $BASHRC\e[0m"
+if [[ -f /usr/local/bin/ins-paq ]]; then
+  echo -e "\e[30;${COLOR_BG_PAR}mEl archivo /usr/local/bin/ins-paq ya existe. No se copia nada.\e[0m"
 else
-echo -e "\e[30;${COLOR_BG_PAR}mLas funciones ya están presentes en $BASHRC\e[0m"
+  if [[ -f "$FUNCIONES" ]]; then
+    cp "$FUNCIONES" /usr/local/bin/ins-paq
+    chown root:root /usr/local/bin/ins-paq
+    chmod 755 /usr/local/bin/ins-paq
+    echo -e "\e[30;${COLOR_BG_PAR}mFunciones copiadas a /usr/local/bin/ins-paq con permisos correctos\e[0m"
+    rm $FUNCIONES
+  else
+    echo -e "\e[30;41mArchivo de funciones $FUNCIONES no encontrado. No se pudo copiar.\e[0m"
+    exit 1
+  fi
 fi
-source "$BASHRC"
-else
- echo -e "\e[30;41mArchivo de funciones $FUNCIONES no encontrado.\e[0m"
-  exit 1
-fi
+
+
+
+
 
 
 #Idioma y hora
