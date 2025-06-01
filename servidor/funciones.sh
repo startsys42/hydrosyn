@@ -16,3 +16,5 @@ ins-paq() {
    return 1 
   fi
 }
+
+ins_paq "$@"
