@@ -2,10 +2,8 @@
 
 ## ¿Qué es Hydrosyn?
 
-
-ENLACE MANUAL INSTALACION
-ENLACE MANUAL USUARIO
-
+- [Manual de instalación](https://github.com/startsys42/hydrosyn/blob/main/Manual%20instalaci%C3%B3n.md)
+- [Manual de usuario](ruta_o_URL_manual_usuario)
 
 ## requisitos seguridad
 - grub
