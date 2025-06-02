@@ -1,0 +1,10 @@
+- telnet
+- comandos remotos
+- grub
+- bios
+- boot
+- usbs
+- raid nas lvm
+- cuotas
+- particiones
+- 
