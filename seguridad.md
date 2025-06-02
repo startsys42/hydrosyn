@@ -7,4 +7,5 @@
 - raid nas lvm
 - cuotas
 - particiones
+- correo encender servidor
 - 
