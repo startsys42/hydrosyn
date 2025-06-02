@@ -30,8 +30,12 @@ python3 -m venv venv
 /opt/hydrosyn/venv/bin/pip install --upgrade pip
 /opt/hydrosyn/venv/bin/pip install fastapi uvicorn jinja2
 
-
-
+mkdir /opt/aviso_e
+cd  /opt/aviso_e
+python3 -m venv venv
+/opt/aviso_e/venv/bin/pip install --upgrade pip
+/opt/aviso_e/venv/bin/pip install --upgrade google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
+mv /root/crd.json .
 
 
 cat <<EOF > /etc/systemd/system/hydrosyn.service
