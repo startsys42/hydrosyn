@@ -5,6 +5,10 @@
 - [Manual de instalación](https://github.com/startsys42/hydrosyn/blob/main/Manual%20instalaci%C3%B3n.md)
 - [Manual de usuario](ruta_o_URL_manual_usuario)
 
+- [Manual de instalación](https://github.com/startsys42/hydrosyn/blob/main/Manual%20instalaci%C3%B3n.md)
+- [Manual de usuario](ruta_o_URL_manual_usuario)
+- [Installation guide]
+- [User guide]
 ## requisitos seguridad
 - grub
 - usbs
