@@ -47,6 +47,7 @@
 - iptables
 - nucleo
 - monitoreo redes
+- borar caches paquetes...
  
   
   
