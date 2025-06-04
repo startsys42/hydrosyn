@@ -1,3 +1,5 @@
 # Manual de instalación
 
-# Requisitos
+## Requisitos
+
+Para la instalación del sistema de Hydrosyn se necesita ....
