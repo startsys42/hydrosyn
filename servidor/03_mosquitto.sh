@@ -2,4 +2,17 @@
 COLOR_BG_IMPAR="46"
 COLOR_BG_PAR="43"
 
- apt install -y mosquitto mosquitto-clients
+ 
+
+ins-paq mosquitto
+if [ $? -ne 0 ]; then
+ 
+    exit 1
+fi
+
+
+ins-paq mosquitto-clients
+if [ $? -ne 0 ]; then
+ 
+    exit 1
+fi
