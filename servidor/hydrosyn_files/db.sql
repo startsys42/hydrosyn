@@ -67,3 +67,38 @@ CREATE TABLE containers (
         ON DELETE RESTRICT
         ON UPDATE CASCADE
 );
+
+
+CREATE TABLE system_users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    system_id INT NOT NULL,
+    user_id INT NOT NULL,
+    added_by INT NOT NULL,
+    removed_by INT DEFAULT NULL,
+    date_added TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    date_removed TIMESTAMP DEFAULT NULL,
+
+    CONSTRAINT fk_su_system
+        FOREIGN KEY (system_id)
+        REFERENCES sistemas(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_su_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_su_added_by
+        FOREIGN KEY (added_by)
+        REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_su_removed_by
+        FOREIGN KEY (removed_by)
+        REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
