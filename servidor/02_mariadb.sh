@@ -16,12 +16,12 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-systemctl status mariadb
 
 systemctl enable mariadb
 
 
 systemctl start mariadb
+systemctl status mariadb
 
 
 #mysql_secure_installation
