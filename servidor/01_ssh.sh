@@ -87,7 +87,7 @@ PubkeyAcceptedAlgorithms rsa-sha2-512,rsa-sha2-256,ssh-ed25519
 EOF
 
 
-cat << 'EOF' > /usr/local/bin/authorized_keys_filter.sh
+cat << EOF > /usr/local/bin/authorized_keys_filter.sh
 #!/bin/bash
 
 USUARIO="$1"
