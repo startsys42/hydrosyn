@@ -80,6 +80,8 @@ systemctl status mariadb
 echo -e "\e[32mMySQL asegurado correctamente.\e[0m"
  
 
+mysql -u root -p < hydrosyn_files/db.sql
+
 
 ins-paq mariadb-backup
 
