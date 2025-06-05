@@ -160,4 +160,4 @@ fi
 
 ## actualizaciones
 
-logout
+exit 1
