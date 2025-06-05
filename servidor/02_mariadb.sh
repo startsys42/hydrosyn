@@ -98,7 +98,7 @@ systemctl status mariadb
 echo -e "\e[32mMySQL asegurado correctamente.\e[0m"
 
 cat <<EOF > user.sql
-CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE utf8mb4_general_cs;
+CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE  utf8mb4_bin;
 INSTALL SONAME 'validate_password';
 CREATE USER IF NOT EXISTS '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';
 
