@@ -17,11 +17,6 @@ if [ $? -ne 0 ]; then
 fi
 
 
-systemctl enable mariadb
-
-
-systemctl start mariadb
-systemctl status mariadb
 
 
 #mysql_secure_installation
@@ -55,6 +50,32 @@ EOF
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD" <<EOF
 FLUSH PRIVILEGES;
 EOF
+
+BACKUP_FILE="${CONF_FILE}.bak"
+
+cp "$CONF_FILE" "$BACKUP_FILE"
+
+# Cambiar bind-address
+if grep -q "^bind-address" "$CONF_FILE"; then
+  sed -i 's/^bind-address.*/bind-address = 127.0.0.1/' "$CONF_FILE"
+else
+  echo "bind-address = 127.0.0.1" >> "$CONF_FILE"
+fi
+
+# Cambiar puerto (ejemplo: 3307)
+if grep -q "^port" "$CONF_FILE"; then
+  sed -i "s/^port.*/port = $PUERTO/" "$CONF_FILE"
+else
+  echo "port = $PUERTO" >> "$CONF_FILE"
+fi
+
+systemctl enable mariadb
+
+
+systemctl start mariadb
+systemctl status mariadb
+
+
 
 echo -e "\e[32mMySQL asegurado correctamente.\e[0m"
  
