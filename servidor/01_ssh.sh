@@ -68,7 +68,7 @@ LoginGraceTime 30
 ClientAliveInterval 60
 ClientAliveCountMax 3
 PermitEmptyPasswords no
-AllowUsers tu_usuario #cambair los usuarios permitidos
+AllowUsers $USER #cambair los usuarios permitidos
 Banner /etc/issue.net
 LogLevel VERBOSE
 SyslogFacility AUTHPRIV
@@ -93,32 +93,43 @@ cat << EOF > /usr/local/bin/authorized_keys_filter.sh
 USUARIO="$1"
 AUTH_KEYS_FILE="/home/$USUARIO/.ssh/authorized_keys"
 
-# Si no existe el archivo, salir con éxito (sin claves)
+# Si no existe el archivo, salir sin error (como si no hubiera claves)
 if [[ ! -f "$AUTH_KEYS_FILE" ]]; then
   exit 0
 fi
 
+# Leer el archivo línea por línea
 while read -r linea; do
-  # Saltar líneas vacías o comentarios
+  # Saltar líneas vacías o que empiezan con #
   [[ -z "$linea" || "$linea" =~ ^# ]] && continue
 
-  # Extraer tipo y clave base64
-  tipo=$(echo "$linea" | awk '{print $1}')
-  clave=$(echo "$linea" | awk '{print $2}')
+  # Extraer tipo (ssh-rsa, ssh-ed25519, etc.) y la clave base64
+  tipo=$(echo "$linea" | cut -d ' ' -f1)
+  clave=$(echo "$linea" | cut -d ' ' -f2)
 
+  # Si el tipo es ssh-rsa, verificar que tenga al menos 2048 bits
   if [[ "$tipo" == "ssh-rsa" ]]; then
-    # Decodificar clave base64 y obtener longitud en bits
+    # Decodificar la clave base64
     clave_bin=$(echo "$clave" | base64 -d 2>/dev/null)
+
+    # Si no se pudo decodificar, saltar esta línea
+    if [[ -z "$clave_bin" ]]; then
+      continue
+    fi
+
+    # Obtener la longitud de la clave en bits
     longitud=$(echo "$clave_bin" | ssh-keygen -lf /dev/stdin 2>/dev/null | awk '{print $1}')
 
+    # Si la clave tiene al menos 2048 bits, aceptarla
     if [[ "$longitud" -ge 2048 ]]; then
       echo "$linea"
     fi
   else
-    # Aceptar otros tipos sin filtro
+    # Si es otro tipo de clave, aceptarla sin filtros
     echo "$linea"
   fi
 done < "$AUTH_KEYS_FILE"
+
 EOF
 
 # Cambiar propietario, grupo y permisos
