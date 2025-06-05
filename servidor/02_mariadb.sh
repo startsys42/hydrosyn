@@ -89,6 +89,7 @@ modify_param_in_mysqld() {
 # ======================
 # Configurar políticas de contraseña seguras
 # ======================
+modify_param_in_mysqld "event_scheduler" "ON"
 modify_param_in_mysqld "plugin_load_add" "cracklib_password_check"
 modify_param_in_mysqld "validate_password.check_user_name" "ON"
 modify_param_in_mysqld "validate_password.special_char_count" "0"
@@ -124,10 +125,26 @@ echo -e "\e[32mMySQL asegurado correctamente.\e[0m"
 
 cat <<EOF > user.sql
 CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE  utf8mb4_bin;
+CREATE DATABASE IF NOT EXISTS users_db CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+USE users_db;
 
-CREATE USER IF NOT EXISTS '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE EVENT IF NOT EXISTS delete_old_users
+ON SCHEDULE EVERY 1 DAY
+DO
+  DELETE FROM users WHERE created_at < NOW() - INTERVAL 450 DAY;
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON hydrosyn_db.* TO '${DB_USER}'@'localhost';
+  
+CREATE USER IF NOT EXISTS '${DB_USER_HYDRO}'@'localhost' IDENTIFIED BY '${DB_PASS_HYDRO}' PASSWORD EXPIRE INTERVAL 90 DAY;
+
+CREATE USER IF NOT EXISTS '${DB_USER_PASS}'@'localhost' IDENTIFIED BY '${DB_PASS_PASS}' PASSWORD EXPIRE INTERVAL 90 DAY;
+GRANT SELECT, INSERT, UPDATE, DELETE ON hydrosyn_db.* TO '${DB_USER_HYDRO}'@'localhost';
+GRANT INSERT ON users_db.* TO '${DB_USER_PASS}'@'localhost';
 
 FLUSH PRIVILEGES;
     
