@@ -150,9 +150,9 @@ FLUSH PRIVILEGES;
     
 EOF
 
-mysql -u root -p < user.sql
+mysql -u root -p"$MYSQL_ROOT_PASSWORD" < user.sql
 
-mysql -u root -p < hydrosyn_files/db.sql
+mysql -u root -p"$MYSQL_ROOT_PASSWORD" < hydrosyn_files/db.sql
 
 
 ins-paq mariadb-backup
