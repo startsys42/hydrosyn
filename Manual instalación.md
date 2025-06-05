@@ -16,4 +16,6 @@ Se recomienda implementar en el servidor las siguientes medidas de seguridad, si
 - Configuración de tecnología RAID
 
 Se recomienda implementar distintos usuarios y permisos para las distintas bases de datos si se tienen varias. Si solo se va a guardar esta, la lógica de permisos recae en la aplicación.
+Se recomeinda usar cifrado SSL/TLS si la base de datos va a permitir conexiones remotas y  estar en una ubicación distinta al servidor de la aplicación.
+
 
