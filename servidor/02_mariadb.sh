@@ -16,7 +16,11 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-
+ins-paq mariadb-plugin-cracklib-password-check
+if [ $? -ne 0 ]; then
+ 
+    exit 1
+fi
 
 
 #mysql_secure_installation
@@ -82,10 +86,31 @@ modify_param_in_mysqld() {
     sed -i "/^\[mysqld\]/a $param = $value" "$CONF_FILE"
   fi
 }
-
+# ======================
+# Configurar políticas de contraseña seguras
+# ======================
+modify_param_in_mysqld "plugin_load_add" "cracklib_password_check"
+modify_param_in_mysqld "validate_password.check_user_name" "ON"
+modify_param_in_mysqld "validate_password.special_char_count" "0"
+modify_param_in_mysqld "validate_password.mixed_case_count" "1"
+modify_param_in_mysqld "validate_password.number_count" "1"
+modify_param_in_mysqld "validate_password.length" "12"
+modify_param_in_mysqld "validate_password.policy" "LOW"
+modify_param_in_mysqld "plugin_load_add" "validate_password.so"
 # Usar función para bind-address y port
-modify_param_in_mysqld "bind-address" "127.0.0.1"
+
+
 modify_param_in_mysqld "port" "$DB_PORT"
+modify_param_in_mysqld "bind-address" "127.0.0.1"
+
+
+
+
+
+
+
+
+
 
 systemctl enable mariadb
 
@@ -99,7 +124,7 @@ echo -e "\e[32mMySQL asegurado correctamente.\e[0m"
 
 cat <<EOF > user.sql
 CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE  utf8mb4_bin;
-INSTALL SONAME 'validate_password';
+
 CREATE USER IF NOT EXISTS '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON hydrosyn_db.* TO '${DB_USER}'@'localhost';
