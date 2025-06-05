@@ -134,7 +134,7 @@ EOF
 
 # Cambiar propietario, grupo y permisos
 chown root:root /usr/local/bin/authorized_keys_filter.sh
-chmod 700 /usr/local/bin/authorized_keys_filter.sh
+chmod 755 /usr/local/bin/authorized_keys_filter.sh
 
 
 
@@ -171,7 +171,7 @@ fi
 
 ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N ""
 
-
+# Verificar que el servicio SSH esté corriendo
 systemctl enable ssh
 
 
@@ -180,7 +180,7 @@ systemctl start ssh
 
 
 
-# Verificar que el servicio SSH esté corriendo
+
 
 systemctl status ssh
 
