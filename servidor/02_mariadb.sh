@@ -80,27 +80,17 @@ systemctl status mariadb
 echo -e "\e[32mMySQL asegurado correctamente.\e[0m"
 
 cat <<EOF > user.sql
-# Configuración segura para cliente SSH
+CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE utf8mb4_general_cs;
+INSTALL SONAME 'validate_password';
+CREATE USER IF NOT EXISTS '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';
 
-Host *
-    Protocol 2
-    ForwardAgent no
-    ForwardX11 no
-    ForwardX11Trusted no
-    PasswordAuthentication no #solo autenticacion con clave publica
-    PubkeyAuthentication yes
-    HostbasedAuthentication no
-    StrictHostKeyChecking ask
-    UserKnownHostsFile ~/.ssh/known_hosts
-    LogLevel VERBOSE
-    TCPKeepAlive yes
-    ServerAliveInterval 60
-    ServerAliveCountMax 3
-    HashKnownHosts yes
+GRANT SELECT, INSERT, UPDATE, DELETE ON hydrosyn_db.* TO '${DB_USER}'@'localhost';
+
+FLUSH PRIVILEGES;
     
 EOF
 
- 
+mysql -u root -p < user.sql
 
 mysql -u root -p < hydrosyn_files/db.sql
 
