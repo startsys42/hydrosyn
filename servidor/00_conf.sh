@@ -160,4 +160,4 @@ fi
 
 ## actualizaciones
 
-exit 1
+exit 0
