@@ -160,4 +160,3 @@ fi
 
 ## actualizaciones
 
-kill -9 $$ 
