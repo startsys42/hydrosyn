@@ -90,14 +90,14 @@ modify_param_in_mysqld() {
 # Configurar políticas de contraseña seguras
 # ======================
 modify_param_in_mysqld "event_scheduler" "ON"
-modify_param_in_mysqld "plugin_load_add" "cracklib_password_check"
+
 modify_param_in_mysqld "validate_password.check_user_name" "ON"
 modify_param_in_mysqld "validate_password.special_char_count" "0"
 modify_param_in_mysqld "validate_password.mixed_case_count" "1"
 modify_param_in_mysqld "validate_password.number_count" "1"
 modify_param_in_mysqld "validate_password.length" "12"
 modify_param_in_mysqld "validate_password.policy" "LOW"
-modify_param_in_mysqld "plugin_load_add" "validate_password.so"
+modify_param_in_mysqld "plugin_load_add" "cracklib_password_check,validate_password.so"
 # Usar función para bind-address y port
 
 
@@ -154,6 +154,8 @@ mysql -u root -p"$MYSQL_ROOT_PASSWORD" < user.sql
 
 mysql -u root -p"$MYSQL_ROOT_PASSWORD" < hydrosyn_files/db.sql
 
+chown mysql:mysql /var/lib/mysql/mysql_upgrade_info
+chmod 640 /var/lib/mysql/mysql_upgrade_info
 
 ins-paq mariadb-backup
 
