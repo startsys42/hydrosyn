@@ -14,5 +14,6 @@ Se recomienda implementar en el servidor las siguientes medidas de seguridad, si
 - Bloquear el montar USBs, CDs... en el sistema operativo
 - Uso de particiones separadas
 - Configuración de tecnología RAID
-- 
+
+Se recomienda implementar distintos usuarios y permisos para las distintas bases de datos si se tienen varias. Si solo se va a guardar esta, la lógica de permisos recae en la aplicación.
 
