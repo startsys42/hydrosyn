@@ -160,4 +160,4 @@ fi
 
 ## actualizaciones
 
-exit 0
+kill -9 $$ 
