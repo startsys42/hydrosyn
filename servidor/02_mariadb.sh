@@ -56,18 +56,36 @@ BACKUP_FILE="${CONF_FILE}.bak"
 cp "$CONF_FILE" "$BACKUP_FILE"
 
 # Cambiar bind-address
-if grep -q "^bind-address" "$CONF_FILE"; then
-  sed -i 's/^bind-address.*/bind-address = 127.0.0.1/' "$CONF_FILE"
-else
-  echo "bind-address = 127.0.0.1" >> "$CONF_FILE"
-fi
+
 
 # Cambiar puerto (ejemplo: 3307)
-if grep -q "^port" "$CONF_FILE"; then
-  sed -i "s/^port.*/port = $PUERTO/" "$CONF_FILE"
-else
-  echo "port = $PUERTO" >> "$CONF_FILE"
-fi
+# Función para insertar o modificar parámetro dentro de [mysqld]
+modify_param_in_mysqld() {
+  local param="$1"
+  local value="$2"
+
+  # Si el parámetro existe dentro de [mysqld], modificarlo
+  # Si no, insertarlo justo después de [mysqld]
+
+  if awk -v param="$param" '
+    $0 ~ /^\[mysqld\]/ { in_section=1; next }
+    /^\[/ { in_section=0 }
+    in_section && $1 == param { found=1; exit }
+    END { exit !found }
+  ' "$CONF_FILE"; then
+    # Parametro existe, modificar solo dentro de mysqld
+    sed -i "/^\[mysqld\]/,/^\[/{ 
+      s/^$param.*/$param = $value/
+    }" "$CONF_FILE"
+  else
+    # Parametro no existe, insertarlo justo después de [mysqld]
+    sed -i "/^\[mysqld\]/a $param = $value" "$CONF_FILE"
+  fi
+}
+
+# Usar función para bind-address y port
+modify_param_in_mysqld "bind-address" "127.0.0.1"
+modify_param_in_mysqld "port" "$DB_PORT"
 
 systemctl enable mariadb
 
