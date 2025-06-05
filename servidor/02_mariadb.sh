@@ -78,6 +78,28 @@ systemctl status mariadb
 
 
 echo -e "\e[32mMySQL asegurado correctamente.\e[0m"
+
+cat <<EOF > user.sql
+# Configuración segura para cliente SSH
+
+Host *
+    Protocol 2
+    ForwardAgent no
+    ForwardX11 no
+    ForwardX11Trusted no
+    PasswordAuthentication no #solo autenticacion con clave publica
+    PubkeyAuthentication yes
+    HostbasedAuthentication no
+    StrictHostKeyChecking ask
+    UserKnownHostsFile ~/.ssh/known_hosts
+    LogLevel VERBOSE
+    TCPKeepAlive yes
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+    HashKnownHosts yes
+    
+EOF
+
  
 
 mysql -u root -p < hydrosyn_files/db.sql
