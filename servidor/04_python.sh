@@ -65,3 +65,6 @@ systemctl enable hydrosyn.service
 
 # Iniciar el servicio ahora mismo
 systemctl start hydrosyn.service
+
+
+#logs seguridad...
