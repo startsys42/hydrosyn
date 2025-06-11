@@ -4,7 +4,7 @@ USE hydrosyn_db;
 CREATE TABLE permissions (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL UNIQUE,  
-    description VARCHAR(150) NOT NULL)                    
+    description VARCHAR(150) NOT NULL                    
 );
 
 
