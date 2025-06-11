@@ -21,7 +21,7 @@ if [ $? -ne 0 ]; then
  
     exit 1
 fi
-
+adduser --system --no-create-home --group hydrosyn
 
 mkdir /opt/hydrosyn
 cd  /opt/hydrosyn
@@ -36,7 +36,8 @@ python3 -m venv venv
 /opt/aviso_e/venv/bin/pip install --upgrade pip
 /opt/aviso_e/venv/bin/pip install --upgrade google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
 mv /root/crd.json .
-
+chown root:root crd.json
+chmod 600 crd.json
 
 cat <<EOF > /etc/systemd/system/hydrosyn.service
 [Unit]
@@ -44,7 +45,8 @@ Description=FastAPI app Hydrosyn
 After=network.target
 
 [Service]
-User=tu_usuario
+User=hydrosyn
+Group=hydrosyn
 WorkingDirectory=/opt/hydrosyn
 ExecStart=/opt/hydrosyn/venv/bin/uvicorn main:app --host 0.0.0.0 --port $APP_PORT
 Restart=always
@@ -52,6 +54,9 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
+
+chown -R hydrosyn:hydrosyn /opt/hydrosyn
+chmod -R 750 /opt/hydrosyn
 
 # Cambiar propietario a root y permisos correctos
 chown root:root /etc/systemd/system/hydrosyn.service
