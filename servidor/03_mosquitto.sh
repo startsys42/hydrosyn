@@ -20,3 +20,5 @@ fi
  systemctl enable mosquitto
  systemctl start mosquitto
  systemctl status mosquitto
+
+ # falta logs, certificado autenticacion puerto si encesita firejail ,...config...
