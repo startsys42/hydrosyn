@@ -25,6 +25,7 @@ adduser --system --no-create-home --group hydrosyn
 
 mkdir /opt/hydrosyn
 cd  /opt/hydrosyn
+mv /root/hydrosyn_files/hydrosyn /opt/hydrosyn
 
 python3 -m venv venv
 /opt/hydrosyn/venv/bin/pip install --upgrade pip
@@ -35,7 +36,7 @@ cd  /opt/aviso_e
 python3 -m venv venv
 /opt/aviso_e/venv/bin/pip install --upgrade pip
 /opt/aviso_e/venv/bin/pip install --upgrade google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
-mv /root/hydrosyn/crd.json .
+mv /root/hydrosyn_files/crd.json .
 chown root:root crd.json
 chmod 600 crd.json
 
