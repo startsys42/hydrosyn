@@ -6,9 +6,8 @@ ins-pip() {
   local PAQUETE="$2"
 
   # Instalar el paquete (salida oculta)
-  "$PIP_BIN" install "$PAQUETE" > /dev/null 2>&1
-  # Instalar el paquete (salida oculta)
-  $PIP_BIN install "$PAQUETE" > /dev/null 2>&1
+  "$PIP_BIN" install --upgrade "$PAQUETE" > /dev/null 2>&1
+
 
   # Verificar si fue exitoso
   if [ $? -ne 0 ]; then
