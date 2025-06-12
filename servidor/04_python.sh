@@ -47,13 +47,13 @@ fi
 /opt/hydrosyn/venv/bin/pip install  mysql-connector-python
 
 mkdir -p /etc/hydrosyn
-touch /etc/hydrosyn/session_secret.shadow
-chown hydrosynuser:hydrosynuser /etc/hydrosyn/session.shadow
-chmod 600 /etc/hydrosyn/session_secret.shadow
+touch /etc/hydrosyn/session.shadow
+chown hydrosyN:hydrosyn /etc/hydrosyn/session.shadow
+chmod 600 /etc/hydrosyn/session.shadow
 
-touch /etc/hydrosyn/user_db_secret.shadow
-chown hydrosynuser:hydrosynuser /etc/hydrosyn/user_db_secret.shadow
-chmod 600 /etc/hydrosyn/user_db_secret.shadow
+touch /etc/hydrosyn/user_db.shadow
+chown hydrosyn:hydrosyn /etc/hydrosyn/user_db.shadow
+chmod 600 /etc/hydrosyn/user_db.shadow
 
 SALT=$(openssl rand -hex 8)
 
@@ -67,7 +67,7 @@ HASH=$(echo -n "$COMBO" | sha512sum | awk '{print $1}')
 TIMESTAMP=$(date +%s)
 
 # Guardar en archivo tipo shadow: hash:salt:timestamp
-echo "${HASH}:${SALT}:${TIMESTAMP}" > /etc/hydrosyn/user_db_secret.shadow
+echo "${HASH}:${SALT}:${TIMESTAMP}" > /etc/hydrosyn/user_db.shadow
 
 
 SALT=$(openssl rand -hex 8)
