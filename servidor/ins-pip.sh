@@ -10,7 +10,7 @@ ins-pip() {
 
   # Verificar si fue exitoso
   if [ $? -ne 0 ]; then
-    echo -e "\e[30;41m❌ Error: No se pudo instalar el paquete Python '$PAQUETE'.\e[0m"
+    echo -e "\e[30;41m Error: No se pudo instalar el paquete Python '$PAQUETE'.\e[0m"
     return 1
   fi
 }
