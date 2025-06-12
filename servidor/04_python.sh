@@ -28,23 +28,27 @@ cd  /opt/hydrosyn
 mv /root/hydrosyn_files/hydrosyn /opt/hydrosyn
 
 python3 -m venv venv
-/opt/hydrosyn/venv/bin/pip install --upgrade pip
-ins-pip fastapi 
+ins-pip $PIP_HYDROSYN pip
 if [ $? -ne 0 ]; then
  
     exit 1
 fi
-ins-pip uvicorn 
+ins-pip $PIP_HYDROSYN fastapi 
 if [ $? -ne 0 ]; then
  
     exit 1
 fi
-ins-pip jinja2
+ins-pip $PIP_HYDROSYN uvicorn 
 if [ $? -ne 0 ]; then
  
     exit 1
 fi
-/opt/hydrosyn/venv/bin/pip install  mysql-connector-python
+ins-pip $PIP_HYDROSYN jinja2
+if [ $? -ne 0 ]; then
+ 
+    exit 1
+fi
+
 
 mkdir -p /etc/hydrosyn
 touch /etc/hydrosyn/session.shadow
@@ -87,8 +91,24 @@ echo "${HASH}:${SALT}:${TIMESTAMP}" > /etc/hydrosyn/session.shadow
 mkdir /opt/aviso_e
 cd  /opt/aviso_e
 python3 -m venv venv
-/opt/aviso_e/venv/bin/pip install --upgrade pip
-/opt/aviso_e/venv/bin/pip install --upgrade google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
+
+paquetes=(
+  pip
+  google-auth
+  google-auth-oauthlib
+  google-auth-httplib2
+  google-api-python-client
+)
+
+for paquete in "${paquetes[@]}"; do
+  ins-pip "$PIP_EMAIL" "$paquete"
+  if [ $? -ne 0 ]; then
+
+    exit 1
+  fi
+done
+
+
 mv /root/hydrosyn_files/crd.json .
 chown root:root crd.json
 chmod 600 crd.json
