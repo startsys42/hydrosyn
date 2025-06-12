@@ -33,6 +33,42 @@ python3 -m venv venv
 
 /opt/hydrosyn/venv/bin/pip install  mysql-connector-python
 
+touch /etc/hydrosyn/session_secret.shadow
+chown hydrosynuser:hydrosynuser /etc/hydrosyn/session_secret.shadow
+chmod 600 /etc/hydrosyn/session_secret.shadow
+
+touch /etc/hydrosyn/user_db_secret.shadow
+chown hydrosynuser:hydrosynuser /etc/hydrosyn/user_db_secret.shadow
+chmod 600 /etc/hydrosyn/user_db_secret.shadow
+
+SALT=$(openssl rand -hex 8)
+
+# Concatenar password + salt
+COMBO="${DB_PASS_HYDRO}${SALT}"
+
+# Calcular hash SHA512
+HASH=$(echo -n "$COMBO" | sha512sum | awk '{print $1}')
+
+# Timestamp actual en segundos
+TIMESTAMP=$(date +%s)
+
+# Guardar en archivo tipo shadow: hash:salt:timestamp
+echo "${HASH}:${SALT}:${TIMESTAMP}" > /etc/hydrosyn/user_db_secret.shadow
+
+
+SALT=$(openssl rand -hex 8)
+
+# Concatenar password + salt
+COMBO="${PASS_COOKIE}${SALT}"
+
+# Calcular hash SHA512
+HASH=$(echo -n "$COMBO" | sha512sum | awk '{print $1}')
+
+# Timestamp actual en segundos
+TIMESTAMP=$(date +%s)
+
+# Guardar en archivo tipo shadow: hash:salt:timestamp
+echo "${HASH}:${SALT}:${TIMESTAMP}" > /etc/hydrosyn/session_secret.shadow
 
 mkdir /opt/aviso_e
 cd  /opt/aviso_e
