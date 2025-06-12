@@ -26,23 +26,41 @@ else
   exit 1
 fi
 
-# Leer script funciones
+# Leer script INS-PAQ
 
 if [[ -f /usr/local/bin/ins-paq ]]; then
   echo -e "\e[30;${COLOR_BG_PAR}mEl archivo /usr/local/bin/ins-paq ya existe. No se copia nada.\e[0m"
 else
-  if [[ -f "$FUNCIONES" ]]; then
-    cp "$FUNCIONES" /usr/local/bin/ins-paq
+  if [[ -f "$INS_PAQ" ]]; then
+    cp "$INS_PAQ" /usr/local/bin/ins-paq
     chown root:root /usr/local/bin/ins-paq
     chmod 755 /usr/local/bin/ins-paq
     echo -e "\e[30;${COLOR_BG_PAR}mFunciones copiadas a /usr/local/bin/ins-paq con permisos correctos\e[0m"
-    rm $FUNCIONES
+    rm $INS_PAQ
   else
-    echo -e "\e[30;41mArchivo de funciones $FUNCIONES no encontrado. No se pudo copiar.\e[0m"
+    echo -e "\e[30;41mArchivo de funciones $INS_PAQ no encontrado. No se pudo copiar.\e[0m"
     exit 1
   fi
 fi
 
+
+
+# Leer script INS-PIP
+
+if [[ -f /usr/local/bin/ins-pip ]]; then
+  echo -e "\e[30;${COLOR_BG_PAR}mEl archivo /usr/local/bin/ins-pip ya existe. No se copia nada.\e[0m"
+else
+  if [[ -f "$INS_PIP" ]]; then
+    cp "$INS_PIP" /usr/local/bin/ins-pip
+    chown root:root /usr/local/bin/ins-pip
+    chmod 755 /usr/local/bin/ins-pip
+    echo -e "\e[30;${COLOR_BG_PAR}mFunciones copiadas a /usr/local/bin/ins-pip con permisos correctos\e[0m"
+    rm $INS_PAQ
+  else
+    echo -e "\e[30;41mArchivo de funciones $INS_PAQ no encontrado. No se pudo copiar.\e[0m"
+    exit 1
+  fi
+fi
 
 
 
