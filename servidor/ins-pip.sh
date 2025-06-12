@@ -2,8 +2,10 @@
 
 # Función para instalar paquetes de Python
 ins-pip() {
-  local PIP_BIN="$1"
-  local PAQUETE="$2"
+    local PIP_BIN="$1"
+  shift
+  local PAQUETE="$1"
+
 
   # Instalar el paquete (salida oculta)
   "$PIP_BIN" install --upgrade "$PAQUETE" > /dev/null 2>&1
@@ -16,4 +18,5 @@ ins-pip() {
   fi
 }
 
-ins-pip "$1" "$2"
+
+ins-pip "$@"
