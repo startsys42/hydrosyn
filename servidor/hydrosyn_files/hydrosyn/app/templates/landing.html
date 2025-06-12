@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Landing</title>
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <form action="/login">
+            <button type="submit">{{ texts.login }}</button>
+        </form>
+        <form method="get" action="/">
+            <input type="hidden" name="lang" value="{{ next_lang }}">
+            <button type="submit">{{ texts.change_lang }}</button>
+        </form>
+        <form action="/forgot-password">
+            <button type="submit">{{ texts.forgot }}</button>
+        </form>
+        <form action="/signup">
+            <button type="submit">{{ texts.signup }}</button>
+        </form>
+    </div>
+</body>
+</html>
