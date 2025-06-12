@@ -14,17 +14,20 @@ def obtener_clave_secreta_de_shadow(ruta_fichero: str) -> str:
     with open(ruta_fichero, "r") as f:
         lines = f.readlines()
 
-    # Cada línea: username:$hash:timestamp
-    # Ejemplo: "user1:$6$salt$hashedpass:1686574800"
+  
+
+    # Cada línea: hash:salt:timestamp
+    # Ejemplo: "hashedpass:somesalt:1686574800"
     # Queremos la línea con el timestamp más alto
     ultima_linea = max(lines, key=lambda l: int(l.strip().split(":")[-1]))
     partes = ultima_linea.strip().split(":")
-    clave = partes[1]  # la parte cifrada (hash)
+    clave = partes[0]  # hash
     return clave
 
 
 # Aquí cargas la clave secreta **antes** de crear el app
-secret_key = obtener_clave_secreta_de_shadow("session.shadow")
+secret_key = obtener_clave_secreta_de_shadow("/etc/hydrosyn/session.shadow")
+
 
 app = FastAPI()
 
