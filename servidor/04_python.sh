@@ -23,9 +23,10 @@ if [ $? -ne 0 ]; then
 fi
 adduser --system --no-create-home --group hydrosyn
 
-mkdir /opt/hydrosyn
-cd  /opt/hydrosyn
-mv /root/hydrosyn_files/hydrosyn /opt/hydrosyn
+
+
+mv /root/hydrosyn_files/hydrosyn /opt/
+cd /opt/hydrosyn
 
 python3 -m venv venv
 ins-pip $PIP_HYDROSYN pip
