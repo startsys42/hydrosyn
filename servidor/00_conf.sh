@@ -41,7 +41,7 @@ else
     chown root:root /usr/local/bin/ins-pip
     chmod 755 /usr/local/bin/ins-pip
     echo -e "\e[30;${COLOR_BG_IMPAR}mFunciones copiadas a /usr/local/bin/ins-pip con permisos correctos\e[0m"
-    rm $INS_PAQ
+    rm $INS_PIP
   else
     echo -e "\e[30;41mArchivo de funciones $INS_PAQ no encontrado. No se pudo copiar.\e[0m"
     exit 1
