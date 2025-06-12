@@ -98,7 +98,7 @@ CREATE TABLE system_users (
 
     CONSTRAINT fk_su_system
         FOREIGN KEY (system_id)
-        REFERENCES sistemas(id)
+        REFERENCES systems(id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE,
 
