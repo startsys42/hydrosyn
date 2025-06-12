@@ -169,6 +169,7 @@ else
    "\e[30;42mNo se ha encontrado el archivo /etc/motd .\e[0m"
 fi
 
+rm -f /etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_rsa_key.pub
 ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N ""
 
 # Verificar que el servicio SSH esté corriendo
