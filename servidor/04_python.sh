@@ -29,26 +29,23 @@ mv /root/hydrosyn_files/hydrosyn /opt/
 cd /opt/hydrosyn
 
 python3 -m venv venv
-ins-pip $PIP_HYDROSYN pip
-if [ $? -ne 0 ]; then
- 
+
+
+
+paquetes=(
+  pip
+  fastapi
+  uvicorn
+  jinja2
+)
+
+for paquete in "${paquetes[@]}"; do
+  ins-pip "$PIP_HYDROSYN" "$paquete"
+  if [ $? -ne 0 ]; then
+
     exit 1
-fi
-ins-pip $PIP_HYDROSYN fastapi 
-if [ $? -ne 0 ]; then
- 
-    exit 1
-fi
-ins-pip $PIP_HYDROSYN uvicorn 
-if [ $? -ne 0 ]; then
- 
-    exit 1
-fi
-ins-pip $PIP_HYDROSYN jinja2
-if [ $? -ne 0 ]; then
- 
-    exit 1
-fi
+  fi
+done
 
 
 mkdir -p /etc/hydrosyn
