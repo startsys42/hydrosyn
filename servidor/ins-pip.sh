@@ -5,7 +5,9 @@ ins-pip() {
     local PIP_BIN="$1"
   shift
   local PAQUETE="$1"
-
+  # Mostrar las variables
+  echo "Usando pip en: $PIP_BIN"
+  echo "Instalando paquete: $PAQUETE"
 
   # Instalar el paquete (salida oculta)
   "$PIP_BIN" install --upgrade "$PAQUETE" > /dev/null 2>&1
