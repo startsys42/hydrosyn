@@ -30,7 +30,7 @@ MYSQL="$(which mysql)"
 
 # 1. Establecer contraseña de root (solo si es primera vez)
 $MYSQL -u root <<EOF
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$MYSQL_ROOT_PASSWORD';
+ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password USING PASSWORD('${MYSQL_ROOT_PASSWORD}');
 FLUSH PRIVILEGES;
 EOF
 
