@@ -52,7 +52,7 @@ fi
 
 mkdir -p /etc/hydrosyn
 touch /etc/hydrosyn/session.shadow
-chown hydrosyN:hydrosyn /etc/hydrosyn/session.shadow
+chown hydrosyn:hydrosyn /etc/hydrosyn/session.shadow
 chmod 600 /etc/hydrosyn/session.shadow
 
 touch /etc/hydrosyn/user_db.shadow
