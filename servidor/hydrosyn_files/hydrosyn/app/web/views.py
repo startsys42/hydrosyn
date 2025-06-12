@@ -1,13 +1,21 @@
 from fastapi import APIRouter, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
 
 router = APIRouter()
-templates = Jinja2Templates(directory="app/web/templates")
+templates = Jinja2Templates(directory="app/templates")  # apunta a la carpeta correcta
 
-@router.get("/dashboard", response_class=HTMLResponse)
-async def dashboard(request: Request):
-    user = request.session.get("user")
-    if not user:
-        return RedirectResponse("/login")
-    return templates.TemplateResponse("dashboard.html", {"request": request, "user": user})
+@router.get("/", response_class=HTMLResponse)
+async def landing(request: Request, lang: str = "en"):
+    texts = {
+        "login": "Login" if lang == "en" else "Iniciar sesión",
+        "change_lang": "Change language" if lang == "en" else "Cambiar idioma",
+        "forgot": "Recovery password" if lang == "en" else "Recuperar contraseña"
+    }
+    next_lang = "es" if lang == "en" else "en"
+    return templates.TemplateResponse("landing.html", {
+        "request": request,
+        "texts": texts,
+        "next_lang": next_lang,
+        "lang": lang
+    })
