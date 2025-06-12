@@ -33,6 +33,7 @@ python3 -m venv venv
 
 /opt/hydrosyn/venv/bin/pip install  mysql-connector-python
 
+mkdir -p /etc/hydrosyn
 touch /etc/hydrosyn/session_secret.shadow
 chown hydrosynuser:hydrosynuser /etc/hydrosyn/session.shadow
 chmod 600 /etc/hydrosyn/session_secret.shadow
