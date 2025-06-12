@@ -29,8 +29,21 @@ mv /root/hydrosyn_files/hydrosyn /opt/hydrosyn
 
 python3 -m venv venv
 /opt/hydrosyn/venv/bin/pip install --upgrade pip
-/opt/hydrosyn/venv/bin/pip install fastapi uvicorn jinja2
-
+ins-pip fastapi 
+if [ $? -ne 0 ]; then
+ 
+    exit 1
+fi
+ins-pip uvicorn 
+if [ $? -ne 0 ]; then
+ 
+    exit 1
+fi
+ins-pip jinja2
+if [ $? -ne 0 ]; then
+ 
+    exit 1
+fi
 /opt/hydrosyn/venv/bin/pip install  mysql-connector-python
 
 mkdir -p /etc/hydrosyn
