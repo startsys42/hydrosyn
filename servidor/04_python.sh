@@ -31,6 +31,9 @@ python3 -m venv venv
 /opt/hydrosyn/venv/bin/pip install --upgrade pip
 /opt/hydrosyn/venv/bin/pip install fastapi uvicorn jinja2
 
+/opt/hydrosyn/venv/bin/pip install  mysql-connector-python
+
+
 mkdir /opt/aviso_e
 cd  /opt/aviso_e
 python3 -m venv venv
