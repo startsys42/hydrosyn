@@ -9,6 +9,11 @@ export MARKER_INI="# === VARS_FROM_CONF_ENV ==="
 export MARKER_END="# === END_VARS_FROM_CONF_ENV ==="
 # Leer configuración desde archivo
 
+
+
+
+
+
 if [[ -f "$CONFIG_FILE" ]]; then
 source "$CONFIG_FILE"
   if ! grep -q "$MARKER_INI" "$BASHRC"; then
@@ -16,15 +21,34 @@ source "$CONFIG_FILE"
     echo -e "\n$MARKER_INI" && cat "$CONFIG_FILE" && echo -e "\n$MARKER_END"
   } >> "$BASHRC"
   
- echo -e "\e[30;${COLOR_BG_IMPAR}mVariables añadidas a $BASHRC\e[0m"
+ echo -e "\e[30;${COLOR_BG_PAR}mVariables añadidas a $BASHRC\e[0m"
 else
-echo -e "\e[30;${COLOR_BG_IMPAR}mLas variables ya están presentes en $BASHRC\e[0m"
+echo -e "\e[30;${COLOR_BG_PAR}mLas variables ya están presentes en $BASHRC\e[0m"
 fi
 source "$BASHRC"
 else
  echo -e "\e[30;41mArchivo de configuración $CONFIG_FILE no encontrado.\e[0m"
   exit 1
 fi
+
+# Leer script INS-PIP
+
+if [[ -f /usr/local/bin/ins-pip ]]; then
+  echo -e "\e[30;${COLOR_BG_IMPAR}mEl archivo /usr/local/bin/ins-pip ya existe. No se copia nada.\e[0m"
+else
+  if [[ -f "$INS_PIP" ]]; then
+    cp "$INS_PIP" /usr/local/bin/ins-pip
+    chown root:root /usr/local/bin/ins-pip
+    chmod 755 /usr/local/bin/ins-pip
+    echo -e "\e[30;${COLOR_BG_IMPAR}mFunciones copiadas a /usr/local/bin/ins-pip con permisos correctos\e[0m"
+    rm $INS_PAQ
+  else
+    echo -e "\e[30;41mArchivo de funciones $INS_PAQ no encontrado. No se pudo copiar.\e[0m"
+    exit 1
+  fi
+fi
+
+
 
 # Leer script INS-PAQ
 
@@ -44,23 +68,6 @@ else
 fi
 
 
-
-# Leer script INS-PIP
-
-if [[ -f /usr/local/bin/ins-pip ]]; then
-  echo -e "\e[30;${COLOR_BG_PAR}mEl archivo /usr/local/bin/ins-pip ya existe. No se copia nada.\e[0m"
-else
-  if [[ -f "$INS_PIP" ]]; then
-    cp "$INS_PIP" /usr/local/bin/ins-pip
-    chown root:root /usr/local/bin/ins-pip
-    chmod 755 /usr/local/bin/ins-pip
-    echo -e "\e[30;${COLOR_BG_PAR}mFunciones copiadas a /usr/local/bin/ins-pip con permisos correctos\e[0m"
-    rm $INS_PAQ
-  else
-    echo -e "\e[30;41mArchivo de funciones $INS_PAQ no encontrado. No se pudo copiar.\e[0m"
-    exit 1
-  fi
-fi
 
 
 
