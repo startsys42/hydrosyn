@@ -15,7 +15,7 @@ app.add_middleware(SessionMiddleware, secret_key="UNA_CLAVE_SECRETA_Y_LARGA")
 
 # 2) Montar carpeta de archivos estáticos y plantillas (clientes web)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
-templates = Jinja2Templates(directory="app/web/templates")
+templates = Jinja2Templates(directory="app/templates")
 
 # 3) Rutas Web (HTML + sesiones)
 #    - web_auth.router: login, logout, formulario, etc.
