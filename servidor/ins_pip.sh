@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Función para instalar paquetes de Python
-ins-pip() {
+ins_pip() {
     local PIP_BIN="$1"
   shift
   local PAQUETE="$1"
@@ -21,4 +21,4 @@ ins-pip() {
 }
 
 
-ins-pip "$@"
+ins_pip "$@"
