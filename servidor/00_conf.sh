@@ -31,16 +31,16 @@ else
   exit 1
 fi
 
-# Leer script INS-PIP
+# Leer script INS_PIP
 
-if [[ -f /usr/local/bin/ins-pip ]]; then
-  echo -e "\e[30;${COLOR_BG_IMPAR}mEl archivo /usr/local/bin/ins-pip ya existe. No se copia nada.\e[0m"
+if [[ -f /usr/local/bin/ins_pip ]]; then
+  echo -e "\e[30;${COLOR_BG_IMPAR}mEl archivo /usr/local/bin/ins_pip ya existe. No se copia nada.\e[0m"
 else
   if [[ -f "$INS_PIP" ]]; then
-    cp "$INS_PIP" /usr/local/bin/ins-pip
-    chown root:root /usr/local/bin/ins-pip
-    chmod 755 /usr/local/bin/ins-pip
-    echo -e "\e[30;${COLOR_BG_IMPAR}mFunciones copiadas a /usr/local/bin/ins-pip con permisos correctos\e[0m"
+    cp "$INS_PIP" /usr/local/bin/ins_pip
+    chown root:root /usr/local/bin/ins_pip
+    chmod 755 /usr/local/bin/ins_pip
+    echo -e "\e[30;${COLOR_BG_IMPAR}mFunciones copiadas a /usr/local/bin/ins_pip con permisos correctos\e[0m"
     rm $INS_PIP
   else
     echo -e "\e[30;41mArchivo de funciones $INS_PIP no encontrado. No se pudo copiar.\e[0m"
@@ -50,16 +50,16 @@ fi
 
 
 
-# Leer script INS-PAQ
+# Leer script INS_PAQ
 
-if [[ -f /usr/local/bin/ins-paq ]]; then
-  echo -e "\e[30;${COLOR_BG_PAR}mEl archivo /usr/local/bin/ins-paq ya existe. No se copia nada.\e[0m"
+if [[ -f /usr/local/bin/ins_paq ]]; then
+  echo -e "\e[30;${COLOR_BG_PAR}mEl archivo /usr/local/bin/ins_paq ya existe. No se copia nada.\e[0m"
 else
   if [[ -f "$INS_PAQ" ]]; then
-    cp "$INS_PAQ" /usr/local/bin/ins-paq
-    chown root:root /usr/local/bin/ins-paq
-    chmod 755 /usr/local/bin/ins-paq
-    echo -e "\e[30;${COLOR_BG_PAR}mFunciones copiadas a /usr/local/bin/ins-paq con permisos correctos\e[0m"
+    cp "$INS_PAQ" /usr/local/bin/ins_paq
+    chown root:root /usr/local/bin/ins_paq
+    chmod 755 /usr/local/bin/ins_paq
+    echo -e "\e[30;${COLOR_BG_PAR}mFunciones copiadas a /usr/local/bin/ins_paq con permisos correctos\e[0m"
     rm $INS_PAQ
   else
     echo -e "\e[30;41mArchivo de funciones $INS_PAQ no encontrado. No se pudo copiar.\e[0m"
@@ -76,7 +76,7 @@ fi
 #Idioma y hora
 
 
-ins-paq locales
+ins_paq locales
 if [ $? -ne 0 ]; then
  
     exit 1
