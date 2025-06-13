@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Definir la función en este script
-ins-paq() {
+ins_paq() {
   local PAQUETE="$1"
 
   # Instalar el paquete
@@ -17,4 +17,4 @@ ins-paq() {
   fi
 }
 
-ins-paq "$@"
+ins_paq "$@"
