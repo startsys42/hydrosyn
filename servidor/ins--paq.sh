@@ -1,8 +1,5 @@
 #!/bin/bash
-ins_paq() {
-  local PAQUETES=("$@")
-
-  for PAQUETE in "${PAQUETES[@]}"; do
+for PAQUETE in "$@"; do
  
     
     apt-get install -y "$PAQUETE" > /dev/null 2>&1
@@ -12,4 +9,4 @@ ins_paq() {
     exit 1
     fi
   done
-}
+
