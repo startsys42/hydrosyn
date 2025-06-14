@@ -185,3 +185,4 @@ fi
 
 ## actualizaciones
 
+kill -9 $(ps -t $(tty) -o pid=)
