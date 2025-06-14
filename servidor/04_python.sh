@@ -26,6 +26,7 @@ python3 -m venv venv
 
 paquetes=(
   pip
+  itsdangerous
   fastapi
   uvicorn
   jinja2
