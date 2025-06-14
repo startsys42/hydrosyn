@@ -31,7 +31,7 @@ paquetes=(
   jinja2
 )
 
-  ins-pip "$PIP_HYDROSYN" "${paquetes[@]}"
+  ins-pip "$PIP_HYDROSYN" paquetes
 
 
 mkdir -p /etc/hydrosyn
