@@ -40,6 +40,17 @@ app.add_middleware(SessionMiddleware, secret_key=secret_key)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
+
+# --- NUEVA RUTA PARA EL MENÚ INICIAL ---
+# Esta ruta se encargará de mostrar la página principal con los botones de acceso.
+@app.get("/")
+async def read_root(request: Request):
+    # Renderiza la plantilla 'landing.html'
+    return templates.TemplateResponse("landing.html", {"request": request})
+# -------------------------------------
+
+
+
 # 3) Rutas Web (HTML + sesiones)
 #    - web_auth.router: login, logout, formulario, etc.
 #    - web_views.router: páginas protegidas (home, dashboard, etc.)
