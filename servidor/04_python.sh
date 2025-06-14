@@ -1,26 +1,17 @@
 #!/bin/bash
-
+set -e
 #crear solo usuario especial para la app
 COLOR_BG_IMPAR="46"
 COLOR_BG_PAR="43"
 
 ins-paq python3
-if [ $? -ne 0 ]; then
- 
-    exit 1
-fi
+
 
 ins-paq python3-pip
-if [ $? -ne 0 ]; then
- 
-    exit 1
-fi
+
 
 ins-paq python3-venv
-if [ $? -ne 0 ]; then
- 
-    exit 1
-fi
+
 adduser --system --no-create-home --group hydrosyn
 
 mkdir /opt/hydrosyn
@@ -40,13 +31,7 @@ paquetes=(
   jinja2
 )
 
-for paquete in "${paquetes[@]}"; do
-  ins-pip "$PIP_HYDROSYN" "$paquete"
-  if [ $? -ne 0 ]; then
-
-    exit 1
-  fi
-done
+  ins-pip "$PIP_HYDROSYN" "$paquetes"
 
 
 mkdir -p /etc/hydrosyn
@@ -99,13 +84,7 @@ paquetes=(
   google-api-python-client
 )
 
-for paquete in "${paquetes[@]}"; do
-  ins-pip "$PIP_EMAIL" "$paquete"
-  if [ $? -ne 0 ]; then
-
-    exit 1
-  fi
-done
+  ins-pip "$PIP_HYDROSYN" "$paquetes"
 
 
 mv /root/hydrosyn_files/crd.json .
