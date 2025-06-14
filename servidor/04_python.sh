@@ -85,7 +85,7 @@ paquetes=(
   google-api-python-client
 )
 
-  ins-pip "$PIP_HYDROSYN" "${paquetes[@]}"
+  ins-pip "$PIP_EMAIL" "${paquetes[@]}"
 
 
 mv /root/hydrosyn_files/crd.json .
