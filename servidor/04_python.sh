@@ -31,7 +31,7 @@ paquetes=(
   jinja2
 )
 
-  ins-pip "$PIP_HYDROSYN" "$paquetes"
+  ins-pip "$PIP_HYDROSYN" "${paquetes[@]}"
 
 
 mkdir -p /etc/hydrosyn
@@ -85,7 +85,7 @@ paquetes=(
   google-api-python-client
 )
 
-  ins-pip "$PIP_HYDROSYN" "$paquetes"
+  ins-pip "$PIP_HYDROSYN" "${paquetes[@]}"
 
 
 mv /root/hydrosyn_files/crd.json .
