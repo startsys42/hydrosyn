@@ -14,10 +14,10 @@ ins-paq python3-venv
 
 adduser --system --no-create-home --group hydrosyn
 
-mkdir /opt/hydrosyn
 
 
-mv /root/hydrosyn_files/hydrosyn /opt/hydrosyn
+
+mv /root/hydrosyn_files/hydrosyn /opt/
 cd /opt/hydrosyn
 
 python3 -m venv venv
@@ -35,13 +35,7 @@ paquetes=(
 
 
 mkdir -p /etc/hydrosyn
-touch /etc/hydrosyn/session.shadow
-chown hydrosyn:hydrosyn /etc/hydrosyn/session.shadow
-chmod 600 /etc/hydrosyn/session.shadow
 
-touch /etc/hydrosyn/user_db.shadow
-chown hydrosyn:hydrosyn /etc/hydrosyn/user_db.shadow
-chmod 600 /etc/hydrosyn/user_db.shadow
 
 SALT=$(openssl rand -hex 8)
 
@@ -71,6 +65,13 @@ TIMESTAMP=$(date +%s)
 
 # Guardar en archivo tipo shadow: hash:salt:timestamp
 echo "${HASH}:${SALT}:${TIMESTAMP}" > /etc/hydrosyn/session.shadow
+
+chown hydrosyn:hydrosyn /etc/hydrosyn/session.shadow
+chmod 600 /etc/hydrosyn/session.shadow
+
+
+chown hydrosyn:hydrosyn /etc/hydrosyn/user_db.shadow
+chmod 600 /etc/hydrosyn/user_db.shadow
 
 mkdir /opt/aviso_e
 cd  /opt/aviso_e
@@ -123,5 +124,5 @@ systemctl enable hydrosyn.service
 # Iniciar el servicio ahora mismo
 systemctl start hydrosyn.service
 
-
+#el propietario de aviso_e y etc hydrosyn debe ser root  ,para paliar vulnerabilidades de escritutra
 #logs seguridad...
