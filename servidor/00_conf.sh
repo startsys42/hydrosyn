@@ -110,7 +110,7 @@ fi
 timedatectl set-ntp true
 
 
-sleep 2  # esperar un poco a que se sincronice
+sleep 20  # esperar un poco a que se sincronice
 
 # Verificar NTP habilitado y sincronizado
 NTP_ENABLED=$(timedatectl show -p NTP --value)
