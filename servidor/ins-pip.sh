@@ -24,7 +24,7 @@ fi
 for PAQUETE in "${paquetes[@]}"; do
 
 
-  "$PIP_BIN" install --upgrade "$PAQUETE" > /dev/null 2>&1
+  "$PIP_BIN" install --upgrade "$PAQUETE" #> /dev/null 2>&1
 
   if [[ $? -ne 0 ]]; then
     echo -e "\e[30;41m Error: No se pudo instalar el paquete Python '$PAQUETE'.\e[0m"
