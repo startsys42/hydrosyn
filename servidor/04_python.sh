@@ -31,6 +31,7 @@ paquetes=(
   uvicorn
   jinja2
   python-jose
+  python-multipart
 )
 
   ins-pip "$PIP_HYDROSYN" "${paquetes[@]}"
