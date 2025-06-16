@@ -30,6 +30,7 @@ paquetes=(
   fastapi
   uvicorn
   jinja2
+  python-jose
 )
 
   ins-pip "$PIP_HYDROSYN" "${paquetes[@]}"
