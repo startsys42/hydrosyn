@@ -1,23 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ next_lang }}">
 <head>
     <meta charset="UTF-8">
-    <title>Hydrosyn</title>
+    <title>{{ texts.title }}</title>
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
-<body>
-  <div class="button-container">
+<body class="{{ theme }}-theme">
+    <h1>{{ texts.title }}</h1>
+
+    <div class="button-container">
+    
+        <!-- Botón para cambiar tema, recarga con nuevo tema -->
+        <form method="get" action="/">
+            <input type="hidden" name="theme" value="{{ next_theme }}">
+            <input type="hidden" name="lang" value="{{ lang }}">
+            <button type="submit">{{ texts.change_theme }}</button>
+        </form>
+
+        <!-- Botón para cambiar idioma, recarga con nuevo idioma -->
+        <form method="get" action="/">
+            <input type="hidden" name="lang" value="{{ next_lang }}">
+            <input type="hidden" name="theme" value="{{ theme }}">
+            <button type="submit">{{ texts.change_lang }}</button>
+        </form>
+
+            <!-- Botón para iniciar sesión (redirige a /login) -->
         <form action="/login">
             <button type="submit">{{ texts.login }}</button>
         </form>
-        <form method="get" action="/">
-            <input type="hidden" name="lang" value="{{ next_lang }}">
-            <button type="submit">{{ texts.change_lang }}</button>
-        </form>
+
+
+        <!-- Botón para recuperar contraseña (redirige a /forgot-password) -->
         <form action="/forgot-password">
             <button type="submit">{{ texts.forgot }}</button>
         </form>
-    </div>
     </div>
 </body>
 </html>
