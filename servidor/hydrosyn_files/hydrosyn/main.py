@@ -61,11 +61,19 @@ LANGS = {
 }
 allowed_langs = ["es", "en"]
 allowed_themes = ["light", "dark"]
+allowed_params = {"lang", "theme"}
 
 # --- NUEVA RUTA PARA EL MENÚ INICIAL ---
 # Esta ruta se encargará de mostrar la página principal con los botones de acceso.
 @app.get("/")
 async def welcome(request: Request):
+    # Validar que no haya parámetros desconocidos
+    for param in request.query_params.keys():
+        if param not in allowed_params:
+            # Puedes registrar, ignorar o devolver error. Aquí devolvemos 400.
+            from fastapi.responses import PlainTextResponse
+            return PlainTextResponse(f"Parámetro no permitido: {param}", status_code=400)
+
     # Leer idioma y tema de query params o sesión
     lang = request.query_params.get("lang") or request.session.get("lang") or "es"
     theme = request.query_params.get("theme") or request.session.get("theme") or "light"
