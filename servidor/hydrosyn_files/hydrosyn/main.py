@@ -69,9 +69,9 @@ async def welcome(request: Request):
     # Leer idioma y tema de query params o sesión
     lang = request.query_params.get("lang") or request.session.get("lang") or "es"
     theme = request.query_params.get("theme") or request.session.get("theme") or "light"
-     if lang not in allowed_langs:
+    if lang not in allowed_langs:
         lang = request.session.get("lang") or "es"
-     if theme not in allowed_themes:
+    if theme not in allowed_themes:
         theme = request.session.get("theme") or "light"
     # Guardar en sesión
     request.session["lang"] = lang
