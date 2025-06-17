@@ -47,8 +47,8 @@ templates = Jinja2Templates(directory="app/templates")
 # Esta ruta se encargará de mostrar la página principal con los botones de acceso.
 @app.get("/")
 async def read_root(request: Request):
-    # Renderiza la plantilla 'landing.html'
-    return templates.TemplateResponse("landing.html", {"request": request})
+    # Renderiza la plantilla 'welcome.html'
+    return templates.TemplateResponse("welcome.html", {"request": request})
 # -------------------------------------
 
 
