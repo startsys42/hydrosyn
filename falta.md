@@ -1,5 +1,5 @@
 
-# confif
+# config
 
 ##ssh
 
