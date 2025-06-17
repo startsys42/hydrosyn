@@ -43,12 +43,52 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
 
+LANGS = {
+    "es": {
+        "title": "¡Bienvenid@!",
+        "login": "Iniciar sesión",
+        "change_lang": "Cambiar idioma",
+        "change_theme": "Cambiar tema",
+        "forgot": "Recuperar contraseña",
+    },
+    "en": {
+        "title": "Welcome!",
+        "login": "Login",
+        "change_lang": "Change language",
+        "change_theme": "Change theme",
+        "forgot": "Recover password",
+    }
+}
+allowed_langs = ["es", "en"]
+allowed_themes = ["light", "dark"]
+
 # --- NUEVA RUTA PARA EL MENÚ INICIAL ---
 # Esta ruta se encargará de mostrar la página principal con los botones de acceso.
 @app.get("/")
-async def read_root(request: Request):
-    # Renderiza la plantilla 'welcome.html'
-    return templates.TemplateResponse("welcome.html", {"request": request})
+async def welcome(request: Request):
+    # Leer idioma y tema de query params o sesión
+    lang = request.query_params.get("lang") or request.session.get("lang") or "es"
+    theme = request.query_params.get("theme") or request.session.get("theme") or "light"
+     if lang not in allowed_langs:
+        lang = request.session.get("lang") or "es"
+     if theme not in allowed_themes:
+        theme = request.session.get("theme") or "light"
+    # Guardar en sesión
+    request.session["lang"] = lang
+    request.session["theme"] = theme
+
+    next_lang = "en" if lang == "es" else "es"
+    next_theme = "dark" if theme == "light" else "light"
+
+    texts = LANGS.get(lang, LANGS["es"])
+
+    return templates.TemplateResponse("welcome.html", {
+        "request": request,
+        "texts": texts,
+        "next_lang": next_lang,
+        "theme": theme,
+        "next_theme": next_theme
+    })
 # -------------------------------------
 
 
