@@ -6,7 +6,7 @@ router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")  # apunta a la carpeta correcta
 
 @router.get("/", response_class=HTMLResponse)
-async def landing(request: Request, lang: str = "en"):
+async def welcome(request: Request, lang: str = "en"):
     texts = {
         "login": "Login" if lang == "en" else "Iniciar sesión",
         "change_lang": "Change language" if lang == "en" else "Cambiar idioma",
