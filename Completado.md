@@ -8,3 +8,5 @@
 
 
 ## Seguridad
+
+- [x] desactivar avahi
