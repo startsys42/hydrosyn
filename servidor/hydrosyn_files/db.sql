@@ -153,7 +153,7 @@ CREATE TABLE user_roles_history (
         ON UPDATE CASCADE,
         
     FOREIGN KEY (changed_by) REFERENCES users(id)
-        ON DELETE SET NULL -- en caso de que se elimine el usuario que hizo el cambio
+        ON DELETE RESTRICT
         ON UPDATE CASCADE
 );
 
