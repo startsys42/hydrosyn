@@ -117,12 +117,12 @@
 - [ ] linuxgms
 - [ ] aapnel
 
-- [ ] ngios
+
 - [ ] influxdb
-- [ ] node red
+
 - [ ] cacti
-- [ ] centreon
-- [ ] zabbix
+
+
 - [ ] logstash
 
 - [ ] check mk
