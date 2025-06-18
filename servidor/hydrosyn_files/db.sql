@@ -3,9 +3,41 @@ USE hydrosyn_db;
 
 CREATE TABLE permissions (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL UNIQUE,  
-    description VARCHAR(150) NOT NULL                    
+                 
 );
+
+CREATE TABLE permission_translations (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    permission_id INT NOT NULL,
+    lang_code ENUM('es', 'en') NOT NULL,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    description VARCHAR(250) NOT NULL UNIQUE,
+
+    FOREIGN KEY (permission_id) REFERENCES permissions(id)
+        ON DELETE RESTRICT
+        ON UPDATE RESTRICT,
+
+    UNIQUE (permission_id, lang_code)
+);
+
+CREATE TABLE roles (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL UNIQUE,
+ 
+);
+
+CREATE TABLE role_permissions (
+    role_id INT NOT NULL,
+    permission_id INT NOT NULL,
+    PRIMARY KEY (role_id, permission_id),
+    FOREIGN KEY (role_id) REFERENCES roles(id)
+        ON DELETE RESTRICT
+        ON UPDATE RESTRICT,
+    FOREIGN KEY (permission_id) REFERENCES permissions(id)
+        ON DELETE RESTRICT
+        ON UPDATE RESTRICT
+);
+
 
 
 
@@ -27,6 +59,108 @@ CREATE TABLE users (
         ON UPDATE CASCADE
 );
 
+CREATE TABLE user_roles (
+    user_id INT NOT NULL,
+    role_id INT NOT NULL,
+    PRIMARY KEY (user_id, role_id),
+    CONSTRAINT fk_user
+        FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    CONSTRAINT fk_role
+        FOREIGN KEY (role_id) REFERENCES roles(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+); 
+
+
+
+
+
+/*
+
+*/
+
+
+-- Inserta permisos (solo el id se genera)
+INSERT INTO permissions () VALUES ();
+INSERT INTO permissions () VALUES ();
+INSERT INTO permissions () VALUES ();
+INSERT INTO permissions () VALUES ();
+INSERT INTO permissions () VALUES ();
+INSERT INTO permissions () VALUES ();
+INSERT INTO permissions () VALUES ();
+
+-- Ahora insertamos las traducciones con sus permission_id generados
+-- Para saber los ids, usa LAST_INSERT_ID() o selecciona con SELECT id FROM permissions;
+
+-- Supongamos que los ids son del 1 al 7 para cada permiso:
+
+-- 1. Crear usuario
+INSERT INTO permission_translations (permission_id, lang_code, name, description) VALUES
+(1, 'es', 'Crear usuario', 'Permite crear un nuevo usuario'),
+(1, 'en', 'Create User', 'Allows creating a new user');
+
+-- 2. Desactivar usuario
+INSERT INTO permission_translations (permission_id, lang_code, name, description) VALUES
+(2, 'es', 'Desactivar usuario', 'Permite desactivar un usuario'),
+(2, 'en', 'Deactivate User', 'Allows deactivating a user');
+
+-- 3. Activar usuario
+INSERT INTO permission_translations (permission_id, lang_code, name, description) VALUES
+(3, 'es', 'Activar usuario', 'Permite activar un usuario'),
+(3, 'en', 'Activate User', 'Allows activating a user');
+
+-- 4. Borrar usuario
+INSERT INTO permission_translations (permission_id, lang_code, name, description) VALUES
+(4, 'es', 'Borrar usuario', 'Permite eliminar un usuario'),
+(4, 'en', 'Delete User', 'Allows deleting a user');
+
+-- 5. Crear roles
+INSERT INTO permission_translations (permission_id, lang_code, name, description) VALUES
+(5, 'es', 'Crear roles', 'Permite crear nuevos roles'),
+(5, 'en', 'Create Roles', 'Allows creating new roles');
+
+-- 6. Borrar roles
+INSERT INTO permission_translations (permission_id, lang_code, name, description) VALUES
+(6, 'es', 'Borrar roles', 'Permite eliminar roles'),
+(6, 'en', 'Delete Roles', 'Allows deleting roles');
+
+-- 7. Asignar roles
+INSERT INTO permission_translations (permission_id, lang_code, name, description) VALUES
+(7, 'es', 'Asignar roles', 'Permite asignar roles a usuarios'),
+(7, 'en', 'Assign Roles', 'Allows assigning roles to users');
+
+-- 8. Modificar roles
+INSERT INTO permission_translations (permission_id, lang_code, name, description) VALUES
+(8, 'es', 'Modificar roles', 'Permite modificar roles existentes'),
+(8, 'en', 'Modify Roles', 'Allows modifying existing roles');
+
+INSERT INTO roles (name) VALUES ('master');
+
+CREATE TABLE user_roles_history (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    role_id INT NOT NULL,
+    action ENUM('assigned', 'removed') NOT NULL,
+    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    changed_by INT, -- Usuario que hizo el cambio
+    
+    FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+        
+    FOREIGN KEY (role_id) REFERENCES roles(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+        
+    FOREIGN KEY (changed_by) REFERENCES users(id)
+        ON DELETE SET NULL -- en caso de que se elimine el usuario que hizo el cambio
+        ON UPDATE CASCADE
+);
+
+
+/*
 CREATE TABLE user_permissions (
     user_id INT NOT NULL,
     permission_id INT NOT NULL,
@@ -36,7 +170,7 @@ CREATE TABLE user_permissions (
     FOREIGN KEY (permission_id) REFERENCES permissions(id) ON DELETE CASCADE
 );
 
-
+*/
 CREATE TABLE systems (
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     system_name VARCHAR(100) NOT NULL UNIQUE,
@@ -183,3 +317,37 @@ CREATE TABLE user_sessions (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (revoked_by) REFERENCES users(id) ON DELETE SET NULL
 );
+
+
+-- Bloqueo para la tabla permissions
+CREATE TRIGGER bloqueo_update_permissions
+BEFORE UPDATE ON permissions
+FOR EACH ROW
+SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Modification of the permissions table is prohibited';
+
+CREATE TRIGGER bloqueo_delete_permissions
+BEFORE DELETE ON permissions
+FOR EACH ROW
+SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Deletion from the permissions table is prohibited';
+
+CREATE TRIGGER bloqueo_insert_permissions
+BEFORE INSERT ON permissions
+FOR EACH ROW
+SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Insertion into the permissions table is prohibited';
+
+-- Bloqueo para la tabla permission_translations
+CREATE TRIGGER bloqueo_update_permission_translations
+BEFORE UPDATE ON permission_translations
+FOR EACH ROW
+SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Modification of the permission_translations table is prohibited';
+
+CREATE TRIGGER bloqueo_delete_permission_translations
+BEFORE DELETE ON permission_translations
+FOR EACH ROW
+SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Deletion from the permission_translations table is prohibited';
+
+CREATE TRIGGER bloqueo_insert_permission_translations
+BEFORE INSERT ON permission_translations
+FOR EACH ROW
+SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Insertion into the permission_translations table is prohibited';
+
