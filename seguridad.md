@@ -140,6 +140,13 @@
 - [ ] politica contraseñas
 - [ ] systemd
 
+- [ ] proxie
+- [ ] vpn
+- [ ] cdn
+- [ ] ipsec
+- [ ] firewall
+
+
 
 ---
 
