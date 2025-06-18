@@ -15,6 +15,8 @@
 
 ##mariadb
 
+- [  ] regex en los campos varchar
+
 #mosquito
 
 ##python
