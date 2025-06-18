@@ -3,6 +3,8 @@
 
 - [x] repositorios
 - [x] fecha y hora
-- [x] nuemro nucleos
+- [x] numero nucleos
+- [x] nombre equipo
+
 
 ## Seguridad
