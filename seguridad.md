@@ -1,8 +1,6 @@
-- telnet
-- comandos remotos
 
-- cuotas
-- particiones
+
+
 - correo encender servidor
 - el script de envio de mensajes email debe generarlogs
 - acls
