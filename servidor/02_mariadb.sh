@@ -11,7 +11,7 @@ ins-paq mariadb-client
 
 ins-paq mariadb-plugin-cracklib-password-check
 
-ins-paq bcrypt
+ins-paq python3-bcrypt
 
 
 #mysql_secure_installation
