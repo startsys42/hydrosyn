@@ -10,3 +10,6 @@
 ## Seguridad
 
 - [x] desactivar avahi
+- [X] kibana (DESCARTADO)
+- [X] elastic search (DESCARTADO)
+- [X] opensearch (DESCARTADO)
