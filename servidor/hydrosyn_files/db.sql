@@ -47,11 +47,16 @@ CREATE TABLE users (
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    was_actived BOOLEAN NOT NULL DEFAULT FALSE,
+email_verified BOOLEAN NOT NULL DEFAULT FALSE, -- ¿Verificó el email vía link?
+
+    email_verification_token VARCHAR(255),   -- Token único para verificar email
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by INT NOT NULL,
      language ENUM('es', 'en') NOT NULL DEFAULT 'en',
     theme ENUM('dark', 'light') NOT NULL DEFAULT 'light',
+    use_2fa BOOLEAN NOT NULL DEFAULT FALSE,
+    twofa_secret VARCHAR(64)
+
     CONSTRAINT fk_user_creator
         FOREIGN KEY (created_by)
         REFERENCES users(id)
@@ -83,58 +88,51 @@ CREATE TABLE user_roles (
 
 
 -- Inserta permisos (solo el id se genera)
-INSERT INTO permissions () VALUES ();
-INSERT INTO permissions () VALUES ();
-INSERT INTO permissions () VALUES ();
-INSERT INTO permissions () VALUES ();
-INSERT INTO permissions () VALUES ();
-INSERT INTO permissions () VALUES ();
-INSERT INTO permissions () VALUES ();
+INSERT INTO permissions () VALUES (); -- 1
+INSERT INTO permissions () VALUES (); -- 2
+INSERT INTO permissions () VALUES (); -- 3
+INSERT INTO permissions () VALUES (); -- 4
+INSERT INTO permissions () VALUES (); -- 5
+INSERT INTO permissions () VALUES (); -- 6
+INSERT INTO permissions () VALUES (); -- 7
+INSERT INTO permissions () VALUES (); -- 8
 
 -- Ahora insertamos las traducciones con sus permission_id generados
--- Para saber los ids, usa LAST_INSERT_ID() o selecciona con SELECT id FROM permissions;
-
--- Supongamos que los ids son del 1 al 7 para cada permiso:
 
 -- 1. Crear usuario
 INSERT INTO permission_translations (permission_id, lang_code, name, description) VALUES
 (1, 'es', 'Crear usuario', 'Permite crear un nuevo usuario'),
 (1, 'en', 'Create User', 'Allows creating a new user');
 
--- 2. Desactivar usuario
+-- 2. Activar / Desactivar usuario
 INSERT INTO permission_translations (permission_id, lang_code, name, description) VALUES
-(2, 'es', 'Desactivar usuario', 'Permite desactivar un usuario'),
-(2, 'en', 'Deactivate User', 'Allows deactivating a user');
+(2, 'es', 'Activar o desactivar usuario', 'Permite activar o desactivar un usuario'),
+(2, 'en', 'Activate or Deactivate User', 'Allows activating or deactivating a user');
 
--- 3. Activar usuario
+-- 3. Borrar usuario
 INSERT INTO permission_translations (permission_id, lang_code, name, description) VALUES
-(3, 'es', 'Activar usuario', 'Permite activar un usuario'),
-(3, 'en', 'Activate User', 'Allows activating a user');
+(3, 'es', 'Borrar usuario', 'Permite eliminar un usuario'),
+(3, 'en', 'Delete User', 'Allows deleting a user');
 
--- 4. Borrar usuario
+-- 4. Crear roles
 INSERT INTO permission_translations (permission_id, lang_code, name, description) VALUES
-(4, 'es', 'Borrar usuario', 'Permite eliminar un usuario'),
-(4, 'en', 'Delete User', 'Allows deleting a user');
+(4, 'es', 'Crear roles', 'Permite crear nuevos roles'),
+(4, 'en', 'Create Roles', 'Allows creating new roles');
 
--- 5. Crear roles
+-- 5. Borrar roles
 INSERT INTO permission_translations (permission_id, lang_code, name, description) VALUES
-(5, 'es', 'Crear roles', 'Permite crear nuevos roles'),
-(5, 'en', 'Create Roles', 'Allows creating new roles');
+(5, 'es', 'Borrar roles', 'Permite eliminar roles'),
+(5, 'en', 'Delete Roles', 'Allows deleting roles');
 
--- 6. Borrar roles
+-- 6. Asignar roles
 INSERT INTO permission_translations (permission_id, lang_code, name, description) VALUES
-(6, 'es', 'Borrar roles', 'Permite eliminar roles'),
-(6, 'en', 'Delete Roles', 'Allows deleting roles');
+(6, 'es', 'Asignar roles', 'Permite asignar roles a usuarios'),
+(6, 'en', 'Assign Roles', 'Allows assigning roles to users');
 
--- 7. Asignar roles
+-- 7. Modificar roles
 INSERT INTO permission_translations (permission_id, lang_code, name, description) VALUES
-(7, 'es', 'Asignar roles', 'Permite asignar roles a usuarios'),
-(7, 'en', 'Assign Roles', 'Allows assigning roles to users');
-
--- 8. Modificar roles
-INSERT INTO permission_translations (permission_id, lang_code, name, description) VALUES
-(8, 'es', 'Modificar roles', 'Permite modificar roles existentes'),
-(8, 'en', 'Modify Roles', 'Allows modifying existing roles');
+(7, 'es', 'Modificar roles', 'Permite modificar roles existentes'),
+(7, 'en', 'Modify Roles', 'Allows modifying existing roles');
 
 INSERT INTO roles (name) VALUES ('master');
 
@@ -351,3 +349,17 @@ BEFORE INSERT ON permission_translations
 FOR EACH ROW
 SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Insertion into the permission_translations table is prohibited';
 
+
+DELIMITER $$
+
+CREATE TRIGGER prevent_delete_master_role
+BEFORE DELETE ON roles
+FOR EACH ROW
+BEGIN
+    IF OLD.name = 'master' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'The master role cannot be deleted';
+    END IF;
+END$$
+
+DELIMITER ;
