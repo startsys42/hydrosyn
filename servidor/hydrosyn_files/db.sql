@@ -18,6 +18,8 @@ CREATE TABLE users (
     was_actived BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by INT NOT NULL,
+     language ENUM('es', 'en') NOT NULL DEFAULT 'en',
+    theme ENUM('dark', 'light') NOT NULL DEFAULT 'light',
     CONSTRAINT fk_user_creator
         FOREIGN KEY (created_by)
         REFERENCES users(id)
