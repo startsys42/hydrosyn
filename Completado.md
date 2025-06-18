@@ -14,3 +14,6 @@
 - [X] elastic search (DESCARTADO)
 - [X] opensearch (DESCARTADO)
 - [X] zabbix (DESCARTADO)
+- [x] centreon (DESCARTADO)
+- [x] nagios (DESCARTADO)
+- [x]  node red (DESCARTADO)
