@@ -5,6 +5,15 @@ COLOR_BG_PAR="43"
  MARKER_END="# === END_VARS_FROM_CONF_ENV ==="
 BASHRC="/root/.bashrc"
 
+# Desactivar avahi
+
+systemctl stop avahi-daemon
+systemctl disable avahi-daemon
+
+
+
+
+
 
 
 # Verifica si el bloque existe
