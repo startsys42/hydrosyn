@@ -55,7 +55,7 @@ email_verified BOOLEAN NOT NULL DEFAULT FALSE, -- ¿Verificó el email vía link
      language ENUM('es', 'en') NOT NULL DEFAULT 'en',
     theme ENUM('dark', 'light') NOT NULL DEFAULT 'light',
     use_2fa BOOLEAN NOT NULL DEFAULT FALSE,
-    twofa_secret VARCHAR(64)
+    twofa_secret VARCHAR(64),
 
     CONSTRAINT fk_user_creator
         FOREIGN KEY (created_by)
