@@ -43,22 +43,7 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
 
-@app.get("/")
-async def welcome(request: Request):
-    try:
-        prefs = get_user_preferences(request)
-    except ValueError as e:
-        return PlainTextResponse(str(e), status_code=400)
 
-    return templates.TemplateResponse("welcome.html", {
-        "request": request,
-        "texts": prefs["texts"],
-        "lang": prefs["lang"],
-        "theme": prefs["theme"],
-        "next_lang": prefs["next_lang"],
-        "next_theme": prefs["next_theme"],
-    })
-# -------------------------------------
 
 
 
