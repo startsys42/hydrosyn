@@ -138,9 +138,9 @@ FLUSH PRIVILEGES;
     
 EOF
 
-mysql -u root -p"$MYSQL_ROOT_PASSWORD" < user.sql
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< user.sql
 
-mysql -u root -p"$MYSQL_ROOT_PASSWORD" < hydrosyn_files/db.sql
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< hydrosyn_files/db.sql
 
 # Generar hash bcrypt con Python
 HASH_PASS=$(python3 -c "
@@ -151,6 +151,7 @@ hashed = bcrypt.hashpw(password, bcrypt.gensalt())
 
 # SQL para crear el primer usuario admin
 SQL="
+USE hydrosyn_db;
 SET FOREIGN_KEY_CHECKS=0;
 INSERT INTO users (id, username, email, password, is_active, email_verified, created_by, language, theme, use_2fa, twofa_secret)
 VALUES (1, '$FIRST_USER', '$FIRST_USER_EMAIL', '$HASH_PASS', TRUE, TRUE, 1, 'en', 'light', FALSE, NULL);
@@ -158,7 +159,7 @@ SET FOREIGN_KEY_CHECKS=1;
 "
 
 # Ejecutar el SQL
-mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "$SQL"
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"  -e "$SQL"
 
 
 chown mysql:mysql /var/lib/mysql/mysql_upgrade_info
