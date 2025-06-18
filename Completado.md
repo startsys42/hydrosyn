@@ -1,6 +1,6 @@
 
 ## Conf
 
-== Repositorios==
+~~ Repositorios ~~
 
 ## Seguridad
