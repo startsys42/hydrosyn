@@ -13,3 +13,4 @@
 - [X] kibana (DESCARTADO)
 - [X] elastic search (DESCARTADO)
 - [X] opensearch (DESCARTADO)
+- [X] zabbix (DESCARTADO)
