@@ -1,6 +1,16 @@
 
 # config
 
+- [ ] nucleos
+- [ ] nombre equipo
+- [ ] repositorios
+- [ ] hora fecha
+- [ ] tecaldo idioma
+- [ ] kernel
+- [ ] actualizaciones
+- [ ] 
+
+
 ##ssh
 
 ##mariadb
@@ -13,6 +23,24 @@
 
 ## seguriodad
 
+- [ ] bios
+- [ ] grub
+- [ ] boot arranque
+- [ ] montar usbs...
+- [ ] selinux
+- [ ] sepcoms
+- [ ] apparmour
+- [ ] dnssec
+- [ ] firejail
+- [ ] chroot
+- [ ] particiones lvm raid
+- [ ] home
+- [ ] bashrc
+- [ ] cuotas
+- [ ] logs
+- [ ] monitoreo
+- [ ] desactivar telent
+- [ ] esactivar cmandos remotos
 
 ## diseño app
 
