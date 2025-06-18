@@ -125,7 +125,7 @@
 
 - [ ] logstash
 
-- [ ] check mk
+
 - [ ] shorewall
 - [ ] correo autenticacion sesion
 - [ ] sqlmap
