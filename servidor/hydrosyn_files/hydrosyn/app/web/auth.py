@@ -8,8 +8,32 @@ router = APIRouter()
 
 @router.get("/login", response_class=HTMLResponse)
 async def login(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
+    try:
+        prefs = get_user_preferences(request)
+    except ValueError as e:
+        from fastapi.responses import PlainTextResponse
+        return PlainTextResponse(str(e), status_code=400)
 
+    return templates.TemplateResponse("login.html", {
+        "request": request,
+        "texts": prefs["texts"],
+        "lang": prefs["lang"],
+        "theme": prefs["theme"],
+        "next_lang": prefs["next_lang"],
+        "next_theme": prefs["next_theme"],
+    })
 @router.get("/recover-password", response_class=HTMLResponse)
 async def recover_password(request: Request):
-    return templates.TemplateResponse("recover_password.html", {"request": request})
+    try:
+        prefs = get_user_preferences(request)
+    except ValueError as e:
+        return PlainTextResponse(str(e), status_code=400)
+
+    return templates.TemplateResponse("recover_password.html", {
+        "request": request,
+        "texts": prefs["texts"],
+        "lang": prefs["lang"],
+        "theme": prefs["theme"],
+        "next_lang": prefs["next_lang"],
+        "next_theme": prefs["next_theme"],
+    })
