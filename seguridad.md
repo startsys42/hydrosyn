@@ -204,16 +204,16 @@ nucleo optimizado
 - suriucata
 - antivirus
 - snort
-- grafana prometheus monit Checkmk kibana elastick search lostats zabbix pterodactyl cacti munin mrtg
+- grafana prometheus monit  lostats zabbix pterodactyl cacti munin mrtg
 - vnstat
-- nessus openvas nikto
+- nessus openvas nikto 
 - aide
 - rkhunter
 - chkrootkit
 - monitoreo top, redes usuarios peticiones
 - htacces
 - discord telegram cortreo avisos
-- hmac
+
 - cambiar puertos
 - polkit
 - tokens
