@@ -5,17 +5,18 @@ from fastapi.responses import HTMLResponse
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")  # apunta a la carpeta correcta
 
-@router.get("/", response_class=HTMLResponse)
-async def welcome(request: Request, lang: str = "en"):
-    texts = {
-        "login": "Login" if lang == "en" else "Iniciar sesión",
-        "change_lang": "Change language" if lang == "en" else "Cambiar idioma",
-        "forgot": "Recovery password" if lang == "en" else "Recuperar contraseña"
-    }
-    next_lang = "es" if lang == "en" else "en"
+@app.get("/")
+async def welcome(request: Request):
+    try:
+        prefs = get_user_preferences(request)
+    except ValueError as e:
+        return PlainTextResponse(str(e), status_code=400)
+
     return templates.TemplateResponse("welcome.html", {
         "request": request,
-        "texts": texts,
-        "next_lang": next_lang,
-        "lang": lang
+        "texts": prefs["texts"],
+        "lang": prefs["lang"],
+        "theme": prefs["theme"],
+        "next_lang": prefs["next_lang"],
+        "next_theme": prefs["next_theme"],
     })
