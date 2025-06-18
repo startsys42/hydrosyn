@@ -8,7 +8,8 @@
 - [ ] tecaldo idioma
 - [ ] kernel
 - [ ] actualizaciones
-- [ ] 
+- [ ] usuarios grupos cgroups
+- [ ] permisos
 
 
 ##ssh
