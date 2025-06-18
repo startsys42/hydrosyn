@@ -13,7 +13,7 @@ async def landing(request: Request, lang: str = "en"):
         "forgot": "Recovery password" if lang == "en" else "Recuperar contraseña"
     }
     next_lang = "es" if lang == "en" else "en"
-    return templates.TemplateResponse("landing.html", {
+    return templates.TemplateResponse("welcome.html", {
         "request": request,
         "texts": texts,
         "next_lang": next_lang,
