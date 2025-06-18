@@ -135,7 +135,7 @@
 - [ ] monit
 - [ ] aide
 - [ ] cron
-- [ ] hmac
+
 - [ ] csfrçxss
 - [ ] politica contraseñas
 - [ ] systemd
