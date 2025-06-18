@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE  utf8mb4
 USE hydrosyn_db;
 
 CREATE TABLE permissions (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    id INT PRIMARY KEY AUTO_INCREMENT
                  
 );
 
