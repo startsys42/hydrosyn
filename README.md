@@ -10,27 +10,8 @@
 - [Installation guide]
 - [User guide]
 ## requisitos seguridad
-- grub
-- usbs
-- cifrar disco duro
-- lvm raid
-- nas
-- contraseñas usuarios grupos permisos
-- sudo
-- mensaje servidor correo o telegram arranque inicio sesion reporte
-- actualizaciones
-- antivirus firewaall
-- logs
-- puertos ssh desactivar root ssh
-- dar la menro informacion posibles
-- tcpwrappers
-- certificdos
-- copias seguridad
-- base de datos y ataques base de datos
-- ataque cokies
-- doble autenticacion
-- selinux apparmor dnssec
-- 
+
+
 
 - 
 ##
