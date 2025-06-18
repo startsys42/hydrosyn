@@ -17,3 +17,4 @@
 - [x] centreon (DESCARTADO)
 - [x] nagios (DESCARTADO)
 - [x]  node red (DESCARTADO)
+- [x] check mk (DESCARTADO)
