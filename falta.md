@@ -1,11 +1,7 @@
 
 # config
 
-- [ ] nucleos
-- [ ] nombre equipo
-- [ ] repositorios
-- [ ] hora fecha
-- [ ] tecaldo idioma
+
 - [ ] kernel
 - [ ] actualizaciones
 - [ ] usuarios grupos cgroups
