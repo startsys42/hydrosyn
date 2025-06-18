@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi import Request
-
+from utils import get_user_preferences 
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
@@ -43,59 +43,20 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
 
-LANGS = {
-    "es": {
-        "title": "¡Bienvenid@!",
-        "login": "Iniciar sesión",
-        "change_lang": "Cambiar idioma",
-        "change_theme": "Cambiar tema",
-        "forgot": "Recuperar contraseña",
-    },
-    "en": {
-        "title": "Welcome!",
-        "login": "Login",
-        "change_lang": "Change language",
-        "change_theme": "Change theme",
-        "forgot": "Recover password",
-    }
-}
-allowed_langs = ["es", "en"]
-allowed_themes = ["light", "dark"]
-allowed_params = {"lang", "theme"}
-
-# --- NUEVA RUTA PARA EL MENÚ INICIAL ---
-# Esta ruta se encargará de mostrar la página principal con los botones de acceso.
 @app.get("/")
 async def welcome(request: Request):
-    # Validar que no haya parámetros desconocidos
-    for param in request.query_params.keys():
-        if param not in allowed_params:
-            # Puedes registrar, ignorar o devolver error. Aquí devolvemos 400.
-            from fastapi.responses import PlainTextResponse
-            return PlainTextResponse(f"Parámetro no permitido: {param}", status_code=400)
-
-    # Leer idioma y tema de query params o sesión
-    lang = request.query_params.get("lang") or request.session.get("lang") or "es"
-    theme = request.query_params.get("theme") or request.session.get("theme") or "light"
-    if lang not in allowed_langs:
-        lang = request.session.get("lang") or "es"
-    if theme not in allowed_themes:
-        theme = request.session.get("theme") or "light"
-    # Guardar en sesión
-    request.session["lang"] = lang
-    request.session["theme"] = theme
-
-    next_lang = "en" if lang == "es" else "es"
-    next_theme = "dark" if theme == "light" else "light"
-
-    texts = LANGS.get(lang, LANGS["es"])
+    try:
+        prefs = get_user_preferences(request)
+    except ValueError as e:
+        return PlainTextResponse(str(e), status_code=400)
 
     return templates.TemplateResponse("welcome.html", {
         "request": request,
-        "texts": texts,
-        "next_lang": next_lang,
-        "theme": theme,
-        "next_theme": next_theme
+        "texts": prefs["texts"],
+        "lang": prefs["lang"],
+        "theme": prefs["theme"],
+        "next_lang": prefs["next_lang"],
+        "next_theme": prefs["next_theme"],
     })
 # -------------------------------------
 
