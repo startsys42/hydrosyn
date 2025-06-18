@@ -142,6 +142,25 @@ mysql -u root -p"$MYSQL_ROOT_PASSWORD" < user.sql
 
 mysql -u root -p"$MYSQL_ROOT_PASSWORD" < hydrosyn_files/db.sql
 
+# Generar hash bcrypt con Python
+HASH_PASS=$(python3 -c "
+import bcrypt
+password = b'$PASSWORD'
+hashed = bcrypt.hashpw(password, bcrypt.gensalt())
+")
+
+# SQL para crear el primer usuario admin
+SQL="
+SET FOREIGN_KEY_CHECKS=0;
+INSERT INTO users (id, username, email, password, is_active, email_verified, created_by, language, theme, use_2fa, twofa_secret)
+VALUES (1, '$FIRST_USER', '$FIRST_USER_EMAIL', '$HASH_PASS', TRUE, TRUE, 1, 'en', 'light', FALSE, NULL);
+SET FOREIGN_KEY_CHECKS=1;
+"
+
+# Ejecutar el SQL
+mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "$SQL"
+
+
 chown mysql:mysql /var/lib/mysql/mysql_upgrade_info
 chmod 640 /var/lib/mysql/mysql_upgrade_info
 
