@@ -116,8 +116,7 @@
 - [ ] hestiacp
 - [ ] linuxgms
 - [ ] aapnel
-- [ ] kibana
-- [ ] elastic search
+
 - [ ] ngios
 - [ ] influxdb
 - [ ] node red
@@ -125,7 +124,7 @@
 - [ ] centreon
 - [ ] zabbix
 - [ ] logstash
-- [ ] opensearch
+
 - [ ] check mk
 - [ ] shorewall
 - [ ] correo autenticacion sesion
@@ -184,7 +183,7 @@ nucleo optimizado
 - puertos
 - camuuflar servidor
 - en apache nor evela info o nginx del sistema opertaivo
-- avahi
+
 - tripwire
 - login
 - rootki
