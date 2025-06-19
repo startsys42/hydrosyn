@@ -22,6 +22,10 @@ CREATE TABLE config_translations (
 
 INSERT INTO config (value) VALUES (3);   -- intentos de sesión
 INSERT INTO config (value) VALUES (15);  -- tiempo de suspensión (minutos)
+-- Insertar nuevos valores (puedes usar UPDATE o INSERT dependiendo de si config ya tiene filas)
+INSERT INTO config (value) VALUES (1);   -- duración mínima sesión (días)
+INSERT INTO config (value) VALUES (15);  -- duración mínima access token (minutos)
+INSERT INTO config (value) VALUES (1);   -- duración mínima refresh token (días)
 
 -- Para intentos de sesión
 INSERT INTO config_translations (config_id, lang_code, name, description)
@@ -36,6 +40,16 @@ VALUES
 (2, 'en', 'Suspension time', 'Duration in minutes of the suspension after failed attempts');
 
 
+-- Agregar traducciones para esos nuevos configs
+INSERT INTO config_translations (config_id, lang_code, name, description) VALUES
+(3, 'es', 'Duración mínima de sesión', 'Duración mínima en días para la sesión web'),
+(3, 'en', 'Minimum session duration', 'Minimum session web duration in days'),
+
+(4, 'es', 'Duración mínima Access Token', 'Duración mínima en minutos para el Access Token JWT'),
+(4, 'en', 'Minimum Access Token duration', 'Minimum duration in minutes for JWT Access Token'),
+
+(5, 'es', 'Duración mínima Refresh Token', 'Duración mínima en días para el Refresh Token JWT'),
+(5, 'en', 'Minimum Refresh Token duration', 'Minimum duration in days for JWT Refresh Token');
 CREATE TABLE permissions (
     id INT PRIMARY KEY AUTO_INCREMENT
                  
@@ -509,3 +523,44 @@ CREATE TRIGGER bloqueo_delete_config_translations
 BEFORE DELETE ON config_translations
 FOR EACH ROW
 SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Deletion from the config_translations table is prohibited';
+
+
+
+DELIMITER $$
+
+CREATE TRIGGER trg_validate_config_values BEFORE INSERT ON config
+FOR EACH ROW
+BEGIN
+    IF NEW.id = 1 THEN -- Max login attempts
+        IF NEW.value < 3 THEN
+            SIGNAL SQLSTATE '45001'
+            SET MESSAGE_TEXT = 'Minimum allowed login attempts before lockout is 3';
+        END IF;
+        
+    ELSEIF NEW.id = 2 THEN -- Suspension time (minutes)
+        IF NEW.value < 15 THEN
+            SIGNAL SQLSTATE '45002'
+            SET MESSAGE_TEXT = 'Minimum suspension time after failed attempts must be 15 minutes';
+        END IF;
+
+    ELSEIF NEW.id = 3 THEN -- Session min duration (days)
+        IF NEW.value < 1 THEN
+            SIGNAL SQLSTATE '45003'
+            SET MESSAGE_TEXT = 'Minimum session duration must be at least 1 day';
+        END IF;
+
+    ELSEIF NEW.id = 4 THEN -- Access token duration (minutes)
+        IF NEW.value < 15 OR NEW.value > 60 THEN
+            SIGNAL SQLSTATE '45004'
+            SET MESSAGE_TEXT = 'Access token duration must be between 15 and 60 minutes';
+        END IF;
+
+    ELSEIF NEW.id = 5 THEN -- Refresh token duration (days)
+        IF NEW.value < 1 THEN
+            SIGNAL SQLSTATE '45005'
+            SET MESSAGE_TEXT = 'Refresh token duration must be at least 1 day';
+        END IF;
+    END IF;
+END$$
+
+DELIMITER ;
