@@ -17,7 +17,8 @@
 #mosquito
 
 ##python
-
+- cerra o forzar cierre sesiones admin y revocar cosa
+- mensaje cambioc ontarseñas based e datso
 ## nginx
 
 
