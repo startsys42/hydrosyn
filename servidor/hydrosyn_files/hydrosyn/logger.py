@@ -1,5 +1,15 @@
+import os
 import logging
 from logging.handlers import RotatingFileHandler
+
+log_dir = "logs"
+os.makedirs(log_dir, exist_ok=True)  # crea carpeta si no existe
+
+
+
+
+
+
 
 # Configurar logger con rotación para evitar que el archivo crezca sin límite
 logger = logging.getLogger("hydrosyn_logs")
