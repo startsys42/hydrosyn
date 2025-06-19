@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi import Request
-
+from logger import logger 
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
@@ -58,3 +58,5 @@ app.include_router(web_views.router, tags=["Web"])
 #    - api_users.router: /api/users, endpoints protegidos por token
 app.include_router(api_auth.router, prefix="/api", tags=["API"])
 app.include_router(api_users.router, prefix="/api", tags=["API"])
+
+logger.info("La aplicación FastAPI ha arrancado")
