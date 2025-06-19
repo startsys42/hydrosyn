@@ -2,16 +2,15 @@
 CREATE DATABASE IF NOT EXISTS session_db CHARACTER SET utf8mb4 COLLATE  utf8mb4_bin;
 USE session_db;
 
-CREATE USER 'auth_admin'@'localhost' IDENTIFIED BY 'UnaClaveMuySegura456!';
 
-GRANT SELECT, INSERT, UPDATE ON auth_management.* TO 'auth_admin'@'localhost';
-FLUSH PRIVILEGES;
+
+
 
 
 
 CREATE TABLE secret_keys (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    key_name VARCHAR(100) NOT NULL UNIQUE,  -- ej: jwt_access, jwt_refresh, session, etc.
+    
     secret_value TEXT NOT NULL,
     key_type ENUM('jwt_access', 'jwt_refresh', 'session', 'password_reset') NOT NULL,
     active BOOLEAN NOT NULL DEFAULT TRUE,
@@ -31,15 +30,3 @@ CREATE TABLE auth_durations (
     updated_by INT
 );
 
-
-CREATE TABLE secret_policy_history (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    min_length INT NOT NULL DEFAULT 64,
-    min_uppercase INT DEFAULT 1,
-    min_lowercase INT DEFAULT 1,
-    min_numbers INT DEFAULT 1,
-    min_special_chars INT DEFAULT 1,
-    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    changed_by INT NOT NULL,
-    notes TEXT
-);
