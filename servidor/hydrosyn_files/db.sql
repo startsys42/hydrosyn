@@ -1,6 +1,41 @@
 CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE  utf8mb4_bin;
 USE hydrosyn_db;
 
+CREATE TABLE config (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    value INT NOT NULL  -- solo un valor numérico entero
+);
+
+CREATE TABLE config_translations (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    config_id INT NOT NULL,
+    lang_code ENUM('es', 'en') NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    description VARCHAR(255) NOT NULL,
+
+    FOREIGN KEY (config_id) REFERENCES config(id)
+        ON DELETE RESTRICT
+        ON UPDATE RESTRICT,
+
+    UNIQUE (config_id, lang_code)
+);
+
+INSERT INTO config (value) VALUES (3);   -- intentos de sesión
+INSERT INTO config (value) VALUES (15);  -- tiempo de suspensión (minutos)
+
+-- Para intentos de sesión
+INSERT INTO config_translations (config_id, lang_code, name, description)
+VALUES 
+(1, 'es', 'Número de intentos de sesión', 'Cantidad máxima de intentos fallidos antes de bloqueo'),
+(1, 'en', 'Session attempts number', 'Maximum failed login attempts before lockout');
+
+-- Para tiempo de suspensión
+INSERT INTO config_translations (config_id, lang_code, name, description)
+VALUES
+(2, 'es', 'Tiempo de suspensión', 'Duración en minutos de la suspensión tras intentos fallidos'),
+(2, 'en', 'Suspension time', 'Duration in minutes of the suspension after failed attempts');
+
+
 CREATE TABLE permissions (
     id INT PRIMARY KEY AUTO_INCREMENT
                  
