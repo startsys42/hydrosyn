@@ -426,3 +426,27 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+-- Bloqueo de INSERT en config
+CREATE TRIGGER bloqueo_insert_config
+BEFORE INSERT ON config
+FOR EACH ROW
+SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Insertion into the config table is prohibited';
+
+-- Bloqueo de DELETE en config
+CREATE TRIGGER bloqueo_delete_config
+BEFORE DELETE ON config
+FOR EACH ROW
+SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Deletion from the config table is prohibited';
+
+-- Bloqueo de INSERT en config_translations
+CREATE TRIGGER bloqueo_insert_config_translations
+BEFORE INSERT ON config_translations
+FOR EACH ROW
+SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Insertion into the config_translations table is prohibited';
+
+-- Bloqueo de DELETE en config_translations
+CREATE TRIGGER bloqueo_delete_config_translations
+BEFORE DELETE ON config_translations
+FOR EACH ROW
+SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Deletion from the config_translations table is prohibited';
