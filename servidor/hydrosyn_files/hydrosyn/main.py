@@ -4,6 +4,10 @@ from logger import logger
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
+from security.claves import GestorClaves
+from security.middleware import DualSessionMiddleware
+
+
 
 # Importamos routers
 from app.web import auth as web_auth
@@ -12,6 +16,7 @@ from app.api import auth as api_auth
 from app.api import users as api_users
 
 # Función para leer la clave secreta del fichero
+'''
 def obtener_clave_secreta_de_shadow(ruta_fichero: str) -> str:
     with open(ruta_fichero, "r") as f:
         lines = f.readlines()
@@ -29,14 +34,20 @@ def obtener_clave_secreta_de_shadow(ruta_fichero: str) -> str:
 
 # Aquí cargas la clave secreta **antes** de crear el app
 secret_key = obtener_clave_secreta_de_shadow("/etc/hydrosyn/session.shadow")
-
+'''
 
 app = FastAPI()
 
 # 1) Middleware para sesiones (solo para rutas web) con la clave cargada desde shadow
-app.add_middleware(SessionMiddleware, secret_key=secret_key)
+#app.add_middleware(SessionMiddleware, secret_key=secret_key)
+
+# Tiempo de rotación: 1 hora (3600 segundos)
+gestor_claves = GestorClaves(tiempo_rotacion=3600)
 
 
+
+# Middleware personalizado con rotación de clave
+app.add_middleware(DualSessionMiddleware, gestor_claves=gestor_claves)
 
 # 2) Montar carpeta de archivos estáticos y plantillas (clientes web)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
