@@ -131,6 +131,7 @@ INSERT INTO permissions () VALUES (); -- 5
 INSERT INTO permissions () VALUES (); -- 6
 INSERT INTO permissions () VALUES (); -- 7
 INSERT INTO permissions () VALUES (); -- 8
+INSERT INTO permissions () VALUES ();
 
 -- Ahora insertamos las traducciones con sus permission_id generados
 
@@ -168,6 +169,10 @@ INSERT INTO permission_translations (permission_id, lang_code, name, description
 INSERT INTO permission_translations (permission_id, lang_code, name, description) VALUES
 (7, 'es', 'Modificar roles', 'Permite modificar roles existentes'),
 (7, 'en', 'Modify Roles', 'Allows modifying existing roles');
+
+INSERT INTO permission_translations (permission_id, lang_code, name, description) VALUES
+(8, 'es', 'Actualizar configuración', 'Permite modificar la configuración del sistema'),
+(8, 'en', 'Update Configuration', 'Allows modifying the system configuration');
 
 INSERT INTO roles (name) VALUES ('master');
 
