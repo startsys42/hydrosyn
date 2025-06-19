@@ -1,14 +1,14 @@
 -- 1. Crear base y usuario
-CREATE DATABASE IF NOT EXISTS auth_management CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS session_db CHARACTER SET utf8mb4 COLLATE  utf8mb4_bin;
+USE session_db;
 
 CREATE USER 'auth_admin'@'localhost' IDENTIFIED BY 'UnaClaveMuySegura456!';
 
 GRANT SELECT, INSERT, UPDATE ON auth_management.* TO 'auth_admin'@'localhost';
 FLUSH PRIVILEGES;
 
-USE auth_management;
 
--- 2. Tabla de claves secretas
+
 CREATE TABLE secret_keys (
     id INT AUTO_INCREMENT PRIMARY KEY,
     key_name VARCHAR(100) NOT NULL UNIQUE,  -- ej: jwt_access, jwt_refresh, session, etc.
@@ -21,7 +21,7 @@ CREATE TABLE secret_keys (
     CONSTRAINT uq_key_type_name UNIQUE (key_type, active)
 );
 
--- 3. Tabla de duración de tokens/sesiones
+
 CREATE TABLE auth_durations (
     id INT AUTO_INCREMENT PRIMARY KEY,
     item_type ENUM('session_web', 'session_mobile', 'jwt_access', 'jwt_refresh', 'password_reset_token') NOT NULL UNIQUE,
@@ -31,7 +31,7 @@ CREATE TABLE auth_durations (
     updated_by INT
 );
 
--- 4. Tabla de política de claves (histórico)
+
 CREATE TABLE secret_policy_history (
     id INT AUTO_INCREMENT PRIMARY KEY,
     min_length INT NOT NULL DEFAULT 64,
