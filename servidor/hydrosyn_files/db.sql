@@ -230,25 +230,25 @@ CREATE TABLE system_users_history (
     date_added TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     date_removed TIMESTAMP DEFAULT NULL,
 
-    CONSTRAINT fk_su_system
+    CONSTRAINT fk_su_hist_system
         FOREIGN KEY (system_id)
         REFERENCES systems(id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE,
 
-    CONSTRAINT fk_su_user
+    CONSTRAINT fk_su_hist_user
         FOREIGN KEY (user_id)
         REFERENCES users(id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE,
 
-    CONSTRAINT fk_su_added_by
+    CONSTRAINT fk_su_hist_added_by
         FOREIGN KEY (added_by)
         REFERENCES users(id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE,
 
-    CONSTRAINT fk_su_removed_by
+    CONSTRAINT fk_su_hist_removed_by
         FOREIGN KEY (removed_by)
         REFERENCES users(id)
         ON DELETE RESTRICT
