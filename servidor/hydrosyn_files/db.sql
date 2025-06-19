@@ -85,6 +85,8 @@ CREATE TABLE users (
 email_verified BOOLEAN NOT NULL DEFAULT FALSE, -- ¿Verificó el email vía link?
 
     email_verification_token VARCHAR(255),   -- Token único para verificar email
+    failed_login_attempts INT NOT NULL DEFAULT 0,
+  lockout_until TIMESTAMP NULL DEFAULT NULL;
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by INT NOT NULL,
      language ENUM('es', 'en') NOT NULL DEFAULT 'en',
@@ -95,6 +97,18 @@ email_verified BOOLEAN NOT NULL DEFAULT FALSE, -- ¿Verificó el email vía link
     CONSTRAINT fk_user_creator
         FOREIGN KEY (created_by)
         REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE login_attempts (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NULL,
+    attempt_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ip_address VARCHAR(45) NOT NULL,
+    success BOOLEAN NOT NULL,
+    user_agent VARCHAR(255),
+    FOREIGN KEY (user_id) REFERENCES users(id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE
 );
