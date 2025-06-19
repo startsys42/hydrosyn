@@ -6,7 +6,7 @@ from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 from security.claves import GestorClaves
 from security.middleware import DualSessionMiddleware
-
+from db.config import obtener_tiempo_rotacion_desde_bd
 
 
 # Importamos routers
@@ -36,13 +36,19 @@ def obtener_clave_secreta_de_shadow(ruta_fichero: str) -> str:
 secret_key = obtener_clave_secreta_de_shadow("/etc/hydrosyn/session.shadow")
 '''
 
+
+gestor_claves = GestorClaves(
+    obtener_tiempo_rotacion=obtener_tiempo_rotacion_desde_bd,
+    ttl=600  # 10 minutos
+)
+
+
 app = FastAPI()
 
 # 1) Middleware para sesiones (solo para rutas web) con la clave cargada desde shadow
 #app.add_middleware(SessionMiddleware, secret_key=secret_key)
 
-# Tiempo de rotación: 1 hora (3600 segundos)
-gestor_claves = GestorClaves(tiempo_rotacion=3600)
+app.add_middleware(DualSessionMiddleware, gestor_claves=gestor_claves)
 
 
 
