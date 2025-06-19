@@ -37,6 +37,7 @@ class Token(BaseModel):
 class TokenRefreshRequest(BaseModel):
     refresh_token: str
 
+
 class PasswordResetRequest(BaseModel):
     email: EmailStr
 
