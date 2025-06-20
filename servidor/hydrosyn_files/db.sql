@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE  utf8mb4_bin;
 USE hydrosyn_db;
 
-CREATE TABLE config (
+CREATE TABLE IF NOT EXISTS config (
     id INT PRIMARY KEY AUTO_INCREMENT,
     value INT NOT NULL  -- solo un valor numérico entero
 );
@@ -10,7 +10,7 @@ CREATE TABLE config (
 
 
 
-CREATE TABLE config_translations (
+CREATE TABLE IF NOT EXISTS config_translations (
     id INT PRIMARY KEY AUTO_INCREMENT,
     config_id INT NOT NULL,
     lang_code ENUM('es', 'en') NOT NULL,
