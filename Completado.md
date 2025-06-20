@@ -18,3 +18,6 @@
 - [x] nagios (DESCARTADO)
 - [x]  node red (DESCARTADO)
 - [x] check mk (DESCARTADO)
+- [x] aapnel (descartado)
+- [x] hestiacp (descartado)
+- [x] influxdb (descartado)
