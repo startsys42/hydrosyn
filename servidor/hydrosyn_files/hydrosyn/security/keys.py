@@ -2,6 +2,8 @@
 import secrets
 import time
 from typing import Tuple, Callable
+from logger import logger  # si querés loguear
+
 
 import math
 
@@ -32,5 +34,6 @@ class GestorClaves:
             self.key_session_old = self.key_session_new
             self.key_session_new = generar_clave_segura()
             self.ultima_rotacion = ahora
+            logger.info("Rotación de clave de sesión ejecutada")
 
         return self.key_session_new, self.key_session_old
