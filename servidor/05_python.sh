@@ -121,7 +121,7 @@ Requires=a2.service
 User=hydrosyn
 Group=hydrosyn
 WorkingDirectory=/opt/hydrosyn
-ExecStartPre=/usr/bin/systemctl start a2.service
+
 ExecStart=/opt/hydrosyn/venv/bin/uvicorn main:app --host 0.0.0.0 --port $APP_PORT
 Restart=on-failure
 RestartSec=15
