@@ -40,39 +40,18 @@ paquetes=(
 mkdir -p /etc/hydrosyn
 
 
-SALT=$(openssl rand -hex 8)
 
-# Concatenar password + salt
-COMBO="${DB_PASS_HYDRO}${SALT}"
-
-# Calcular hash SHA512
-HASH=$(echo -n "$COMBO" | sha512sum | awk '{print $1}')
-
-# Timestamp actual en segundos
-TIMESTAMP=$(date +%s)
-
-# Guardar en archivo tipo shadow: hash:salt:timestamp
-echo "${HASH}:${SALT}:${TIMESTAMP}" > /etc/hydrosyn/user_db.shadow
-
-
-SALT=$(openssl rand -hex 8)
-
-# Concatenar password + salt
-COMBO="${PASS_COOKIE}${SALT}"
-
-# Calcular hash SHA512
-HASH=$(echo -n "$COMBO" | sha512sum | awk '{print $1}')
-
-# Timestamp actual en segundos
-TIMESTAMP=$(date +%s)
-
-# Guardar en archivo tipo shadow: hash:salt:timestamp
-echo "${HASH}:${SALT}:${TIMESTAMP}" > /etc/hydrosyn/session.shadow
-
-chown hydrosyn:hydrosyn /etc/hydrosyn/session.shadow
+echo $KEY > /etc/hydrosyn/session.key
+chown hydrosyn:hydrosyn /etc/hydrosyn/session.key
 chmod 600 /etc/hydrosyn/session.key
 
+# 1. Cifrar la contraseña individualmente con la clave maestra
+password_cifrada=$(echo -n "$DB_PASS_HYDRO" | openssl enc -aes-256-cbc -a -salt -pass pass:"$KEY")
+fecha_actual=$(date +"%Y-%m-%d")
+# 2. Construir línea usuario:contraseña_cifrada:fecha
+datos="$password_cifrada:$fecha_actual"
 
+echo "$datos" >/etc/hydrosyn/user_db.shadow
 chown hydrosyn:hydrosyn /etc/hydrosyn/user_db.shadow
 chmod 600 /etc/hydrosyn/user_db.shadow
 
