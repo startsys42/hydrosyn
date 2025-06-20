@@ -5,6 +5,7 @@ from itsdangerous import Signer, BadSignature
 from security.keys import GestorClaves
 import uuid
 from db.config import obtener_tiempo_rotacion_desde_bd
+from logger import logger
 
 class DualSessionMiddleware(BaseHTTPMiddleware):
     def __init__(self, app, gestor_claves: GestorClaves):
@@ -25,6 +26,7 @@ class DualSessionMiddleware(BaseHTTPMiddleware):
                     session_data = signer.unsign(session_cookie.encode()).decode()
                     # ✅ 2. Guardar el valor de la sesión en el request para usar en endpoints
                     request.state.session_data = session_data
+                    logger.debug(f"Sesión válida detectada: {session_data}")
                     break
                 except BadSignature:
                     continue
@@ -35,16 +37,19 @@ class DualSessionMiddleware(BaseHTTPMiddleware):
         # ✅ 4. Si no había sesión válida, crear una nueva
         if not session_data:
             session_id = str(uuid.uuid4())
-            new_value = f"session_id={session_id}"
+           new_value = session_id
 
             signed = Signer(key_new).sign(new_value.encode()).decode()
+            max_age = obtener_tiempo_rotacion_desde_bd()
             response.set_cookie(
                 "session_id",
                 signed,
                 httponly=True,
                 secure=True,
                 samesite="Lax",  # Puedes usar "Strict" o "None" según necesidad
-                max_age=obtener_tiempo_rotacion_desde_bd # 7 días de validez
+                max_age=max_age
             )
+        logger.info(f"Sesión nueva creada: {session_id}")
+
 
         return response
