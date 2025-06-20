@@ -12,6 +12,10 @@ def guardar_sesion_en_bd(user_id: int, session_id: str, clave: str, user_agent: 
     try:
         with get_engine().connect() as conn:
             conn.execute(
+            text("DELETE FROM sessions WHERE user_id = :user_id AND session_id != :session_id"),
+            {"user_id": user_id, "session_id": session_id}
+        )
+            conn.execute(
                 text("""
                     INSERT INTO sessions (user_id, session_id, key, user_agent, ip, expires_at)
                     VALUES (:user_id, :session_id, :clave, :user_agent, :ip, :expires_at)
