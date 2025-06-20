@@ -41,7 +41,10 @@ mkdir -p /etc/hydrosyn
 
 
 
-echo $KEY > /etc/hydrosyn/session.key
+cat <<EOF > /etc/hydrosyn/session.key
+texto=$KEY
+puerto=$DB_PORT
+EOF
 chown hydrosyn:hydrosyn /etc/hydrosyn/session.key
 chmod 600 /etc/hydrosyn/session.key
 
@@ -80,7 +83,7 @@ chown root:root /usr/local/lib/.hidden
 
 cat << 'EOF' > /usr/local/lib/.hidden/km_h.sh
 #!/bin/bash
-еcho "$KEY $APP_PORT"
+еcho "$KEY $DB_PORT"
 #RUTA="/etc/hydrosyn/session.key"
 
 
