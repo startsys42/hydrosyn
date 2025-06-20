@@ -13,6 +13,44 @@ import sys
 from db.conexion import inicializar_engine
 from datetime import datetime
 
+import asyncio
+from datetime import datetime, timedelta
+from fastapi import FastAPI
+from db.config import obtener_hora_limpieza_desde_bd
+from db.conexion import get_engine
+from sqlalchemy import text
+from logger import logger
+
+async def limpiar_sesiones_expiradas():
+    ahora = datetime.utcnow()
+    try:
+        with get_engine().connect() as conn:
+            result = conn.execute(
+                text("DELETE FROM sessions WHERE expires_at < :ahora"),
+                {"ahora": ahora}
+            )
+            logger.info(f"Sesiones expiradas eliminadas: {result.rowcount}")
+    except Exception as e:
+        logger.error(f"Error al limpiar sesiones expiradas: {e}")
+async def job_limpieza_periodica():
+    while True:
+        hora_limpieza_int = int(obtener_hora_limpieza_desde_bd())  # Ej: 2 para las 2AM
+        hora_limpieza = time(hour=hora_limpieza_int, minute=0, second=0)
+
+        ahora_dt = datetime.utcnow()
+        proxima_ejecucion_dt = ahora_dt.replace(hour=hora_limpieza.hour, minute=hora_limpieza.minute, second=hora_limpieza.second, microsecond=0)
+
+        if ahora_dt >= proxima_ejecucion_dt:
+            proxima_ejecucion_dt += timedelta(days=1)
+
+        segundos_espera = (proxima_ejecucion_dt - ahora_dt).total_seconds()
+        logger.info(f"Esperando {segundos_espera} segundos para la próxima limpieza de sesiones...")
+
+        await asyncio.sleep(segundos_espera)
+
+        await limpiar_sesiones_expiradas()
+
+
 def obtener_password_mas_reciente(ruta_shadow: str, clave_maestra: str) -> str:
     if not os.path.exists(ruta_shadow):
         logger.error(f"Archivo no encontrado en {ruta_shadow}. Abortando.")
@@ -141,7 +179,9 @@ gestor_claves = GestorClaves(
 
 
 app = FastAPI()
-
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(job_limpieza_periodica())
 # 1) Middleware para sesiones (solo para rutas web) con la clave cargada desde shadow
 #app.add_middleware(SessionMiddleware, secret_key=secret_key)
 
