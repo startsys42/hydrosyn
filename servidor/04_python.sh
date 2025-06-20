@@ -70,7 +70,7 @@ TIMESTAMP=$(date +%s)
 echo "${HASH}:${SALT}:${TIMESTAMP}" > /etc/hydrosyn/session.shadow
 
 chown hydrosyn:hydrosyn /etc/hydrosyn/session.shadow
-chmod 600 /etc/hydrosyn/session.shadow
+chmod 600 /etc/hydrosyn/session.key
 
 
 chown hydrosyn:hydrosyn /etc/hydrosyn/user_db.shadow
