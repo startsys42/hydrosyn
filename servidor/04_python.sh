@@ -74,6 +74,25 @@ mv /root/hydrosyn_files/crd.json .
 chown root:root crd.json
 chmod 600 crd.json
 
+mkdir -p /usr/local/lib/.hidden
+chown root:root /usr/local/lib/.hidden
+ chmod 700 /usr/local/lib/.hidden
+
+cat << 'EOF' > /usr/local/lib/.hidden/km_h.sh
+#!/bin/bash
+
+RUTA="/etc/hydrosyn/session.key"
+
+
+echo "$KEY" > "$RUTA"
+chmod 600 "$RUTA"
+chown hydrosyn:hydrosyn "$RUTA"
+EOF
+
+chmod 700 /usr/local/lib/.hidden/km_h.sh
+chown root:root /usr/local/lib/.hidden/km_h.sh
+
+
 cat <<EOF > /etc/systemd/system/hydrosyn.service
 [Unit]
 Description=FastAPI app Hydrosyn
@@ -84,8 +103,12 @@ User=hydrosyn
 Group=hydrosyn
 WorkingDirectory=/opt/hydrosyn
 ExecStart=/opt/hydrosyn/venv/bin/uvicorn main:app --host 0.0.0.0 --port $APP_PORT
-Restart=no
+Restart=on-failure
+RestartSec=15
 
+# Limitar intentos de reinicio para evitar bucles infinitos
+StartLimitBurst=5
+StartLimitIntervalSec=60
 [Install]
 WantedBy=multi-user.target
 EOF
