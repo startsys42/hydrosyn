@@ -1,7 +1,7 @@
 import base64
 import hashlib
 from Crypto.Cipher import AES
-
+from logger import logger
 def openssl_decrypt(enc, password):
     # decodificar base64
     data = base64.b64decode(enc)
