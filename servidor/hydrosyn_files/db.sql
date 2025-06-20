@@ -141,7 +141,7 @@ CREATE TABLE sessions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     session_id VARCHAR(128) NOT NULL UNIQUE,
-    key VARCHAR(128) NOT NULL,
+    session_key VARCHAR(128) NOT NULL,
     user_agent VARCHAR(512),
     ip VARCHAR(39),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
