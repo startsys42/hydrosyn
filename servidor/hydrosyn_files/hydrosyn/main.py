@@ -7,17 +7,59 @@ from starlette.middleware.sessions import SessionMiddleware
 from security.claves import GestorClaves
 from security.middleware import DualSessionMiddleware
 from db.config import obtener_tiempo_rotacion_desde_bd
-
+from security.crypto import descifrar_contrasena
 
 from db.conexion import inicializar_engine
+from datetime import datetime
 
+def obtener_password_mas_reciente(ruta_shadow: str, clave_maestra: str) -> str:
+    if not os.path.exists(ruta_shadow):
+        logger.error(f"Archivo no encontrado en {ruta_shadow}. Abortando.")
+        sys.exit(1)
+
+    with open(ruta_shadow, "r") as f:
+        lineas = f.readlines()
+
+    if not lineas:
+        logger.error(f"El fichero {ruta_shadow} está vacío. Abortando.")
+        sys.exit(1)
+
+    datos = []
+    for linea in lineas:
+        linea = linea.strip()
+        if not linea or ":" not in linea:
+            continue
+        texto_cifrado, fecha_str = linea.rsplit(":", 1)
+        try:
+            fecha = datetime.strptime(fecha_str, "%Y%m%d%H%M%S")
+        except ValueError:
+            logger.warning(f"Línea con fecha no válida ignorada: {linea}")
+            continue
+        datos.append((texto_cifrado, fecha))
+
+    if not datos:
+        logger.error(f"No hay líneas válidas con fecha en {ruta_shadow}. Abortando.")
+        sys.exit(1)
+
+    # Línea con fecha más reciente
+    texto_cifrado_reciente, _ = max(datos, key=lambda x: x[1])
+
+    # Descifrar la contraseña
+    try:
+        password = descifrar_contrasena(texto_cifrado_reciente, clave_maestra)
+    except Exception as e:
+        logger.error(f"Error al descifrar la contraseña: {e}")
+        sys.exit(1)
+
+    logger.info("Contraseña descifrada correctamente.")
+    return password
 
 # Importamos routers
 from app.web import auth as web_auth
 from app.web import views as web_views
 from app.api import auth as api_auth
 from app.api import users as api_users
-
+ruta_user_shadow = "/etc/hydrosyn/user_db.shadow"
 ruta_k_bd = "/etc/hydrosyn/session.key"
 def cargar_datos_maestros():
     if not os.path.exists(ruta_k_bd):
@@ -61,9 +103,9 @@ km, bd_port = cargar_datos_maestros()
 
 # Puedes leer el resto de valores como quieras (desde archivo, variables de entorno, etc.)
 usuario = "hydro_user"
-password = "mi_contraseña"
+password = obtener_password_mas_reciente(ruta_user_shadow, km)
 host = "localhost"
-nombre_bd = "mi_base_de_datos"
+nombre_bd = "hydrosyn_db"
 
 inicializar_engine(usuario, password, host, bd_port, nombre_bd)
 
