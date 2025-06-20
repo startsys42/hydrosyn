@@ -1,23 +1,10 @@
 from sqlalchemy import create_engine, text
-
-# Cambia estos valores por los de tu entorno
-usuario = "hydro_user"
-password = "mi_contraseña"
-host = "localhost"
-puerto = 3306
-nombre_bd = "mi_base_de_datos"
-
-# Conexión a MariaDB usando pymysql
-engine = create_engine(
-    f"mysql+pymysql://{usuario}:{password}@{host}:{puerto}/{nombre_bd}",
-    pool_pre_ping=True
-)
-
+from db.conexion import get_engine
 def obtener_tiempo_rotacion_desde_bd() -> int:
-    with engine.connect() as conn:
+    with get_engine().connect() as conn:
         result = conn.execute(
             text("SELECT valor FROM configuracion WHERE clave = 'tiempo_rotacion_sesiones'")
         ).fetchone()
         if result:
-            return int(result[0]) * 86400 
-        return 3600  # Valor por defecto si no existe en BD
+            return int(result[0]) * 86400
+        return 3600  # valor por defecto
