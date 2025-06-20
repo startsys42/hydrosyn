@@ -84,7 +84,7 @@ User=hydrosyn
 Group=hydrosyn
 WorkingDirectory=/opt/hydrosyn
 ExecStart=/opt/hydrosyn/venv/bin/uvicorn main:app --host 0.0.0.0 --port $APP_PORT
-Restart=always
+Restart=no
 
 [Install]
 WantedBy=multi-user.target
