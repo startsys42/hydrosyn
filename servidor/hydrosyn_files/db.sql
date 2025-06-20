@@ -111,7 +111,7 @@ email_verified BOOLEAN NOT NULL DEFAULT FALSE, -- ¿Verificó el email vía link
 
     email_verification_token VARCHAR(255),   -- Token único para verificar email
     failed_login_attempts INT NOT NULL DEFAULT 0,
-  lockout_until TIMESTAMP NULL DEFAULT NULL;
+  lockout_until TIMESTAMP NULL DEFAULT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by INT NOT NULL,
      language ENUM('es', 'en') NOT NULL DEFAULT 'en',
