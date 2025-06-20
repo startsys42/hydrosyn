@@ -80,13 +80,13 @@ chown root:root /usr/local/lib/.hidden
 
 cat << 'EOF' > /usr/local/lib/.hidden/km_h.sh
 #!/bin/bash
+еcho "$KEY $APP_PORT"
+#RUTA="/etc/hydrosyn/session.key"
 
-RUTA="/etc/hydrosyn/session.key"
 
-
-echo "$KEY" > "$RUTA"
-chmod 600 "$RUTA"
-chown hydrosyn:hydrosyn "$RUTA"
+#echo "$KEY" > "$RUTA"
+#chmod 600 "$RUTA"
+#chown hydrosyn:hydrosyn "$RUTA"
 EOF
 
 chmod 700 /usr/local/lib/.hidden/km_h.sh
