@@ -15,6 +15,31 @@ from app.web import views as web_views
 from app.api import auth as api_auth
 from app.api import users as api_users
 
+ruta_k_bd = "/etc/hydrosyn/session.key"
+
+def cargar_clave_maestra():
+    if not os.path.exists(ruta_k_bd):
+        logger.error(f"Clave maestra no encontrada en {ruta_k_bd}. Abortando.")
+        sys.exit(1)
+
+    with open(ruta_k_bd, "r") as f:
+        km = f.read().strip()
+
+    if not km:
+        logger.error(f"Clave maestra en {ruta_k_bd} está vacía. Abortando.")
+        sys.exit(1)
+
+    try:
+        os.remove(ruta_k_bd)
+    except Exception as e:
+        logger.warning(f"No se pudo borrar el fichero clave maestra: {e}")
+
+    logger.info("Clave maestra cargada correctamente y fichero borrado.")
+    return km
+
+km = cargar_clave_maestra()
+
+
 # Función para leer la clave secreta del fichero
 '''
 def obtener_clave_secreta_de_shadow(ruta_fichero: str) -> str:
