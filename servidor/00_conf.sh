@@ -169,6 +169,11 @@ fi
 
 
 
+
+
+# gcc
+ins-paq gcc
+
 ## red
 
 ## usuarios
