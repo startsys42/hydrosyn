@@ -113,13 +113,9 @@
 - [ ] garafna
 - [ ] prometeus
 - [ ] pterodactyl
-- [ ] hestiacp
+
 - [ ] linuxgms
-- [ ] aapnel
-
-
-- [ ] influxdb
-
+-
 - [ ] cacti
 
 
