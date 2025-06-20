@@ -114,7 +114,8 @@ chmod 644 /etc/systemd/system/a2.service
 cat <<EOF > /etc/systemd/system/hydrosyn.service
 [Unit]
 Description=FastAPI app Hydrosyn
-After=network.target
+After=network.target a2.service
+Requires=a2.service
 
 [Service]
 User=hydrosyn
