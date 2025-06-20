@@ -3,7 +3,7 @@ from starlette.requests import Request
 from starlette.responses import Response
 from itsdangerous import Signer, BadSignature
 from security.keys import GestorClaves
-
+import uuid
 
 class DualSessionMiddleware(BaseHTTPMiddleware):
     def __init__(self, app, gestor_claves: GestorClaves):
@@ -33,7 +33,9 @@ class DualSessionMiddleware(BaseHTTPMiddleware):
 
         # ✅ 4. Si no había sesión válida, crear una nueva
         if not session_data:
-            new_value = "usuario_id=123"  # Aquí puedes reemplazar con un ID real de sesión si estás usando BD
+            session_id = str(uuid.uuid4())
+            new_value = f"session_id={session_id}"
+
             signed = Signer(key_new).sign(new_value.encode()).decode()
             response.set_cookie(
                 "session_id",
