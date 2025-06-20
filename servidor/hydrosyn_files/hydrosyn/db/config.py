@@ -19,5 +19,5 @@ def obtener_tiempo_rotacion_desde_bd() -> int:
             text("SELECT valor FROM configuracion WHERE clave = 'tiempo_rotacion_sesiones'")
         ).fetchone()
         if result:
-            return int(result[0])
+            return int(result[0]) * 86400 
         return 3600  # Valor por defecto si no existe en BD
