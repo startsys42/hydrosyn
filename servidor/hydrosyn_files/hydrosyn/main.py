@@ -9,6 +9,9 @@ from security.middleware import DualSessionMiddleware
 from db.config import obtener_tiempo_rotacion_desde_bd
 
 
+from db.conexion import inicializar_engine
+
+
 # Importamos routers
 from app.web import auth as web_auth
 from app.web import views as web_views
@@ -52,6 +55,19 @@ def cargar_datos_maestros():
 
 
 km, bd_port = cargar_datos_maestros()
+
+
+
+
+# Puedes leer el resto de valores como quieras (desde archivo, variables de entorno, etc.)
+usuario = "hydro_user"
+password = "mi_contraseña"
+host = "localhost"
+nombre_bd = "mi_base_de_datos"
+
+inicializar_engine(usuario, password, host, bd_port, nombre_bd)
+
+
 
 # Función para leer la clave secreta del fichero
 '''
