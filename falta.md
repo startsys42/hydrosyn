@@ -35,3 +35,6 @@ mensaje fallo servicio
 COMPROBAR CAMBIO DE CONTARSEÑA BD Y GETSIOANR ESE CAMBIO
 COMPROBAR PARA Y ARRANCAR SIS E EGNERA DE NEUVO AL CLAVE CONE CHO ESPECIAL
 MIRAR LO DE LOGS PARA MODIFICARLO POR LOGS POR DIAS
+revisar actulizar borrar claves foraneas 
+trigger para ip en sesioens web.
+monitorear dbles sesiones en panel comoa dmin temporalmente para evr si funcioan bien lod e las seisones
