@@ -20,6 +20,6 @@ def obtener_tiempo_rotacion_desde_bd() -> int:
         logger.error(f"Error al obtener tiempo de rotación desde BD: {e}")
 
     # Valor por defecto si falla algo
-    default_ttl = 3600
+    default_ttl = 86400
     logger.info(f"Usando valor por defecto para tiempo de rotación: {default_ttl} segundos")
     return default_ttl
