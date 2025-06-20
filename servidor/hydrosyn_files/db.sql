@@ -23,9 +23,9 @@ CREATE TABLE config_translations (
 INSERT INTO config (value) VALUES (3);   -- intentos de sesión
 INSERT INTO config (value) VALUES (15);  -- tiempo de suspensión (minutos)
 -- Insertar nuevos valores (puedes usar UPDATE o INSERT dependiendo de si config ya tiene filas)
-INSERT INTO config (value) VALUES (1);   -- duración mínima sesión (días)
-INSERT INTO config (value) VALUES (15);  -- duración mínima access token (minutos)
-INSERT INTO config (value) VALUES (1);   -- duración mínima refresh token (días)
+INSERT INTO config (value) VALUES (1);   -- duración máxima sesión (días)
+INSERT INTO config (value) VALUES (15);  -- duración máxima access token (minutos)
+INSERT INTO config (value) VALUES (1);   -- duración máxima refresh token (días)
 
 -- Para intentos de sesión
 INSERT INTO config_translations (config_id, lang_code, name, description)
@@ -42,14 +42,14 @@ VALUES
 
 -- Agregar traducciones para esos nuevos configs
 INSERT INTO config_translations (config_id, lang_code, name, description) VALUES
-(3, 'es', 'Duración mínima de sesión', 'Duración mínima en días para la sesión web'),
-(3, 'en', 'Minimum session duration', 'Minimum session web duration in days'),
+(3, 'es', 'Duración mínima de sesión', 'Duración máxima en días para la sesión web'),
+(3, 'en', 'Minimum session duration', 'Maximum session web duration in days'),
 
-(4, 'es', 'Duración mínima Access Token', 'Duración mínima en minutos para el Access Token JWT'),
-(4, 'en', 'Minimum Access Token duration', 'Minimum duration in minutes for JWT Access Token'),
+(4, 'es', 'Duración mínima Access Token', 'Duración máxima en minutos para el Access Token JWT'),
+(4, 'en', 'Minimum Access Token duration', 'Maximum duration in minutes for JWT Access Token'),
 
-(5, 'es', 'Duración mínima Refresh Token', 'Duración mínima en días para el Refresh Token JWT'),
-(5, 'en', 'Minimum Refresh Token duration', 'Minimum duration in days for JWT Refresh Token');
+(5, 'es', 'Duración mínima Refresh Token', 'Duración máxima en días para el Refresh Token JWT'),
+(5, 'en', 'Minimum Refresh Token duration', 'Maximum duration in days for JWT Refresh Token');
 CREATE TABLE permissions (
     id INT PRIMARY KEY AUTO_INCREMENT
                  
