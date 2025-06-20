@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, text
 
 # Cambia estos valores por los de tu entorno
-usuario = "mi_usuario"
+usuario = "hydro_user"
 password = "mi_contraseña"
 host = "localhost"
 puerto = 3306
