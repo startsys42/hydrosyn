@@ -13,7 +13,7 @@
 ##mariadb
 
 - [  ] regex en los campos varchar
-- tiempo ede expiracion usuario base de datos
+- tiempo ede expiracion usuario base de datos en un shadow solo para suauriod e bd, recomendar cambiso cada x tiempo,  mincaracteres...
 - audit plugin
 
 #mosquito
