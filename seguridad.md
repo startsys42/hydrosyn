@@ -204,7 +204,7 @@ nucleo optimizado
 - suriucata
 - antivirus
 - snort
-- grafana prometheus monit  lostats zabbix pterodactyl cacti munin mrtg
+- grafana prometheus monit  lostats  pterodactyl cacti munin mrtg
 - vnstat
 - nessus openvas nikto 
 - aide
