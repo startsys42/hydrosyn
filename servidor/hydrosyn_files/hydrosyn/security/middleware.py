@@ -58,6 +58,6 @@ class DualSessionMiddleware(BaseHTTPMiddleware):
             ip = request.client.host
 
             if user_id:
-                guardar_sesion_en_bd(user_id, session_id, key_new, user_agent, ip)
+                guardar_sesion_en_bd(user_id, session_id, key_new, user_agent, ip, max_age)
 
         return response
