@@ -12,7 +12,8 @@ systemctl disable avahi-daemon
 
 
 
-
+apt-get autoremove -y
+apt-get clean
 
 
 
