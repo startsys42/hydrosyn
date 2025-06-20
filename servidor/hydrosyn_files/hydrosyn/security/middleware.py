@@ -6,6 +6,7 @@ from security.keys import GestorClaves
 import uuid
 from db.config import obtener_tiempo_rotacion_desde_bd
 from logger import logger
+from db.sesiones import guardar_sesion_en_bd 
 
 class DualSessionMiddleware(BaseHTTPMiddleware):
     def __init__(self, app, gestor_claves: GestorClaves):
@@ -37,19 +38,26 @@ class DualSessionMiddleware(BaseHTTPMiddleware):
         # ✅ 4. Si no había sesión válida, crear una nueva
         if not session_data:
             session_id = str(uuid.uuid4())
-           new_value = session_id
-
-            signed = Signer(key_new).sign(new_value.encode()).decode()
+            signed = Signer(key_new).sign(session_id.encode()).decode()
             max_age = obtener_tiempo_rotacion_desde_bd()
+
             response.set_cookie(
                 "session_id",
                 signed,
                 httponly=True,
                 secure=True,
-                samesite="Lax",  # Puedes usar "Strict" o "None" según necesidad
+                samesite="Lax",
                 max_age=max_age
             )
-        logger.info(f"Sesión nueva creada: {session_id}")
 
+            logger.info(f"Sesión nueva creada: {session_id}")
+
+            # 🔽 Aquí guardamos en la base de datos
+            user_id = getattr(request.state, "user_id", None)  # puedes configurar esto antes si quieres
+            user_agent = request.headers.get("user-agent", "")[:512]
+            ip = request.client.host
+
+            if user_id:
+                guardar_sesion_en_bd(user_id, session_id, key_new, user_agent, ip)
 
         return response
