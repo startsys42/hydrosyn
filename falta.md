@@ -30,3 +30,5 @@
 - [ ] limpiar trazas app ordenador en reat
 - [ ] pner el 2fa y el pin en la app
 - [ ] 
+
+mensaje fallo servicio
