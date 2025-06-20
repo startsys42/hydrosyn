@@ -13,6 +13,7 @@
 ##mariadb
 
 - [  ] regex en los campos varchar
+- tiempo ede expiracion usuario base de datos
 
 #mosquito
 
