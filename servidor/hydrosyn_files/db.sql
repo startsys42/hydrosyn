@@ -31,6 +31,8 @@ INSERT INTO config (value) VALUES (1);   -- duración máxima sesión (días)
 INSERT INTO config (value) VALUES (15);  -- duración máxima access token (minutos)
 INSERT INTO config (value) VALUES (1);   -- duración máxima refresh token (días)
 
+INSERT INTO config (value) VALUES (2);  -- hora de limpieza diaria (0 a 23)
+
 -- Para intentos de sesión
 INSERT INTO config_translations (config_id, lang_code, name, description)
 VALUES 
@@ -54,6 +56,11 @@ INSERT INTO config_translations (config_id, lang_code, name, description) VALUES
 
 (5, 'es', 'Duración mínima Refresh Token', 'Duración máxima en días para el Refresh Token JWT'),
 (5, 'en', 'Minimum Refresh Token duration', 'Maximum duration in days for JWT Refresh Token');
+INSERT INTO config_translations (config_id, lang_code, name, description) VALUES
+(6, 'es', 'Hora de limpieza de sesiones', 'Hora del día (0-23) para borrar sesiones expiradas'),
+(6, 'en', 'Session cleanup hour', 'Hour of the day (0-23) to delete expired sessions');
+
+
 CREATE TABLE permissions (
     id INT PRIMARY KEY AUTO_INCREMENT
                  
@@ -578,7 +585,14 @@ BEGIN
             SIGNAL SQLSTATE '45005'
             SET MESSAGE_TEXT = 'Refresh token duration must be at least 1 day';
         END IF;
+
+    ELSEIF NEW.id = 6 THEN -- Session cleanup hour (0-23)
+        IF NEW.value < 0 OR NEW.value > 23 THEN
+            SIGNAL SQLSTATE '45006'
+            SET MESSAGE_TEXT = 'Session cleanup hour must be between 0 and 23';
+        END IF;
     END IF;
 END$$
+
 
 DELIMITER ;
