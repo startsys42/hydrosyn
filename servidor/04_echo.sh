@@ -31,22 +31,34 @@ cat <<EOF > "$ARCHIVO_C"
 
 void limpiar_texto(char *texto) {
     size_t j = 0;
-    for (size_t i = 0; texto[i] != '\\0'; i++) {
+    for (size_t i = 0; texto[i] != '\0'; i++) {
         if (texto[i] >= 32 && texto[i] <= 126 && texto[i] != '"' && texto[i] != '\'') {
             texto[j++] = texto[i];
         }
     }
-    texto[j] = '\\0';
+    texto[j] = '\0';
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 3) return 1;
+    if (argc != 2) return 1;
 
-    char *texto = argv[1];
-    char *puerto_str = argv[2];
+    char *input = argv[1];
 
-    if (strlen(texto) >= MAX_TEXTO) return 1;
+    // Buscamos el espacio que separa texto y puerto
+    char *space_pos = strchr(input, ' ');
+    if (!space_pos) return 1; // No hay espacio, error
 
+    // Separamos texto y puerto
+    size_t texto_len = space_pos - input;
+    if (texto_len >= MAX_TEXTO) return 1;
+
+    char texto[MAX_TEXTO] = {0};
+    strncpy(texto, input, texto_len);
+    texto[texto_len] = '\0';
+
+    char *puerto_str = space_pos + 1;
+
+    // Validar que el puerto sólo tenga números
     for (size_t i = 0; puerto_str[i]; ++i) {
         if (puerto_str[i] < '0' || puerto_str[i] > '9') return 1;
     }
@@ -56,7 +68,7 @@ int main(int argc, char *argv[]) {
     FILE *f = fopen(RUTA, "w");
     if (!f) return 1;
 
-    fprintf(f, "texto=%s\\npuerto=%s\\n", texto, puerto_str);
+    fprintf(f, "texto=%s\npuerto=%s\n", texto, puerto_str);
     fclose(f);
 
     chmod(RUTA, 0600);
@@ -68,6 +80,8 @@ int main(int argc, char *argv[]) {
     }
 
     return 0;
+
+
 }
 EOF
 
