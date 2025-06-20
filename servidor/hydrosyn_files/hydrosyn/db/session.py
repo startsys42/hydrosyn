@@ -17,7 +17,7 @@ def guardar_sesion_en_bd(user_id: int, session_id: str, clave: str, user_agent: 
         )
             conn.execute(
                 text("""
-                    INSERT INTO sessions (user_id, session_id, key, user_agent, ip, expires_at)
+                    INSERT INTO sessions (user_id, session_id, session_key , user_agent, ip, expires_at)
                     VALUES (:user_id, :session_id, :clave, :user_agent, :ip, :expires_at)
                 """),
                 {
