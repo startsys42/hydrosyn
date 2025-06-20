@@ -4,6 +4,7 @@ from starlette.responses import Response
 from itsdangerous import Signer, BadSignature
 from security.keys import GestorClaves
 import uuid
+from db.config import obtener_tiempo_rotacion_desde_bd
 
 class DualSessionMiddleware(BaseHTTPMiddleware):
     def __init__(self, app, gestor_claves: GestorClaves):
@@ -43,7 +44,7 @@ class DualSessionMiddleware(BaseHTTPMiddleware):
                 httponly=True,
                 secure=True,
                 samesite="Lax",  # Puedes usar "Strict" o "None" según necesidad
-                max_age=60 * 60 * 24 * 7  # 7 días de validez
+                max_age=obtener_tiempo_rotacion_desde_bd # 7 días de validez
             )
 
         return response
