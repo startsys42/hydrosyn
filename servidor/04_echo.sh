@@ -93,4 +93,4 @@ chown root:root "$DESTINO"
 # Borrar el archivo fuente temporal
 rm -f "$ARCHIVO_C"
 
-apt purge gcc
+apt purge gcc -y
