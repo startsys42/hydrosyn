@@ -70,7 +70,8 @@ def obtener_password_mas_reciente(ruta_shadow: str, clave_maestra: str) -> str:
             continue
         texto_cifrado, fecha_str = linea.rsplit(":", 1)
         try:
-            fecha = datetime.strptime(fecha_str, "%Y%m%d%H%M%S")
+            fecha = datetime.strptime(fecha_str, "%Y-%m-%d_%H-%M-%S")
+
         except ValueError:
             logger.warning(f"Línea con fecha no válida ignorada: {linea}")
             continue
