@@ -5,7 +5,7 @@ _engine = None
 
 def inicializar_engine(usuario, password, host, puerto, nombre_bd):
     global _engine
-    logger.info(f"Conectando a BD con: usuario={usuario}, password={'***' if password else 'VACÍO'}, host={host}, puerto={bd_port}, bd={nombre_bd}")
+    logger.info(f"Conectando a BD con: usuario={usuario}, password={'***' if password else 'VACÍO'}, host={host}, puerto={puerto}, bd={nombre_bd}")
 
     if not usuario or not password or not host or not puerto or not nombre_bd:
         raise ValueError("Todos los parámetros de conexión deben tener valor válido.")
