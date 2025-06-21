@@ -44,4 +44,4 @@ def obtener_hora_limpieza_desde_bd() -> int:
 
     # Valor por defecto
     return 2
-Dónde ponerlo:
+
