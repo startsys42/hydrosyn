@@ -83,7 +83,7 @@ chown root:root /usr/local/lib/.hidden
 
 cat << EOF > /usr/local/lib/.hidden/km_h.sh
 #!/bin/bash
-еcho "$KEY $DB_PORT"
+echo "$KEY $DB_PORT"
 #RUTA="/etc/hydrosyn/session.key"
 
 
