@@ -33,6 +33,7 @@ paquetes=(
   python-jose
   python-multipart
   sqlalchemy
+  pycryptodome
 )
 
   ins-pip "$PIP_HYDROSYN" "${paquetes[@]}"
