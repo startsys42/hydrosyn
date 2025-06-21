@@ -3,18 +3,16 @@ import hashlib
 from Crypto.Cipher import AES
 from logger import logger
 def openssl_decrypt(enc, password):
-    # decodificar base64
     data = base64.b64decode(enc)
 
-    # El formato de OpenSSL con salt es: "Salted__" + 8 bytes salt + datos cifrados
     if data[:8] != b"Salted__":
         raise ValueError("No encontrado encabezado Salted__")
 
     salt = data[8:16]
     ciphertext = data[16:]
 
-    # Derivar key y iv con EVP_BytesToKey (MD5)
-    key_iv = evp_bytes_to_key(password.encode(), salt, key_len=32, iv_len=16)
+    # Derivar key e IV con PBKDF2 (OpenSSL usa 10000 iteraciones y sha256)
+    key_iv = pbkdf2_bytes_to_key(password.encode(), salt, key_len=32, iv_len=16, iterations=10000)
     key = key_iv[:32]
     iv = key_iv[32:]
 
@@ -25,17 +23,12 @@ def openssl_decrypt(enc, password):
     padding_len = decrypted[-1]
     return decrypted[:-padding_len].decode('utf-8')
 
-def evp_bytes_to_key(password, salt, key_len, iv_len):
-    """
-    Deriva key e IV usando método OpenSSL EVP_BytesToKey con MD5
-    """
-    dtot = b''
-    d = b''
-    while len(dtot) < (key_len + iv_len):
-        d = hashlib.md5(d + password + salt).digest()
-        dtot += d
-    return dtot[:key_len + iv_len]
-
+def pbkdf2_bytes_to_key(password, salt, key_len, iv_len, iterations):
+    # PBKDF2 para derivar key + iv concatenados
+    from Crypto.Protocol.KDF import PBKDF2
+    dk_len = key_len + iv_len
+    key_iv = PBKDF2(password, salt, dk_len, count=iterations, hmac_hash_module=hashlib.sha256)
+    return key_iv
 
 
 def descifrar_contrasena(texto_cifrado: str, clave_maestra: str) -> str:
