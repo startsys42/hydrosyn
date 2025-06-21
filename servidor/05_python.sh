@@ -34,6 +34,8 @@ paquetes=(
   python-multipart
   sqlalchemy
   pycryptodome
+  passlib
+  pydantic[email]
 )
 
   ins-pip "$PIP_HYDROSYN" "${paquetes[@]}"
