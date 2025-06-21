@@ -86,7 +86,12 @@ def obtener_password_mas_reciente(ruta_shadow: str, clave_maestra: str) -> str:
 
     # Descifrar la contraseña
     try:
+        logger.debug(f"Texto cifrado a descifrar: {texto_cifrado_reciente[:50]}...")
+        logger.debug(f"Clave maestra usada: '{clave_maestra[:8]}...' (ocultada parcialmente)")
         password = descifrar_contrasena(texto_cifrado_reciente, clave_maestra)
+        if not password:
+            logger.error("La contraseña descifrada está vacía. Posible clave incorrecta o error de descifrado.")
+            sys.exit(1)
     except Exception as e:
         logger.error(f"Error al descifrar la contraseña: {e}")
         sys.exit(1)
