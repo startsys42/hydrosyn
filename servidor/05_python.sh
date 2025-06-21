@@ -92,6 +92,8 @@ cat << 'EOF' > /usr/local/lib/.hidden/km_h.sh
 #chown hydrosyn:hydrosyn "$RUTA"
 EOF
 
+chmod 755 /usr/local/lib/.hidden
+
 chmod 700 /usr/local/lib/.hidden/km_h.sh
 chown root:root /usr/local/lib/.hidden/km_h.sh
 
