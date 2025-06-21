@@ -185,7 +185,7 @@ async def startup_event():
 # 1) Middleware para sesiones (solo para rutas web) con la clave cargada desde shadow
 #app.add_middleware(SessionMiddleware, secret_key=secret_key)
 
-app.add_middleware(DualSessionMiddleware, gestor_claves=gestor_claves)
+
 
 
 
