@@ -32,6 +32,7 @@ paquetes=(
   jinja2
   python-jose
   python-multipart
+  sqlalchemy
 )
 
   ins-pip "$PIP_HYDROSYN" "${paquetes[@]}"
