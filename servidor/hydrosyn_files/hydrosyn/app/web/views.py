@@ -7,7 +7,7 @@ from app.web.utils import get_user_preferences
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")  # apunta a la carpeta correcta
 
-@app.get("/")
+@router.get("/", response_class=HTMLResponse)
 async def welcome(request: Request):
     try:
         prefs = get_user_preferences(request)
