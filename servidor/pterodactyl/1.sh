@@ -22,8 +22,8 @@ cd /var/www/pterodactyl
 curl -Lo panel.tar.gz https://github.com/pterodactyl/panel/releases/latest/download/panel.tar.gz
 tar -xzvf panel.tar.gz
 chmod -R 755 storage/* bootstrap/cache/
-MYSQL_ROOT_PASSWORD="rootPassword"
-PTERODACTYL_PASSWORD="yourPassword"
+MYSQL_ROOT_PASSWORD="Elcampanariodemario43"
+PTERODACTYL_PASSWORD="abc123."
 
 # Ejecutar comandos SQL con mysql CLI, usando localhost
 mysql -u root -p"$MYSQL_ROOT_PASSWORD" -h localhost <<EOF
