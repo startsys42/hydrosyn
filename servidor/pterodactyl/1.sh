@@ -89,7 +89,7 @@ server {
 
     location ~ \\.php\$ {
         fastcgi_split_path_info ^(.+\\.php)(/.+)\$;
-        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+        fastcgi_pass unix:/run/php/php8.2-fpm.sock;
         fastcgi_index index.php;
         include fastcgi_params;
         fastcgi_param PHP_VALUE "upload_max_filesize = 100M \\n post_max_size=100M";
@@ -122,8 +122,8 @@ After=redis-server.service
 [Service]
 # On some systems the user and group might be different.
 # Some systems use \`apache\` or \`nginx\` as the user and group.
-User=www-data
-Group=www-data
+User=nginx
+Group=nginx
 Restart=always
 ExecStart=/usr/bin/php /var/www/pterodactyl/artisan queue:work --queue=high,standard,low --sleep=3 --tries=3
 StartLimitInterval=180
