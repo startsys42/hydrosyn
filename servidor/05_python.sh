@@ -36,6 +36,7 @@ paquetes=(
   pycryptodome
   passlib
   pydantic[email]
+  pymysql
 )
 
   ins-pip "$PIP_HYDROSYN" "${paquetes[@]}"
