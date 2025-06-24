@@ -52,7 +52,7 @@ chown hydrosyn:hydrosyn /var/lib/hydrosyn/session.key
 chmod 600 /var/lib/hydrosyn/session.key
 
 # 1. Cifrar la contraseña individualmente con la clave maestra
-password_cifrada=$(echo -n "$DB_PASS_HYDRO" | openssl enc -aes-256-cbc  -A -salt -pbkdf2  -pass pass:"$KEY")
+password_cifrada=$(echo -n "$DB_PASS_HYDRO" | openssl enc -aes-256-cbc   -salt -pbkdf2  -pass pass:"$KEY" -base64)
 password_cifrada_clean=$(echo "$password_cifrada" | tr -d '\r\n ')
 fecha_actual=$(date +"%Y-%m-%d_%H-%M-%S")
 # 2. Construir línea usuario:contraseña_cifrada:fecha
