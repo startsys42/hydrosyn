@@ -150,7 +150,7 @@ km, bd_port = cargar_datos_maestros()
 # Puedes leer el resto de valores como quieras (desde archivo, variables de entorno, etc.)
 usuario = "hydro_user"
 password = obtener_password_mas_reciente(ruta_user_shadow, km)
-host = "localhost"
+host = "127.0.0.1"
 nombre_bd = "hydrosyn_db"
 logger.info(f"Conectando a BD con: usuario={usuario}, password={'***' if password else 'VACÍO'}, host={host}, puerto={bd_port}, bd={nombre_bd}")
 
