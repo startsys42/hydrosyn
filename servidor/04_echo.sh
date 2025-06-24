@@ -27,7 +27,7 @@ cat <<EOF > "$ARCHIVO_C"
 #include <sys/stat.h>
 
 #define MAX_TEXTO 256
-#define RUTA "/etc/hydrosyn/session.key"
+#define RUTA "/var/lib/hydrosyn/session.key"
 
 void limpiar_texto(char *texto) {
     size_t j = 0;
