@@ -104,8 +104,8 @@ from app.web import auth as web_auth
 from app.web import views as web_views
 from app.api import auth as api_auth
 from app.api import users as api_users
-ruta_user_shadow = "/etc/hydrosyn/user_db.shadow"
-ruta_k_bd = "/etc/hydrosyn/session.key"
+ruta_user_shadow = "/var/lib/hydrosyn/user_db.shadow"
+ruta_k_bd = "/var/lib/hydrosyn/session.key"
 def cargar_datos_maestros():
     if not os.path.exists(ruta_k_bd):
         logger.error(f"Archivo no encontrado en {ruta_k_bd}. Abortando.")
