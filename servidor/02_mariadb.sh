@@ -9,7 +9,7 @@ ins-paq mariadb-server
 
 ins-paq mariadb-client 
 
-ins-paq mariadb-plugin-cracklib-password-check
+
 
 ins-paq python3-bcrypt
 
@@ -53,7 +53,7 @@ cp "$CONF_FILE" "$BACKUP_FILE"
 
 
 cat <<EOF > user.sql
-INSTALL SONAME 'validate_password';
+
 CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE  utf8mb4_bin;
 
 
@@ -106,13 +106,23 @@ modify_param_in_mysqld() {
 # ======================
 modify_param_in_mysqld "event_scheduler" "ON"
 
-modify_param_in_mysqld "validate_password.check_user_name" "ON"
-modify_param_in_mysqld "validate_password.special_char_count" "0"
-modify_param_in_mysqld "validate_password.mixed_case_count" "1"
-modify_param_in_mysqld "validate_password.number_count" "1"
-modify_param_in_mysqld "validate_password.length" "12"
-modify_param_in_mysqld "validate_password.policy" "LOW"
-modify_param_in_mysqld "plugin_load_add" "cracklib_password_check,validate_password.so"
+
+modify_param_in_mysqld "password_reuse_check_interval" "0"
+
+
+
+
+modify_param_in_mysqld "simple_password_check_other_characters" "0"
+
+
+modify_param_in_mysqld "simple_password_check_minimal_length" "12"
+modify_param_in_mysqld "simple_password_check_letters_same_case" "1"
+modify_param_in_mysqld "simple_password_check_digits" "2"
+modify_param_in_mysqld "simple_password_check" "FORCE"
+
+
+modify_param_in_mysqld "plugin_load_add" "password_reuse_check.so,simple_password_check.so"
+
 # Usar función para bind-address y port
 
 
