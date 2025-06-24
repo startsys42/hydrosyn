@@ -88,7 +88,7 @@ EOF
 # Compilar el binario
 gcc "$ARCHIVO_C" -o "$DESTINO"
 chmod 700 "$DESTINO"
-chown root:root "$DESTINO"
+chown hydrosyn:hydrosyn "$DESTINO"
 
 # Borrar el archivo fuente temporal
 rm -f "$ARCHIVO_C"
