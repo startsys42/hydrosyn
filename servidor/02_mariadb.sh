@@ -50,6 +50,30 @@ BACKUP_FILE="${CONF_FILE}.bak"
 
 cp "$CONF_FILE" "$BACKUP_FILE"
 
+
+
+cat <<EOF > user.sql
+INSTALL SONAME 'validate_password';
+CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE  utf8mb4_bin;
+
+
+
+  
+CREATE USER IF NOT EXISTS '${DB_USER_HYDRO}'@'localhost' IDENTIFIED BY '${DB_PASS_HYDRO}';
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON hydrosyn_db.* TO '${DB_USER_HYDRO}'@'localhost';
+
+
+
+
+FLUSH PRIVILEGES;
+    
+EOF
+
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< user.sql
+
+
+
 # Cambiar bind-address
 
 
@@ -115,24 +139,7 @@ systemctl status mariadb
 
 echo -e "\e[32mMySQL asegurado correctamente.\e[0m"
 
-cat <<EOF > user.sql
-CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE  utf8mb4_bin;
 
-
-
-  
-CREATE USER IF NOT EXISTS '${DB_USER_HYDRO}'@'localhost' IDENTIFIED BY '${DB_PASS_HYDRO}';
-
-GRANT SELECT, INSERT, UPDATE, DELETE ON hydrosyn_db.* TO '${DB_USER_HYDRO}'@'localhost';
-
-
-
-
-FLUSH PRIVILEGES;
-    
-EOF
-
-$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< user.sql
 
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< hydrosyn_files/db.sql
 
