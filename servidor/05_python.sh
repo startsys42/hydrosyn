@@ -57,7 +57,7 @@ password_cifrada=$(echo -n "$DB_PASS_HYDRO" | openssl enc -aes-256-cbc  -A -salt
 password_cifrada_clean=$(echo "$password_cifrada" | tr -d '\r\n ')
 fecha_actual=$(date +"%Y-%m-%d_%H-%M-%S")
 # 2. Construir línea usuario:contraseña_cifrada:fecha
-datos="$password_cifrada:$fecha_actual"
+datos="$password_cifrada_clean:$fecha_actual"
 
 echo "$datos" >/etc/hydrosyn/user_db.shadow
 chown hydrosyn:hydrosyn /etc/hydrosyn/user_db.shadow
