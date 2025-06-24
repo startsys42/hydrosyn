@@ -167,7 +167,7 @@ ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N ""
 systemctl enable ssh
 
 
-systemctl start ssh
+systemctl restart ssh
 
 
 
