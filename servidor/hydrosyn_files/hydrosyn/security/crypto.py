@@ -1,5 +1,5 @@
 import base64
-import hashlib
+#import hashlib
 from Crypto.Cipher import AES
 from Crypto.Protocol.KDF import PBKDF2
 from Crypto.Hash import SHA256  
@@ -16,7 +16,7 @@ def openssl_decrypt(enc: str, password: str) -> str:
         ciphertext = data[16:]
 
         # Derivar key e IV con PBKDF2 (OpenSSL usa 10000 iteraciones y SHA256)
-        key_iv = PBKDF2(password.encode(), salt, dkLen=48, count=10000, hmac_hash_module=hashlib.sha256)
+        key_iv = PBKDF2(password.encode(), salt, dkLen=48, count=10000, hmac_hash_module=SHA56)
         key = key_iv[:32]
         iv = key_iv[32:]
 
