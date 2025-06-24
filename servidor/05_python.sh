@@ -50,6 +50,8 @@ texto=$KEY
 puerto=$DB_PORT
 EOF
 chown hydrosyn:hydrosyn /var/lib/hydrosyn/session.key
+chown hydrosyn:hydrosyn /var/lib/hydrosyn
+chmod 700 /var/lib/hydrosyn
 chmod 600 /var/lib/hydrosyn/session.key
 
 # 1. Cifrar la contraseña individualmente con la clave maestra
