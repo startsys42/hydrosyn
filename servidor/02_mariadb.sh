@@ -107,7 +107,7 @@ modify_param_in_mysqld "bind-address" "127.0.0.1"
 systemctl enable mariadb
 
 
-systemctl start mariadb
+systemctl restart mariadb
 systemctl status mariadb
 
 
