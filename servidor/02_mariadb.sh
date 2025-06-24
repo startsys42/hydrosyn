@@ -107,7 +107,7 @@ modify_param_in_mysqld() {
 modify_param_in_mysqld "event_scheduler" "ON"
 
 
-modify_param_in_mysqld "password_reuse_check_interval" "0"
+
 
 
 modify_param_in_mysqld "simple_password_check" "FORCE"
