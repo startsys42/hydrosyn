@@ -121,7 +121,7 @@ modify_param_in_mysqld "simple_password_check_digits" "2"
 modify_param_in_mysqld "simple_password_check" "FORCE"
 
 
-modify_param_in_mysqld "plugin_load_add" "password_reuse_check.so,simple_password_check.so"
+modify_param_in_mysqld "plugin_load_add" "password_reuse_check,simple_password_check"
 
 # Usar función para bind-address y port
 
