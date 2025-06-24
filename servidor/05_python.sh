@@ -45,7 +45,7 @@ paquetes=(
 mkdir -p /var/lib/hydrosyn
 
 
-cat <<EOF > /var/lib/hydrosynn/session.key
+cat <<EOF > /var/lib/hydrosyn/session.key
 texto=$KEY
 puerto=$DB_PORT
 EOF
