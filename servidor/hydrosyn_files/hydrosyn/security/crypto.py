@@ -2,6 +2,7 @@ import base64
 import hashlib
 from Crypto.Cipher import AES
 from Crypto.Protocol.KDF import PBKDF2
+from Crypto.Hash import SHA256  
 from logger import logger
 
 def openssl_decrypt(enc: str, password: str) -> str:
