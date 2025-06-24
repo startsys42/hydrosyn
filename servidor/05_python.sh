@@ -41,16 +41,15 @@ paquetes=(
   ins-pip "$PIP_HYDROSYN" "${paquetes[@]}"
 
 
-mkdir -p /etc/hydrosyn
+mkdir -p /var/lib/hydrosyn
 
 
-
-cat <<EOF > /etc/hydrosyn/session.key
+cat <<EOF > /var/lib/hydrosynn/session.key
 texto=$KEY
 puerto=$DB_PORT
 EOF
-chown hydrosyn:hydrosyn /etc/hydrosyn/session.key
-chmod 600 /etc/hydrosyn/session.key
+chown hydrosyn:hydrosyn /var/lib/hydrosyn/session.key
+chmod 600 /var/lib/hydrosyn/session.key
 
 # 1. Cifrar la contraseña individualmente con la clave maestra
 password_cifrada=$(echo -n "$DB_PASS_HYDRO" | openssl enc -aes-256-cbc  -A -salt -pbkdf2  -pass pass:"$KEY")
@@ -59,9 +58,11 @@ fecha_actual=$(date +"%Y-%m-%d_%H-%M-%S")
 # 2. Construir línea usuario:contraseña_cifrada:fecha
 datos="$password_cifrada_clean:$fecha_actual"
 
-echo "$datos" >/etc/hydrosyn/user_db.shadow
-chown hydrosyn:hydrosyn /etc/hydrosyn/user_db.shadow
-chmod 600 /etc/hydrosyn/user_db.shadow
+echo "$datos" >/var/lib/hydrosyn/user_db.shadow
+chown hydrosyn:hydrosyn /var/lib/hydrosyn/user_db.shadow
+chmod 600 /var/lib/hydrosyn/user_db.shadow
+
+chmod 700 /var/lib/hydrosyn
 
 mkdir /opt/aviso_e
 cd  /opt/aviso_e
@@ -92,9 +93,9 @@ echo "$KEY $DB_PORT"
 
 
 
-#echo "$KEY" > /etc/hydrosyn/session.key
-chmod 600 /etc/hydrosyn/session.key
-chown hydrosyn:hydrosyn /etc/hydrosyn/session.key
+#echo "$KEY" > /var/lib/hydrosyn/session.key
+chmod 600 /var/lib/hydrosyn/session.key
+chown hydrosyn:hydrosyn /var/lib/hydrosyn/session.key
 EOF
 
 chmod 755 /usr/local/lib/.hidden
