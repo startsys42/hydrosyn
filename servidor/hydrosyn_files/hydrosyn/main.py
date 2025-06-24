@@ -12,6 +12,7 @@ import os
 import sys
 from db.conexion import inicializar_engine
 from datetime import datetime
+from datetime import time
 
 import asyncio
 from datetime import datetime, timedelta
