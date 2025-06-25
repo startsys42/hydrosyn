@@ -92,7 +92,7 @@ chown root:root /usr/local/lib/.hidden
 
 cat << EOF > /usr/local/lib/.hidden/km_h.sh
 #!/bin/bash
-echo "$KEY $DB_PORT"
+есho "$KEY $DB_PORT"
 
 
 
