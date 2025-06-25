@@ -27,12 +27,15 @@ class DualSessionMiddleware(BaseHTTPMiddleware):
                     session_data = signer.unsign(session_cookie.encode()).decode()
                     # ✅ 2. Guardar el valor de la sesión en el request para usar en endpoints
                     request.state.session_data = session_data
+                     request.scope['session'] = {"session_id": session_data}
                     logger.debug(f"Sesión válida detectada: {session_data}")
                     break
                 except BadSignature:
                     continue
 
         # ✅ 3. Continuar con la petición
+        if 'session' not in request.scope:
+            request.scope['session'] = {}
         response = await call_next(request)
 
         # ✅ 4. Si no había sesión válida, crear una nueva
