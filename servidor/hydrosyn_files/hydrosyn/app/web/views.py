@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from app.web.utils import get_user_preferences
-
+from starlette.responses import PlainTextResponse
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")  # apunta a la carpeta correcta
