@@ -1,3 +1,9 @@
+import os
+import sys
+from datetime import datetime
+from logger import logger
+from security.crypto import descifrar_contrasena 
+
 def obtener_password_mas_reciente(ruta_shadow: str, clave_maestra: str) -> str:
     if not os.path.exists(ruta_shadow):
         logger.error(f"Archivo no encontrado en {ruta_shadow}. Abortando.")
@@ -47,7 +53,7 @@ def obtener_password_mas_reciente(ruta_shadow: str, clave_maestra: str) -> str:
     return password
 
 
-def cargar_datos_maestros():
+def cargar_datos_maestros(ruta_k_bd: str):
     if not os.path.exists(ruta_k_bd):
         logger.error(f"Archivo no encontrado en {ruta_k_bd}. Abortando.")
         sys.exit(1)
