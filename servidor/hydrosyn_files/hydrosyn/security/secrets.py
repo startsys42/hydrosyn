@@ -45,3 +45,38 @@ def obtener_password_mas_reciente(ruta_shadow: str, clave_maestra: str) -> str:
 
     logger.info("Contraseña descifrada correctamente.")
     return password
+
+
+def cargar_datos_maestros():
+    if not os.path.exists(ruta_k_bd):
+        logger.error(f"Archivo no encontrado en {ruta_k_bd}. Abortando.")
+        sys.exit(1)
+
+    with open(ruta_k_bd, "r") as f:
+        lineas = f.read().strip().splitlines()
+
+    datos = {}
+    for linea in lineas:
+        if "=" in linea:
+            clave, valor = linea.split("=", 1)
+            datos[clave.strip()] = valor.strip()
+
+    texto = datos.get("texto", "")
+    puerto = datos.get("puerto", "")
+
+    # Validar contenido
+    if not texto:
+        logger.error("El campo 'texto' está vacío. Abortando.")
+        sys.exit(1)
+
+    if not puerto.isdigit():
+        logger.error(f"El campo 'puerto' debe ser numérico. Valor recibido: '{puerto}'. Abortando.")
+        sys.exit(1)
+
+    try:
+        os.remove(ruta_k_bd)
+    except Exception as e:
+        logger.warning(f"No se pudo borrar el fichero de datos: {e}")
+
+    logger.info("Datos cargados correctamente y fichero borrado.")
+    return texto, puerto
