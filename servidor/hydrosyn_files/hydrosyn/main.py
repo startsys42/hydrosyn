@@ -14,7 +14,7 @@ import sys
 from db.conexion import inicializar_engine
 from datetime import datetime
 from datetime import time
-from jobs.sessions import periodic_cleanup_job
+from tasks.sessions import periodic_cleanup_job
 import asyncio
 from datetime import datetime, timedelta
 from fastapi import FastAPI
