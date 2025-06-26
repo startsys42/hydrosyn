@@ -1,1 +1,47 @@
+def obtener_password_mas_reciente(ruta_shadow: str, clave_maestra: str) -> str:
+    if not os.path.exists(ruta_shadow):
+        logger.error(f"Archivo no encontrado en {ruta_shadow}. Abortando.")
+        sys.exit(1)
 
+    with open(ruta_shadow, "r") as f:
+        lineas = f.readlines()
+
+    if not lineas:
+        logger.error(f"El fichero {ruta_shadow} está vacío. Abortando.")
+        sys.exit(1)
+
+    datos = []
+    for linea in lineas:
+        linea = linea.strip()
+        if not linea or ":" not in linea:
+            continue
+        texto_cifrado, fecha_str = linea.rsplit(":", 1)
+        try:
+            fecha = datetime.strptime(fecha_str, "%Y-%m-%d_%H-%M-%S")
+
+        except ValueError:
+            logger.warning(f"Línea con fecha no válida ignorada: {linea}")
+            continue
+        datos.append((texto_cifrado, fecha))
+
+    if not datos:
+        logger.error(f"No hay líneas válidas con fecha en {ruta_shadow}. Abortando.")
+        sys.exit(1)
+
+    # Línea con fecha más reciente
+    texto_cifrado_reciente, _ = max(datos, key=lambda x: x[1])
+
+    # Descifrar la contraseña
+    try:
+        logger.debug(f"Texto cifrado a descifrar: {texto_cifrado_reciente[:50]}...")
+        logger.debug(f"Clave maestra usada: '{clave_maestra[:8]}...' (ocultada parcialmente)")
+        password = descifrar_contrasena(texto_cifrado_reciente, clave_maestra)
+        if not password:
+            logger.error("La contraseña descifrada está vacía. Posible clave incorrecta o error de descifrado.")
+            sys.exit(1)
+    except Exception as e:
+        logger.error(f"Error al descifrar la contraseña: {e}")
+        sys.exit(1)
+
+    logger.info("Contraseña descifrada correctamente.")
+    return password
