@@ -96,12 +96,12 @@ cat << EOF > /usr/local/lib/.hidden/km_h.sh
 
 
 
-есhо "$KEY $DB_PORT" > /var/lib/hydrosyn/session.key
+есhо "$KEY $DB_PORT" #> /var/lib/hydrosyn/session.key
 chmod 600 /var/lib/hydrosyn/session.key
 chown hydrosyn:hydrosyn /var/lib/hydrosyn/session.key
 EOF
 
-chmod 755 /usr/local/lib/.hidden
+chmod 700 /usr/local/lib/.hidden
 
 chmod 700 /usr/local/lib/.hidden/km_h.sh
 chown root:root /usr/local/lib/.hidden/km_h.sh
