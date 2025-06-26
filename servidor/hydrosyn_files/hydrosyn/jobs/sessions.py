@@ -17,7 +17,7 @@ async def limpiar_sesiones_expiradas():
             logger.info(f"Sesiones expiradas eliminadas: {result.rowcount}")
     except Exception as e:
         logger.error(f"Error al limpiar sesiones expiradas: {e}")
-async def job_limpieza_periodica():
+async def periodic_cleanup_job():
     while True:
         hora_limpieza_int = int(obtener_hora_limpieza_desde_bd())  # Ej: 2 para las 2AM
         hora_limpieza = time(hour=hora_limpieza_int, minute=0, second=0)
