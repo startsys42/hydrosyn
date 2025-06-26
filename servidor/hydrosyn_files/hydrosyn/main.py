@@ -34,11 +34,11 @@ from app.web import views as web_views
 from app.api import auth as api_auth
 from app.api import users as api_users
 ruta_user_shadow = "/var/lib/hydrosyn/user_db.shadow"
-ruta_k_bd = "/var/lib/hydrosyn/session.key"
+ruta_k_db = "/var/lib/hydrosyn/session.key"
 
 
 
-km, bd_port = cargar_datos_maestros()
+km, db_port = cargar_datos_maestros(ruta_k_db)
 
 
 
