@@ -148,7 +148,7 @@ gestor_claves = GestorClaves(
 app = FastAPI()
 @app.on_event("startup")
 async def startup_event():
-    asyncio.create_task(job_limpieza_periodica())
+    asyncio.create_task(periodic_cleanup_job())
 # 1) Middleware para sesiones (solo para rutas web) con la clave cargada desde shadow
 
 
