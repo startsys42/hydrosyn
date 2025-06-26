@@ -1,9 +1,11 @@
 from sqlalchemy import create_engine
+from security.secrets import obtener_password_mas_reciente, cargar_datos_maestros
 from logger import logger
 
 _engine = None
 
 def inicializar_engine(usuario, password, host, puerto, nombre_bd):
+   
     global _engine
     logger.info(f"Conectando a BD con: usuario={usuario}, password={'***' if password else 'VACÍO'}, host={host}, puerto={puerto}, bd={nombre_bd}")
 
