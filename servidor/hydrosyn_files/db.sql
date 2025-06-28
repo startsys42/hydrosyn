@@ -2,8 +2,8 @@ CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE  utf8mb4
 USE hydrosyn_db;
 
 CREATE TABLE IF NOT EXISTS config (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    value INT NOT NULL  -- solo un valor numérico entero
+    id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
+    value INT UNSIGNED NOT NULL  -- solo un valor numérico entero
 );
 
 
@@ -11,8 +11,8 @@ CREATE TABLE IF NOT EXISTS config (
 
 
 CREATE TABLE IF NOT EXISTS config_translations (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    config_id INT NOT NULL,
+    id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
+    config_id INT UNSIGNED  NOT NULL,
     lang_code ENUM('es', 'en') NOT NULL,
     name VARCHAR(100) NOT NULL,
     description VARCHAR(255) NOT NULL,
@@ -25,6 +25,8 @@ CREATE TABLE IF NOT EXISTS config_translations (
 );
 
 INSERT INTO config (value) VALUES (3);   -- intentos de sesión
+
+INSERT INTO config (value) VALUES (5);   -- tiempo de duración de lo intentos de inicio de sesión
 INSERT INTO config (value) VALUES (15);  -- tiempo de suspensión (minutos)
 -- Insertar nuevos valores (puedes usar UPDATE o INSERT dependiendo de si config ya tiene filas)
 INSERT INTO config (value) VALUES (1);   -- duración máxima sesión (días)
@@ -33,103 +35,221 @@ INSERT INTO config (value) VALUES (1);   -- duración máxima refresh token (dí
 
 INSERT INTO config (value) VALUES (2);  -- hora de limpieza diaria (0 a 23)
 
+INSERT INTO config (value) VALUES (24); -- TIEMPO EN HORAS PARA VERIFICAR EMAIL YC AMBIAR CLAVE
+INSERT INTO config (value) VALUES (365); -- TIEMPO EN DIAS PARA MANTEER REGISTROD E USUARIOS QUE NO SE EVRIFICARON
+INSERT INTO config (value) VALUES (2); -- TIEMPO EN DIAS PARA FORZAR EL CMABIO DE NOMBRE DE USUARIO POR LA NEUVA POLITICA D ENOMBRES
+
 -- Para intentos de sesión
 INSERT INTO config_translations (config_id, lang_code, name, description)
 VALUES 
 (1, 'es', 'Número de intentos de sesión', 'Cantidad máxima de intentos fallidos antes de bloqueo'),
 (1, 'en', 'Session attempts number', 'Maximum failed login attempts before lockout');
 
+INSERT INTO config_translations (config_id, lang_code, name, description) VALUES
+(2, 'es', 'Tiempo de duración de intentos', 'Duración en minutos durante la cual se cuentan los intentos fallidos'),
+(2, 'en', 'Duration of attempts time', 'Duration in minutes during which failed attempts are counted');
+
 -- Para tiempo de suspensión
 INSERT INTO config_translations (config_id, lang_code, name, description)
 VALUES
-(2, 'es', 'Tiempo de suspensión', 'Duración en minutos de la suspensión tras intentos fallidos'),
-(2, 'en', 'Suspension time', 'Duration in minutes of the suspension after failed attempts');
+(3, 'es', 'Tiempo de suspensión', 'Duración en minutos de la suspensión tras intentos fallidos'),
+(3, 'en', 'Suspension time', 'Duration in minutes of the suspension after failed attempts');
 
 
 -- Agregar traducciones para esos nuevos configs
 INSERT INTO config_translations (config_id, lang_code, name, description) VALUES
-(3, 'es', 'Duración mínima de sesión', 'Duración máxima en días para la sesión web'),
-(3, 'en', 'Minimum session duration', 'Maximum session web duration in days'),
+(4, 'es', 'Duración mínima de sesión', 'Duración máxima en días para la sesión web'),
+(4, 'en', 'Minimum session duration', 'Maximum session web duration in days'),
 
-(4, 'es', 'Duración mínima Access Token', 'Duración máxima en minutos para el Access Token JWT'),
-(4, 'en', 'Minimum Access Token duration', 'Maximum duration in minutes for JWT Access Token'),
+(5, 'es', 'Duración mínima Access Token', 'Duración máxima en minutos para el Access Token JWT'),
+(5, 'en', 'Minimum Access Token duration', 'Maximum duration in minutes for JWT Access Token'),
 
-(5, 'es', 'Duración mínima Refresh Token', 'Duración máxima en días para el Refresh Token JWT'),
-(5, 'en', 'Minimum Refresh Token duration', 'Maximum duration in days for JWT Refresh Token');
+(6, 'es', 'Duración mínima Refresh Token', 'Duración máxima en días para el Refresh Token JWT'),
+(6, 'en', 'Minimum Refresh Token duration', 'Maximum duration in days for JWT Refresh Token');
 INSERT INTO config_translations (config_id, lang_code, name, description) VALUES
-(6, 'es', 'Hora de limpieza de sesiones', 'Hora del día (0-23) para borrar sesiones expiradas'),
-(6, 'en', 'Session cleanup hour', 'Hour of the day (0-23) to delete expired sessions');
+(7, 'es', 'Hora de limpieza de sesiones', 'Hora del día (0-23) para borrar sesiones expiradas'),
+(7, 'en', 'Session cleanup hour', 'Hour of the day (0-23) to delete expired sessions');
+
+INSERT INTO config_translations (config_id, lang_code, name, description) VALUES
+(8, 'es', 'Tiempo para verificación inicial', 'Horas disponibles para que el usuario verifique su email y cambie su contraseña temporal');
+
+-- Inglés
+INSERT INTO config_translations (config_id, lang_code, name, description) VALUES
+(8, 'en', 'Initial verification window', 'Hours available for the user to verify email and change temporary password');
+INSERT INTO config_translations (config_id, lang_code, name, description) VALUES
+(9, 'es', 'Tiempo de retención de registros', 'Días para mantener registros históricos de usuarios no verificados'),
+(9, 'en', 'Retention time for records', 'Days to keep historical records of unverified users');
+INSERT INTO config_translations (config_id, lang_code, name, description) VALUES
+(10, 'es', 'Tiempo para cambio de nombre por política', 'Días disponibles para que el usuario cambie su nombre de usuario si no cumple la nueva política'),
+(10, 'en', 'Username policy change grace period', 'Days given to users to change their username if it does not comply with the new policy');
+
+
+CREATE TABLE users (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT FALSE,
+
+
+
+    failed_login_attempts INT UNSIGNED NOT NULL DEFAULT 0,
+  lockout_until TIMESTAMP  DEFAULT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by INT UNSIGNED NOT NULL,
+     language ENUM('es', 'en') NOT NULL DEFAULT 'en',
+    theme ENUM('dark', 'light') NOT NULL DEFAULT 'light',
+    use_2fa BOOLEAN NOT NULL DEFAULT FALSE,
+    twofa_secret VARCHAR(64),
+
+    CONSTRAINT fk_user_creator
+        FOREIGN KEY (created_by)
+        REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE email_verifications (
+    user_id INT UNSIGNED  PRIMARY KEY,
+    email_verification_token VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NOT NULL,
+    verified BOOLEAN NOT NULL DEFAULT FALSE,
+
+    FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+
+CREATE TABLE email_verifications_unverified_log (
+    id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL,   -- fecha creación del token
+    expires_at TIMESTAMP NOT NULL,   -- fecha de expiración
+    deleted_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP -- fecha en que se borró el registro original
+);
+
+
+CREATE TABLE password_policy_current (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    min_length INT NOT NULL DEFAULT 12,
+    min_numbers INT NOT NULL DEFAULT 2,
+    min_uppercase INT NOT NULL DEFAULT 1,
+    min_special_chars INT NOT NULL DEFAULT 1,
+    min_lowercase INT NOT NULL DEFAULT 1,
+    min_distinct_chars INT NOT NULL DEFAULT 8,
+    min_distinct_digits INT NOT NULL DEFAULT 0,
+    max_password_age_days INT NOT NULL DEFAULT 90,
+    min_password_history INT NOT NULL DEFAULT 5,
+    min_password_age_history_days INT NOT NULL DEFAULT 450, -- nuevo campo
+
+    applied_since TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    changed_by INT UNSIGNED NOT NULL,
+
+    CONSTRAINT fk_current_changed_by FOREIGN KEY (changed_by) REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE password_policy_history (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    min_length INT NOT NULL DEFAULT 12,
+    min_numbers INT NOT NULL DEFAULT 2,
+    min_uppercase INT NOT NULL DEFAULT 1,
+    min_special_chars INT NOT NULL DEFAULT 1,
+    min_lowercase INT NOT NULL DEFAULT 1,
+    min_distinct_chars INT NOT NULL DEFAULT 8,
+    min_distinct_digits INT NOT NULL DEFAULT 0,
+    max_password_age_days INT NOT NULL DEFAULT 90,
+    min_password_history INT NOT NULL DEFAULT 5,
+    min_password_age_history_days INT NOT NULL DEFAULT 450, -- mínimo días entre cambios
+
+    changed_by INT UNSIGNED NOT NULL, -- ID del usuario que hizo el cambio
+    changed_at TIMESTAMP NOT NULL DEFAULT,
+
+    CONSTRAINT fk_changed_by FOREIGN KEY (changed_by) REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
+
+
+
+
+
+CREATE TABLE username_policy_current (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    min_length INT NOT NULL DEFAULT 6,
+    max_length INT NOT NULL DEFAULT 20,
+    min_lowercase INT NOT NULL DEFAULT 0,
+    min_numbers INT NOT NULL DEFAULT 0,
+    min_uppercase INT NOT NULL DEFAULT 0,
+    min_distinct_chars INT NOT NULL DEFAULT 3,
+    min_distinct_digits INT NOT NULL DEFAULT 0,
+    
+
+    applied_since TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    
+    changed_by INT UNSIGNED NOT NULL,
+    CONSTRAINT fk_username_policy_current_changed_by FOREIGN KEY (changed_by) REFERENCES users(id)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE TABLE username_policy_history (
+      id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    min_length INT NOT NULL DEFAULT 5,
+    max_length INT NOT NULL DEFAULT 20,
+    min_lowercase INT NOT NULL DEFAULT 0,
+    min_numbers INT NOT NULL DEFAULT 0,
+    min_uppercase INT NOT NULL DEFAULT 0,
+    min_distinct_chars INT NOT NULL DEFAULT 3,
+    min_distinct_digits INT NOT NULL DEFAULT 0,
+    
+
+    applied_since TIMESTAMP NOT NULL DEFAULT,
+    
+    changed_by INT UNSIGNED NOT NULL,
+    
+    CONSTRAINT fk_username_policy_history_changed_by FOREIGN KEY (changed_by) REFERENCES users(id)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+);
+CREATE TABLE username_blacklist (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE
+ 
+
+);
+
+INSERT INTO username_blacklist (username) VALUES
+('admin'),
+('administrator'),
+('root'),
+('superuser'),
+('support'),
+('helpdesk'),
+('test'),
+('guest'),
+('info'),
+('contact'),
+('system'),
+('null'),
+('user'),
+('users'),
+('security'),
+('owner'),
+('master'),
+('webmaster'),
+('api'),
+('backend'),
+('frontend');
 
 
 CREATE TABLE permissions (
     id INT PRIMARY KEY AUTO_INCREMENT
                  
 );
-
-CREATE TABLE username_policy_current (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    min_length INT NOT NULL DEFAULT 3,
-    max_length INT NOT NULL DEFAULT 20,
-    
-    min_numbers INT NOT NULL DEFAULT 1,
-    min_uppercase INT NOT NULL DEFAULT 1,
-    min_distinct_chars INT NOT NULL DEFAULT 3,
-    min_distinct_digits INT NOT NULL DEFAULT 1,
-    
-    allowed_characters VARCHAR(255) NOT NULL DEFAULT 'a-zA-Z0-9_.', -- descripción
-    
-    prohibit_special_chars BOOLEAN NOT NULL DEFAULT FALSE,
-    prohibit_consecutive_chars BOOLEAN NOT NULL DEFAULT TRUE,
-    prohibit_repeated_chars BOOLEAN NOT NULL DEFAULT TRUE,
-    prohibit_usernames_in_blacklist BOOLEAN NOT NULL DEFAULT TRUE,
-    blacklist TEXT, -- JSON o lista separada por comas
-    
-    applied_since TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    
-    changed_by INT NOT NULL,
-    CONSTRAINT fk_username_policy_current_changed_by FOREIGN KEY (changed_by) REFERENCES users(id)
-        ON DELETE RESTRICT ON UPDATE CASCADE
-);
-
-CREATE TABLE username_policy_history (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    min_length INT NOT NULL DEFAULT 3,
-    max_length INT NOT NULL DEFAULT 20,
-    
-    min_numbers INT NOT NULL DEFAULT 1,
-    min_uppercase INT NOT NULL DEFAULT 1,
-    min_distinct_chars INT NOT NULL DEFAULT 3,
-    min_distinct_digits INT NOT NULL DEFAULT 1,
-    
-    allowed_characters VARCHAR(255) NOT NULL DEFAULT 'a-zA-Z0-9_.',
-    
-    prohibit_special_chars BOOLEAN NOT NULL DEFAULT FALSE,
-    prohibit_consecutive_chars BOOLEAN NOT NULL DEFAULT TRUE,
-    prohibit_repeated_chars BOOLEAN NOT NULL DEFAULT TRUE,
-    prohibit_usernames_in_blacklist BOOLEAN NOT NULL DEFAULT TRUE,
-    blacklist TEXT,
-    
-    changed_by INT NOT NULL,
-    changed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    
-    CONSTRAINT fk_username_policy_history_changed_by FOREIGN KEY (changed_by) REFERENCES users(id)
-        ON DELETE RESTRICT ON UPDATE CASCADE
-);
-
-CREATE TABLE user_username (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL UNIQUE,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    username_policy_applied_id INT NOT NULL,
-    username_created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    
-    CONSTRAINT fk_user_username_user FOREIGN KEY (user_id) REFERENCES users(id)
-        ON DELETE CASCADE ON UPDATE CASCADE,
-    
-    CONSTRAINT fk_user_username_policy FOREIGN KEY (username_policy_applied_id) REFERENCES username_policy_current(id)
-        ON DELETE RESTRICT ON UPDATE CASCADE
-);
-
 
 CREATE TABLE permission_translations (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -166,31 +286,6 @@ CREATE TABLE role_permissions (
 
 
 
-CREATE TABLE users (
-    id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    username VARCHAR(255) NOT NULL UNIQUE,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-email_verified BOOLEAN NOT NULL DEFAULT FALSE, -- ¿Verificó el email vía link?
-
-    email_verification_token VARCHAR(255),   -- Token único para verificar email
-    failed_login_attempts INT NOT NULL DEFAULT 0,
-  lockout_until TIMESTAMP  DEFAULT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_by INT NOT NULL,
-     language ENUM('es', 'en') NOT NULL DEFAULT 'en',
-    theme ENUM('dark', 'light') NOT NULL DEFAULT 'light',
-    use_2fa BOOLEAN NOT NULL DEFAULT FALSE,
-    twofa_secret VARCHAR(64),
-
-    CONSTRAINT fk_user_creator
-        FOREIGN KEY (created_by)
-        REFERENCES users(id)
-        ON DELETE RESTRICT
-        ON UPDATE CASCADE
-);
-
 CREATE TABLE login_attempts (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NULL,
@@ -217,46 +312,7 @@ CREATE TABLE sessions (
 
 
 
-CREATE TABLE password_policy_current (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    min_length INT NOT NULL DEFAULT 12,
-    min_numbers INT NOT NULL DEFAULT 2,
-    min_uppercase INT NOT NULL DEFAULT 1,
-    min_special_chars INT NOT NULL DEFAULT 1,
-    min_lowercase INT NOT NULL DEFAULT 1,
-    min_unique_chars INT NOT NULL DEFAULT 8,
-    max_password_age_days INT NOT NULL DEFAULT 90,
-    min_password_history INT NOT NULL DEFAULT 5,
-    min_password_age_history_days INT NOT NULL DEFAULT 450, -- nuevo campo
 
-    applied_since TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    changed_by INT NOT NULL,
-
-    CONSTRAINT fk_current_changed_by FOREIGN KEY (changed_by) REFERENCES users(id)
-        ON DELETE RESTRICT
-        ON UPDATE CASCADE
-);
-
-CREATE TABLE password_policy_history (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    min_length INT NOT NULL DEFAULT 12,
-    min_numbers INT NOT NULL DEFAULT 2,
-    min_uppercase INT NOT NULL DEFAULT 1,
-    min_special_chars INT NOT NULL DEFAULT 1,
-    min_lowercase INT NOT NULL DEFAULT 1,
-    min_unique_chars INT NOT NULL DEFAULT 8,
-    max_password_age_days INT NOT NULL DEFAULT 90,
-    min_password_history INT NOT NULL DEFAULT 5,
-    min_password_age_history_days INT NOT NULL DEFAULT 450, -- mínimo días entre cambios
-
-    changed_by INT NOT NULL, -- ID del usuario que hizo el cambio
-    changed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_changed_by FOREIGN KEY (changed_by) REFERENCES users(id)
-        ON DELETE RESTRICT
-        ON UPDATE CASCADE
-);
 CREATE TABLE user_roles (
     user_id INT NOT NULL,
     role_id INT NOT NULL,
@@ -661,3 +717,4 @@ END$$
 
 
 DELIMITER ;
+-- TIRGER APAR REAJUSTAR EINDICE UTOINCREMENT
