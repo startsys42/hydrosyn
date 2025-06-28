@@ -168,7 +168,7 @@ CREATE TABLE password_policy_history (
     min_password_age_history_days INT NOT NULL DEFAULT 450, -- mínimo días entre cambios
 
     changed_by INT UNSIGNED NOT NULL, -- ID del usuario que hizo el cambio
-    changed_at TIMESTAMP NOT NULL DEFAULT,
+    changed_at TIMESTAMP NOT NULL,
 
     CONSTRAINT fk_changed_by FOREIGN KEY (changed_by) REFERENCES users(id)
         ON DELETE RESTRICT
@@ -208,7 +208,7 @@ CREATE TABLE username_policy_history (
     min_distinct_digits INT NOT NULL DEFAULT 0,
     
 
-    applied_since TIMESTAMP NOT NULL DEFAULT,
+    applied_since TIMESTAMP NOT NULL,
     
     changed_by INT UNSIGNED NOT NULL,
     
