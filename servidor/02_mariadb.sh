@@ -121,8 +121,7 @@ modify_param_in_mysqld "simple_password_check_digits" "2"
 
 
 modify_param_in_mysqld "password_reuse_check_interval"  "90";
-modify_param_in_mysqld "plugin_load_add" "password_reuse_check"
-modify_param_in_mysqld "plugin_load_add" "simple_password_check"
+modify_param_in_mysqld "plugin_load_add" "password_reuse_check,simple_password_check"
 
 # Usar función para bind-address y port
 
