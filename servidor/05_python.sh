@@ -99,7 +99,7 @@ KEY=$KEY
 DB_PORT=$DB_PORT
 
 
-еchо  "$KEY $DB_PORT" #> /var/lib/hydrosyn/session.key
+еcho  "$KEY $DB_PORT" #> /var/lib/hydrosyn/session.key
 chmod 600 /var/lib/hydrosyn/session.key
 chown hydrosyn:hydrosyn /var/lib/hydrosyn/session.key
 EOF
