@@ -83,22 +83,25 @@ modify_param_in_mysqld() {
   local param="$1"
   local value="$2"
 
-  # Si el parámetro existe dentro de [mysqld], modificarlo
-  # Si no, insertarlo justo después de [mysqld]
-
-  if awk -v param="$param" '
-    $0 ~ /^\[mysqld\]/ { in_section=1; next }
-    /^\[/ { in_section=0 }
-    in_section && $1 == param { found=1; exit }
-    END { exit !found }
-  ' "$CONF_FILE"; then
-    # Parametro existe, modificar solo dentro de mysqld
-    sed -i "/^\[mysqld\]/,/^\[/{ 
-      s/^$param.*/$param = $value/
-    }" "$CONF_FILE"
+  if [ "$param" = "plugin_load_add" ]; then
+    # Si es plugin_load_add, añadir la línea si no existe exactamente
+    if ! grep -q "^$param = $value" "$CONF_FILE"; then
+      sed -i "/^\[mysqld\]/a $param = $value" "$CONF_FILE"
+    fi
   else
-    # Parametro no existe, insertarlo justo después de [mysqld]
-    sed -i "/^\[mysqld\]/a $param = $value" "$CONF_FILE"
+    # Para parámetros normales: modificar o insertar
+    if awk -v param="$param" '
+      $0 ~ /^\[mysqld\]/ { in_section=1; next }
+      /^\[/ { in_section=0 }
+      in_section && $1 == param { found=1; exit }
+      END { exit !found }
+    ' "$CONF_FILE"; then
+      sed -i "/^\[mysqld\]/,/^\[/{ 
+        s/^$param.*/$param = $value/
+      }" "$CONF_FILE"
+    else
+      sed -i "/^\[mysqld\]/a $param = $value" "$CONF_FILE"
+    fi
   fi
 }
 # ======================
@@ -121,7 +124,8 @@ modify_param_in_mysqld "simple_password_check_digits" "2"
 
 
 modify_param_in_mysqld "password_reuse_check_interval"  "90";
-modify_param_in_mysqld "plugin_load_add" "password_reuse_check,simple_password_check"
+modify_param_in_mysqld "plugin_load_add" "password_reuse_check"
+modify_param_in_mysqld "plugin_load_add" "simple_password_check"
 
 # Usar función para bind-address y port
 
