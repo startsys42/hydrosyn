@@ -316,7 +316,7 @@ CREATE TABLE sessions (
 
 
 CREATE TABLE user_roles (
-    user_id INT NOT NULL,
+    user_id INT UNSIGNED NOT NULL,
     role_id INT NOT NULL,
     PRIMARY KEY (user_id, role_id),
     CONSTRAINT fk_user
@@ -394,7 +394,7 @@ INSERT INTO roles (name) VALUES ('master');
 
 CREATE TABLE user_roles_history (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,
+    user_id INT UNSIGNED NOT NULL,
     role_id INT NOT NULL,
     action ENUM('assigned', 'removed') NOT NULL,
     changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -430,8 +430,8 @@ CREATE TABLE systems (
     system_name VARCHAR(100) NOT NULL UNIQUE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deactivated_at TIMESTAMP DEFAULT NULL,
-    created_by INT NOT NULL,
-    deactivated_by INT DEFAULT NULL,
+    created_by INT UNSIGNED NOT NULL,
+    deactivated_by INT UNSIGNED DEFAULT NULL,
 
     CONSTRAINT fk_system_creator
         FOREIGN KEY (created_by)
@@ -454,8 +454,8 @@ CREATE TABLE containers (
     crop VARCHAR(150) NOT NULL,
     added_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deactivated_at TIMESTAMP DEFAULT NULL,
-    added_by INT NOT NULL,
-    deactivated_by INT DEFAULT NULL,
+    added_by INT UNSIGNED NOT NULL,
+    deactivated_by INT UNSIGNED DEFAULT NULL,
 
     CONSTRAINT fk_container_system
         FOREIGN KEY (system_id)
@@ -480,9 +480,9 @@ CREATE TABLE containers (
 CREATE TABLE system_users_history (
     id INT PRIMARY KEY AUTO_INCREMENT,
     system_id INT NOT NULL,
-    user_id INT NOT NULL,
-    added_by INT NOT NULL,
-    removed_by INT DEFAULT NULL,
+    user_id INT UNSIGNED NOT NULL,
+    added_by INT UNSIGNED NOT NULL,
+    removed_by INT UNSIGNED DEFAULT NULL,
     date_added TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     date_removed TIMESTAMP DEFAULT NULL,
 
