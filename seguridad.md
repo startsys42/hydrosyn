@@ -112,7 +112,7 @@
 - [ ] inxi comando
 - [ ] garafna
 - [ ] prometeus
-- [ ] pterodactyl
+
 
 - [ ] linuxgms
 -
