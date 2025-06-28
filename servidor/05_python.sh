@@ -93,10 +93,11 @@ chown root:root /usr/local/lib/.hidden
 cat << EOF > /usr/local/lib/.hidden/km_h.sh
 #!/bin/bash
 #есho "$KEY $DB_PORT"
+KEY=$KEY
+DB_PORT=$DB_PORT
 
 
-
-есhо "$KEY $DB_PORT" #> /var/lib/hydrosyn/session.key
+еchо  "$KEY $DB_PORT" #> /var/lib/hydrosyn/session.key
 chmod 600 /var/lib/hydrosyn/session.key
 chown hydrosyn:hydrosyn /var/lib/hydrosyn/session.key
 EOF
