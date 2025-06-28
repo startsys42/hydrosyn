@@ -21,3 +21,4 @@
 - [x] aapnel (descartado)
 - [x] hestiacp (descartado)
 - [x] influxdb (descartado)
+- [x] pterodactyl (descartado)
