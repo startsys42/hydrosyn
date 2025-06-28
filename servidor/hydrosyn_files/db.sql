@@ -513,8 +513,8 @@ CREATE TABLE system_users_history (
 CREATE TABLE system_users (
     id INT PRIMARY KEY AUTO_INCREMENT,
     system_id INT NOT NULL,
-    user_id INT NOT NULL,
-   added_by INT NOT NULL,
+    user_id INT UNSIGNED NOT NULL,
+   added_by INT UNSIGNED NOT NULL,
     date_added TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
  CONSTRAINT fk_su_system
