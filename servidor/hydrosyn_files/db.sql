@@ -66,6 +66,71 @@ CREATE TABLE permissions (
                  
 );
 
+CREATE TABLE username_policy_current (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    min_length INT NOT NULL DEFAULT 3,
+    max_length INT NOT NULL DEFAULT 20,
+    
+    min_numbers INT NOT NULL DEFAULT 1,
+    min_uppercase INT NOT NULL DEFAULT 1,
+    min_distinct_chars INT NOT NULL DEFAULT 3,
+    min_distinct_digits INT NOT NULL DEFAULT 1,
+    
+    allowed_characters VARCHAR(255) NOT NULL DEFAULT 'a-zA-Z0-9_.', -- descripción
+    
+    prohibit_special_chars BOOLEAN NOT NULL DEFAULT FALSE,
+    prohibit_consecutive_chars BOOLEAN NOT NULL DEFAULT TRUE,
+    prohibit_repeated_chars BOOLEAN NOT NULL DEFAULT TRUE,
+    prohibit_usernames_in_blacklist BOOLEAN NOT NULL DEFAULT TRUE,
+    blacklist TEXT, -- JSON o lista separada por comas
+    
+    applied_since TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    
+    changed_by INT NOT NULL,
+    CONSTRAINT fk_username_policy_current_changed_by FOREIGN KEY (changed_by) REFERENCES users(id)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE TABLE username_policy_history (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    min_length INT NOT NULL DEFAULT 3,
+    max_length INT NOT NULL DEFAULT 20,
+    
+    min_numbers INT NOT NULL DEFAULT 1,
+    min_uppercase INT NOT NULL DEFAULT 1,
+    min_distinct_chars INT NOT NULL DEFAULT 3,
+    min_distinct_digits INT NOT NULL DEFAULT 1,
+    
+    allowed_characters VARCHAR(255) NOT NULL DEFAULT 'a-zA-Z0-9_.',
+    
+    prohibit_special_chars BOOLEAN NOT NULL DEFAULT FALSE,
+    prohibit_consecutive_chars BOOLEAN NOT NULL DEFAULT TRUE,
+    prohibit_repeated_chars BOOLEAN NOT NULL DEFAULT TRUE,
+    prohibit_usernames_in_blacklist BOOLEAN NOT NULL DEFAULT TRUE,
+    blacklist TEXT,
+    
+    changed_by INT NOT NULL,
+    changed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    
+    CONSTRAINT fk_username_policy_history_changed_by FOREIGN KEY (changed_by) REFERENCES users(id)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE TABLE user_username (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL UNIQUE,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    username_policy_applied_id INT NOT NULL,
+    username_created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    
+    CONSTRAINT fk_user_username_user FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    
+    CONSTRAINT fk_user_username_policy FOREIGN KEY (username_policy_applied_id) REFERENCES username_policy_current(id)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+
 CREATE TABLE permission_translations (
     id INT PRIMARY KEY AUTO_INCREMENT,
     permission_id INT NOT NULL,
