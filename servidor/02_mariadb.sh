@@ -168,8 +168,8 @@ hashed = bcrypt.hashpw(password, bcrypt.gensalt())
 SQL="
 USE hydrosyn_db;
 SET FOREIGN_KEY_CHECKS=0;
-INSERT INTO users (id, username, email, password, is_active, email_verified, created_by, language, theme, use_2fa, twofa_secret)
-VALUES (1, '$FIRST_USER', '$FIRST_USER_EMAIL', '$HASH_PASS', TRUE, TRUE, 1, 'en', 'light', FALSE, NULL);
+INSERT INTO users (id, username, email, password, is_active,  created_by, language, theme, use_2fa, twofa_secret)
+VALUES (1, '$FIRST_USER', '$FIRST_USER_EMAIL', '$HASH_PASS',  TRUE, 1, 'en', 'light', FALSE, NULL);
 SET FOREIGN_KEY_CHECKS=1;
 "
 
