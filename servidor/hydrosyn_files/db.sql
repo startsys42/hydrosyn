@@ -301,7 +301,7 @@ CREATE TABLE login_attempts (
 );
 CREATE TABLE sessions (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    user_id INT UNSIGNED NOT NULL,
     session_id VARCHAR(128) NOT NULL UNIQUE,
     session_key VARCHAR(128) NOT NULL,
     user_agent VARCHAR(512),
