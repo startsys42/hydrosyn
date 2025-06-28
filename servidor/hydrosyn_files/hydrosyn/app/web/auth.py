@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from app.web.utils import get_user_preferences
-
+from fastapi.responses import PlainTextResponse
 templates = Jinja2Templates(directory="app/templates")
 
 router = APIRouter()
@@ -12,7 +12,7 @@ async def login(request: Request):
     try:
         prefs = get_user_preferences(request)
     except ValueError as e:
-        from fastapi.responses import PlainTextResponse
+        
         return PlainTextResponse(str(e), status_code=400)
 
     return templates.TemplateResponse("login.html", {
