@@ -398,7 +398,7 @@ CREATE TABLE user_roles_history (
     role_id INT NOT NULL,
     action ENUM('assigned', 'removed') NOT NULL,
     changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    changed_by INT, -- Usuario que hizo el cambio
+    changed_by INT UNSIGNED, -- Usuario que hizo el cambio
     
     FOREIGN KEY (user_id) REFERENCES users(id)
         ON DELETE RESTRICT
@@ -540,10 +540,10 @@ CREATE TABLE system_users (
 
 CREATE TABLE user_password_history (
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    user_id INT NOT NULL,
+    user_id INT UNSIGNED NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    changed_by INT NOT NULL,
+    changed_by INT UNSIGNED NOT NULL,
     device VARCHAR(255),
     ip_address VARCHAR(15),
     mac_address VARCHAR(17),
@@ -561,14 +561,14 @@ CREATE TABLE user_password_history (
 
 CREATE TABLE user_email_changes (
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    user_id INT NOT NULL,
+    user_id INT UNSIGNED NOT NULL,
     old_email VARCHAR(255) NOT NULL,
     new_email VARCHAR(255) NOT NULL,
     changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    changed_by INT NOT NULL,
+    changed_by INT UNSIGNED NOT NULL,
     device VARCHAR(255),
     ip_address VARCHAR(15),
-    mac_address VARCHAR(17),
+
 
     CONSTRAINT fk_email_user
         FOREIGN KEY (user_id) REFERENCES users(id)
@@ -583,7 +583,7 @@ CREATE TABLE user_email_changes (
 
 CREATE TABLE user_sessions (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,
+    user_id INT UNSIGNED NOT NULL,
     token VARCHAR(512) NOT NULL UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP,
