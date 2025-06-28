@@ -589,7 +589,7 @@ CREATE TABLE user_sessions (
     expires_at TIMESTAMP,
     revoked_at TIMESTAMP,
     revoked_reason VARCHAR(255),
-    revoked_by INT,  -- quién revocó la sesión
+    revoked_by INT UNSIGNED,  -- quién revocó la sesión
     revoked_device VARCHAR(255),
     revoked_ip VARCHAR(39),
     revoked_user_agent TEXT,
