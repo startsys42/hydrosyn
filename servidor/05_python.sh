@@ -37,6 +37,8 @@ paquetes=(
   passlib
   pydantic[email]
   pymysql
+  pyotp 
+  qrcode[pil]
 )
 
   ins-pip "$PIP_HYDROSYN" "${paquetes[@]}"
