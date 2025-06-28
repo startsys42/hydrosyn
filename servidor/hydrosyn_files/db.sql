@@ -132,7 +132,7 @@ CREATE TABLE login_attempts (
     attempt_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ip_address VARCHAR(45) NOT NULL,
     success BOOLEAN NOT NULL,
-    user_agent VARCHAR(255),
+    user_agent VARCHAR(512),
     FOREIGN KEY (user_id) REFERENCES users(id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE
