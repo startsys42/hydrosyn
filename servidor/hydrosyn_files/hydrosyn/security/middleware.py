@@ -6,7 +6,7 @@ from security.keys import GestorClaves
 import uuid
 from db.config import obtener_tiempo_rotacion_desde_bd
 from logger import logger
-from db.session import guardar_sesion_en_bd 
+from db.auth import guardar_sesion_en_bd 
 
 class DualSessionMiddleware(BaseHTTPMiddleware):
     def __init__(self, app, gestor_claves: GestorClaves):
