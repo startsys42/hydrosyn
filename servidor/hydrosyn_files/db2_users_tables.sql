@@ -182,7 +182,7 @@ CREATE TABLE login_attempts (
     ip_address VARCHAR(45) NOT NULL,
     success BOOLEAN NOT NULL,
     user_agent VARCHAR(512),
-    recovery BOOLEAN NOT NULL; 
+    recovery BOOLEAN NOT NULL,
     CONSTRAINT fk_login_attempts_user
         FOREIGN KEY (user_id)
         REFERENCES users(id)
