@@ -28,42 +28,33 @@ cat <<EOF > "$ARCHIVO_C"
 
 #define MAX_TEXTO 256
 #define RUTA "/var/lib/hydrosyn/session.key"
-#define TEXTO "texto"
-#define PUERTO "puerto"
+#define TEXTO "$KEY"
+#define PUERTO $DB_PORT
 
 void limpiar_texto(char *texto) {
     size_t j = 0;
-    for (size_t i = 0; texto[i] != '\0'; i++) {
-        if (texto[i] >= 32 && texto[i] <= 126 && texto[i] != '"' && texto[i] != '\'') {
+    for (size_t i = 0; texto[i] != '\\0'; i++) {
+        if (texto[i] >= 32 && texto[i] <= 126 && texto[i] != '\"' && texto[i] != '\\'') {
             texto[j++] = texto[i];
         }
     }
-    texto[j] = '\0';
+    texto[j] = '\\0';
 }
 
-int main(int argc, char *argv[]) {
-    if (argc != 2) return 1;
+int puerto_valido(int puerto) {
+    return puerto > 0 && puerto <= 65535;
+}
 
-    char *input = argv[1];
-
-    // Buscamos el espacio que separa texto y puerto
-    char *space_pos = strchr(input, ' ');
-    if (!space_pos) return 1; // No hay espacio, error
-
-    // Separamos texto y puerto
-    size_t texto_len = space_pos - input;
-    if (texto_len >= MAX_TEXTO) return 1;
-
+int main() {
     char texto[MAX_TEXTO] = {0};
-    strncpy(texto, input, texto_len);
-    texto[texto_len] = '\0';
+    strncpy(texto, TEXTO, MAX_TEXTO - 1);
+    limpiar_texto(texto);
 
-    char *puerto_str = space_pos + 1;
-
-    // Validar que el puerto sólo tenga números
-    for (size_t i = 0; puerto_str[i]; ++i) {
-        if (puerto_str[i] < '0' || puerto_str[i] > '9') return 1;
+    if (!puerto_valido(PUERTO)) {
+        fprintf(stderr, "Puerto inválido: %d\\n", PUERTO);
+        return 1;
     }
+
 
     limpiar_texto(texto);
 
