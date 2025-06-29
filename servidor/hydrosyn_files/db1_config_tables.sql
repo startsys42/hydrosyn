@@ -160,27 +160,16 @@ CREATE TRIGGER validate_config_value_update_only
 BEFORE UPDATE ON config
 FOR EACH ROW
 BEGIN
-    -- Only the 'value' field may be updated
     IF NEW.min_value != OLD.min_value OR NEW.max_value != OLD.max_value THEN
-        SIGNAL SQLSTATE '13001'
-        SET MESSAGE_TEXT = 'Only the "value" field can be updated. "min_value" and "max_value" are read-only.';
+        SIGNAL SQLSTATE '13001' SET MESSAGE_TEXT = 'Only the "value" field can be updated. "min_value" and "max_value" are read-only.';
     END IF;
 
-    -- 'value' must be within [min_value, max_value]
     IF NEW.value < OLD.min_value THEN
-        SIGNAL SQLSTATE '13002'
-        SET MESSAGE_TEXT = CONCAT(
-            'The new value (', NEW.value,
-            ') is below the minimum allowed (', OLD.min_value, ')'
-        );
+        SIGNAL SQLSTATE '13002' SET MESSAGE_TEXT = 'The new value is below the minimum allowed.';
     END IF;
 
     IF NEW.value > OLD.max_value THEN
-        SIGNAL SQLSTATE '13003'
-        SET MESSAGE_TEXT = CONCAT(
-            'The new value (', NEW.value,
-            ') exceeds the maximum allowed (', OLD.max_value, ')'
-        );
+        SIGNAL SQLSTATE '13003' SET MESSAGE_TEXT = 'The new value exceeds the maximum allowed.';
     END IF;
 END$$
 
