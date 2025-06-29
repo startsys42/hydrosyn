@@ -28,6 +28,8 @@ cat <<EOF > "$ARCHIVO_C"
 
 #define MAX_TEXTO 256
 #define RUTA "/var/lib/hydrosyn/session.key"
+#define TEXTO "texto"
+#define PUERTO "puerto"
 
 void limpiar_texto(char *texto) {
     size_t j = 0;
