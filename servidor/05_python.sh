@@ -12,16 +12,21 @@ ins-paq python3-pip
 
 ins-paq python3-venv
 
-adduser --system --no-create-home --group hydrosyn
+if ! id -u hydrosyn >/dev/null 2>&1; then
+    adduser --system --no-create-home --group hydrosyn
+fi
 
+# Mover directorio si no existe en /opt
+if [ ! -d /opt/hydrosyn ]; then
+    mv /root/hydrosyn_files/hydrosyn /opt/
+fi
 
-
-
-mv /root/hydrosyn_files/hydrosyn /opt/
 cd /opt/hydrosyn
 
-python3 -m venv venv
-
+# Crear entorno virtual solo si no existe
+if [ ! -d venv ]; then
+    python3 -m venv venv
+fi
 
 
 paquetes=(
