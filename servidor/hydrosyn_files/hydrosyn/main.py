@@ -51,7 +51,7 @@ nombre_bd = "hydrosyn_db"
 logger.info(f"Conectando a BD con: usuario={usuario}, password={'***' if password else 'VACÍO'}, host={host}, puerto={db_port}, bd={nombre_bd}")
 
 try:
-    inicializar_engine(usuario, password, host, bd_port, nombre_bd)
+    inicializar_engine(usuario, password, host, db_port, nombre_bd)
 except Exception as e:
     logger.error(f"Error inicializando motor DB: {e}")
     sys.exit(1)
