@@ -37,11 +37,10 @@ INSERT INTO config (value, min_value, max_value) VALUES
 (24, 1, 24),    -- Time limit to verify email or change password (in hours)
 (365, 1, 1825),  -- Days to retain unverified users before deletion
 (2, 1, 10);      -- Time to force username change after policy update (in days)
+(2, 1, 10);      -- Time to force password change after policy update (in days)
 
-
-
-
-
+(365, 1, 1825),  -- Days to retain users activation history before deletion
+(365, 1, 1825),  -- Days to retain users email changes before deletion
 
 
 -- Para intentos de sesión
