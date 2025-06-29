@@ -15,7 +15,7 @@
 - [  ] regex en los campos varchar
 - tiempo ede expiracion usuario base de datos en un shadow solo para suauriod e bd, recomendar cambiso cada x tiempo,  mincaracteres...
 - audit plugin
-
+- tirger final reajuste
 #mosquito
 
 ##python
@@ -23,7 +23,7 @@
 - mensaje cambioc ontarseñas based e datso
 ## nginx
 
-
+ panel web monitereo
 ## diseño app
 
 - [ ] cambiar idioam a ingles lo amximo posible
