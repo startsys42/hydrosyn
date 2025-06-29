@@ -140,8 +140,8 @@ CREATE TABLE user_activation_history (
     changed_by INT UNSIGNED NOT NULL, -- ID de quien hizo el cambio
     reason VARCHAR(255),              -- opcional, motivo del cambio
 
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (changed_by) REFERENCES users(id) ON DELETE SET NULL
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT,
+    FOREIGN KEY (changed_by) REFERENCES users(id) ON DELETE RESTRICT
 );
 
 
