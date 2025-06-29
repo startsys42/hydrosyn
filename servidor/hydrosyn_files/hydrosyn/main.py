@@ -48,7 +48,7 @@ usuario = "hydro_user"
 password = obtener_password_mas_reciente(ruta_user_shadow, km)
 host = "127.0.0.1"
 nombre_bd = "hydrosyn_db"
-logger.info(f"Conectando a BD con: usuario={usuario}, password={'***' if password else 'VACÍO'}, host={host}, puerto={bd_port}, bd={nombre_bd}")
+logger.info(f"Conectando a BD con: usuario={usuario}, password={'***' if password else 'VACÍO'}, host={host}, puerto={db_port}, bd={nombre_bd}")
 
 try:
     inicializar_engine(usuario, password, host, bd_port, nombre_bd)
