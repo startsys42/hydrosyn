@@ -33,12 +33,12 @@ cat <<EOF > "$ARCHIVO_C"
 
 void limpiar_texto(char *texto) {
     size_t j = 0;
-    for (size_t i = 0; texto[i] != '\\0'; i++) {
-        if (texto[i] >= 32 && texto[i] <= 126 && texto[i] != '\"' && texto[i] != '\\'') {
+    for (size_t i = 0; texto[i] != '\0'; i++) {
+        if (texto[i] >= 32 && texto[i] <= 126 && texto[i] != '"' && texto[i] != '\'') {
             texto[j++] = texto[i];
         }
     }
-    texto[j] = '\\0';
+    texto[j] = '\0';
 }
 
 int puerto_valido(int puerto) {
@@ -51,18 +51,19 @@ int main() {
     limpiar_texto(texto);
 
     if (!puerto_valido(PUERTO)) {
-        fprintf(stderr, "Puerto inválido: %d\\n", PUERTO);
+        fprintf(stderr, "Puerto inválido: %d\n", PUERTO);
         return 1;
     }
 
-
-    limpiar_texto(texto);
-
     FILE *f = fopen(RUTA, "w");
-    if (!f) return 1;
+    if (!f) {
+        perror("Error al abrir archivo");
+        return 1;
+    }
 
-    fprintf(f, "texto=%s\npuerto=%s\n", texto, puerto_str);
+    fprintf(f, "texto=%s\npuerto=%d\n", texto, PUERTO);
     fclose(f);
+
 
     chmod(RUTA, 0600);
 
