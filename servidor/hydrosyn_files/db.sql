@@ -287,12 +287,13 @@ CREATE TABLE role_permissions (
 
 
 CREATE TABLE login_attempts (
-    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     user_id INT UNSIGNED NULL,
     attempt_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ip_address VARCHAR(45) NOT NULL,
     success BOOLEAN NOT NULL,
     user_agent VARCHAR(512),
+    recovery BOOLEAN NOT NULL; 
     CONSTRAINT fk_login_attempts_user
         FOREIGN KEY (user_id)
         REFERENCES users(id)
