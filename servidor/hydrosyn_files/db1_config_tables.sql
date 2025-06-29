@@ -3,7 +3,9 @@ USE hydrosyn_db;
 
 CREATE TABLE IF NOT EXISTS config (
     id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
-    value INT UNSIGNED NOT NULL  -- solo un valor numérico entero
+    value INT UNSIGNED NOT NULL, 
+    min_value INT UNSIGNED NOT NULL,  
+    max_value INT UNSIGNED NOT NULL  
 );
 
 
@@ -24,20 +26,23 @@ CREATE TABLE IF NOT EXISTS config_translations (
     UNIQUE (config_id, lang_code)
 );
 
-INSERT INTO config (value) VALUES (3);   -- intentos de sesión
+INSERT INTO config (value, min_value, max_value) VALUES
+(3, 3, 5),       -- Failed login or password recovery attempts before temporary lockout
+(5, 1, 10),      -- Time window (in minutes) to count failed attempts
+(15, 1, 3600),   -- Lockout duration (in minutes) after exceeding failed attempts
+(1, 1, 30),      -- Maximum session duration (in days)
+(15, 1, 60),   -- Access token duration (in minutes)
+(1, 1, 90),      -- Refresh token duration (in days)
+(2, 0, 23),      -- Daily cleanup hour sessions and tokens (0 to 23)
+(24, 1, 24),    -- Time limit to verify email or change password (in hours)
+(365, 1, 1825),  -- Days to retain unverified users before deletion
+(2, 1, 10);      -- Time to force username change after policy update (in days)
 
-INSERT INTO config (value) VALUES (5);   -- tiempo de duración de lo intentos de inicio de sesión
-INSERT INTO config (value) VALUES (15);  -- tiempo de suspensión (minutos)
--- Insertar nuevos valores (puedes usar UPDATE o INSERT dependiendo de si config ya tiene filas)
-INSERT INTO config (value) VALUES (1);   -- duración máxima sesión (días)
-INSERT INTO config (value) VALUES (15);  -- duración máxima access token (minutos)
-INSERT INTO config (value) VALUES (1);   -- duración máxima refresh token (días)
 
-INSERT INTO config (value) VALUES (2);  -- hora de limpieza diaria (0 a 23)
 
-INSERT INTO config (value) VALUES (24); -- TIEMPO EN HORAS PARA VERIFICAR EMAIL YC AMBIAR CLAVE
-INSERT INTO config (value) VALUES (365); -- TIEMPO EN DIAS PARA MANTEER REGISTROD E USUARIOS QUE NO SE EVRIFICARON
-INSERT INTO config (value) VALUES (2); -- TIEMPO EN DIAS PARA FORZAR EL CMABIO DE NOMBRE DE USUARIO POR LA NEUVA POLITICA D ENOMBRES
+
+
+
 
 -- Para intentos de sesión
 INSERT INTO config_translations (config_id, lang_code, name, description)
@@ -102,39 +107,39 @@ CREATE TABLE user_permissions (
 
 
 -- Bloqueo de INSERT en config
-CREATE TRIGGER bloqueo_insert_config
+CREATE TRIGGER block_insert_config
 BEFORE INSERT ON config
 FOR EACH ROW
-SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Insertion into the config table is prohibited';
+SIGNAL SQLSTATE '10001' SET MESSAGE_TEXT = 'Insertion into the config table is prohibited';
 
 -- Bloqueo de DELETE en config
-CREATE TRIGGER bloqueo_delete_config
+CREATE TRIGGER block_delete_config
 BEFORE DELETE ON config
 FOR EACH ROW
-SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Deletion from the config table is prohibited';
+SIGNAL SQLSTATE '10002' SET MESSAGE_TEXT = 'Deletion from the config table is prohibited';
 
 -- Bloqueo de INSERT en config_translations
-CREATE TRIGGER bloqueo_insert_config_translations
+CREATE TRIGGER block_insert_config_translations
 BEFORE INSERT ON config_translations
 FOR EACH ROW
-SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Insertion into the config_translations table is prohibited';
+SIGNAL SQLSTATE '10003' SET MESSAGE_TEXT = 'Insertion into the config_translations table is prohibited';
 
 -- Bloqueo de DELETE en config_translations
-CREATE TRIGGER bloqueo_delete_config_translations
+CREATE TRIGGER block_delete_config_translations
 BEFORE DELETE ON config_translations
 FOR EACH ROW
-SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Deletion from the config_translations table is prohibited';
+SIGNAL SQLSTATE '10004' SET MESSAGE_TEXT = 'Deletion from the config_translations table is prohibited';
 
 
 
 DELIMITER $$
 
-CREATE TRIGGER trg_validate_config_values BEFORE INSERT ON config
+CREATE TRIGGER validate_config_values BEFORE UPDATE ON config
 FOR EACH ROW
 BEGIN
     IF NEW.id = 1 THEN -- Max login attempts
         IF NEW.value < 3 THEN
-            SIGNAL SQLSTATE '45001'
+            SIGNAL SQLSTATE '10101'
             SET MESSAGE_TEXT = 'Minimum allowed login attempts before lockout is 3';
         END IF;
         
