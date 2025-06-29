@@ -212,7 +212,7 @@ CREATE TABLE username_policy_current (
 
 CREATE TABLE username_policy_history (
       id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    min_length INT NOT NULL DEFAULT 5,
+    min_length INT NOT NULL DEFAULT 6,
     max_length INT NOT NULL DEFAULT 20,
     min_lowercase INT NOT NULL DEFAULT 0,
     min_numbers INT NOT NULL DEFAULT 0,
