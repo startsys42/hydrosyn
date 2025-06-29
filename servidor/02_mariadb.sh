@@ -153,9 +153,9 @@ systemctl status mariadb
 
 echo -e "\e[32mMySQL asegurado correctamente.\e[0m"
 
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< hydrosyn_files/db1_config_tables.sql
 
-
-$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< hydrosyn_files/db.sql
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< hydrosyn_files/db2_users_tables.sql
 
 # Generar hash bcrypt con Python
 HASH_PASS=$(python3 -c "
