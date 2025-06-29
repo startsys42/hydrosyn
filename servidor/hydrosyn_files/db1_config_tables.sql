@@ -44,7 +44,7 @@ INSERT INTO config (value, min_value, max_value) VALUES
 (365, 90, 1825),  -- Days to retain users email changes before deletion
     
 (365, 90, 1825),  -- Days to retain login attempts before deletion
-login_attempts
+
 -- Para intentos de sesión
 INSERT INTO config_translations (config_id, lang_code, name, description)
 VALUES 
@@ -92,44 +92,38 @@ INSERT INTO config_translations (config_id, lang_code, name, description) VALUES
 
 
 
-/*
-CREATE TABLE user_permissions (
-    user_id INT NOT NULL,
-    permission_id INT NOT NULL,
-    granted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (user_id, permission_id),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (permission_id) REFERENCES permissions(id) ON DELETE CASCADE
-);
-
-*/
 
 
 
-
--- Bloqueo de INSERT en config
+-- Prevent insertion into the 'config' table to enforce controlled setup
 CREATE TRIGGER block_insert_config
 BEFORE INSERT ON config
 FOR EACH ROW
-SIGNAL SQLSTATE '10001' SET MESSAGE_TEXT = 'Insertion into the config table is prohibited';
+SIGNAL SQLSTATE '11000' SET MESSAGE_TEXT = 'Insertion into the config table is prohibited';
 
--- Bloqueo de DELETE en config
+--  Prevent deletion from the 'config' table to preserve system configuration
 CREATE TRIGGER block_delete_config
 BEFORE DELETE ON config
 FOR EACH ROW
-SIGNAL SQLSTATE '10002' SET MESSAGE_TEXT = 'Deletion from the config table is prohibited';
+SIGNAL SQLSTATE '12000' SET MESSAGE_TEXT = 'Deletion from the config table is prohibited';
 
--- Bloqueo de INSERT en config_translations
+--  Prevent insertion into the 'config_translations' table to avoid unapproved language entries
 CREATE TRIGGER block_insert_config_translations
 BEFORE INSERT ON config_translations
 FOR EACH ROW
-SIGNAL SQLSTATE '10003' SET MESSAGE_TEXT = 'Insertion into the config_translations table is prohibited';
+SIGNAL SQLSTATE '21000' SET MESSAGE_TEXT = 'Insertion into the config_translations table is prohibited';
 
--- Bloqueo de DELETE en config_translations
+--  Prevent deletion from the 'config_translations' table to retain translation integrity
 CREATE TRIGGER block_delete_config_translations
 BEFORE DELETE ON config_translations
 FOR EACH ROW
-SIGNAL SQLSTATE '10004' SET MESSAGE_TEXT = 'Deletion from the config_translations table is prohibited';
+SIGNAL SQLSTATE '22000' SET MESSAGE_TEXT = 'Deletion from the config_translations table is prohibited';
+
+--  Prevent updates to 'config_translations' to avoid altering validated texts
+CREATE TRIGGER block_update_config_translations
+BEFORE UPDATE ON config_translations
+FOR EACH ROW
+SIGNAL SQLSTATE '23000' SET MESSAGE_TEXT = 'Updation from the config_translations table is prohibited';
 
 
 
