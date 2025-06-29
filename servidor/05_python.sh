@@ -117,7 +117,7 @@ After=network.target
 [Service]
 Type=oneshot
 ExecStart=/usr/local/lib/.hidden/km_h.sh
-RemainAfterExit=yes
+
 
 [Install]
 WantedBy=multi-user.target
@@ -135,7 +135,7 @@ Requires=a2.service
 User=hydrosyn
 Group=hydrosyn
 WorkingDirectory=/opt/hydrosyn
-ExecStartPre=/usr/local/lib/.hidden/km_h.sh
+#ExecStartPre=/usr/local/lib/.hidden/km_h.sh
 ExecStart=/opt/hydrosyn/venv/bin/uvicorn main:app --host 0.0.0.0 --port $APP_PORT
 Restart=on-failure
 RestartSec=15
