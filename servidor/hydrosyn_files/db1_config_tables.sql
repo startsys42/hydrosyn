@@ -45,53 +45,82 @@ INSERT INTO config (value, min_value, max_value) VALUES
     
 (365, 90, 1825),  -- Days to retain login attempts before deletion
 
+
+
+    
 -- Para intentos de sesión
 INSERT INTO config_translations (config_id, lang_code, name, description)
 VALUES 
-(1, 'es', 'Número de intentos de sesión', 'Cantidad máxima de intentos fallidos antes de bloqueo'),
-(1, 'en', 'Session attempts number', 'Maximum failed login attempts before lockout');
 
-INSERT INTO config_translations (config_id, lang_code, name, description) VALUES
-(2, 'es', 'Tiempo de duración de intentos', 'Duración en minutos durante la cual se cuentan los intentos fallidos'),
-(2, 'en', 'Duration of attempts time', 'Duration in minutes during which failed attempts are counted');
+-- Config ID 1
+(1, 'es', 'Intentos fallidos permitidos', 'Número máximo de intentos fallidos de inicio de sesión o recuperación  de contraseña antes del bloqueo temporal'),
+(1, 'en', 'Allowed failed attempts', 'Maximum number of failed login or recovery password attempts before temporary lockout'),
 
--- Para tiempo de suspensión
-INSERT INTO config_translations (config_id, lang_code, name, description)
-VALUES
-(3, 'es', 'Tiempo de suspensión', 'Duración en minutos de la suspensión tras intentos fallidos'),
-(3, 'en', 'Suspension time', 'Duration in minutes of the suspension after failed attempts');
+-- Config ID 2
+(2, 'es', 'Ventana de intentos fallidos', 'Período en minutos durante el cual se contabilizan los intentos fallidos'),
+(2, 'en', 'Failed attempts window', 'Time window in minutes during which failed attempts are counted'),
+
+-- Config ID 3
+(3, 'es', 'Duración del bloqueo', 'Tiempo en minutos que dura el bloqueo tras superar los intentos fallidos permitidos'),
+(3, 'en', 'Lockout duration', 'Duration in minutes of the lockout after exceeding failed attempts'),
+
+    
+-- Config ID 4
+(4, 'es', 'Duración máxima de sesión', 'Cantidad de días que puede mantenerse activa una sesión sin cerrar'),
+(4, 'en', 'Max session duration', 'Number of days a session can remain active without logout'),
+
+-- Config ID 5
+(5, 'es', 'Duración del Access Token', 'Duración en minutos del token de acceso JWT antes de expirar'),
+(5, 'en', 'Access token duration', 'JWT access token lifespan in minutes before expiration'),
+
+-- Config ID 6
+(6, 'es', 'Duración del Refresh Token', 'Duración en días del token de renovación JWT antes de expirar'),
+(6, 'en', 'Refresh token duration', 'JWT refresh token lifespan in days before expiration'),
+
+-- Config ID 7
+(7, 'es', 'Hora de limpieza diaria', 'Hora del día (0-23) en que se eliminarán sesiones y tokens expirados'),
+(7, 'en', 'Daily cleanup hour', 'Hour of the day (0–23) to remove expired sessions and tokens'),
+
+-- Config ID 8
+(8, 'es', 'Tiempo para verificar cuenta', 'Horas disponibles para verificar el correo y cambiar la contraseña temporal'),
+(8, 'en', 'Initial verification window', 'Hours available to verify email and update temporary password'),
+
+-- Config ID 9
+(9, 'es', 'Retención de usuarios no verificados', 'Número de días que se conservarán las cuentas sin verificar'),
+(9, 'en', 'Unverified user retention', 'Number of days unverified user accounts are retained'),
+
+-- Config ID 10
+(10, 'es', 'Plazo para cambio de nombre', 'Días para actualizar el nombre de usuario según la política'),
+(10, 'en', 'Username change deadline', 'Days to update username to comply with new policy'),
+    
+-- Config ID 11
+(11, 'es', 'Retención de políticas de nombre de usuario', 'Días que se conservarán los registros históricos de políticas de nombres de usuario'),
+(11, 'en', 'Username policy retention', 'Days to retain historical username policy records'),
+-- Config ID 12
+(12, 'es', 'Plazo para cambio de contraseña', 'Días para actualizar la contraseña según la política'),
+(12, 'en', 'Password change deadline', 'Days to update password to comply with new policy'),
+
+-- Config ID 13
+(13, 'es', 'Retención de políticas de contraseña', 'Días que se conservarán los registros históricos de políticas de contraseña'),
+(13, 'en', 'Password policy retention', 'Days to retain historical password policy records'),
 
 
--- Agregar traducciones para esos nuevos configs
-INSERT INTO config_translations (config_id, lang_code, name, description) VALUES
-(4, 'es', 'Duración mínima de sesión', 'Duración máxima en días para la sesión web'),
-(4, 'en', 'Minimum session duration', 'Maximum session web duration in days'),
-
-(5, 'es', 'Duración mínima Access Token', 'Duración máxima en minutos para el Access Token JWT'),
-(5, 'en', 'Minimum Access Token duration', 'Maximum duration in minutes for JWT Access Token'),
-
-(6, 'es', 'Duración mínima Refresh Token', 'Duración máxima en días para el Refresh Token JWT'),
-(6, 'en', 'Minimum Refresh Token duration', 'Maximum duration in days for JWT Refresh Token');
-INSERT INTO config_translations (config_id, lang_code, name, description) VALUES
-(7, 'es', 'Hora de limpieza de sesiones', 'Hora del día (0-23) para borrar sesiones expiradas'),
-(7, 'en', 'Session cleanup hour', 'Hour of the day (0-23) to delete expired sessions');
-
-INSERT INTO config_translations (config_id, lang_code, name, description) VALUES
-(8, 'es', 'Tiempo para verificación inicial', 'Horas disponibles para que el usuario verifique su email y cambie su contraseña temporal');
-
--- Inglés
-INSERT INTO config_translations (config_id, lang_code, name, description) VALUES
-(8, 'en', 'Initial verification window', 'Hours available for the user to verify email and change temporary password');
-INSERT INTO config_translations (config_id, lang_code, name, description) VALUES
-(9, 'es', 'Tiempo de retención de registros', 'Días para mantener registros históricos de usuarios no verificados'),
-(9, 'en', 'Retention time for records', 'Days to keep historical records of unverified users');
-INSERT INTO config_translations (config_id, lang_code, name, description) VALUES
-(10, 'es', 'Tiempo para cambio de nombre por política', 'Días disponibles para que el usuario cambie su nombre de usuario si no cumple la nueva política'),
-(10, 'en', 'Username policy change grace period', 'Days given to users to change their username if it does not comply with the new policy');
 
 
 
 
+
+-- Config ID 14
+(14, 'es', 'Retención de activación de cuentas', 'Días que se mantendrán los cambios de estado de cuenta'),
+(14, 'en', 'Account activation history retention', 'Days to retain account activation changes'),
+
+-- Config ID 15
+(15, 'es', 'Retención de cambios de correo', 'Días que se conservarán los registros de cambios de email'),
+(15, 'en', 'Email change history retention', 'Days to retain email change logs'),
+
+-- Config ID 16
+(16, 'es', 'Retención de intentos de acceso y recuperación', 'Días que se conservarán los intentos de inicio de sesión y recuperación de contraseña'),
+(16, 'en', 'Access and recovery attempts retention', 'Days to retain login and password recovery attempt history');
 
 
 
@@ -125,51 +154,38 @@ BEFORE UPDATE ON config_translations
 FOR EACH ROW
 SIGNAL SQLSTATE '23000' SET MESSAGE_TEXT = 'Updation from the config_translations table is prohibited';
 
-
-
 DELIMITER $$
 
-CREATE TRIGGER validate_config_values BEFORE UPDATE ON config
+CREATE TRIGGER validate_config_value_update_only
+BEFORE UPDATE ON config
 FOR EACH ROW
 BEGIN
-    IF NEW.id = 1 THEN -- Max login attempts
-        IF NEW.value < 3 THEN
-            SIGNAL SQLSTATE '10101'
-            SET MESSAGE_TEXT = 'Minimum allowed login attempts before lockout is 3';
-        END IF;
-        
-    ELSEIF NEW.id = 2 THEN -- Suspension time (minutes)
-        IF NEW.value < 15 THEN
-            SIGNAL SQLSTATE '45002'
-            SET MESSAGE_TEXT = 'Minimum suspension time after failed attempts must be 15 minutes';
-        END IF;
+    -- Only the 'value' field may be updated
+    IF NEW.min_value != OLD.min_value OR NEW.max_value != OLD.max_value THEN
+        SIGNAL SQLSTATE '13001'
+        SET MESSAGE_TEXT = 'Only the "value" field can be updated. "min_value" and "max_value" are read-only.';
+    END IF;
 
-    ELSEIF NEW.id = 3 THEN -- Session min duration (days)
-        IF NEW.value < 1 THEN
-            SIGNAL SQLSTATE '45003'
-            SET MESSAGE_TEXT = 'Minimum session duration must be at least 1 day';
-        END IF;
+    -- 'value' must be within [min_value, max_value]
+    IF NEW.value < OLD.min_value THEN
+        SIGNAL SQLSTATE '13002'
+        SET MESSAGE_TEXT = CONCAT(
+            'The new value (', NEW.value,
+            ') is below the minimum allowed (', OLD.min_value, ')'
+        );
+    END IF;
 
-    ELSEIF NEW.id = 4 THEN -- Access token duration (minutes)
-        IF NEW.value < 15 OR NEW.value > 60 THEN
-            SIGNAL SQLSTATE '45004'
-            SET MESSAGE_TEXT = 'Access token duration must be between 15 and 60 minutes';
-        END IF;
-
-    ELSEIF NEW.id = 5 THEN -- Refresh token duration (days)
-        IF NEW.value < 1 THEN
-            SIGNAL SQLSTATE '45005'
-            SET MESSAGE_TEXT = 'Refresh token duration must be at least 1 day';
-        END IF;
-
-    ELSEIF NEW.id = 6 THEN -- Session cleanup hour (0-23)
-        IF NEW.value < 0 OR NEW.value > 23 THEN
-            SIGNAL SQLSTATE '45006'
-            SET MESSAGE_TEXT = 'Session cleanup hour must be between 0 and 23';
-        END IF;
+    IF NEW.value > OLD.max_value THEN
+        SIGNAL SQLSTATE '13003'
+        SET MESSAGE_TEXT = CONCAT(
+            'The new value (', NEW.value,
+            ') exceeds the maximum allowed (', OLD.max_value, ')'
+        );
     END IF;
 END$$
 
-
 DELIMITER ;
+
+
+
 -- TIRGER APAR REAJUSTAR EINDICE UTOINCREMENT
