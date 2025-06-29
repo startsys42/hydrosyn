@@ -160,7 +160,7 @@ $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< hydrosyn_files/db.sql
 # Generar hash bcrypt con Python
 HASH_PASS=$(python3 -c "
 import bcrypt
-password = b'$PASSWORD'
+password = b'$FIRST_USER_PASSWORD'
 hashed = bcrypt.hashpw(password, bcrypt.gensalt())
 ")
 
