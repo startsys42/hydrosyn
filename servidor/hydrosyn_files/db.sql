@@ -131,6 +131,19 @@ CREATE TABLE email_verifications_unverified_log (
     deleted_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP -- fecha en que se borró el registro original
 );
 
+CREATE TABLE user_activation_history (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    prev_is_active BOOLEAN NOT NULL,
+    new_is_active BOOLEAN NOT NULL,
+    changed_at TIMESTAMP NOT NULL,
+    changed_by INT UNSIGNED NOT NULL, -- ID de quien hizo el cambio
+    reason VARCHAR(255),              -- opcional, motivo del cambio
+
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (changed_by) REFERENCES users(id) ON DELETE SET NULL
+);
+
 
 CREATE TABLE password_policy_current (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
