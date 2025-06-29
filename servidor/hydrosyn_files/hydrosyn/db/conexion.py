@@ -4,18 +4,18 @@ from logger import logger
 
 _engine = None
 
-def inicializar_engine(usuario, password, host, puerto, nombre_bd):
+def inicializar_engine(usuario, password, host, puerto, nombre_db):
    
     global _engine
-    logger.info(f"Conectando a BD con: usuario={usuario}, password={'***' if password else 'VACÍO'}, host={host}, puerto={puerto}, bd={nombre_bd}")
+    logger.info(f"Conectando a BD con: usuario={usuario}, password={'***' if password else 'VACÍO'}, host={host}, puerto={puerto}, bd={nombre_db}")
 
-    if not usuario or not password or not host or not puerto or not nombre_bd:
+    if not usuario or not password or not host or not puerto or not nombre_db:
         raise ValueError("Todos los parámetros de conexión deben tener valor válido.")
 
     if not _engine:
         try:
             _engine = create_engine(
-                f"mysql+pymysql://{usuario}:{password}@{host}:{puerto}/{nombre_bd}",
+                f"mysql+pymysql://{usuario}:{password}@{host}:{puerto}/{nombre_db}",
                 pool_pre_ping=True
             )
             logger.info("Motor de base de datos inicializado correctamente.")
