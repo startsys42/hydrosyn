@@ -209,8 +209,8 @@ CREATE TABLE user_password_history (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     changed_by INT UNSIGNED NOT NULL,
     device VARCHAR(255),
-    ip_address VARCHAR(15),
-    mac_address VARCHAR(17),
+    ip_address VARCHAR(45),
+  
 
     CONSTRAINT fk_password_user
         FOREIGN KEY (user_id) REFERENCES users(id)
@@ -231,7 +231,7 @@ CREATE TABLE user_email_changes (
     changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     changed_by INT UNSIGNED NOT NULL,
     device VARCHAR(255),
-    ip_address VARCHAR(15),
+    ip_address VARCHAR(45),
 
 
     CONSTRAINT fk_email_user
