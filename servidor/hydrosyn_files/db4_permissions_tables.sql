@@ -140,3 +140,50 @@ CREATE TABLE user_roles_history (
         ON UPDATE CASCADE
 );
 
+
+-- Bloqueo para la tabla permissions
+CREATE TRIGGER bloqueo_update_permissions
+BEFORE UPDATE ON permissions
+FOR EACH ROW
+SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Modification of the permissions table is prohibited';
+
+CREATE TRIGGER bloqueo_delete_permissions
+BEFORE DELETE ON permissions
+FOR EACH ROW
+SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Deletion from the permissions table is prohibited';
+
+CREATE TRIGGER bloqueo_insert_permissions
+BEFORE INSERT ON permissions
+FOR EACH ROW
+SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Insertion into the permissions table is prohibited';
+
+-- Bloqueo para la tabla permission_translations
+CREATE TRIGGER bloqueo_update_permission_translations
+BEFORE UPDATE ON permission_translations
+FOR EACH ROW
+SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Modification of the permission_translations table is prohibited';
+
+CREATE TRIGGER bloqueo_delete_permission_translations
+BEFORE DELETE ON permission_translations
+FOR EACH ROW
+SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Deletion from the permission_translations table is prohibited';
+
+CREATE TRIGGER bloqueo_insert_permission_translations
+BEFORE INSERT ON permission_translations
+FOR EACH ROW
+SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Insertion into the permission_translations table is prohibited';
+
+
+DELIMITER $$
+
+CREATE TRIGGER prevent_delete_master_role
+BEFORE DELETE ON roles
+FOR EACH ROW
+BEGIN
+    IF OLD.name = 'master' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'The master role cannot be deleted';
+    END IF;
+END$$
+
+DELIMITER ;
