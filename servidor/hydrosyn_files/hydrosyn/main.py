@@ -9,12 +9,18 @@ from security.keys import KeyManager
 from db.db_config import get_rotation_time_from_db
 from db_engine import DBEngine
 from security.middleware import DualSessionMiddleware
+from dotenv import load_dotenv
+
+
 
 # Importamos routers
 from app.web import auth as web_auth
 from app.web import views as web_views
 from app.api import auth as api_auth
 from app.api import users as api_users
+
+
+load_dotenv(".env")
 
 
 user_shadow_path = "/var/lib/hydrosyn/user_db.shadow"
