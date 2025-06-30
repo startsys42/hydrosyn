@@ -50,12 +50,12 @@ db_host = "127.0.0.1"
 db_name = "hydrosyn_db"
 logger.info(f"Conectando a BD con: usuario={db_user}, password={'***' if password else 'VACÍO'}, host={db_host}, puerto={db_port}, bd={db_name}")
 
+
 try:
-     initialize_engine(db_user, db_password, db_host, db_port, db_name)
+    DBEngine.initialize_engine(db_user, password, db_host, db_port, db_name)
 except Exception as e:
     logger.error(f"Error initializing DB engine: {e}")
     sys.exit(1)
-
 
 
 # Función para leer la clave secreta del fichero
