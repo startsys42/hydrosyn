@@ -9,13 +9,14 @@ logger = logging.getLogger("hydrosyn_logs")
 logger.setLevel(logging.INFO)
 
 # Rotar cada día a la medianoche, mantener 30 archivos (30 días)
-handler = TimedRotatingFileHandler(
-    "logs/hydrosyn.log",
-    when="midnight",
-    interval=1,
-    backupCount=30,
-    encoding="utf-8"
-)
+if not logger.hasHandlers():
+    handler = TimedRotatingFileHandler(
+        "logs/hydrosyn.log",
+        when="midnight",
+        interval=1,
+        backupCount=30,
+        encoding="utf-8"
+    )
 
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
