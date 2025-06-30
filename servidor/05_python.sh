@@ -165,8 +165,8 @@ chmod 644 /etc/systemd/system/hydrosyn.service
 
 cat <<EOF > /opt/hydrosyn/.env
 LOG_DIR=logs
-DB_USER=hydro_user
-DB_HOST=127.0.0.1
+DB_USER=$DB_USER_HYDRO
+DB_HOST=$DB_IP
 DB_NAME=hydrosyn_db
 EOF
 
