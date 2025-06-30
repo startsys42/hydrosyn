@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from security.secrets import obtener_password_mas_reciente, cargar_datos_maestros
+from security.secrets import get_most_recent_password, cargar_datos_maestros
 from logger import logger
 
 _engine = None
