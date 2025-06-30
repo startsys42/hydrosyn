@@ -103,4 +103,4 @@ app.include_router(web_views.router, tags=["Web"])
 app.include_router(api_auth.router, prefix="/api", tags=["API"])
 app.include_router(api_users.router, prefix="/api", tags=["API"])
 
-logger.info("La aplicación FastAPI ha arrancado")
+logger.info("Starting application...")
