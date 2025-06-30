@@ -6,7 +6,7 @@ import sys
 from logger import logger
 from security.secrets import get_most_recent_password, load_master_data
 from security.keys import KeyManager
-from db.db_config import get_rotation_time_from_db
+from db.db_config import get_cookie_rotation_time_from_db
 from db_engine import DBEngine
 from security.middleware import DualSessionMiddleware
 from dotenv import load_dotenv
@@ -55,11 +55,12 @@ except Exception as e:
 
 
 
-key_manager = KeyManager(
-    get_rotation_time=get_rotation_time_from_db,
+cookie_key_manager = CookieKeyManager(
+    get_rotation_time=get_cookie_rotation_time_from_db,
     ttl=600  # 10 minutes 
 )
 
+jwt_key_manager = JWTKeyManager(get_rotation_time=get_jwt_rotation_time_from_db, ttl=600)
 
 app = FastAPI()
 @app.on_event("startup")
