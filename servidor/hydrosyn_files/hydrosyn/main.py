@@ -34,10 +34,11 @@ km, db_port = load_master_data(k_db_path)
 
 
 # Puedes leer el resto de valores como quieras (desde archivo, variables de entorno, etc.)
-db_user = "hydro_user"
+db_user = os.getenv("DB_USER")
+db_host = os.getenv("DB_HOST")
+db_name = os.getenv("DB_NAME")
 password  = get_most_recent_password(user_shadow_path, km)
-db_host = "127.0.0.1"
-db_name = "hydrosyn_db"
+
 logger.info(f"Conectando a BD con: usuario={db_user}, password={'***' if password else 'VACÍO'}, host={db_host}, puerto={db_port}, bd={db_name}")
 
 
