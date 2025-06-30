@@ -155,12 +155,21 @@ EOF
 
 
 
+
 chown -R hydrosyn:hydrosyn /opt/hydrosyn
 chmod -R 750 /opt/hydrosyn
 
 # Cambiar propietario a root y permisos correctos
 chown root:root /etc/systemd/system/hydrosyn.service
 chmod 644 /etc/systemd/system/hydrosyn.service
+
+cat <<EOF > /opt/hydrosyn/.env
+LOG_DIR=logs
+DB_USER=hydro_user
+EOF
+
+
+
 
 # Recargar systemd para detectar el nuevo servicio
 systemctl daemon-reload
