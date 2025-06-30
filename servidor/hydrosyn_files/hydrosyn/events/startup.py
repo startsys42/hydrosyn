@@ -1,8 +1,8 @@
 import asyncio
 from tasks.sessions import periodic_cleanup_job
-from logger import logger  # Importa tu logger personalizado
+from logger import logger  # Import your custom logger
 
 async def on_startup():
-    logger.info("La aplicación está arrancando...")
-    # Lanzar el job periódico en segundo plano
+    logger.info("The application is starting up...")
+    # Launch the periodic job in the background
     asyncio.create_task(periodic_cleanup_job())
