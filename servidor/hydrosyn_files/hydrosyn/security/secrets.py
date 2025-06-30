@@ -2,7 +2,7 @@ import os
 import sys
 from datetime import datetime
 from logger import logger
-from security.crypto import descifrar_contrasena 
+from security.crypto import decrypt_password 
 
 def get_most_recent_password(ruta_shadow: str, clave_maestra: str) -> str:
     if not os.path.exists(ruta_shadow):
