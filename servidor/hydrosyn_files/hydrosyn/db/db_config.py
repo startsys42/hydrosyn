@@ -6,7 +6,7 @@ def get_rotation_time_from_db() -> int:
     try:
         with DBEngine.get_engine().connect() as conn:  # using class method
             result = conn.execute(
-                text("SELECT value FROM config WHERE id = 3")
+                text("SELECT value FROM config WHERE id = 4")
             ).fetchone()
             if result and result[0] is not None:
                 try:
