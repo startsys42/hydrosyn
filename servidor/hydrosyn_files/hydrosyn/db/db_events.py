@@ -3,7 +3,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from bd.db_engine import DBEngine 
 from logger import logger
 
-CLEANUP_HOUR_CONFIG_ID = 7
+
 DEFAULT_CLEANUP_HOUR = 2
 
 def get_cleanup_hour_from_db():
