@@ -1,5 +1,5 @@
 from sqlalchemy import text
-from db.engine import DBEngine  # changed import
+from db.db_engine import DBEngine  # changed import
 from logger import logger
 
 def get_rotation_time_from_db() -> int:
