@@ -19,7 +19,7 @@ async def periodic_event_dynamic_schedule(name: str, get_next_run_time, task_cor
             await asyncio.sleep(max(sleep_time, 0.1))
 
 async def on_startup():
-    logger.info("Starting application...")
+
 
     # Crear tarea periódica para limpieza de sesiones
     asyncio.create_task(
