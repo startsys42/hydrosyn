@@ -32,7 +32,7 @@ INSERT INTO config (value, min_value, max_value) VALUES
 (15, 1, 3600),   -- Lockout duration (in minutes) after exceeding failed attempts
 (1, 1, 30),      -- Maximum session duration (in days)
 (15, 1, 60),   -- Access token duration (in minutes)
-(1, 1, 90),      -- Refresh token duration (in days)
+(90, 1, 90),      -- Refresh token duration (in days)
 (2, 0, 23),      -- Daily cleanup hour sessions and tokens (0 to 23)
 (24, 1, 24),    -- Time limit to verify email or change password (in hours)
 (365, 90, 1825),  -- Days to retain unverified users before deletion
