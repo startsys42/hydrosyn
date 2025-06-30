@@ -2,87 +2,86 @@ import os
 import sys
 from datetime import datetime
 from logger import logger
-from security.crypto import decrypt_password 
+from security.crypto import decrypt_password  # assuming descifrar_contrasena is decrypt_password
 
-def get_most_recent_password(ruta_shadow: str, clave_maestra: str) -> str:
-    if not os.path.exists(ruta_shadow):
-        logger.error(f"Archivo no encontrado en {ruta_shadow}. Abortando.")
+def get_most_recent_password(shadow_path: str, master_key: str) -> str:
+    if not os.path.exists(shadow_path):
+        logger.error(f"File not found at {shadow_path}. Aborting.")
         sys.exit(1)
 
-    with open(ruta_shadow, "r") as f:
-        lineas = f.readlines()
+    with open(shadow_path, "r") as f:
+        lines = f.readlines()
 
-    if not lineas:
-        logger.error(f"El fichero {ruta_shadow} está vacío. Abortando.")
+    if not lines:
+        logger.error(f"The file {shadow_path} is empty. Aborting.")
         sys.exit(1)
 
-    datos = []
-    for linea in lineas:
-        linea = linea.strip()
-        if not linea or ":" not in linea:
+    data = []
+    for line in lines:
+        line = line.strip()
+        if not line or ":" not in line:
             continue
-        texto_cifrado, fecha_str = linea.rsplit(":", 1)
+        encrypted_text, date_str = line.rsplit(":", 1)
         try:
-            fecha = datetime.strptime(fecha_str, "%Y-%m-%d_%H-%M-%S")
-
+            date = datetime.strptime(date_str, "%Y-%m-%d_%H-%M-%S")
         except ValueError:
-            logger.warning(f"Línea con fecha no válida ignorada: {linea}")
+            logger.warning(f"Line with invalid date ignored: {line}")
             continue
-        datos.append((texto_cifrado, fecha))
+        data.append((encrypted_text, date))
 
-    if not datos:
-        logger.error(f"No hay líneas válidas con fecha en {ruta_shadow}. Abortando.")
+    if not data:
+        logger.error(f"No valid lines with date found in {shadow_path}. Aborting.")
         sys.exit(1)
 
-    # Línea con fecha más reciente
-    texto_cifrado_reciente, _ = max(datos, key=lambda x: x[1])
+    # Get the line with the most recent date
+    recent_encrypted_text, _ = max(data, key=lambda x: x[1])
 
-    # Descifrar la contraseña
+    # Decrypt the password
     try:
-        logger.debug(f"Texto cifrado a descifrar: {texto_cifrado_reciente[:50]}...")
-        logger.debug(f"Clave maestra usada: '{clave_maestra[:8]}...' (ocultada parcialmente)")
-        password = descifrar_contrasena(texto_cifrado_reciente, clave_maestra)
+        logger.debug(f"Encrypted text to decrypt: {recent_encrypted_text[:50]}...")
+        logger.debug(f"Master key used: '{master_key[:8]}...' (partially hidden)")
+        password = decrypt_password(recent_encrypted_text, master_key)
         if not password:
-            logger.error("La contraseña descifrada está vacía. Posible clave incorrecta o error de descifrado.")
+            logger.error("Decrypted password is empty. Possible wrong key or decryption error.")
             sys.exit(1)
     except Exception as e:
-        logger.error(f"Error al descifrar la contraseña: {e}")
+        logger.error(f"Error decrypting password: {e}")
         sys.exit(1)
 
-    logger.info("Contraseña descifrada correctamente.")
+    logger.info("Password decrypted successfully.")
     return password
 
 
-def cargar_datos_maestros(ruta_k_bd: str):
-    if not os.path.exists(ruta_k_bd):
-        logger.error(f"Archivo no encontrado en {ruta_k_bd}. Abortando.")
+def load_master_data(master_data_path: str):
+    if not os.path.exists(master_data_path):
+        logger.error(f"File not found at {master_data_path}. Aborting.")
         sys.exit(1)
 
-    with open(ruta_k_bd, "r") as f:
-        lineas = f.read().strip().splitlines()
+    with open(master_data_path, "r") as f:
+        lines = f.read().strip().splitlines()
 
-    datos = {}
-    for linea in lineas:
-        if "=" in linea:
-            clave, valor = linea.split("=", 1)
-            datos[clave.strip()] = valor.strip()
+    data = {}
+    for line in lines:
+        if "=" in line:
+            key, value = line.split("=", 1)
+            data[key.strip()] = value.strip()
 
-    texto = datos.get("texto", "")
-    puerto = datos.get("puerto", "")
+    text = data.get("text", "")
+    port = data.get("port", "")
 
-    # Validar contenido
-    if not texto:
-        logger.error("El campo 'texto' está vacío. Abortando.")
+    # Validate content
+    if not text:
+        logger.error("The 'text' field is empty. Aborting.")
         sys.exit(1)
 
-    if not puerto.isdigit():
-        logger.error(f"El campo 'puerto' debe ser numérico. Valor recibido: '{puerto}'. Abortando.")
+    if not port.isdigit():
+        logger.error(f"The 'port' field must be numeric. Received value: '{port}'. Aborting.")
         sys.exit(1)
 
     try:
-        os.remove(ruta_k_bd)
+        os.remove(master_data_path)
     except Exception as e:
-        logger.warning(f"No se pudo borrar el fichero de datos: {e}")
+        logger.warning(f"Could not delete the master data file: {e}")
 
-    logger.info("Datos cargados correctamente y fichero borrado.")
-    return texto, puerto
+    logger.info("Data loaded successfully and file deleted.")
+    return text, port
