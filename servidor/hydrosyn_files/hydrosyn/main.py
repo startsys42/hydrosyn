@@ -6,7 +6,7 @@ from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 from security.keys import GestorClaves
 from security.middleware import DualSessionMiddleware
-from db.config import obtener_tiempo_rotacion_desde_bd
+from db.db_config import obtener_tiempo_rotacion_desde_bd
 from security.crypto import descifrar_contrasena
 from security.secrets import obtener_password_mas_reciente, cargar_datos_maestros
 import os
