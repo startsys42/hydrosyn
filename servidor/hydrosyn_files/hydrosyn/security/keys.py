@@ -11,7 +11,7 @@ def generate_secure_key(length: int = 128) -> str:
     n_bytes = math.ceil(length * 3 / 4)  # bytes needed for base64 length
     return secrets.token_urlsafe(n_bytes)[:length]  # trim if too long
 
-class KeyManager:
+class CookieKeyManager:
     def __init__(self, get_rotation_time: Callable[[], int], ttl: int = 600):
         self.get_rotation_time = get_rotation_time
         self.ttl = ttl  # minimum time between queries, in seconds
