@@ -7,33 +7,33 @@ from logger import logger  # si querés loguear
 
 import math
 
-def generar_clave_segura(longitud: int = 128) -> str:
-    n_bytes = math.ceil(longitud * 3 / 4)  # bytes necesarios para longitud base64
-    return secrets.token_urlsafe(n_bytes)[:longitud]  # recortar si se pasa
+def generate_secure_key(length: int = 128) -> str:
+    n_bytes = math.ceil(length * 3 / 4)  # bytes needed for base64 length
+    return secrets.token_urlsafe(n_bytes)[:length]  # trim if too long
 
-class GestorClaves:
-    def __init__(self, obtener_tiempo_rotacion: Callable[[], int], ttl: int = 600):
-        self.obtener_tiempo_rotacion = obtener_tiempo_rotacion
-        self.ttl = ttl  # tiempo mínimo entre consultas, en segundos
-        self._cache_tiempo_rotacion = self.obtener_tiempo_rotacion()
-        self._ultima_consulta = time.time()
-        self.ultima_rotacion = time.time()
-        self.key_session_new = generar_clave_segura()
+class KeyManager:
+    def __init__(self, get_rotation_time: Callable[[], int], ttl: int = 600):
+        self.get_rotation_time = get_rotation_time
+        self.ttl = ttl  # minimum time between queries, in seconds
+        self._cached_rotation_time = self.get_rotation_time()
+        self._last_query = time.time()
+        self.last_rotation = time.time()
+        self.key_session_new = generate_secure_key()
         self.key_session_old = self.key_session_new
 
-    def obtener_claves(self) -> Tuple[str, str]:
-        ahora = time.time()
+    def get_keys(self) -> Tuple[str, str]:
+        now = time.time()
 
-        # Si pasaron más de `ttl`, actualiza el valor de la base de datos
-        if ahora - self._ultima_consulta >= self.ttl:
-            self._cache_tiempo_rotacion = self.obtener_tiempo_rotacion()
-            self._ultima_consulta = ahora
+        # If more than `ttl` seconds passed, update value from the database
+        if now - self._last_query >= self.ttl:
+            self._cached_rotation_time = self.get_rotation_time()
+            self._last_query = now
 
-        # ¿Es momento de rotar la clave?
-        if ahora - self.ultima_rotacion >= self._cache_tiempo_rotacion:
+        # Is it time to rotate the key?
+        if now - self.last_rotation >= self._cached_rotation_time:
             self.key_session_old = self.key_session_new
-            self.key_session_new = generar_clave_segura()
-            self.ultima_rotacion = ahora
-            logger.info("Rotación de clave de sesión ejecutada")
+            self.key_session_new = generate_secure_key()
+            self.last_rotation = now
+            logger.info("Session key rotation executed")
 
         return self.key_session_new, self.key_session_old
