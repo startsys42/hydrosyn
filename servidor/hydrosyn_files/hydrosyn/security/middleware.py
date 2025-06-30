@@ -4,9 +4,9 @@ from starlette.responses import Response
 from itsdangerous import Signer, BadSignature
 from security.keys import GestorClaves
 import uuid
-from db.config import obtener_tiempo_rotacion_desde_bd
+from db.db_config import obtener_tiempo_rotacion_desde_bd
 from logger import logger
-from db.auth import guardar_sesion_en_bd 
+from db.db_auth import guardar_sesion_en_bd 
 
 class DualSessionMiddleware(BaseHTTPMiddleware):
     def __init__(self, app, key_manager):
