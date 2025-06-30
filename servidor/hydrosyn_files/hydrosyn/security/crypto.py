@@ -10,7 +10,7 @@ def openssl_decrypt(enc: str, password: str) -> str:
         data = base64.b64decode(enc)
 
         if data[:8] != b"Salted__":
-            raise ValueError("No encontrado encabezado Salted__")
+            raise ValueError("Salted__ header not found")
 
         salt = data[8:16]
         ciphertext = data[16:]
@@ -26,14 +26,14 @@ def openssl_decrypt(enc: str, password: str) -> str:
         # Quitar padding PKCS7
         padding_len = decrypted[-1]
         if padding_len < 1 or padding_len > AES.block_size:
-            raise ValueError(f"Padding inválido: {padding_len}")
+            raise ValueError(f"Invalid padding: {padding_len}")
 
         return decrypted[:-padding_len].decode('utf-8')
 
     except Exception as e:
-        logger.error(f"Error en openssl_decrypt: {e}")
+        logger.error(f"Error in openssl_decrypt: {e}")
         raise
 
-def descifrar_contrasena(texto_cifrado: str, clave_maestra: str) -> str:
-    return openssl_decrypt(texto_cifrado, clave_maestra)
+def decrypt_password(encrypted_text: str, master_key: str) -> str:
+    return openssl_decrypt(encrypted_text, master_key)
 
