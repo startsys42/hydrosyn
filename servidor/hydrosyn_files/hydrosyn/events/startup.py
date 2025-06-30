@@ -28,7 +28,7 @@ async def on_startup():
             "General Clean",
             get_next_cleanup_time,
             clean_expired,
-            check_interval=1800 
+            check_interval=1800  #minutes
         )
     )
 
