@@ -21,7 +21,7 @@ def get_cleanup_hour_from_db():
                     return int(value)
                 else:
                     logger.warning(
-                        f"Cleanup hour out of range ({value}). Expected between 0–23. Using default: {DEFAULT_CLEANUP_HOUR}"
+                         f"Cleanup hour {value} out of range ({min_val}-{max_val} or 0-23). Using default {DEFAULT_CLEANUP_HOUR}"
                     )
                     return DEFAULT_CLEANUP_HOUR
             else:
