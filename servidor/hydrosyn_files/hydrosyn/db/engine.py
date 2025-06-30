@@ -4,7 +4,7 @@ from logger import logger
 
 _engine = None
 
-def inicializar_engine(usuario, password, host, puerto, nombre_db):
+def initialize_engine(usuario, password, host, puerto, nombre_db):
    
     global _engine
     logger.info(f"Conectando a BD con: usuario={usuario}, password={'***' if password else 'VACÍO'}, host={host}, puerto={puerto}, bd={nombre_db}")
