@@ -11,8 +11,8 @@ def get_cleanup_hour_from_db():
         engine = DBEngine.get_engine()
         with engine.connect() as conn:
             result = conn.execute(
-                text("SELECT value, min_value, max_value FROM config WHERE id = :id"),
-                {"id": CLEANUP_HOUR_CONFIG_ID}
+                text("SELECT value, min_value, max_value FROM config WHERE id = 2")
+      
             )
             row = result.fetchone()
             if row:
