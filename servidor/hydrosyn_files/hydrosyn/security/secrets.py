@@ -4,7 +4,7 @@ from datetime import datetime
 from logger import logger
 from security.crypto import descifrar_contrasena 
 
-def obtener_password_mas_reciente(ruta_shadow: str, clave_maestra: str) -> str:
+def get_most_recent_password(ruta_shadow: str, clave_maestra: str) -> str:
     if not os.path.exists(ruta_shadow):
         logger.error(f"Archivo no encontrado en {ruta_shadow}. Abortando.")
         sys.exit(1)
