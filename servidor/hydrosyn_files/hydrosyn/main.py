@@ -11,6 +11,8 @@ from security.crypto import descifrar_contrasena
 from security.secrets import obtener_password_mas_reciente, cargar_datos_maestros
 import os
 import sys
+from security.keys import KeyManager
+from db.config import get_rotation_time_from_db
 from db.conexion import inicializar_engine
 from datetime import datetime
 from datetime import time
@@ -62,9 +64,11 @@ except Exception as e:
 
 
 
-gestor_claves = GestorClaves(
-    obtener_tiempo_rotacion=obtener_tiempo_rotacion_desde_bd,
-    ttl=600  # 10 minutos
+
+
+key_manager = KeyManager(
+    get_rotation_time=get_rotation_time_from_db,
+    ttl=600  # 10 minutes 
 )
 
 
