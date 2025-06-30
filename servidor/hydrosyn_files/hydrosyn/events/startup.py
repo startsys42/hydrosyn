@@ -18,15 +18,17 @@ async def periodic_event_dynamic_schedule(name: str, get_next_run_time, task_cor
             sleep_time = min(wait_time, check_interval)
             await asyncio.sleep(max(sleep_time, 0.1))
 
+
+
+
 async def on_startup():
 
-
-    # Crear tarea periódica para limpieza de sesiones
     asyncio.create_task(
         periodic_event_dynamic_schedule(
-            "Session Cleanup",
-            obtener_proxima_hora_limpieza,
-            limpiar_sesiones_expiradas
+            "General Clean",
+            get_next_cleanup_time,
+            clean_expired,
+            check_interval=1800 
         )
     )
 
