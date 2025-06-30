@@ -33,27 +33,27 @@ from app.web import auth as web_auth
 from app.web import views as web_views
 from app.api import auth as api_auth
 from app.api import users as api_users
-ruta_user_shadow = "/var/lib/hydrosyn/user_db.shadow"
-ruta_k_db = "/var/lib/hydrosyn/session.key"
+user_shadow_path = "/var/lib/hydrosyn/user_db.shadow"
+k_db_path = "/var/lib/hydrosyn/session.key"
 
 
 
-km, db_port = cargar_datos_maestros(ruta_k_db)
+km, db_port = load_master_data(k_db_path)
 
 
 
 
 # Puedes leer el resto de valores como quieras (desde archivo, variables de entorno, etc.)
-usuario = "hydro_user"
-password = obtener_password_mas_reciente(ruta_user_shadow, km)
-host = "127.0.0.1"
-nombre_bd = "hydrosyn_db"
-logger.info(f"Conectando a BD con: usuario={usuario}, password={'***' if password else 'VACÍO'}, host={host}, puerto={db_port}, bd={nombre_bd}")
+db_user = "hydro_user"
+password  = get_most_recent_password(user_shadow_path, km)
+db_host = "127.0.0.1"
+db_name = "hydrosyn_db"
+logger.info(f"Conectando a BD con: usuario={db_user}, password={'***' if password else 'VACÍO'}, host={db_host}, puerto={db_port}, bd={db_name}")
 
 try:
-    inicializar_engine(usuario, password, host, db_port, nombre_bd)
+     initialize_engine(db_user, db_password, db_host, db_port, db_name)
 except Exception as e:
-    logger.error(f"Error inicializando motor DB: {e}")
+    logger.error(f"Error initializing DB engine: {e}")
     sys.exit(1)
 
 
