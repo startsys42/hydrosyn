@@ -1,6 +1,7 @@
 import asyncio
 
 from logger import logger  # Import your custom logger
+from events.tasks import *
 
 def get_next_cleanup_time():
     now = datetime.utcnow()
