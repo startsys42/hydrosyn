@@ -4,42 +4,53 @@ from logger import logger
 
 def get_cookie_rotation_time_from_db() -> int:
     try:
-        with DBEngine.get_engine().connect() as conn:  # using class method
+        with DBEngine.get_engine().connect() as conn:
             result = conn.execute(
                 text("SELECT value, min_value, max_value FROM config WHERE id = 4")
             ).fetchone()
-            if result and result[0] is not None:
-                try:
-                    days = int(result[0])
-                    seconds = days * 86400
-                    return seconds
-                except (ValueError, TypeError):
-                    logger.warning(f"Invalid value for rotation time: {result[0]}")
+
+            if result:
+                value, min_val, max_val = result
+                if min_val <= value <= max_val and value > 0:
+                    return int(value * 86400)
+                else:
+                    logger.warning(f"Cookie rotation {value} out of range ({min_val}-{max_val}) days. Using default.")
     except Exception as e:
-        logger.error(f"Error fetching rotation time from DB: {e}")
+        logger.error(f"Error fetching cookie rotation time: {e}")
 
-    default_ttl = 86400
-    logger.info(f"Using default rotation time: {default_ttl} seconds")
-    return default_ttl
+ 
+    logger.info(f"Using default cookie rotation time: 1 day")
+    return 86400
 
+def get_jwt_rotation_time_from_db() -> tuple[int, int]:
+    default_access_ttl = 3600  # 1 hour 
+    default_refresh_ttl = 7 * 86400  # 7 days
 
-def get_jwt_rotation_time_from_db() -> int:
     try:
-        with DBEngine.get_engine().connect() as conn:  # using class method
+        with DBEngine.get_engine().connect() as conn:
             result = conn.execute(
-                   text("SELECT id, value FROM config WHERE id IN (5,6)")
+                text("SELECT id, value, min_value, max_value FROM config WHERE id IN (5, 6)")
             ).fetchall()
-            if result and result[0] is not None:
-                try:
-                    days = int(result[0])
-                    seconds = days * 86400
-                    return seconds
-                except (ValueError, TypeError):
-                    logger.warning(f"Invalid value for rotation time: {result[0]}")
-    except Exception as e:
-        logger.error(f"Error fetching rotation time from DB: {e}")
 
-    default_ttl = 86400
-    logger.info(f"Using default rotation time: {default_ttl} seconds")
-    return default_ttl
+            access_ttl = default_access_ttl
+            refresh_ttl = default_refresh_ttl
+
+            for row in result:
+                config_id, value, min_val, max_val = row
+                if min_val <= value <= max_val and value > 0:
+                    if config_id == 5:  # Tiempo de acceso (en minutos)
+                        access_ttl = int(value * 60)
+                    elif config_id == 6:  # Tiempo de refresco (en días)
+                        refresh_ttl = int(value * 86400)
+                else:
+                    logger.warning(
+                        f"JWT rotation time (ID {config_id}) out of range ({min_val}-{max_val}): {value}. "
+                        "Using default."
+                    )
+
+            return access_ttl, refresh_ttl
+
+    except Exception as e:
+        logger.error(f"Error fetching JWT rotation times: {e}")
+        return default_access_ttl, default_refresh_ttl
  
