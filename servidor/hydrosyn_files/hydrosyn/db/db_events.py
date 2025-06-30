@@ -1,6 +1,6 @@
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
-from engine import get_engine
+from bd.db_engine import DBEngine 
 from logger import logger
 
 CLEANUP_HOUR_CONFIG_ID = 7
@@ -8,7 +8,7 @@ DEFAULT_CLEANUP_HOUR = 2
 
 def get_cleanup_hour_from_db():
     try:
-        engine = get_engine()
+        engine = DBEngine.get_engine()
         with engine.connect() as conn:
             result = conn.execute(
                 text("SELECT value, min_value, max_value FROM config WHERE id = :id"),
