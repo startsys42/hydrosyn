@@ -9,9 +9,9 @@ from logger import logger
 from db.auth import guardar_sesion_en_bd 
 
 class DualSessionMiddleware(BaseHTTPMiddleware):
-    def __init__(self, app, gestor_claves: GestorClaves):
+    def __init__(self, app, key_manager):
         super().__init__(app)
-        self.gestor_claves = gestor_claves
+        self.key_manager = key_manager
 
     async def dispatch(self, request: Request, call_next):
         key_new, key_old = self.gestor_claves.obtener_claves()
