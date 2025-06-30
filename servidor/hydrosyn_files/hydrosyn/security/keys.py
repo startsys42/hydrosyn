@@ -37,3 +37,28 @@ class CookieKeyManager:
             logger.info("Session key rotation executed")
 
         return self.key_session_new, self.key_session_old
+
+class JWTKeyManager:
+    def __init__(self, get_rotation_time: Callable[[], int], ttl: int = 600):
+        self.get_rotation_time = get_rotation_time
+        self.ttl = ttl
+        self._cached_rotation_time = self.get_rotation_time()
+        self._last_query = time.time()
+        self.last_rotation = time.time()
+        self.key_session_new = generate_secure_key()
+        self.key_session_old = self.key_session_new
+
+    def get_keys(self) -> Tuple[str, str]:
+        now = time.time()
+
+        if now - self._last_query >= self.ttl:
+            self._cached_rotation_time = self.get_rotation_time()
+            self._last_query = now
+
+        if now - self.last_rotation >= self._cached_rotation_time:
+            self.key_session_old = self.key_session_new
+            self.key_session_new = generate_secure_key()
+            self.last_rotation = now
+            logger.info("JWT key rotation executed")
+
+        return self.key_session_new, self.key_session_old
