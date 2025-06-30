@@ -84,7 +84,7 @@ async def startup_event():
 
 
 # Middleware personalizado con rotación de clave
-app.add_middleware(DualSessionMiddleware, gestor_claves=gestor_claves)
+app.add_middleware(DualSessionMiddleware, key_manager=key_manager)
 
 # 2) Montar carpeta de archivos estáticos y plantillas (clientes web)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
