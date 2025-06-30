@@ -2,7 +2,7 @@ import os
 import logging
 from logging.handlers import TimedRotatingFileHandler
 
-log_dir = "logs"
+log_dir = os.getenv("LOG_DIR", "logs")
 os.makedirs(log_dir, exist_ok=True)  # crea carpeta si no existe
 
 logger = logging.getLogger("hydrosyn_logs")
