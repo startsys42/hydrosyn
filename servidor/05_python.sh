@@ -13,7 +13,7 @@ ins-paq python3-pip
 ins-paq python3-venv
 
 if ! id -u hydrosyn >/dev/null 2>&1; then
-    adduser --system --no-create-home --group hydrosyn
+    adduser --system --no-create-home --group $APP_USER
 fi
 
 # Mover directorio si no existe en /opt
@@ -56,8 +56,8 @@ cat <<EOF > /var/lib/hydrosyn/session.key
 texto=$KEY
 puerto=$DB_PORT
 EOF
-chown hydrosyn:hydrosyn /var/lib/hydrosyn/session.key
-chown hydrosyn:hydrosyn /var/lib/hydrosyn
+chown $APP_USER:$APP_USER /var/lib/hydrosyn/session.key
+chown $APP_USER:$APP_USER /var/lib/hydrosyn
 chmod 700 /var/lib/hydrosyn
 chmod 600 /var/lib/hydrosyn/session.key
 
@@ -69,7 +69,7 @@ fecha_actual=$(date +"%Y-%m-%d_%H-%M-%S")
 datos="$password_cifrada_clean:$fecha_actual"
 
 echo "$datos" >/var/lib/hydrosyn/user_db.shadow
-chown hydrosyn:hydrosyn /var/lib/hydrosyn/user_db.shadow
+chown $APP_USER:$APP_USER /var/lib/hydrosyn/user_db.shadow
 chmod 600 /var/lib/hydrosyn/user_db.shadow
 
 chmod 700 /var/lib/hydrosyn
@@ -106,7 +106,7 @@ DB_PORT=$DB_PORT
 
 $NOMBRE_CAMUFLADO  "$KEY $DB_PORT" #> /var/lib/hydrosyn/session.key
 chmod 600 /var/lib/hydrosyn/session.key
-chown hydrosyn:hydrosyn /var/lib/hydrosyn/session.key
+chown $APP_USER:$APP_USER /var/lib/hydrosyn/session.key
 EOF
 
 chmod 700 /usr/local/lib/.hidden
@@ -137,8 +137,8 @@ After=network.target a2.service
 Requires=a2.service
 
 [Service]
-User=hydrosyn
-Group=hydrosyn
+User=$APP_USER
+Group=$APP_USER
 WorkingDirectory=/opt/hydrosyn
 #ExecStartPre=/usr/local/lib/.hidden/km_h.sh
 ExecStart=/opt/hydrosyn/venv/bin/uvicorn main:app --host 0.0.0.0 --port $APP_PORT
@@ -156,7 +156,7 @@ EOF
 
 
 
-chown -R hydrosyn:hydrosyn /opt/hydrosyn
+chown -R $APP_USER:$APP_USER /opt/hydrosyn
 chmod -R 750 /opt/hydrosyn
 
 # Cambiar propietario a root y permisos correctos
@@ -167,12 +167,12 @@ cat <<EOF > /opt/hydrosyn/.env
 LOG_DIR=logs
 DB_USER=$DB_USER_HYDRO
 DB_HOST=$DB_IP
-DB_NAME=hydrosyn_db
+DB_NAME=$DB_NAME
 EOF
 
 chmod 600 /opt/hydrosyn/.env
 
-chown hydrosyn:hydrosyn /opt/hydrosyn/.env
+chown $APP_USER:$APP_USER /opt/hydrosyn/.env
 
 
 
