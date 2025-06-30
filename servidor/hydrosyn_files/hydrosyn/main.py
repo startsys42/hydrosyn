@@ -1,44 +1,22 @@
 from fastapi import FastAPI
-from fastapi import Request
-from logger import logger 
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from starlette.middleware.sessions import SessionMiddleware
-from security.keys import GestorClaves
-from security.middleware import DualSessionMiddleware
-from db.db_config import obtener_tiempo_rotacion_desde_bd
-from security.crypto import descifrar_contrasena
-from security.secrets import get_most_recent_password, load_master_data
-
-
-
-
 import os
 import sys
-from security.keys import KeyManager
-from db.config import get_rotation_time_from_db
-from db.conexion import inicializar_engine
-from datetime import datetime
-from datetime import time
-
-import asyncio
-from datetime import datetime, timedelta
-from fastapi import FastAPI
-from db.config import obtener_hora_limpieza_desde_bd
-from db.conexion import get_engine
-from sqlalchemy import text
 from logger import logger
-from db_engine import DBEngine 
-
-
-
-
+from security.secrets import get_most_recent_password, load_master_data
+from security.keys import KeyManager
+from db.db_config import get_rotation_time_from_db
+from db_engine import DBEngine
+from security.middleware import DualSessionMiddleware
 
 # Importamos routers
 from app.web import auth as web_auth
 from app.web import views as web_views
 from app.api import auth as api_auth
 from app.api import users as api_users
+
+
 user_shadow_path = "/var/lib/hydrosyn/user_db.shadow"
 k_db_path = "/var/lib/hydrosyn/session.key"
 
