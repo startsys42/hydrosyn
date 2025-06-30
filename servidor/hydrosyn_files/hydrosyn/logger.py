@@ -1,26 +1,22 @@
 import os
 import logging
-from logging.handlers import RotatingFileHandler
+from logging.handlers import TimedRotatingFileHandler
 
 log_dir = "logs"
 os.makedirs(log_dir, exist_ok=True)  # crea carpeta si no existe
 
-
-
-
-
-
-
-# Configurar logger con rotación para evitar que el archivo crezca sin límite
 logger = logging.getLogger("hydrosyn_logs")
 logger.setLevel(logging.INFO)
 
-handler = RotatingFileHandler("logs/hydrosyn.log", maxBytes=5*1024*1024, backupCount=7)  # 5MB por archivo, 3 backups
+# Rotar cada día a la medianoche, mantener 30 archivos (30 días)
+handler = TimedRotatingFileHandler(
+    "logs/hydrosyn.log",
+    when="midnight",
+    interval=1,
+    backupCount=30,
+    encoding="utf-8"
+)
+
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
-
 logger.addHandler(handler)
-
-# Uso del logger
-#logger.info("Aplicación iniciada")
-#logger.error("Ocurrió un error grave")
