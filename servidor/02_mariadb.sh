@@ -54,7 +54,7 @@ cp "$CONF_FILE" "$BACKUP_FILE"
 
 cat <<EOF > user.sql
 
-CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE  utf8mb4_bin;
+CREATE DATABASE IF NOT EXISTS $DB_NAME CHARACTER SET utf8mb4 COLLATE  utf8mb4_bin;
 
 
 
@@ -131,7 +131,7 @@ modify_param_in_mysqld "plugin_load_add" "simple_password_check"
 
 
 modify_param_in_mysqld "port" "$DB_PORT"
-modify_param_in_mysqld "bind-address" "127.0.0.1"
+modify_param_in_mysqld "bind-address" "$DB_IP"
 
 
 
