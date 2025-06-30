@@ -2,7 +2,7 @@ from sqlalchemy import text
 from db.db_engine import DBEngine  # changed import
 from logger import logger
 
-def get_rotation_time_from_db() -> int:
+def get_cookie_rotation_time_from_db() -> int:
     try:
         with DBEngine.get_engine().connect() as conn:  # using class method
             result = conn.execute(
