@@ -7,6 +7,9 @@ from sqlalchemy import text
 from logger import logger
 
 
+
+async def clean_general():
+
 async def limpiar_sesiones_expiradas():
     ahora = datetime.utcnow()
     try:
