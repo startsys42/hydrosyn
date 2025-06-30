@@ -2,7 +2,31 @@ import asyncio
 from tasks.sessions import periodic_cleanup_job
 from logger import logger  # Import your custom logger
 
+async def periodic_event_dynamic_schedule(name: str, get_next_run_time, task_coro, check_interval=1):
+    """
+    Ejecuta `task_coro` cuando datetime.utcnow() >= get_next_run_time().
+    """
+    while True:
+        now = datetime.utcnow()
+        next_run = get_next_run_time()
+
+        if now >= next_run:
+            logger.info(f"Running event '{name}' at {now.isoformat()}")
+            await task_coro()
+        else:
+            wait_time = (next_run - now).total_seconds()
+            sleep_time = min(wait_time, check_interval)
+            await asyncio.sleep(max(sleep_time, 0.1))
+
 async def on_startup():
-    logger.info("The application is starting up...")
-    # Launch the periodic job in the background
-    asyncio.create_task(periodic_cleanup_job())
+    logger.info("Starting application...")
+
+    # Crear tarea periódica para limpieza de sesiones
+    asyncio.create_task(
+        periodic_event_dynamic_schedule(
+            "Session Cleanup",
+            obtener_proxima_hora_limpieza,
+            limpiar_sesiones_expiradas
+        )
+    )
+
