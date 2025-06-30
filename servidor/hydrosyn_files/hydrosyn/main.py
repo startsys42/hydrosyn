@@ -8,7 +8,11 @@ from security.keys import GestorClaves
 from security.middleware import DualSessionMiddleware
 from db.db_config import obtener_tiempo_rotacion_desde_bd
 from security.crypto import descifrar_contrasena
-from security.secrets import obtener_password_mas_reciente, cargar_datos_maestros
+from security.secrets import get_most_recent_password, load_master_data
+
+
+
+
 import os
 import sys
 from security.keys import KeyManager
