@@ -6,7 +6,7 @@ import sys
 from logger import logger
 from security.secrets import get_most_recent_password, load_master_data
 from security.keys import CookieKeyManager
-from db.db_config import get_cookie_rotation_time_from_db, get_old_cookie_limit_hour_from_db
+from db.db_config import get_cookie_rotation_time_from_db, get_old_cookie_token_limit_hour_from_db
 from db.db_engine import DBEngine
 from security.middleware import DualSessionMiddleware
 from dotenv import load_dotenv
@@ -57,7 +57,7 @@ except Exception as e:
 
 cookie_key_manager = CookieKeyManager(
     get_rotation_time=get_cookie_rotation_time_from_db,
-    get_grace_period = get_old_cookie_limit_hour_from_db,
+    get_grace_period = get_old_cookie_token_limit_hour_from_db,
     ttl=600  # 10 minutes 
 )
 
