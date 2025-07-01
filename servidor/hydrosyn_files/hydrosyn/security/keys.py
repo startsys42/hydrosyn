@@ -12,8 +12,9 @@ def generate_secure_key(length: int = 128) -> str:
     return secrets.token_urlsafe(n_bytes)[:length]  # trim if too long
 
 class CookieKeyManager:
-    def __init__(self, get_rotation_time: Callable[[], int], ttl: int = 600):
+    def __init__(self, get_rotation_time: Callable[[], int], get_grace_period: Callable[[], int], ttl: int = 600):
         self.get_rotation_time = get_rotation_time
+        self.get_grace_period = get_grace_period
         self.ttl = ttl  # minimum time between queries, in seconds
         self._cached_rotation_time = self.get_rotation_time()
         self._last_query = time.time()
