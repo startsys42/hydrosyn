@@ -5,11 +5,11 @@ from logger import logger
 
 def get_session_from_db(session_id: str, extend_validity: bool = True) -> dict:
     """
-    Obtiene los datos de sesión desde la base de datos con opción de extender validez
+    Obtiene los datos de sesión desde la base de datos con opción de margen de validez
     
     Args:
         session_id: Identificador único de la sesión
-        extend_validity: Si True, considera válidas sesiones que expiran en 1 día
+        extend_validity: Si True, considera válidas sesiones que expiraron hace menos de 1 día
         
     Returns:
         dict: Datos de la sesión o None si no existe o está expirada
@@ -41,7 +41,7 @@ def get_session_from_db(session_id: str, extend_validity: bool = True) -> dict:
             # Determinar el tiempo de validación
             validation_time = datetime.utcnow()
             if extend_validity:
-                validation_time = validation_time + timedelta(days=1)
+                validation_time = validation_time - timedelta(days=1)  # <- Cambio clave aquí
             
             result = conn.execute(
                 query,
@@ -54,7 +54,13 @@ def get_session_from_db(session_id: str, extend_validity: bool = True) -> dict:
             if result:
                 # Convertir resultado a diccionario
                 columns = result.keys()
-                return {column: result[i] for i, column in enumerate(columns)}
+                session_data = {column: result[i] for i, column in enumerate(columns)}
+                
+                # Verificar si la sesión está técnicamente expirada pero dentro del margen
+                if extend_validity and session_data['expires_at'] < datetime.utcnow():
+                    logger.info(f"Session {session_id} is expired but within grace period")
+                
+                return session_data
             
             logger.warning(f"Session not found or expired: {session_id}")
             return None
@@ -62,3 +68,4 @@ def get_session_from_db(session_id: str, extend_validity: bool = True) -> dict:
     except Exception as e:
         logger.error(f"Error fetching session: {e}")
         return None
+Cambios clave:
