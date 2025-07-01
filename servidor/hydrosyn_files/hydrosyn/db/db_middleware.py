@@ -68,4 +68,4 @@ def get_session_from_db(session_id: str, extend_validity: bool = True) -> dict:
     except Exception as e:
         logger.error(f"Error fetching session: {e}")
         return None
-Cambios clave:
+
