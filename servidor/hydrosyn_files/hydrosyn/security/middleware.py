@@ -7,10 +7,10 @@ from datetime import datetime, timedelta
 from typing import Optional, Dict, Any
 
 class AdvancedSessionMiddleware(BaseHTTPMiddleware):
-    def __init__(self, app, key_manager, db_handler):
+    def __init__(self, app, key_manager):
         super().__init__(app)
         self.key_manager = key_manager
-        self.db_handler = db_handler
+
 
     async def dispatch(self, request: Request, call_next) -> Response:
         # 1. Obtener claves actuales para verificación
@@ -23,18 +23,24 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         
         # 3. Validar sesión en BD si existe
         if session_id:
-            session_data = self.db_handler.get_session(session_id)
-            if session_data:
-                if session_data['expires_at'] > datetime.utcnow():
-                    user_id = session_data['user_id']
-                    is_logged_in = bool(user_id)
-                    
-                    # Terminar otras sesiones si es nuevo login
-                    if hasattr(request.state, 'is_new_login') and request.state.is_new_login:
-                        self.db_handler.terminate_other_sessions(user_id, session_id)
+            session_data = get_session_from_db(session_id)
+    
+            if session_data and session_data['expires_at'] > datetime.utcnow():
+        # Verificar si la sesión es de ESTE dispositivo
+                current_device = self._get_device_fingerprint(request)
         
-        # 4. Manejar preferencias de usuario/guest
-        await self._handle_user_preferences(request, user_id, is_logged_in)
+                if session_data['device_id'] != current_device:
+            # Sesión válida, pero en OTRO dispositivo → Cerrarla
+                    self.db_handler.delete_session(session_id)
+                    session_id = None  # Forzar nuevo login
+                else:
+            # Sesión válida y en ESTE dispositivo
+                    user_id = session_data['user_id']
+                    is_logged_in = True
+        
+ 
+
+        ##BLOQUEAR ACCESOS
         
         # 5. Procesar la petición principal
         response = await call_next(request)
@@ -45,44 +51,8 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         
         return response
 
-    async def _get_valid_session_id(self, request: Request, current_key: str, old_key: str) -> Optional[str]:
-        """Extrae y valida el session_id de las cookies"""
-        if cookie := request.cookies.get("session_id"):
-            for key in [current_key, old_key]:
-                try:
-                    return Signer(key).unsign(cookie.encode()).decode()
-                except BadSignature:
-                    continue
-        return None
 
-    async def _handle_user_preferences(self, request: Request, user_id: Optional[str], is_logged_in: bool):
-        """Gestiona tema/idioma para usuarios logueados y guests"""
-        # Preferencias base
-        prefs = {
-            'theme': 'light',
-            'language': 'es'
-        }
-        
-        # 1. Obtener preferencias actuales (de cookies o BD)
-        if is_logged_in:
-            # Usuario logueado: preferencias de BD
-            db_prefs = self.db_handler.get_user_preferences(user_id)
-            prefs.update(db_prefs)
-        else:
-            # Usuario guest: preferencias de cookies
-            prefs['theme'] = request.cookies.get('guest_theme', prefs['theme'])
-            prefs['language'] = request.cookies.get('guest_language', prefs['language'])
-        
-        # 2. Aplicar cambios si vienen en la request
-        if 'theme' in request.query_params:
-            prefs['theme'] = request.query_params['theme']
-        if 'language' in request.query_params:
-            prefs['language'] = request.query_params['language']
-        
-        # 3. Guardar estado en el request
-        request.state.prefs = prefs
-        request.state.is_logged_in = is_logged_in
-        request.state.user_id = user_id
+ 
 
     async def _create_new_session(self, request: Request, response: Response, current_key: str) -> Response:
         """Crea una nueva sesión después de login exitoso"""
@@ -121,3 +91,25 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         response.delete_cookie("guest_language")
         
         return response
+def _get_device_fingerprint(self, request: Request) -> str:
+    """Genera un ID único por dispositivo (IP + navegador)"""
+    device_data = f"{request.client.host}-{request.headers.get('user-agent', '')}"
+    return hashlib.sha256(device_data.encode()).hexdigest()
+async def _get_valid_session_id(self, request: Request, current_key: str, old_key: str) -> Optional[str]:
+    session_cookie = request.cookies.get("session_id")
+    if not session_cookie:
+        return None  # No existe la cookie
+    
+    try:
+        # Intentar con la clave actual
+        signer = Signer(current_key)
+        return signer.unsign(session_cookie).decode()
+    except BadSignature:
+        if old_key:
+            # Intentar con la clave antigua (rotación)
+            old_signer = Signer(old_key)
+            try:
+                return old_signer.unsign(session_cookie).decode()
+            except BadSignature:
+                return None  # Cookie inválida
+        return None
