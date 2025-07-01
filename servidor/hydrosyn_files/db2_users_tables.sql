@@ -195,7 +195,12 @@ CREATE TABLE sessions (
     session_id VARCHAR(128) NOT NULL UNIQUE,
     session_key VARCHAR(128) NOT NULL,
     user_agent VARCHAR(512),
-    ip VARCHAR(39),
+    ram_gb FLOAT NULL,
+    cpu_cores SMALLINT UNSIGNED NULL,
+    cpu_architecture VARCHAR(32) NULL,
+    gpu_vendor VARCHAR(64) NULL,
+    gpu_model VARCHAR(128) NULL,
+    device_os VARCHAR(64) NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -209,7 +214,7 @@ CREATE TABLE user_password_history (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     changed_by INT UNSIGNED NOT NULL,
     device VARCHAR(255),
-    ip_address VARCHAR(45),
+    ip_address VARCHAR(39),
   
 
     CONSTRAINT fk_password_user
@@ -231,7 +236,7 @@ CREATE TABLE user_email_changes (
     changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     changed_by INT UNSIGNED NOT NULL,
     device VARCHAR(255),
-    ip_address VARCHAR(45),
+    ip_address VARCHAR(39),
 
 
     CONSTRAINT fk_email_user
