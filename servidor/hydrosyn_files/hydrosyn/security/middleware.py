@@ -6,6 +6,7 @@ import uuid
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any
 
+# poenr httponly
 class AdvancedSessionMiddleware(BaseHTTPMiddleware):
     def __init__(self, app, key_manager):
         super().__init__(app)
