@@ -25,7 +25,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         if session_id:
             session_data = get_session_from_db(session_id)
     
-            if session_data and session_data['expires_at'] > datetime.utcnow():
+            if session_data:
         # Verificar si la sesión es de ESTE dispositivo
                 current_device = self._get_device_fingerprint(request)
         
