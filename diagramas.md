@@ -1,0 +1,9 @@
+- [ ] login
+- [ ] recueperar contraseña
+- [ ] cookeis
+- [ ] jwt
+- [ ] crear suuarios mdoificar suaurios
+- [ ] permisos roles
+- [ ] tareas programasdas
+- [ ] sistemas
+- [ ] panelw eb datios
