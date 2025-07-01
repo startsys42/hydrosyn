@@ -7,3 +7,4 @@
 - [ ] tareas programasdas
 - [ ] sistemas
 - [ ] panelw eb datios
+- [ ] cambair contrsela usuario 
