@@ -5,7 +5,7 @@ from app.web.utils import get_user_preferences
 from starlette.responses import PlainTextResponse
 
 router = APIRouter()
-templates = Jinja2Templates(directory="app/templates")  # apunta a la carpeta correcta
+
 
 @router.get("/", response_class=HTMLResponse)
 async def welcome(request: Request):
