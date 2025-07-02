@@ -190,7 +190,7 @@ CREATE TABLE login_attempts (
         ON UPDATE CASCADE
 );
 CREATE TABLE sessions (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id INT UNSIGNED NOT NULL UNIQUE,
     session_id VARCHAR(128) NOT NULL UNIQUE,
     session_key VARCHAR(128) NOT NULL,
@@ -200,7 +200,7 @@ CREATE TABLE sessions (
     cpu_architecture VARCHAR(32) NULL,
     gpu_info VARCHAR(128) NULL,
     device_os VARCHAR(64) NULL,
-    summary CHAR(64) NOT NULL,
+    summary CHAR(64) NOT NULL UNIQUE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
