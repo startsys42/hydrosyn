@@ -77,24 +77,7 @@ chmod 600 /var/lib/hydrosyn/user_db.shadow
 
 chmod 700 /var/lib/hydrosyn
 
-mkdir /opt/aviso_e
-cd  /opt/aviso_e
-python3 -m venv venv
 
-paquetes=(
-  pip
-  google-auth
-  google-auth-oauthlib
-  google-auth-httplib2
-  google-api-python-client
-)
-
-  ins-pip "$PIP_EMAIL" "${paquetes[@]}"
-
-
-mv /root/hydrosyn_files/crd.json .
-chown root:root crd.json
-chmod 600 crd.json
 NOMBRE_CAMUFLADO="$(echo -e '\u0435\u0441h\u043e')"
 mkdir -p /usr/local/lib/.hidden
 chown root:root /usr/local/lib/.hidden
