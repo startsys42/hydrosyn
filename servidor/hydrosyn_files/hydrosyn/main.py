@@ -41,7 +41,8 @@ db_name = os.getenv("DB_NAME")
 password  = get_most_recent_password(user_shadow_path, km)
 
 logger.info(f"Conectando a BD con: usuario={db_user}, password={'***' if password else 'VACÍO'}, host={db_host}, puerto={db_port}, bd={db_name}")
-
+client_secret_file = os.getenv("GMAIL_CLIENT_SECRET_FILE")
+token_file = os.getenv("GMAIL_TOKEN_FILE")
 
 try:
     DBEngine.initialize_engine(db_user, password, db_host, db_port, db_name)
