@@ -72,11 +72,10 @@
 - [ ] fstab
 - [ ] antivirus
 - [ ] tokens
-- [ ] vlans
-- [ ] dmz
-- [ ] oaauth raidus ldap pam kerberos
+
+
 - [ ] proxy
-- [ ] vpn
+
 - [ ] balanceo de carga
 - [ ] cambiar puertos
 - [ ] no iniciar sesion ssh con root
@@ -179,7 +178,7 @@ nucleo optimizado
 - f2a
 - lsof
 - steam
-- hestiacp
+
 - clam
 - linys
 - acid
@@ -190,7 +189,7 @@ nucleo optimizado
 - tripwire
 - login
 - rootki
-- dnssec
+
 - quitar telnet quitar comandos remotos
 - firejail
 - caches
@@ -213,7 +212,7 @@ nucleo optimizado
 - cambiar puertos
 - polkit
 - tokens
-- vlan
+
 - particiones
 - sudo
 - usb
@@ -247,7 +246,7 @@ nucleo optimizado
 - cuotas
 
 - chroot
-- dmz
+
 - polkit
 
 
