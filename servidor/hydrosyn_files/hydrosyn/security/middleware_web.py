@@ -93,9 +93,24 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         
         return response
 def _get_device_fingerprint(self, request: Request) -> str:
-    """Genera un ID único por dispositivo (IP + navegador)"""
-    device_data = f"{request.client.host}-{request.headers.get('user-agent', '')}"
-    return hashlib.sha256(device_data.encode()).hexdigest()
+        """Genera un ID único por dispositivo usando información de hardware del cliente"""
+        device_data = {
+           # "ip": request.client.host,
+            "user_agent": request.headers.get("user-agent", ""),
+            "ram": request.headers.get("x-device-ram"),
+            "cpu_cores": request.headers.get("x-device-cpu-cores"),
+            "cpu_arch": request.headers.get("x-device-cpu-arch"),
+            "gpu": request.headers.get("x-device-gpu"),
+            "os": request.headers.get("x-device-os"),
+        }
+        
+        device_str = ";".join(
+        f"{k}={v}" 
+        for k, v in sorted(device_data.items()) 
+        if v  # Filtramos valores vacíos
+    )
+    
+    return hashlib.sha256(device_str.encode()).hexdigest()
 async def _get_valid_session_id(self, request: Request, current_key: str, old_key: str) -> Optional[str]:
     session_cookie = request.cookies.get("session_id")
     if not session_cookie:
