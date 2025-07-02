@@ -15,7 +15,26 @@ systemctl disable avahi-daemon
 apt-get autoremove -y
 apt-get clean
 
+# Email report
 
+mkdir /opt/report
+cd  /opt/report
+python3 -m venv venv
+
+packages=(
+  pip
+  google-auth
+  google-auth-oauthlib
+  google-auth-httplib2
+  google-api-python-client
+)
+
+  ins-pip "$PIP_EMAIL" "${packages[@]}"
+
+
+mv /root/hydrosyn_files/crd.json .
+chown root:root crd.json
+chmod 600 crd.json
 
 # Check if the block exists
 if grep -q "$MARKER_INI" "$BASHRC" && grep -q "$MARKER_END" "$BASHRC"; then
