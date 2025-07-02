@@ -193,7 +193,6 @@ CREATE TABLE sessions (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id INT UNSIGNED NOT NULL UNIQUE,
     session_id VARCHAR(128) NOT NULL UNIQUE,
-    session_key VARCHAR(128) NOT NULL,
     user_agent VARCHAR(512),
     ram_gb FLOAT NULL,
     cpu_cores SMALLINT UNSIGNED NULL,
