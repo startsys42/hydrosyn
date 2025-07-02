@@ -185,7 +185,7 @@ daily
 
 # Keep 30 rotated log files before deleting
 rotate 30
-
+ maxsize 500M
 # Do not rotate empty log files
 notifempty
 
