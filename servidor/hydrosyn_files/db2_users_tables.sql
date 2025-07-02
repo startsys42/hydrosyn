@@ -191,7 +191,7 @@ CREATE TABLE login_attempts (
 );
 CREATE TABLE sessions (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT UNSIGNED NOT NULL,
+    user_id INT UNSIGNED NOT NULL UNIQUE,
     session_id VARCHAR(128) NOT NULL UNIQUE,
     session_key VARCHAR(128) NOT NULL,
     user_agent VARCHAR(512),
@@ -200,6 +200,7 @@ CREATE TABLE sessions (
     cpu_architecture VARCHAR(32) NULL,
     gpu_info VARCHAR(128) NULL,
     device_os VARCHAR(64) NULL,
+    summary CHAR(64) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
