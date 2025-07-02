@@ -41,7 +41,6 @@ def get_session_from_db(session_id: str, extend_validity: bool = True) -> dict:
             query = text("""
                 SELECT 
                     s.user_id, 
-                    s.session_key, 
                     s.user_agent,
                     s.ram_gb,
                     s.cpu_cores,
