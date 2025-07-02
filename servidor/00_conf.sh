@@ -1,26 +1,20 @@
 #!/bin/bash
 set -e
 CONFIG_FILE="config.env"
-#LIBRARY_FILE="funciones.sh"
+
 #BASHRC="/root/.bashrc"
 COLOR_BG_IMPAR="46"
 COLOR_BG_PAR="43"
 export MARKER_INI="# === VARS_FROM_CONF_ENV ==="
 export MARKER_END="# === END_VARS_FROM_CONF_ENV ==="
-# Leer configuración desde archivo
 
 
 
 
 
 
-if [[ -f "$CONFIG_FILE" ]]; then
-source "$CONFIG_FILE"
-  if ! grep -q "$MARKER_INI" "$BASHRC"; then
-  {
-    echo -e "\n$MARKER_INI" && cat "$CONFIG_FILE" && echo -e "\n$MARKER_END"
-  } >> "$BASHRC"
-  
+
+
 
 
 
@@ -182,17 +176,9 @@ fi
 # gcc
 ins-paq gcc
 
-## red
-
-## usuarios
-
-## permisos
-
-## instalar
-
-## seguridad
 
 
-## actualizaciones
+
+
 
 kill -9 $(ps -t $(tty) -o pid=)
