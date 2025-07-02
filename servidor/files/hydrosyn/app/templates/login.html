@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ texts.login }}</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body class="{{ theme }}-theme">
+    <h1>{{ texts.login }}</h1>
+
+    <form method="post" action="/login">
+        <label>{{ texts.username }}: <input type="text" name="username" required></label><br>
+        <label>{{ texts.password }}: <input type="password" name="password" required></label><br>
+        <button type="submit">{{ texts.login }}</button>
+    </form>
+
+    <form method="get" action="/">
+        <button type="submit">{{ texts.back }}</button>
+    </form>
+</body>
+</html>

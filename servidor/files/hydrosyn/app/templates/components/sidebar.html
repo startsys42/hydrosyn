@@ -1,0 +1,32 @@
+<nav>
+    <ul>
+        <li><a href="/dashboard">{{ texts.dashboard }}</a></li>
+
+        {% if "usuarios:ver" in permisos %}
+        <li><a href="/usuarios">{{ texts.usuarios }}</a></li>
+        {% endif %}
+
+        {% if "roles:ver" in permisos %}
+        <li><a href="/roles">{{ texts.roles }}</a></li>
+        {% endif %}
+
+        {% if "permisos:ver" in permisos %}
+        <li><a href="/permisos">{{ texts.permisos }}</a></li>
+        {% endif %}
+
+        {% if "sistemas:ver" in permisos %}
+        <li><a href="/sistemas">{{ texts.sistemas }}</a></li>
+        {% endif %}
+
+        {% if "perfil:ver" in permisos %}
+        <li><a href="/perfil">{{ texts.perfil }}</a></li>
+        {% endif %}
+
+        <li><a href="/logout">{{ texts.logout }}</a></li>
+    </ul>
+
+    <div class="footer-controls">
+        <a href="?lang={{ next_lang }}">{{ texts.change_lang }}</a> |
+        <a href="?theme={{ next_theme }}">{{ texts.change_theme }}</a>
+    </div>
+</nav>

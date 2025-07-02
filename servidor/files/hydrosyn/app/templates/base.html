@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ texts.title }}</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body class="{{ theme }}">
+    <div class="layout">
+        <aside class="sidebar">
+            {% include "components/sidebar.html" %}
+        </aside>
+
+        <main class="main-content">
+            {% block content %}
+            <!-- Cada página insertará aquí su contenido -->
+            {% endblock %}
+        </main>
+    </div>
+</body>
+</html>
