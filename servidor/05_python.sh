@@ -44,6 +44,9 @@ paquetes=(
   pymysql
   pyotp 
   qrcode[pil]
+  google-api-python-client 
+  google-auth-httplib2 
+  google-auth-oauthlib
 )
 
   ins-pip "$PIP_HYDROSYN" "${paquetes[@]}"
