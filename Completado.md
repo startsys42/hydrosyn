@@ -28,3 +28,4 @@
 - [x] oaauth raidus  kerberos (descartado)
 - [x]  ping para saber si esta levantado (descartado)
 - [x] cdn (descartado)
+- [x] dnssec (descartado, no uso dns propio)
