@@ -7,30 +7,30 @@ from email.mime.text import MIMEText
 
 # Configuración inicial
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
-CLIENT_SECRET_FILE = 'credentials.json'  # Archivo descargado de Google Cloud
-
+client_secret_file = os.getenv("GMAIL_CLIENT_SECRET_FILE")
+token_file = os.getenv("GMAIL_TOKEN_FILE")
 def get_gmail_service():
  
     creds = None
     
-    # El archivo token.json guarda los tokens de acceso/refresh
+ 
     if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+        creds = Credentials.from_authorized_user_file(token_file, SCOPES)
     
-    # Si no hay credenciales válidas, haz el flujo OAuth
+ 
     if not creds or not creds.valid:
         flow = InstalledAppFlow.from_client_secrets_file(
-            CLIENT_SECRET_FILE, SCOPES)
+            client_secret_file, SCOPES)
         creds = flow.run_local_server(port=0)
         
-        # Guarda las credenciales para la próxima vez
-        with open('token.json', 'w') as token:
+     
+        with open(token_file, 'w') as token:
             token.write(creds.to_json())
     
     return build('gmail', 'v1', credentials=creds)
 
 def create_message(sender, to, subject, message_text):
-    """Crea un mensaje email listo para enviar"""
+ 
     message = MIMEText(message_text)
     message['to'] = to
     message['from'] = sender
