@@ -10,3 +10,4 @@
 - [ ] cambair contrsela usuario 
 
 
+- crear roles, añadir editar, eliminar modificar roles, asignar roles,....
