@@ -1,33 +1,38 @@
 #!/bin/bash
 
-# primer argumento: ruta del pip
-#argumentos restantes: paquetes python o array de paquetes
+# first argument: path to pip executable
+# remaining arguments: python packages or an array variable name containing packages
 
-# Verificar que al menos se pasó el ejecutable pip
+# Check that at least the pip executable and one package are provided
 if [[ $# -lt 2 ]]; then
-   echo -e "\e[30;41m Error:Faltan argumentos.\e[0m"
+   echo -e "\e[30;41m Error: Missing arguments.\e[0m"
   exit 1
 fi
 
-# Guardar ruta al ejecutable pip
+# Save pip executable path
 PIP_BIN="$1"
 shift
 
-# Detectar si el siguiente argumento es el nombre de una variable tipo array
+# Detect if the next argument is an array variable name
 if [[ $# -eq 1 && "$(declare -p "$1" 2>/dev/null)" =~ "declare -a" ]]; then
-  eval "paquetes=(\"\${$1[@]}\")"
+  eval "packages=(\"\${$1[@]}\")"
 else
-  paquetes=("$@")
+  packages=("$@")
 fi
 
-# Iterar e instalar cada paquete
-for PAQUETE in "${paquetes[@]}"; do
+# Iterate and install each package
+for PACKAGE in "${packages[@]}"; do
 
-
-  "$PIP_BIN" install --upgrade "$PAQUETE" #> /dev/null 2>&1
+  "$PIP_BIN" install --upgrade "$PACKAGE" #> /dev/null 2>&1
 
   if [[ $? -ne 0 ]]; then
-    echo -e "\e[30;41m Error: No se pudo instalar el paquete Python '$PAQUETE'.\e[0m"
+    echo -e "\e[30;41m Error: Failed to install Python package '$PACKAGE'.\e[0m"
     exit 1
   fi
 done
+
+
+
+
+
+
