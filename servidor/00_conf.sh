@@ -88,61 +88,55 @@ fi
 
 
 
-#Idioma y hora
+# Language and locale settings
 
 
 ins-paq locales
 
-
-locale-gen "$IDIOMA"
-update-locale LANG="$IDIOMA"
+locale-gen "$LANGUAGE"
+update-locale LANG="$LANGUAGE"
 source /etc/default/locale
 
-# Verificar directamente si la configuración se realizó correctamente
-if locale | grep -q "LANG=$IDIOMA"; then
-    echo -e "\e[30;${COLOR_BG_IMPAR}mEl idioma se ha configurado correctamente a $IDIOMA.\e[0m"
+# Directly verify if the locale was set correctly
+if locale | grep -q "LANG=$LANGUAGE"; then
+    echo -e "\e[30;${COLOR_BG_ODD}mThe language has been successfully set to $LANGUAGE.\e[0m"
 else
-    echo -e "\e[30;41mHubo un error al configurar el idioma.\e[0m"
+    echo -e "\e[30;41mThere was an error setting the language.\e[0m"
     exit 1
 fi
 
-
-
-timedatectl set-timezone "$ZONA_HORARIA"
-
-if timedatectl | grep -q "Time zone: $ZONA_HORARIA"; then
-    echo -e "\e[30;${COLOR_BG_PAR}mLa zona horaria se ha configurado correctamente a $ZONA_HORARIA.\e[0m"
+timedatectl set-timezone "$TIMEZONE"
+if timedatectl | grep -q "Time zone: $TIMEZONE"; then
+    echo -e "\e[30;${COLOR_BG_EVEN}mThe timezone has been successfully set to $TIMEZONE.\e[0m"
 else
-    echo -e "\e[30;41mHubo un error al configurar la zona horaria.\e[0m"
+    echo -e "\e[30;41mThere was an error setting the timezone.\e[0m"
     exit 1
 fi
-
-
 
 timedatectl set-ntp true
+sleep 30  
 
-
-sleep 30  # esperar un poco a que se sincronice
-
-# Verificar NTP habilitado y sincronizado
+# Check if NTP is enabled and synchronized
 NTP_ENABLED=$(timedatectl show -p NTP --value)
 NTP_SYNCED=$(timedatectl show -p NTPSynchronized --value)
 
 if [[ "$NTP_ENABLED" == "yes" && "$NTP_SYNCED" == "yes" ]]; then
-    echo -e "\e[30;${COLOR_BG_IMPAR}mLa sincronización NTP está activada y funcionando.\e[0m"
+    echo -e "\e[30;${COLOR_BG_ODD}mNTP synchronization is enabled and working.\e[0m"
 else
-    echo -e "\e[30;41mHubo un error al activar o sincronizar el NTP.\e[0m"
+    echo -e "\e[30;41mThere was an error enabling or synchronizing NTP.\e[0m"
     exit 1
 fi
 
 
 
 
-## repositorios
+
+
+## Repositories
 
 
 cat <<EOF > $REPO_FILE
-# Repositorios principales para Debian 12 (Bookworm)
+
 deb http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
 deb-src http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
 
@@ -155,33 +149,32 @@ deb http://deb.debian.org/debian/ bookworm-updates main contrib non-free non-fre
 deb-src http://deb.debian.org/debian/ bookworm-updates main contrib non-free non-free-firmware
 EOF
 
-# Actualizar la lista de paquetes
+
 
 apt-get update -y > /dev/null
 apt-get upgrade -y > /dev/null
 
 
-   echo -e "\e[30;${COLOR_BG_PAR}mConfigurados los repositorios de APT en $REPO_FILE.\e[0m"
+echo -e "\e[30;${COLOR_BG_EVEN}mAPT repositories configured in $REPO_FILE.\e[0m"
 
-## nombre
+## Hostname
 
-# Cambia el hostname permanente (archivos del sistema)
+# Change the permanent hostname (system files)
 echo "$HOSTNAME" > /etc/hostname
 
-#  actualizar /etc/hosts
+# Update /etc/hosts
 sed -i "s/127\.0\.1\.1.*/127.0.1.1 $HOSTNAME/" /etc/hosts
 
-## info ocultar
-# Reemplazar el contenido de /etc/issue (pantalla de login local)
+## Info hiding
+# Replace the content of /etc/issue (local login screen)
 echo "$ISSUE" > /etc/issue
 
-# Si existe el archivo /etc/issue.net 
+# If the file /etc/issue.net exists
 if [ -f /etc/issue.net ]; then
     echo "$ISSUE" > /etc/issue.net
 else
-   "\e[30;42mNo se ha encontrado el archivo /etc/issue.net.\e[0m"
+    echo -e "\e[30;42mThe file /etc/issue.net was not found.\e[0m"
 fi
-
 
 
 
