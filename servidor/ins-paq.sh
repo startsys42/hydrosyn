@@ -1,20 +1,19 @@
 #!/bin/bash
 
-# Detectar si el primer argumento es el nombre de una variable array
+# Detect if the first argument is the name of an array variable
 if [[ $# -eq 1 && "$(declare -p "$1" 2>/dev/null)" =~ "declare -a" ]]; then
-  eval "paquetes=(\"\${$1[@]}\")"
+  eval "packages=(\"\${$1[@]}\")"
 else
-  paquetes=("$@")
+  packages=("$@")
 fi
 
-for PAQUETE in "${paquetes[@]}"; do
- 
-    
-    apt-get install -y "$PAQUETE" > /dev/null 2>&1
+for PACKAGE in "${packages[@]}"; do
+
+    apt-get install -y "$PACKAGE" > /dev/null 2>&1
 
     if [ $? -ne 0 ]; then
-      echo -e "\e[30;41m Error: No se pudo instalar el paquete '$PAQUETE'.\e[0m"
-    exit 1
+      echo -e "\e[30;41m Error: Failed to install package '$PACKAGE'.\e[0m"
+      exit 1
     fi
-  done
+done
 
