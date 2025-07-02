@@ -33,6 +33,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                 if session_data['device_id'] != current_device:
             # Sesión válida, pero en OTRO dispositivo → Cerrarla
                     self.db_handler.delete_session(session_id)
+                    # enviar correo
                     session_id = None  # Forzar nuevo login
                 else:
             # Sesión válida y en ESTE dispositivo
@@ -47,6 +48,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
         
         # 6. Crear nueva sesión si es necesario (post-login)
+        # modificar valores  base ded atos sie s necesario
         if hasattr(request.state, 'should_create_session') and request.state.should_create_session:
             response = await self._create_new_session(request, response, current_key)
         
@@ -57,8 +59,9 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
 
     async def _create_new_session(self, request: Request, response: Response, current_key: str) -> Response:
         """Crea una nueva sesión después de login exitoso"""
-        session_id = str(uuid.uuid4())
-        expires_at = datetime.utcnow() + timedelta(days=30)  # 30 días de validez
+        session_id = secrets.token_hex(64)
+        days = get_cookie_expired_time_from_db()
+        expires_at = datetime.utcnow() + timedelta(days=days)  # 30 días de validez
         
         # 1. Guardar sesión en BD
         self.db_handler.create_session(
@@ -84,7 +87,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
             httponly=True,
             secure=True,
             samesite="Lax",
-            max_age=30*24*60*60  # 30 días en segundos
+            max_age=days *86400  
         )
         
         # 4. Limpiar cookies de guest si existían
