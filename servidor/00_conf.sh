@@ -2,7 +2,6 @@
 set -e
 CONFIG_FILE="config.env"
 
-#BASHRC="/root/.bashrc"
 COLOR_BG_IMPAR="46"
 COLOR_BG_PAR="43"
 export MARKER_INI="# === VARS_FROM_CONF_ENV ==="
