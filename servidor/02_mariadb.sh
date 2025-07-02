@@ -1,9 +1,8 @@
 #!/bin/bash
-COLOR_BG_IMPAR="46"
-COLOR_BG_PAR="43"
+COLOR_BG_ODD="46"
+COLOR_BG_EVEN="43"
 
 
-# Actualizar el sistema
 
 ins-paq mariadb-server
 
