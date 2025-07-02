@@ -200,7 +200,7 @@ CREATE TABLE sessions (
     cpu_architecture VARCHAR(32) NULL,
     gpu_info VARCHAR(128) NULL,
     device_os VARCHAR(64) NULL,
-    summary CHAR(64) NOT NULL UNIQUE,
+    summary CHAR(64) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -250,7 +250,7 @@ CREATE TABLE user_email_changes (
         ON UPDATE CASCADE
 );
 
-CREATE TABLE user_sessions (
+CREATE TABLE tokens (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT UNSIGNED NOT NULL,
     token VARCHAR(512) NOT NULL UNIQUE,
