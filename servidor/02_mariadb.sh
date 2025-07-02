@@ -18,29 +18,29 @@ ins-paq python3-bcrypt
 
 MYSQL="$(which mysql)"
 
-# 1. Establecer contraseña de root (solo si es primera vez)
+# 1. Set root password (only if it's the first time)
 $MYSQL -u root <<EOF
 ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
 FLUSH PRIVILEGES;
 EOF
 
-# 2. Eliminar usuarios anónimos
+# 2. Remove anonymous users
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD" <<EOF
 DELETE FROM mysql.user WHERE User='';
 EOF
 
-# 3. Deshabilitar acceso remoto del root
+# 3. Disable remote root access
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD" <<EOF
 DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost');
 EOF
 
-# 4. Eliminar base de datos de prueba
+# 4. Remove test database
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD" <<EOF
 DROP DATABASE IF EXISTS test;
 DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
 EOF
 
-# 5. Recargar privilegios
+# 5. Reload privileges
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD" <<EOF
 FLUSH PRIVILEGES;
 EOF
@@ -73,11 +73,10 @@ $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< user.sql
 
 
 
-# Cambiar bind-address
 
 
-# Cambiar puerto (ejemplo: 3307)
-# Función para insertar o modificar parámetro dentro de [mysqld]
+
+
 modify_param_in_mysqld() {
   local param="$1"
   local value="$2"
