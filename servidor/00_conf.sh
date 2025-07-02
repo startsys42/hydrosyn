@@ -21,51 +21,66 @@ source "$CONFIG_FILE"
     echo -e "\n$MARKER_INI" && cat "$CONFIG_FILE" && echo -e "\n$MARKER_END"
   } >> "$BASHRC"
   
- echo -e "\e[30;${COLOR_BG_PAR}mVariables añadidas a $BASHRC\e[0m"
+
+
+
+
+
+# Read configuration from file
+
+if [[ -f "$CONFIG_FILE" ]]; then
+source "$CONFIG_FILE"
+  if ! grep -q "$MARKER_INI" "$BASHRC"; then
+  {
+    echo -e "\n$MARKER_INI" && cat "$CONFIG_FILE" && echo -e "\n$MARKER_END"
+  } >> "$BASHRC"
+  
+   echo -e "\e[30;${COLOR_BG_EVEN}mVariables added to $BASHRC\e[0m"
+  else
+    echo -e "\e[30;${COLOR_BG_ODD}mVariables are already present in $BASHRC\e[0m"
+  fi
+  source "$BASHRC"
 else
-echo -e "\e[30;${COLOR_BG_PAR}mLas variables ya están presentes en $BASHRC\e[0m"
-fi
-source "$BASHRC"
-else
- echo -e "\e[30;41mArchivo de configuración $CONFIG_FILE no encontrado.\e[0m"
+  echo -e "\e[30;41mConfiguration file $CONFIG_FILE not found.\e[0m"
   exit 1
 fi
 
-# Leer script INS-PIP
+
+# Check for INS-PIP script
 
 if [[ -f /usr/local/bin/ins-pip ]]; then
-  echo -e "\e[30;${COLOR_BG_IMPAR}mEl archivo /usr/local/bin/ins-pip ya existe. No se copia nada.\e[0m"
+  echo -e "\e[30;${COLOR_BG_ODD}File /usr/local/bin/ins-pip already exists. Nothing copied.\e[0m"
 else
   if [[ -f "$INS_PIP" ]]; then
     cp "$INS_PIP" /usr/local/bin/ins-pip
     chown root:root /usr/local/bin/ins-pip
-    chmod 755 /usr/local/bin/ins-pip
-    echo -e "\e[30;${COLOR_BG_IMPAR}mFunciones copiadas a /usr/local/bin/ins-pip con permisos correctos\e[0m"
-    rm $INS_PIP
+    chmod 700 /usr/local/bin/ins-pip
+    echo -e "\e[30;${COLOR_BG_ODD}Functions copied to /usr/local/bin/ins-pip with correct permissions\e[0m"
+    rm "$INS_PIP"
   else
-    echo -e "\e[30;41mArchivo de funciones $INS_PIP no encontrado. No se pudo copiar.\e[0m"
+    echo -e "\e[30;41mFunctions file $INS_PIP not found. Could not copy.\e[0m"
     exit 1
   fi
 fi
 
 
-
-# Leer script INS-PAQ
+# Check for INS-PAQ script
 
 if [[ -f /usr/local/bin/ins-paq ]]; then
-  echo -e "\e[30;${COLOR_BG_PAR}mEl archivo /usr/local/bin/ins-paq ya existe. No se copia nada.\e[0m"
+  echo -e "\e[30;${COLOR_BG_EVEN}File /usr/local/bin/ins-paq already exists. Nothing copied.\e[0m"
 else
   if [[ -f "$INS_PAQ" ]]; then
     cp "$INS_PAQ" /usr/local/bin/ins-paq
     chown root:root /usr/local/bin/ins-paq
-    chmod 755 /usr/local/bin/ins-paq
-    echo -e "\e[30;${COLOR_BG_PAR}mFunciones copiadas a /usr/local/bin/ins-paq con permisos correctos\e[0m"
-    rm $INS_PAQ
+    chmod 700 /usr/local/bin/ins-paq
+    echo -e "\e[30;${COLOR_BG_EVEN}Functions copied to /usr/local/bin/ins-paq with correct permissions\e[0m"
+    rm "$INS_PAQ"
   else
-    echo -e "\e[30;41mArchivo de funciones $INS_PAQ no encontrado. No se pudo copiar.\e[0m"
+    echo -e "\e[30;41mFunctions file $INS_PAQ not found. Could not copy.\e[0m"
     exit 1
   fi
 fi
+
 
 
 
@@ -107,7 +122,7 @@ fi
 timedatectl set-ntp true
 
 
-sleep 20  # esperar un poco a que se sincronice
+sleep 30  # esperar un poco a que se sincronice
 
 # Verificar NTP habilitado y sincronizado
 NTP_ENABLED=$(timedatectl show -p NTP --value)
