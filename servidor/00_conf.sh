@@ -176,6 +176,35 @@ fi
 ins-paq gcc
 
 
+# /etc/logrotate.conf
+cat << EOF > /etc/logrotate.conf
+# /etc/logrotate.conf
+
+# Rotate logs daily
+daily
+
+# Keep 30 rotated log files before deleting
+rotate 30
+
+# Do not rotate empty log files
+notifempty
+
+# Ignore missing log files and continue
+missingok
+
+# Use copy and truncate (useful for services that keep files open)
+copytruncate
+
+# Use date extension for rotated log files
+dateext
+
+EOF
+
+# Set ownership to root:root
+chown root:root /etc/logrotate.conf
+
+# Set permissions to 644 (readable by everyone, writable by owner)
+chmod 644 /etc/logrotate.conf
 
 
 
