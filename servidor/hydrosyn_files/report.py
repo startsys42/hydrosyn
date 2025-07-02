@@ -10,7 +10,7 @@ from googleapiclient.discovery import build
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
-def enviar_correo(service, remitente, destinatario, asunto, cuerpo, adjuntos=None):
+def send_email(service, remitente, destinatario, asunto, cuerpo, adjuntos=None):
     message = EmailMessage()
     message.set_content(cuerpo)
     message['To'] = destinatario
