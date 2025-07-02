@@ -30,15 +30,24 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         # Verificar si la sesión es de ESTE dispositivo
                 current_device = self._get_device_fingerprint(request)
         
-                if session_data['device_id'] != current_device:
-            # Sesión válida, pero en OTRO dispositivo → Cerrarla
-                    self.db_handler.delete_session(session_id)
-                    # enviar correo
-                    session_id = None  # Forzar nuevo login
-                else:
-            # Sesión válida y en ESTE dispositivo
-                    user_id = session_data['user_id']
-                    is_logged_in = True
+               if session_data['summary'] != current_device_fingerprint:  # ⬅️ Comparación clave
+                logger.warning(
+                     f"Session detected from a different device. "
+                )
+                 self._send_security_alert(
+        user_id=session_data['user_id'],
+        device=request.headers.get("User-Agent"),
+        ip=request.client.host
+    )
+    
+    self.db_handler.delete_session(session_id)
+    return RedirectResponse(url="/login?error=dispositivo_no_coincide", status_code=303)
+                session_id = None
+            else:
+                # 2. Si todo coincide, usuario está autenticado
+                user_id = session_data['user_id']
+                is_logged_in = True
+                request.state.user_id = user_id
         
  
 
