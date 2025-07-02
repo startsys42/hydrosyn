@@ -166,7 +166,7 @@ echo "$ISSUE" > /etc/issue
 if [ -f /etc/issue.net ]; then
     echo "$ISSUE" > /etc/issue.net
 else
-    echo -e "\e[30;42mThe file /etc/issue.net was not found.\e[0m"
+    echo -e "\e[30;41mThe file /etc/issue.net was not found.\e[0m"
 fi
 
 
