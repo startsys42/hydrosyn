@@ -199,10 +199,9 @@ apt-get purge ssh-audit
 ins-paq sshguard
 
 
- systemctl start sshguard
+ systemctl restart sshguard
  systemctl enable sshguard
 
-echo "¡SSH Server y Client instalados y configurados correctamente!"
 
 
-#certificados falta activar el google 2fa y el audit  logs
+
