@@ -1,31 +1,28 @@
 #!/bin/bash
-COLOR_BG_IMPAR="46"
-COLOR_BG_PAR="43"
+COLOR_BG_ODD="46"
+COLOR_BG_EVEN="43"
  MARKER_INI="# === VARS_FROM_CONF_ENV ==="
  MARKER_END="# === END_VARS_FROM_CONF_ENV ==="
 BASHRC="/root/.bashrc"
 
-# Desactivar avahi
+# Disable avahi
 
 systemctl stop avahi-daemon
 systemctl disable avahi-daemon
 
 
-
+# Clean  packages 
 apt-get autoremove -y
 apt-get clean
 
 
 
-# Verifica si el bloque existe
+# Check if the block exists
 if grep -q "$MARKER_INI" "$BASHRC" && grep -q "$MARKER_END" "$BASHRC"; then
-    # Hacer una copia de respaldo opcional (recomendado)
-    cp "$BASHRC" "$BASHRC.bak"
 
-    # Eliminar el bloque
     sed -i "/$MARKER_INI/,/$MARKER_END/d" "$BASHRC"
 
-    echo " Bloque de variables eliminado de $BASHRC"
+    echo "Variable block removed from $BASHRC"
 else
-    echo " No se encontró ningún bloque de variables en $BASHRC"
+    echo "No variable block found in $BASHRC"
 fi
