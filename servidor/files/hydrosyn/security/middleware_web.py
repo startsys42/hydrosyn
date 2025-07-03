@@ -50,7 +50,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
     )
            
     
-    self.db_handler.delete_session(session_id)
+    delete_session_from_db(session_id)
     return RedirectResponse(url="/login?error=dispositivo_no_coincide", status_code=303)
                 session_id = None
             else:
