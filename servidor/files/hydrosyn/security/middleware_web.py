@@ -48,7 +48,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     )
     
                     delete_session_from_db(session_id)
-                    return RedirectResponse(url="/login?error=device_mismatch", status_code=303)
+                    return RedirectResponse(url="/?error=device_mismatch", status_code=303)
                 
                 else:
                     # 2. Si todo coincide, usuario está autenticado
@@ -56,16 +56,16 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     is_logged_in = True
                     request.state.user_id = user_id
                     if is_logged_in:
-                        if request.url.path in ["/login", "/recover-password", "/login-two", "/recover-password-two","/"]:
+                        if request.url.path in [ "/recover-password", "/login-two", "/recover-password-two","/"]:
                             return RedirectResponse(url="/dashboard")  # o la ruta del home de usuario
          else:
   
-        if request.url.path not in ["/login", "/recover-password", "/login-two", "/recover-password-two","/"]:
-            return RedirectResponse(url="/login")
+        if request.url.path not in [ "/recover-password", "/login-two", "/recover-password-two","/"]:
+            return RedirectResponse(url="/")
      else:
         # No hay sesión, permitir solo acceso a rutas públicas
-        if request.url.path not in ["/login", "/recover-password", "/login-two", "/recover-password-two","/"]:
-            return RedirectResponse(url="/login")
+        if request.url.path not in [ "/recover-password", "/login-two", "/recover-password-two","/"]:
+            return RedirectResponse(url="/")
         
    
     
