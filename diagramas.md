@@ -1,3 +1,14 @@
+- [ ] cmabiar congiguracion
+  - [ ] cambair toda comprobar 
+- [ ] rajusatr base de datos
+- [ ] ataque ddos
+- [ ] cambair contraseñas
+- [ ] crear usuario borra activar
+- [ ] loguearse recueprar contraseña
+- [ ] roles permisos asignar eliminar entiempo reasl
+- [ ] ajustar pefil
+- [ ] sistemas
+
 - [ ] login
 - [ ] recueperar contraseña
 - [ ] cookeis
