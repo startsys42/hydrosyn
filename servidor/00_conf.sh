@@ -2,8 +2,8 @@
 set -e
 CONFIG_FILE="config.env"
 
-COLOR_BG_IMPAR="46"
-COLOR_BG_PAR="43"
+COLOR_BG_ODD="46"
+COLOR_BG_EVEN="43"
 export MARKER_INI="# === VARS_FROM_CONF_ENV ==="
 export MARKER_END="# === END_VARS_FROM_CONF_ENV ==="
 
