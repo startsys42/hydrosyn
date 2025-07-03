@@ -38,21 +38,20 @@ def get_user_preferences(request: Request):
             raise ValueError(f"Parámetro no permitido: {param}")
 
     # Obtener idioma y tema de query o sesión o defecto
-    lang = request.query_params.get("lang") or request.session.get("lang") or "es"
+    lang = request.query_params.get("lang") or request.session.get("lang") or "en"
     theme = request.query_params.get("theme") or request.session.get("theme") or "light"
     if lang not in allowed_langs:
-        lang = request.session.get("lang") or "es"
+        lang =  "en"
     if theme not in allowed_themes:
-        theme = request.session.get("theme") or "light"
+        theme = "light"
 
     # Guardar en sesión
     request.session["lang"] = lang
     request.session["theme"] = theme
 
-    next_lang = "en" if lang == "es" else "es"
-    next_theme = "dark" if theme == "light" else "light"
+ 
 
-    texts = LANGS.get(lang, LANGS["es"])
+    texts = LANGS.get(lang, LANGS["en"])
 
     return {
         "lang": lang,
