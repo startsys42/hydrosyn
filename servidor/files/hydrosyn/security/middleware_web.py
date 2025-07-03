@@ -31,9 +31,9 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                 current_device = self._get_device_fingerprint(request)
         
                if session_data['summary'] != current_device_fingerprint:  # ⬅️ Comparación clave
-                logger.warning(
-                     f"Session detected from a different device. "
-                )
+               logger.warning(
+    f"Session detected from a different device for user '{session_data['username']}'."
+)
                  self._send_security_alert(
         user_id=session_data['user_id'],
         device=request.headers.get("User-Agent"),
