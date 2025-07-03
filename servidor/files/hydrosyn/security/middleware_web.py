@@ -23,36 +23,60 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         user_id = None
         is_logged_in = False
         
-        # 3. Validar sesión en BD si existe
         if session_id:
             session_data = get_session_from_db(session_id)
-    
+            # 3. Validar sesión en BD si existe
             if session_data:
-        # Verificar si la sesión es de ESTE dispositivo
-                current_device = self._get_device_fingerprint(request)
+                # Verificar si la sesión es de ESTE dispositivo
+                current_device_fingerprint = self._get_device_fingerprint(request)
         
-               if session_data['summary'] != current_device_fingerprint:  # ⬅️ Comparación clave
-               logger.warning(
-    f"Session detected from a different device for user '{session_data['username']}',possible cookie theft detected."
-)
-                   message_text = (
-    "Alert: Possible cookie theft detected.\n\n"
+                if session_data['summary'] != current_device_fingerprint:  # ⬅️ Comparación clave
+                    logger.warning(
+                        f"Session detected from a different device for user '{session_data['username']}', possible cookie theft detected."
+                    )
+                    message_text = (
+                        "Alert: Possible cookie theft detected.\n\n"
+                        f"Device Info: {request.headers.get('User-Agent')}\n"
+                        f"IP Address: {request.client.host}\n\n"
+                        "If this wasn't you, please secure your account immediately."
+                    )
+                    send_email(
+                        sender="tu-correo@gmail.com",
+                        to=session_data['email'],
+                        subject="Possible cookie theft detected",
+                        message_text=message_text
+                    )
+    
+                    delete_session_from_db(session_id)
+                    return RedirectResponse(url="/login?error=device_mismatch", status_code=303)
+                
+                else:
+                    # 2. Si todo coincide, usuario está autenticado
+                    user_id = session_data['user_id']
+                    is_logged_in = True
+                    request.state.user_id = user_id
+                    if is_logged_in:
+                        if request.url.path in ["/login", "/recover", "/"]:
+                            return RedirectResponse(url="/dashboard")  # o la ruta del home de usuario
+         else:
+  
+        if request.url.path not in ["/login", "/recover", "/register"]:
+            return RedirectResponse(url="/login")
+     else:
+        # No hay sesión, permitir solo acceso a rutas públicas
+        if request.url.path not in ["/login", "/recover", "/register"]:
+            return RedirectResponse(url="/login")
+        
+   
+    
+        
+            
 
-    f"Device Info: {request.headers.get('User-Agent')}\n"
-    f"IP Address: {request.client.host}\n\n"
-    "If this wasn't you, please secure your account immediately."
-)
-                   send_email(
-        sender="tu-coreo@gmail.com",
-        to="session_data['email']",
-        subject="possible cookie theft detected",
-        message_text=message_text
-    )
            
     
-    delete_session_from_db(session_id)
-    return RedirectResponse(url="/login?error=dispositivo_no_coincide", status_code=303)
-                session_id = None
+    
+    
+                
             else:
                 # 2. Si todo coincide, usuario está autenticado
                 user_id = session_data['user_id']
