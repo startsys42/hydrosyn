@@ -35,17 +35,20 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                logger.warning(
     f"Session detected from a different device for user '{session_data['username']}',possible cookie theft detected."
 )
+                   message_text = (
+    "Alert: Possible cookie theft detected.\n\n"
+
+    f"Device Info: {request.headers.get('User-Agent')}\n"
+    f"IP Address: {request.client.host}\n\n"
+    "If this wasn't you, please secure your account immediately."
+)
                    send_email(
         sender="tu-coreo@gmail.com",
-        to="destinatario@example.com",
+        to="session_data['email']",
         subject="possible cookie theft detected",
-        message_text="Este es un correo enviado desde otro módulo."
+        message_text=message_text
     )
-                 self._send_security_alert(
-        user_id=session_data['user_id'],
-        device=request.headers.get("User-Agent"),
-        ip=request.client.host
-    )
+           
     
     self.db_handler.delete_session(session_id)
     return RedirectResponse(url="/login?error=dispositivo_no_coincide", status_code=303)
