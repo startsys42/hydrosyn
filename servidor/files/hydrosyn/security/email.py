@@ -2,6 +2,7 @@
 import os
 import base64
 import re
+from logger import logger
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
@@ -29,21 +30,22 @@ def get_gmail_service():
 
 
 def create_message(sender: str, to: str, subject: str, message_text: str):
- # Validaciones básicas
+    # Basic validations
     if not sender or not to:
-        raise ValueError("El remitente y el destinatario no pueden estar vacíos.")
+        raise ValueError("Sender and recipient cannot be empty.")
 
     if not validate_email(sender):
-        raise ValueError(f"Correo del remitente inválido: {sender}")
+        raise ValueError(f"Invalid sender email address: {sender}")
     
     if not validate_email(to):
-        raise ValueError(f"Correo del destinatario inválido: {to}")
+        raise ValueError(f"Invalid recipient email address: {to}")
 
     if not subject.strip():
-        raise ValueError("El asunto no puede estar vacío.")
+        raise ValueError("Subject cannot be empty.")
 
     if not message_text.strip():
-        raise ValueError("El cuerpo del mensaje no puede estar vacío.")
+        raise ValueError("Message body cannot be empty.")
+    
     message = MIMEText(message_text, "plain", "utf-8")
     message['to'] = to
     message['from'] = sender
@@ -57,8 +59,8 @@ def send_email(sender: str, to: str, subject: str, message_text: str) -> bool:
     message = create_message(sender, to, subject, message_text)
     try:
         sent = service.users().messages().send(userId="me", body=message).execute()
-        print(f"Email enviado. Message Id: {sent['id']}")
+        logger.info(f"Email sent. Message Id: {sent['id']}, To: {to}, Subject: {subject}")
         return True
     except Exception as e:
-        print(f"Error al enviar email: {e}")
+        logger.error(f"Error sending email to {to} with subject '{subject}': {e}")
         return False
