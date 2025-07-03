@@ -42,13 +42,13 @@ fi
 # Check for INS-PIP script
 
 if [[ -f /usr/local/bin/ins-pip ]]; then
-  echo -e "\e[30;${COLOR_BG_ODD}File /usr/local/bin/ins-pip already exists. Nothing copied.\e[0m"
+  echo -e "\e[30;${COLOR_BG_ODD}mFile /usr/local/bin/ins-pip already exists. Nothing copied.\e[0m"
 else
   if [[ -f "$INS_PIP" ]]; then
     cp "$INS_PIP" /usr/local/bin/ins-pip
     chown root:root /usr/local/bin/ins-pip
     chmod 700 /usr/local/bin/ins-pip
-    echo -e "\e[30;${COLOR_BG_ODD}Functions copied to /usr/local/bin/ins-pip with correct permissions\e[0m"
+    echo -e "\e[30;${COLOR_BG_ODD}mFunctions copied to /usr/local/bin/ins-pip with correct permissions\e[0m"
     rm "$INS_PIP"
   else
     echo -e "\e[30;41mFunctions file $INS_PIP not found. Could not copy.\e[0m"
@@ -60,13 +60,13 @@ fi
 # Check for INS-PAQ script
 
 if [[ -f /usr/local/bin/ins-paq ]]; then
-  echo -e "\e[30;${COLOR_BG_EVEN}File /usr/local/bin/ins-paq already exists. Nothing copied.\e[0m"
+  echo -e "\e[30;${COLOR_BG_EVEN}mFile /usr/local/bin/ins-paq already exists. Nothing copied.\e[0m"
 else
   if [[ -f "$INS_PAQ" ]]; then
     cp "$INS_PAQ" /usr/local/bin/ins-paq
     chown root:root /usr/local/bin/ins-paq
     chmod 700 /usr/local/bin/ins-paq
-    echo -e "\e[30;${COLOR_BG_EVEN}Functions copied to /usr/local/bin/ins-paq with correct permissions\e[0m"
+    echo -e "\e[30;${COLOR_BG_EVEN}mFunctions copied to /usr/local/bin/ins-paq with correct permissions\e[0m"
     rm "$INS_PAQ"
   else
     echo -e "\e[30;41mFunctions file $INS_PAQ not found. Could not copy.\e[0m"
