@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 #crear solo usuario especial para la app
-COLOR_BG_IMPAR="46"
-COLOR_BG_PAR="43"
+COLOR_BG_ODD="46"
+COLOR_BG_EVEN="43"
 
 ins-paq python3
 
@@ -18,7 +18,7 @@ fi
 
 # Mover directorio si no existe en /opt
 if [ ! -d /opt/hydrosyn ]; then
-    mv /root/hydrosyn_files/hydrosyn /opt/
+    mv /root/files/hydrosyn /opt/
 fi
 
 cd /opt/hydrosyn
@@ -29,7 +29,7 @@ if [ ! -d venv ]; then
 fi
 
 
-paquetes=(
+packages=(
   pip
   itsdangerous
   fastapi
@@ -49,7 +49,7 @@ paquetes=(
   google-auth-oauthlib
 )
 
-  ins-pip "$PIP_HYDROSYN" "${paquetes[@]}"
+  ins-pip "$PIP_HYDROSYN" "${packages[@]}"
 
 
 mkdir -p /var/lib/hydrosyn
