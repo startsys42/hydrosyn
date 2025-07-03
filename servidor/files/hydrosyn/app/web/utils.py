@@ -58,6 +58,4 @@ def get_user_preferences(request: Request):
         "lang": lang,
         "theme": theme,
         "texts": texts,
-        "next_lang": next_lang,
-        "next_theme": next_theme,
     } 
