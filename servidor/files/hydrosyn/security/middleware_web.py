@@ -48,7 +48,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     )
     
                     delete_session_from_db(session_id)
-                    return RedirectResponse(url="/?error=device_mismatch", status_code=303)
+                    return RedirectResponse(url="/", status_code=303)
                 
                 else:
                     # 2. Si todo coincide, usuario está autenticado
@@ -61,11 +61,11 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
          else:
   
         if request.url.path not in [ "/recover-password", "/login-two", "/recover-password-two","/"]:
-            return RedirectResponse(url="/")
+            return RedirectResponse(url="/", status_code=303)
      else:
         # No hay sesión, permitir solo acceso a rutas públicas
         if request.url.path not in [ "/recover-password", "/login-two", "/recover-password-two","/"]:
-            return RedirectResponse(url="/")
+            return RedirectResponse(url="/", status_code=303)
         
    
     
