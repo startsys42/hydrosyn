@@ -3,6 +3,7 @@ from starlette.requests import Request
 from starlette.responses import Response, RedirectResponse
 from itsdangerous import Signer, BadSignature
 import uuid
+from security.email import send_email
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any
 
@@ -32,8 +33,14 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         
                if session_data['summary'] != current_device_fingerprint:  # ⬅️ Comparación clave
                logger.warning(
-    f"Session detected from a different device for user '{session_data['username']}'."
+    f"Session detected from a different device for user '{session_data['username']}',possible cookie theft detected."
 )
+                   send_email(
+        sender="tu-coreo@gmail.com",
+        to="destinatario@example.com",
+        subject="possible cookie theft detected",
+        message_text="Este es un correo enviado desde otro módulo."
+    )
                  self._send_security_alert(
         user_id=session_data['user_id'],
         device=request.headers.get("User-Agent"),
