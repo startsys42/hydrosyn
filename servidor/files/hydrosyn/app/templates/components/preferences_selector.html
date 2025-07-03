@@ -1,0 +1,13 @@
+<form method="get" action="{{ request.url.path }}" style="margin-bottom: 20px;">
+    <label for="lang-select">{{ texts.change_lang }}:</label>
+    <select name="lang" id="lang-select" onchange="this.form.submit()">
+        <option value="es" {% if lang == "es" %}selected{% endif %}>Español</option>
+        <option value="en" {% if lang == "en" %}selected{% endif %}>English</option>
+    </select>
+
+    <label for="theme-select" style="margin-left: 20px;">{{ texts.change_theme }}:</label>
+    <select name="theme" id="theme-select" onchange="this.form.submit()">
+        <option value="light" {% if theme == "light" %}selected{% endif %}>Light</option>
+        <option value="dark" {% if theme == "dark" %}selected{% endif %}>Dark</option>
+    </select>
+</form>
