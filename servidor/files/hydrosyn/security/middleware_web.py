@@ -56,16 +56,16 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     is_logged_in = True
                     request.state.user_id = user_id
                     if is_logged_in:
-                        if request.url.path in ["/login", "/recover", "/"]:
+                        if request.url.path in ["/login", "/recover-password"", "/"]:
                             return RedirectResponse(url="/dashboard")  # o la ruta del home de usuario
          else:
   
-        if request.url.path not in ["/login", "/recover", "/register"]:
-            return RedirectResponse(url="/login")
+        if request.url.path not in ["/login", "/recover-password"", "/"]:
+            return RedirectResponse(url="/")
      else:
         # No hay sesión, permitir solo acceso a rutas públicas
-        if request.url.path not in ["/login", "/recover", "/register"]:
-            return RedirectResponse(url="/login")
+        if request.url.path not in ["/login", "/recover-password"", "/"]:
+            return RedirectResponse(url="/")
         
    
     
@@ -77,11 +77,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
     
     
                 
-            else:
-                # 2. Si todo coincide, usuario está autenticado
-                user_id = session_data['user_id']
-                is_logged_in = True
-                request.state.user_id = user_id
+        
         
  
 
