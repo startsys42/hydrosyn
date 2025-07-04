@@ -48,6 +48,7 @@ packages=(
   google-auth-httplib2 
   google-auth-oauthlib
   python-dotenv
+  paho-mqtt
 )
 
   ins-pip "$PIP_HYDROSYN" "${packages[@]}"
