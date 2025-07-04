@@ -145,7 +145,7 @@ def _get_device_fingerprint(self, request: Request) -> str:
             "os": request.headers.get("x-device-os"),
         }
         
-        device_str = ";".join(f"{k}={v}"  for k, v in sorted(device_data.items()) if v  # Filtramos valores vacíos)
+        device_str = ";".join(f"{k}={v}"  for k, v in sorted(device_data.items()) if v ) 
         return hashlib.sha256(device_str.encode()).hexdigest()
     
 async def _get_valid_session_id(self, request: Request, current_key: str, old_key: str) -> Optional[str]:
