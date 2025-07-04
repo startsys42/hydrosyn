@@ -10,7 +10,15 @@ class DeviceInfo(BaseModel):
     os: str | None
     gpu: str | None
 
-@router.post("/device-info")
-async def receive_device_info(info: DeviceInfo):
-    print("Info del dispositivo recibida:", info)
-    return {"status": "ok"}
+@app.post("/device-info")
+async def device_info(request: Request):
+    try:
+        data = await request.json()
+        info = DeviceInfo(**data)
+        logging.info(f"Info recibida de IP {request.client.host}: {info}")
+        # Aquí guardas o procesas info...
+    except Exception as e:
+        # Captura cualquier error (incluido ValidationError)
+        logging.warning(f"Datos inválidos recibidos de IP {request.client.host}: {e}")
+        # No hacemos nada más, ni devolvemos error al cliente
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
