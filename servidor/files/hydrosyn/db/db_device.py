@@ -5,10 +5,56 @@ from db.conexion import get_engine
 from logger import logger  # Asegúrate de tenerlo configurado
 
 
-def insert_login_attempts_to_db(session_id: str) -> bool:
-    sql = text("""
-        DELETE FROM sessions WHERE session_id = :session_id
+def insert_login_attempts_to_db(
+    user_id: int | None,
+    ip_address: str,
+    success: bool,
+    user_agent: str | None = None,
+    ram_gb: float | None = None,
+    cpu_cores: int | None = None,
+    cpu_architecture: str | None = None,
+    gpu_info: str | None = None,
+    device_os: str | None = None,
+    recovery: bool = False
+) -> bool:
+     sql = text("""
+        INSERT INTO login_attempts (
+            user_id,
+            ip_address,
+            success,
+            user_agent,
+            ram_gb,
+            cpu_cores,
+            cpu_architecture,
+            gpu_info,
+            device_os,
+            recovery
+        ) VALUES (
+            :user_id,
+            :ip_address,
+            :success,
+            :user_agent,
+            :ram_gb,
+            :cpu_cores,
+            :cpu_architecture,
+            :gpu_info,
+            :device_os,
+            :recovery
+        )
     """)
+    
+    params = {
+        "user_id": user_id,
+        "ip_address": ip_address,
+        "success": success,
+        "user_agent": user_agent,
+        "ram_gb": ram_gb,
+        "cpu_cores": cpu_cores,
+        "cpu_architecture": cpu_architecture,
+        "gpu_info": gpu_info,
+        "device_os": device_os,
+        "recovery": recovery
+    }
     try:
         with get_engine().connect() as conn:
             result = conn.execute(sql, {"session_id": session_id})
