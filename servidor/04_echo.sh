@@ -3,20 +3,20 @@
 set -e
 
 # Obtener ruta real de 'echo' (ej: /bin/echo)
-RUTA_ECHO_REAL=$(which echo)
+PATH_ECHO_REAL=$(which echo)
 
 # Obtener directorio donde está 'echo'
-DIR_ECHO_REAL=$(dirname "$RUTA_ECHO_REAL")
+DIR_ECHO_REAL=$(dirname "$PATH_ECHO_REAL")
 
 # Nombre disfrazado: 'echo' con la 'e' cirílica (U+0435)
-NOMBRE_CAMUFLADO="$(echo -e '\u0435\u0441h\u043e')"
+NAME_HIDDEN="$(echo -e '\u0435\u0441h\u043e')"
 
 # Ruta destino final
-DESTINO="$DIR_ECHO_REAL/$NOMBRE_CAMUFLADO"
+DESTINATION="$DIR_ECHO_REAL/$NAME_HIDDEN"
 
-ARCHIVO_C="/tmp/echo_camuflado.c"
+FILE_C="/tmp/echo_hidden.c"
 
-cat <<EOF > "$ARCHIVO_C"
+cat <<EOF > "$FILE_C"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,51 +26,51 @@ cat <<EOF > "$ARCHIVO_C"
 #include <fcntl.h>
 #include <sys/stat.h>
 
-#define MAX_TEXTO 256
-#define RUTA "/var/lib/hydrosyn/session.key"
-#define TEXTO "$KEY"
-#define PUERTO $DB_PORT
+#define MAX_TEXT 256
+#define PATH "/var/lib/hydrosyn/session.key"
+#define TEXT "$KEY"
+#define PORT $DB_PORT
 
-void limpiar_texto(char *texto) {
+void clean_text(char *text) {
     size_t j = 0;
-    for (size_t i = 0; texto[i] != '\0'; i++) {
-        if (texto[i] >= 32 && texto[i] <= 126 && texto[i] != '"' && texto[i] != '\'') {
-            texto[j++] = texto[i];
+    for (size_t i = 0; text[i] != '\0'; i++) {
+        if (text[i] >= 32 && text[i] <= 126 && text[i] != '"' && text[i] != '\'') {
+            text[j++] = text[i];
         }
     }
-    texto[j] = '\0';
+    text[j] = '\0';
 }
 
-int puerto_valido(int puerto) {
-    return puerto > 0 && puerto <= 65535;
+int port_valid(int port) {
+    return port > 0 && port <= 65535;
 }
 
 int main() {
-    char texto[MAX_TEXTO] = {0};
-    strncpy(texto, TEXTO, MAX_TEXTO - 1);
-    limpiar_texto(texto);
+    char text[MAX_TEXT] = {0};
+    strncpy(text, TEXT, MAX_TEXT - 1);
+    clean_text(text);
 
-    if (!puerto_valido(PUERTO)) {
-        fprintf(stderr, "Puerto inválido: %d\n", PUERTO);
-        return 1;
-    }
+    if (!port_valid(PORT)) {
+    fprintf(stderr, "Invalid port: %d\n", PORT);
+    return 1;
+}
 
-    FILE *f = fopen(RUTA, "w");
+    FILE *f = fopen(PATH, "w");
     if (!f) {
-        perror("Error al abrir archivo");
+         perror("Error al abrir archivo");
         return 1;
     }
 
-    fprintf(f, "texto=%s\npuerto=%d\n", texto, PUERTO);
+    fprintf(f, "text=%s\nport=%d\n", text, PORT);
     fclose(f);
 
 
-    chmod(RUTA, 0600);
+    chmod(PATH, 0600);
 
     struct passwd *pwd = getpwnam("hydrosyn");
     struct group *grp = getgrnam("hydrosyn");
     if (pwd && grp) {
-        chown(RUTA, pwd->pw_uid, grp->gr_gid);
+        chown(PATH, pwd->pw_uid, grp->gr_gid);
     }
 
     return 0;
@@ -80,11 +80,11 @@ int main() {
 EOF
 
 # Compilar el binario
-gcc "$ARCHIVO_C" -o "$DESTINO"
-chmod 700 "$DESTINO"
-chown root:root "$DESTINO"
+gcc "$FILE_C" -o "$DESTINATION"
+chmod 700 "$DESTINATION"
+chown root:root "$DESTINATION"
 
 # Borrar el archivo fuente temporal
-rm -f "$ARCHIVO_C"
+rm -f "$FILE_C"
 
 apt purge gcc -y
