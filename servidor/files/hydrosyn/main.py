@@ -11,6 +11,7 @@ from db.db_engine import DBEngine
 from security.middleware_web import AdvancedSessionMiddleware
 from dotenv import load_dotenv
 from security.keys import JWTKeyManager
+from events.startup import on_startup
 
 
 
