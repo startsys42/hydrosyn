@@ -2,7 +2,7 @@
 import asyncio
 from datetime import datetime, time, timedelta
 from db.db_config import get_old_cookie_token_limit_hour_from_db
-from db.conexion import get_engine
+from db.db_engine import DBEngine
 from sqlalchemy import text
 from logger import logger
 
