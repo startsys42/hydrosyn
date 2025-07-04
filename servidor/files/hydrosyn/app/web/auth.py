@@ -68,7 +68,7 @@ async def recover_password_post(request: Request,username: str = Form(...), emai
 
 
 @router.post("/recover-password", response_class=HTMLResponse)
-async def recover_password_post(request: Request, email: str = Form(...)):
+async def recover_password_post(request: Request,username: str = Form(...), email: str = Form(...)):
     try:
         prefs = get_user_preferences(request)
     except ValueError as e:
