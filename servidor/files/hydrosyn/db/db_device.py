@@ -43,7 +43,9 @@ def insert_login_attempts_to_db(
             :cpu_architecture,
             :gpu_info,
             :device_os,
-            :recovery
+            :recovery,
+            :page,              
+            :http_method  
         )
     """)
     
@@ -57,7 +59,9 @@ def insert_login_attempts_to_db(
         "cpu_architecture": cpu_architecture,
         "gpu_info": gpu_info,
         "device_os": device_os,
-        "recovery": recovery
+        "recovery": recovery,
+        page": page,                     
+        "http_method": http_method.upper()
     }
     try:
         engine = DBEngine.get_engine()
