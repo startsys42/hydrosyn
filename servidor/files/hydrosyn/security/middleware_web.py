@@ -133,10 +133,12 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         response.delete_cookie("guest_language")
         
         return response
-def _get_device_fingerprint(self, request: Request) -> str:
+
+
+    def _get_device_fingerprint(self, request: Request) -> str:
         """Genera un ID único por dispositivo usando información de hardware del cliente"""
         device_data = {
-           # "ip": request.client.host,
+            # "ip": request.client.host,
             "user_agent": request.headers.get("user-agent", ""),
             "ram": request.headers.get("x-device-ram"),
             "cpu_cores": request.headers.get("x-device-cpu-cores"),
@@ -144,25 +146,27 @@ def _get_device_fingerprint(self, request: Request) -> str:
             "gpu": request.headers.get("x-device-gpu"),
             "os": request.headers.get("x-device-os"),
         }
-        
-        device_str = ";".join(f"{k}={v}"  for k, v in sorted(device_data.items()) if v ) 
+
+        device_str = ";".join(f"{k}={v}" for k, v in sorted(device_data.items()) if v)
         return hashlib.sha256(device_str.encode()).hexdigest()
+
+    async def _get_valid_session_id(self, request: Request, current_key: str, old_key: str) -> Optional[str]:
+        session_cookie = request.cookies.get("session_id")
+        if not session_cookie:
+            return None  # No existe la cookie
+
+        try:
+            # Intentar con la clave actual
+            signer = Signer(current_key)
+            return signer.unsign(session_cookie).decode()
+        except BadSignature:
+            if old_key:
+                try:
+                    old_signer = Signer(old_key)
+                    return old_signer.unsign(session_cookie).decode()
+                except BadSignature:
+                    return None  # Cookie inválida
+            return None
     
-async def _get_valid_session_id(self, request: Request, current_key: str, old_key: str) -> Optional[str]:
-    session_cookie = request.cookies.get("session_id")
-    if not session_cookie:
-        return None  # No existe la cookie
-    
-    try:
-        # Intentar con la clave actual
-        signer = Signer(current_key)
-        return signer.unsign(session_cookie).decode()
-    except BadSignature:
-        if old_key:
-            # Intentar con la clave antigua (rotación)
-            old_signer = Signer(old_key)
-            try:
-                return old_signer.unsign(session_cookie).decode()
-            except BadSignature:
-                return None  # Cookie inválida
-        return None
+ 
+ 
