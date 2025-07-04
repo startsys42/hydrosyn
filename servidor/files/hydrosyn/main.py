@@ -16,7 +16,11 @@ from security.keys import JWTKeyManager
 
 # Importamos routers
 from app.web import auth as web_auth
-from app.web import views as web_views
+from app.web import config as web_config
+from app.web import profile as web_profile
+from app.web import permissions as web_permissions
+from app.web import users as web_users
+
 from app.api import auth as api_auth
 from app.api import users as api_users
 
@@ -93,8 +97,11 @@ templates = Jinja2Templates(directory="app/templates")
 # 3) Rutas Web (HTML + sesiones)
 #    - web_auth.router: login, logout, formulario, etc.
 #    - web_views.router: páginas protegidas (home, dashboard, etc.)
-app.include_router(web_auth.router, tags=["Web"])
-app.include_router(web_views.router, tags=["Web"])
+app.include_router(web_auth.router, prefix="/web/auth", tags=["Web Auth"])
+app.include_router(web_config.router, prefix="/web/config", tags=["Web Config"])
+app.include_router(web_profile.router, prefix="/web/profile", tags=["Web Profile"])
+app.include_router(web_permissions.router, prefix="/web/permissions", tags=["Web Permissions"])
+app.include_router(web_users.router, prefix="/web/users", tags=["Web Users"])
 
 # 4) Rutas API (JSON + JWT)
 #    - api_auth.router: /api/token, validación de credenciales, emisión de JWT
