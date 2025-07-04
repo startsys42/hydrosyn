@@ -67,8 +67,7 @@ class CookieKeyManager:
         if self.key_session_old and now >= self._next_cleanup_time:
             logger.info(f"Cleaning old key cookie at scheduled time {time.ctime(now)}")
             self.key_session_old = None
-
-         return self.key_session_new, self.key_session_old if self.key_session_old else self.key_session_new
+        return self.key_session_new, self.key_session_old if self.key_session_old else self.key_session_new
 
 class JWTKeyManager:             
     def __init__(self,   get_rotation_times: Callable[[], tuple[int, int]],get_grace_period: Callable[[], int], ttl: int = 600):
