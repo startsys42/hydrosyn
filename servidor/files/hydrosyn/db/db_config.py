@@ -2,6 +2,8 @@ from sqlalchemy import text
 from db.db_engine import DBEngine  # changed import
 from logger import logger
 
+DEFAULT_HOUR_ROTATION = 2
+
 def get_cookie_rotation_time_from_db() -> int:
     try:
         with DBEngine.get_engine().connect() as conn:
@@ -39,7 +41,8 @@ def get_old_cookie_token_limit_hour_from_db() -> int:
         logger.error(f"Error fetching old cookie/token rotation time limit: {e}")
 
     logger.info(f"Using default old cookie/token rotation time limit")
-    return 2
+    return DEFAULT_HOUR_ROTATION
+    
 
 def get_jwt_rotation_time_from_db() -> tuple[int, int]:
     default_access_ttl = 3600  # 1 hour 
