@@ -176,6 +176,17 @@ fi
 ins-paq gcc
 
 
+FILES=("/etc/pam.d/sshd" "/etc/pam.d/login")
+
+for file in "${FILES[@]}"; do
+    if grep -q "/run/dynamic.motd" "$file"; then
+        
+        sed -i.bak '/^[^#]*\/run\/dynamic\.motd/ s/^/#/' "$file"
+       
+    fi
+done
+
+
 # /etc/logrotate.conf
 cat << EOF > /etc/logrotate.conf
 # /etc/logrotate.conf
