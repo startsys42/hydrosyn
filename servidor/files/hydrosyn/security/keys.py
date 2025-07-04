@@ -70,7 +70,7 @@ class CookieKeyManager:
         return self.key_session_new, (self.key_session_old if self.key_session_old else self.key_session_new)
 
 class JWTKeyManager:             
-    def __init__(self,   get_rotation_times: Callable[[], tuple[int, int]],get_grace_period: Callable[[], int], ttl: int = 600):
+    def __init__(self,   get_rotation_time: Callable[[], tuple[int, int]],get_grace_period: Callable[[], int], ttl: int = 600):
         self.get_rotation_time = get_rotation_time
         self.get_grace_period = get_grace_period
         self.ttl = ttl  # minimum time between queries, in seconds
