@@ -38,8 +38,6 @@ async def recover_password(request: Request):
         "texts": prefs["texts"],
         "lang": prefs["lang"],
         "theme": prefs["theme"],
-        "next_lang": prefs["next_lang"],
-        "next_theme": prefs["next_theme"],
     })
 
 
