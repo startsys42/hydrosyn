@@ -126,4 +126,4 @@ class JWTKeyManager:
             logger.info(f"Cleaning old key jwt at scheduled time {time.ctime(now)}")
             self.key_jwt_old = None
 
-         return self.key_jwt_new, self.key_jwt_old if self.key_jwt_old else self.key_jwt_new
+        return self.key_jwt_new, (self.key_jwt_old if self.key_jwt_old else self.key_jwt_new)
