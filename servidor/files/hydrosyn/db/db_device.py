@@ -21,7 +21,7 @@ def insert_login_attempts_to_db(
     device_os: str | None = None,
     recovery: bool = False,
     page: str, 
-    http_method: Literal['GET', 'POST'], 
+    http_method: Literal['GET', 'POST']
     
 ) -> bool:
      sql = text("""
