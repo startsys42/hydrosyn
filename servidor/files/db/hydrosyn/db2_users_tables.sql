@@ -179,9 +179,14 @@ CREATE TABLE login_attempts (
     id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     user_id INT UNSIGNED NULL,
     attempt_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    ip_address VARCHAR(45) NOT NULL,
+    ip_address VARCHAR(39) NOT NULL,
     success BOOLEAN NOT NULL,
     user_agent VARCHAR(512),
+    ram_gb FLOAT NULL,
+    cpu_cores SMALLINT UNSIGNED NULL,
+    cpu_architecture VARCHAR(32) NULL,
+    gpu_info VARCHAR(128) NULL,
+    device_os VARCHAR(64) NULL,
     recovery BOOLEAN NOT NULL,
     CONSTRAINT fk_login_attempts_user
         FOREIGN KEY (user_id)
@@ -202,7 +207,7 @@ CREATE TABLE sessions (
     summary CHAR(64) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
