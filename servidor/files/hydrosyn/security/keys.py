@@ -64,7 +64,7 @@ class CookieKeyManager:
             logger.info(f"Key cookie rotated at {time.ctime(now)}. Old key cookie will expire at {time.ctime(self._next_cleanup_time)}")
 
         # Borrar clave vieja si es la hora programada
-        if self.key_session_old and now >= self._next_cleanup_time:
+        if self.key_session_old and self.key_session_old != self.key_session_new and now >= self._next_cleanup_time:
             logger.info(f"Cleaning old key cookie at scheduled time {time.ctime(now)}")
             self.key_session_old = None
         return self.key_session_new, (self.key_session_old if self.key_session_old else self.key_session_new)
