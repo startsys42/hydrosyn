@@ -3,9 +3,9 @@ from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from db.conexion import get_engine
 from logger import logger  # Asegúrate de tenerlo configurado
-from db.config import obtener_tiempo_rotacion_desde_bd
 
-def insert_login_from_db(session_id: str) -> bool:
+
+def insert_login_attempts_to_db(session_id: str) -> bool:
     sql = text("""
         DELETE FROM sessions WHERE session_id = :session_id
     """)
