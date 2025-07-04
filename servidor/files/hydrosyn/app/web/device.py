@@ -5,9 +5,9 @@ router = APIRouter()
 
 class DeviceInfo(BaseModel):
     ram: float | None
-    cores: int
-    arch: str
-    os: str
+    cores: int | None
+    arch: str | None
+    os: str | None
     gpu: str | None
 
 @router.post("/device-info")
