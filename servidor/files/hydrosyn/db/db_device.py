@@ -19,7 +19,10 @@ def insert_login_attempts_to_db(
     cpu_architecture: str | None = None,
     gpu_info: str | None = None,
     device_os: str | None = None,
-    recovery: bool = False
+    recovery: bool = False,
+    page: str, 
+    http_method: Literal['GET', 'POST'], 
+    
 ) -> bool:
      sql = text("""
         INSERT INTO login_attempts (
