@@ -67,38 +67,3 @@ async def collect_device_info(request: Request):
     # Always return empty response
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-@router.post("/device-info-post")
-async def collect_device_info(request: Request):
-    """Silently collects device info with IP and User-Agent"""
-    client_ip = request.client.host or "unknown"
-    user_agent = request.headers.get("user-agent", "unknown")
-     html_source = get_html_source(request)
-    try:
-        # Safely extract JSON (empty dict if invalid)
-        data = await request.json() if await request.body() else {}
-        
-        # Filter only valid fields we care about
-        clean_data = {k: v for k, v in data.items() if k in DeviceInfo.__fields__}
-        device_info = DeviceInfo(**clean_data)
-        
-        # Log everything important
-        logger.info(
-            "Device Info Collected\n"
-            f"IP: {client_ip}\n"
-            f"User-Agent: {user_agent}\n"
-            f"Data: {device_info.dict(exclude_none=True)}"  # Only show provided fields
-        )
-        
-        # Here you would add database storage logic
-        # await store_to_database(device_info, client_ip, user_agent)
-        
-    except Exception as e:
-        logger.warning(
-            "Failed to process device info\n"
-            f"IP: {client_ip}\n"
-            f"User-Agent: {user_agent}\n"
-            f"Error: {str(e)}"
-        )
-    
-    # Always return empty response
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
