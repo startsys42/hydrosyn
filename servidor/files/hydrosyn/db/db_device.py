@@ -1,8 +1,12 @@
 from datetime import datetime, timedelta
 from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
-from db.conexion import get_engine
-from logger import logger  # Asegúrate de tenerlo configurado
+
+from logger import logger  
+from bd.db_engine import DBEngine 
+
+
+
 
 
 def insert_login_attempts_to_db(
@@ -10,7 +14,7 @@ def insert_login_attempts_to_db(
     ip_address: str,
     success: bool,
     user_agent: str | None = None,
-    ram_gb: float | None = None,
+    ram_gb: int | float | None = None,
     cpu_cores: int | None = None,
     cpu_architecture: str | None = None,
     gpu_info: str | None = None,
@@ -48,7 +52,7 @@ def insert_login_attempts_to_db(
         "ip_address": ip_address,
         "success": success,
         "user_agent": user_agent,
-        "ram_gb": ram_gb,
+        "ram_gb": float(ram_gb) if ram_gb is not None else None, 
         "cpu_cores": cpu_cores,
         "cpu_architecture": cpu_architecture,
         "gpu_info": gpu_info,
@@ -56,15 +60,21 @@ def insert_login_attempts_to_db(
         "recovery": recovery
     }
     try:
-        with get_engine().connect() as conn:
-            result = conn.execute(sql, {"session_id": session_id})
-            conn.commit()  # Commit the transaction
-            if result.rowcount > 0:
-                logger.info(f"Session deleted successfully. Session ID: {session_id}")
+        engine = DBEngine.get_engine()
+        with engine.connect() as conn:
+            result = conn.execute(sql, params)
+            conn.commit()
+            
+            if result.rowcount == 1:
+                logger.info(f"Login attempt recorded successfully for IP: {ip_address}")
                 return True
             else:
-                logger.warning(f"No session found with Session ID: {session_id}")
+                logger.warning(f"Login attempt not recorded for IP: {ip_address}")
                 return False
+                
+    except SQLAlchemyError as e:
+        logger.error(f"Database error recording login attempt: {str(e)}")
+        return False
     except Exception as e:
-        logger.error(f"Error deleting session with Session ID {session_id}: {e}")
+        logger.error(f"Unexpected error recording login attempt: {str(e)}")
         return False
