@@ -8,7 +8,7 @@ from logger import logger
 
 
 
-async def clean_general():
+async def general_clean():
     clean_hour = int(get_old_cookie_token_limit_hour_from_db()) 
     clean_hour = time(hour=clean_hour, minute=0, second=0)
    # if datetime.utcnow() >= clean_hour:
