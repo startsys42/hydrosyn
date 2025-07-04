@@ -5,7 +5,7 @@ from events.tasks import *
 
 def get_next_cleanup_time():
     now = datetime.utcnow()
-    cleanup_hour = get_cleanup_hour_from_db()
+    cleanup_hour = get_old_cookie_token_limit_hour_from_db()
     scheduled_time_today = datetime.combine(now.date(), time(cleanup_hour, 0))
 
     if now >= scheduled_time_today:
