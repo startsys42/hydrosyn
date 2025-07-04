@@ -1,7 +1,7 @@
 
 import asyncio
 from datetime import datetime, time, timedelta
-from db.config import obtener_hora_limpieza_desde_bd
+from db.DB_config import get_old_cookie_token_limit_hour_from_db
 from db.conexion import get_engine
 from sqlalchemy import text
 from logger import logger
@@ -9,8 +9,8 @@ from logger import logger
 
 
 async def clean_general():
-    hora_limpieza_int = int(obtener_hora_limpieza_desde_bd())  # Ej: 2 para las 2AM
-    hora_limpieza = time(hour=hora_limpieza_int, minute=0, second=0)
+    clean_hour = int(get_old_cookie_token_limit_hour_from_db()) 
+    clean_hour = time(hour=clean_hour, minute=0, second=0)
 
 async def limpiar_sesiones_expiradas():
     ahora = datetime.utcnow()
