@@ -47,6 +47,7 @@ packages=(
   google-api-python-client 
   google-auth-httplib2 
   google-auth-oauthlib
+  python-dotenv
 )
 
   ins-pip "$PIP_HYDROSYN" "${packages[@]}"
