@@ -1,12 +1,15 @@
 from fastapi import APIRouter, Request, Response, status
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Union
 from logger import logger  # Your custom logger
 from urllib.parse import urlparse
+from db.db_device import insert_login_attempts_to_db
+
+
 
 router = APIRouter()
 class DeviceInfo(BaseModel):
-    ram: Optional[int] = None
+    ram: Optional[Union[int, float]] = None
     cores: Optional[int] = None
     arch: Optional[str] = None
     os: Optional[str] = None
@@ -36,7 +39,8 @@ async def collect_device_info(request: Request):
 
     client_ip = request.client.host or "unknown"
     user_agent = request.headers.get("user-agent", "unknown")
-     html_source = get_html_source(request)
+    html_source = get_html_source(request)
+    device_info = None
     try:
         # Safely extract JSON (empty dict if invalid)
         data = await request.json() if await request.body() else {}
@@ -63,7 +67,22 @@ async def collect_device_info(request: Request):
             f"User-Agent: {user_agent}\n"
             f"Error: {str(e)}"
         )
-    
+
+     insert_login_attempts_to_db(
+            user_id=None,  
+            ip_address=client_ip,
+            success=False,  # O False si es un intento fallido
+            user_agent=user_agent,
+            ram_gb=device_info.ram,
+            cpu_cores=device_info.cores,
+            cpu_architecture=device_info.arch,
+            gpu_info=device_info.gpu,
+            device_os=device_info.os,
+            recovery = False,
+            page=html_source,
+            http_method='GET'
+     
+        )
     # Always return empty response
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
