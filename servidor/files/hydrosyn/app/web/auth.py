@@ -12,7 +12,7 @@ router = APIRouter()
 
 
 @router.get("/", response_class=HTMLResponse)
-async def welcome(request: Request):
+async def login_get(request: Request):
     try:
         prefs = get_user_preferences(request)
     except ValueError as e:
@@ -27,7 +27,7 @@ async def welcome(request: Request):
     })
 
 @router.get("/recover-password", response_class=HTMLResponse)
-async def recover_password(request: Request):
+async def recover_password_get(request: Request):
     try:
         prefs = get_user_preferences(request)
     except ValueError as e:
