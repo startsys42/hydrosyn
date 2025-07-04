@@ -1,10 +1,10 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-
+from logger import logger
 router = APIRouter()
 
 class DeviceInfo(BaseModel):
-    ram: float | None
+    ram: int | None
     cores: int | None
     arch: str | None
     os: str | None
