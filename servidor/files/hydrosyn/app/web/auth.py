@@ -42,7 +42,7 @@ async def recover_password_get(request: Request):
 
 
 @router.post("/login", response_class=HTMLResponse)
-async def recover_password_post(request: Request,username: str = Form(...), email: str = Form(...)):
+async def login_post(request: Request, username: str = Form(...), password: str = Form(...)):
     try:
         prefs = get_user_preferences(request)
     except ValueError as e:
