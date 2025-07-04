@@ -10,8 +10,6 @@ CREATE TABLE users (
 
 
 
-    failed_login_attempts INT UNSIGNED NOT NULL DEFAULT 0,
-  lockout_until TIMESTAMP  DEFAULT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by INT UNSIGNED NOT NULL,
      language ENUM('es', 'en') NOT NULL DEFAULT 'en',
@@ -188,6 +186,8 @@ CREATE TABLE login_attempts (
     gpu_info VARCHAR(128) NULL,
     device_os VARCHAR(64) NULL,
     recovery BOOLEAN NOT NULL,
+    page VARCHAR(64) NOT NULL,          
+    http_method ENUM('GET', 'POST') NOT NULL,
     CONSTRAINT fk_login_attempts_user
         FOREIGN KEY (user_id)
         REFERENCES users(id)
