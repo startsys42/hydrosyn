@@ -8,7 +8,7 @@ from security.secrets import get_most_recent_password, load_master_data
 from security.keys import CookieKeyManager
 from db.db_config import get_cookie_rotation_time_from_db, get_old_cookie_token_limit_hour_from_db, get_jwt_rotation_time_from_db
 from db.db_engine import DBEngine
-from security.middleware_web import DualSessionMiddleware
+from security.middleware_web import AdvancedSessionMiddleware
 from dotenv import load_dotenv
 from security.keys import JWTKeyManager
 
