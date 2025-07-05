@@ -68,7 +68,7 @@ async def collect_device_info(request: Request):
             f"Error: {str(e)}"
         )
 
-     insert_login_attempts_to_db(
+    insert_login_attempts_to_db(
             user_id=None,  
             ip_address=client_ip,
             success=False,  # O False si es un intento fallido
