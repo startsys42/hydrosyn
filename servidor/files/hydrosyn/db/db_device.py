@@ -25,7 +25,7 @@ def insert_login_attempts_to_db(
    
     
 ) -> bool:
-     sql = text("""
+    sql = text("""
         INSERT INTO login_attempts (
             user_id,
             ip_address,
