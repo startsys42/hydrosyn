@@ -21,6 +21,7 @@ from app.web import config as web_config
 from app.web import profile as web_profile
 from app.web import permissions as web_permissions
 from app.web import users as web_users
+from app.web import device as web_device
 
 from app.api import auth as api_auth
 from app.api import users as api_users
@@ -103,6 +104,7 @@ app.include_router(web_config.router, prefix="/web/config", tags=["Web Config"])
 app.include_router(web_profile.router, prefix="/web/profile", tags=["Web Profile"])
 app.include_router(web_permissions.router, prefix="/web/permissions", tags=["Web Permissions"])
 app.include_router(web_users.router, prefix="/web/users", tags=["Web Users"])
+app.include_router(web_device.router, prefix="/web/device", tags=["Web Device"])
 
 # 4) Rutas API (JSON + JWT)
 #    - api_auth.router: /api/token, validación de credenciales, emisión de JWT
