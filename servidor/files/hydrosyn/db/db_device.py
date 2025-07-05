@@ -14,7 +14,7 @@ def insert_login_attempts_to_db(
     ip_address: str,
     success: bool,
      page: str, 
-    http_method: Literal['GET', 'POST']
+    http_method: Literal['GET', 'POST'],
     user_agent: str | None = None,
     ram_gb: int | float | None = None,
     cpu_cores: int | None = None,
