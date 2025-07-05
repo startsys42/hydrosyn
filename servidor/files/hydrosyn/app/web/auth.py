@@ -5,6 +5,7 @@ from app.web.utils import get_user_preferences
 from fastapi.responses import PlainTextResponse
 from fastapi import Form, status
 from fastapi.responses import RedirectResponse
+from core.templates import templates
 
 
 
