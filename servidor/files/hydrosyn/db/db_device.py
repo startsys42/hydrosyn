@@ -3,7 +3,7 @@ from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from logger import logger  
-from bd.db_engine import DBEngine 
+from db.db_engine import DBEngine 
 
 
 
