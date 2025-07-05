@@ -72,15 +72,16 @@ async def collect_device_info(request: Request):
             user_id=None,  
             ip_address=client_ip,
             success=False,  # O False si es un intento fallido
+            page=html_source,
+            http_method='GET',
             user_agent=user_agent,
             ram_gb=device_info.ram,
             cpu_cores=device_info.cores,
             cpu_architecture=device_info.arch,
             gpu_info=device_info.gpu,
             device_os=device_info.os,
-            recovery = False,
-            page=html_source,
-            http_method='GET'
+            recovery = False
+           
      
         )
     # Always return empty response
