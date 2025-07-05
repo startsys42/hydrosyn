@@ -63,7 +63,7 @@ def insert_login_attempts_to_db(
         "gpu_info": gpu_info,
         "device_os": device_os,
         "recovery": recovery,
-        page": page,                     
+        "page": page,                     
         "http_method": http_method.upper()
     }
     try:
