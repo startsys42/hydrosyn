@@ -12,7 +12,7 @@ from security.middleware_web import AdvancedSessionMiddleware
 from dotenv import load_dotenv
 from security.keys import JWTKeyManager
 from events.startup import on_startup
-
+from fastapi.responses import RedirectResponse
 
 
 # Importamos routers
@@ -92,6 +92,12 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
 
+@app.get("/")
+async def root_redirect():
+    """Redirige la raíz a la página de login."""
+    
+    # Asumiendo que tu login está en /web/auth/
+    return RedirectResponse(url="/web/auth/")
 
 
 
