@@ -35,7 +35,9 @@ def insert_login_attempts_to_db(
             cpu_architecture,
             gpu_info,
             device_os,
-            recovery
+            recovery,
+            page,              
+            http_method
         ) VALUES (
             :user_id,
             :ip_address,
