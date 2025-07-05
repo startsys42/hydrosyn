@@ -56,14 +56,14 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     is_logged_in = True
                     request.state.user_id = user_id
                     if is_logged_in:
-                        if request.url.path in [ "/recover-password", "/login-two", "/recover-password-two","/"]:
+                        if request.url.path in [ "/recover-password", "/login-two", "/recover-password-two","/","/login" ]:
                             return RedirectResponse(url="/dashboard")  # o la ruta del home de usuario
             else:
-                if request.url.path not in [ "/recover-password", "/login-two", "/recover-password-two","/"]:
+                if request.url.path not in [ "/recover-password", "/login-two", "/recover-password-two","/","/device-info","/login" ]:
                     return RedirectResponse(url="/", status_code=303)
         else:
         # No hay sesión, permitir solo acceso a rutas públicas
-            if request.url.path not in [ "/recover-password", "/login-two", "/recover-password-two","/"]:
+            if request.url.path not in [ "/recover-password", "/login-two", "/recover-password-two","/","/device-info","/login" ]:
                 return RedirectResponse(url="/", status_code=303)
         
    
