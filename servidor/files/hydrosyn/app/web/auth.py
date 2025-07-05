@@ -12,7 +12,7 @@ from core.templates import templates
 router = APIRouter()
 
 
-@router.get("/", response_class=HTMLResponse)
+@router.get("/login", response_class=HTMLResponse)
 async def login_get(request: Request):
     try:
         prefs = get_user_preferences(request)
