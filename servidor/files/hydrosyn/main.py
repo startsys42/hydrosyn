@@ -74,9 +74,7 @@ cookie_key_manager = CookieKeyManager(
 jwt_key_manager = JWTKeyManager(get_rotation_time=get_jwt_rotation_time_from_db, get_grace_period = get_old_cookie_token_limit_hour_from_db,ttl=600)
 
 app = FastAPI()
-@app.on_event("startup")
-async def startup_event():
-    await on_startup()
+
 # 1) Middleware para sesiones (solo para rutas web) con la clave cargada desde shadow
 
 
@@ -119,3 +117,10 @@ app.include_router(api_auth.router, prefix="/api", tags=["API"])
 app.include_router(api_users.router, prefix="/api", tags=["API"])
 
 logger.info("Starting application...")
+
+@app.on_event("startup")
+async def startup_event():
+    await on_startup()
+
+
+
