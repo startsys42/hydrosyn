@@ -6,6 +6,7 @@ import uuid
 from security.email import send_email
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any
+from logger import logger
 
 # poenr httponly
 class AdvancedSessionMiddleware(BaseHTTPMiddleware):
