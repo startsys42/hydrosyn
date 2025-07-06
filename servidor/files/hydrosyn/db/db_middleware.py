@@ -51,7 +51,8 @@ def get_session_from_db(session_id: str, extend_validity: bool = True) -> dict:
                     s.created_at,
                     s.expires_at,
                     u.username,
-                    u.email
+                    u.email,
+                    u.language 
                 FROM sessions s
                 JOIN users u ON s.user_id = u.id
                 WHERE s.session_id = :session_id 
