@@ -35,16 +35,28 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     logger.warning(
                         f"Session detected from a different device for user '{session_data['username']}', possible cookie theft detected."
                     )
-                    message_text = (
-                        "Alert: Possible cookie theft detected.\n\n"
-                        f"Device Info: {request.headers.get('User-Agent')}\n"
-                        f"IP Address: {request.client.host}\n\n"
-                        "If this wasn't you, please secure your account immediately."
-                    )
+                   if session_data['language'] == 'es':
+                        message_text = (
+                            "Alerta: Posible robo de cookies detectado.\n\n"
+                            f"Información del dispositivo: {request.headers.get('User-Agent')}\n"
+                            f"Dirección IP: {request.client.host}\n\n"
+                            "Si no fuiste tú, por favor asegura tu cuenta inmediatamente."
+                        )
+                        subject = "Posible robo de cookies detectado"
+                    elif:
+                        message_text = (
+                            "Alert: Possible cookie theft detected.\n\n"
+                            f"Device Info: {request.headers.get('User-Agent')}\n"
+                            f"IP Address: {request.client.host}\n\n"
+                            "If this wasn't you, please secure your account immediately."
+                        )
+                        subject = "Possible cookie theft detected"
+
+
                     send_email(
                         sender="tu-correo@gmail.com",
                         to=session_data['email'],
-                        subject="Possible cookie theft detected",
+                        subject=subject,
                         message_text=message_text
                     )
     
