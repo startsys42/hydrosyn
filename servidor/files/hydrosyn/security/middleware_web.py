@@ -76,7 +76,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     return RedirectResponse(url="/web/auth/login", status_code=303)
         else:
         # No hay sesión, permitir solo acceso a rutas públicas
-            if request.url.path not in ["/web/device/device-info","/web/auth/login" , "/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/"]:
+            if request.url.path not in ["/web/device/device-info","/web/auth/login" , "/web/auth/recover-password","/"]:
                 return RedirectResponse(url="/web/auth/login", status_code=303)
         
    
