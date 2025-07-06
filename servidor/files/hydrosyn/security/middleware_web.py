@@ -49,7 +49,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     )
     
                     delete_session_from_db(session_id)
-                    return RedirectResponse(url="/", status_code=303)
+                    return RedirectResponse(url="/web/auth/login", status_code=303)
                 
                 else:
                     # 2. Si todo coincide, usuario está autenticado
@@ -61,11 +61,11 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                             return RedirectResponse(url="/dashboard")  # o la ruta del home de usuario
             else:
                 if request.url.path not in [ "/web/device/device-info","/web/auth/login" ,"/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/"]:
-                    return RedirectResponse(url="/", status_code=303)
+                    return RedirectResponse(url="/web/auth/login", status_code=303)
         else:
         # No hay sesión, permitir solo acceso a rutas públicas
             if request.url.path not in ["/web/device/device-info","/web/auth/login" , "/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/"]:
-                return RedirectResponse(url="/", status_code=303)
+                return RedirectResponse(url="/web/auth/login", status_code=303)
         
    
     
