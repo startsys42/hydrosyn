@@ -97,7 +97,7 @@ async def root_redirect():
     """Redirige la raíz a la página de login."""
     
     # Asumiendo que tu login está en /web/auth/
-    return RedirectResponse(url="/web/auth/", status_code=302)
+    return RedirectResponse(url="/web/auth/login", status_code=302)
 
 
 
