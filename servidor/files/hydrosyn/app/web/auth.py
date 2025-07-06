@@ -6,7 +6,7 @@ from fastapi.responses import PlainTextResponse
 from fastapi import Form, status
 from fastapi.responses import RedirectResponse
 from templates.templates import templates
-
+from logger import logger
 
 
 router = APIRouter()
