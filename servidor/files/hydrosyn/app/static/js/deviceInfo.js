@@ -48,22 +48,25 @@ function overrideGlobalFetch() {
   const originalFetch = window.fetch;
   
   window.fetch = async function(url, options = {}) {
-    const deviceInfo = getDeviceInfo();
-    
-    const newOptions = {
-      ...options,
-      headers: {
-        ...options.headers,
-        'X-Device-RAM': deviceInfo.ram,
-        'X-Device-CPU-Cores': deviceInfo.cores,
-        'X-Device-CPU-Arch': deviceInfo.arch,
-        'X-Device-GPU': deviceInfo.gpu,
-        'X-Device-OS': deviceInfo.os
-      }
-    };
-    
-    return originalFetch(url, newOptions);
+  const deviceInfo = getDeviceInfo();
+  const currentUrl = window.location.pathname; // solo ruta actual
+
+  const newOptions = {
+    ...options,
+    headers: {
+      ...options.headers,
+      'X-Device-RAM': deviceInfo.ram,
+      'X-Device-CPU-Cores': deviceInfo.cores,
+      'X-Device-CPU-Arch': deviceInfo.arch,
+      'X-Device-GPU': deviceInfo.gpu,
+      'X-Device-OS': deviceInfo.os,
+      'X-Origin-Path': currentUrl,    // <-- Aquí agregas la ruta de origen
+    }
   };
+
+  return originalFetch(url, newOptions);
+};
+
 }
 
 // Inicialización cuando el DOM esté listo
