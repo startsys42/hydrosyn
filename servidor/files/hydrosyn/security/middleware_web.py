@@ -75,7 +75,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     # 2. Si todo coincide, usuario está autenticado
                     user_id = session_data['user_id']
                     is_logged_in = True
-                    request.state.user_id = user_id
+                    #request.state.user_id = user_id
                     if is_logged_in:
                         if request.url.path in [ "/web/auth/login","/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/"]:
                             return RedirectResponse(url="/dashboard")  # o la ruta del home de usuario
