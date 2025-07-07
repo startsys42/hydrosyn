@@ -218,23 +218,23 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         return hashlib.sha256(device_str.encode()).hexdigest()
 
     async def _get_valid_session_id(self, request: Request, current_key: str, old_key: str) -> Optional[str]:
-    session_cookie = request.cookies.get("session_id")
-    if not session_cookie:
-        return None  # No existe la cookie
+        session_cookie = request.cookies.get("session_id")
+        if not session_cookie:
+            return None
 
-    try:
-        signer = Signer(current_key)
-        data_str = signer.unsign(session_cookie).decode()
-        data = json.loads(data_str)
-        return data.get("session_id")
-    except (BadSignature, json.JSONDecodeError):
-        if old_key:
-            try:
-                old_signer = Signer(old_key)
-                data_str = old_signer.unsign(session_cookie).decode()
-                data = json.loads(data_str)
-                return data.get("session_id")
-            except (BadSignature, json.JSONDecodeError):
-                return None  # Cookie inválida o malformada
-        return None
+        try:
+            signer = Signer(current_key)
+            data_str = signer.unsign(session_cookie).decode()
+            data = json.loads(data_str)
+            return data.get("session_id")
+        except (BadSignature, json.JSONDecodeError):
+            if old_key:
+                try:
+                    old_signer = Signer(old_key)
+                    data_str = old_signer.unsign(session_cookie).decode()
+                    data = json.loads(data_str)
+                    return data.get("session_id")
+                except (BadSignature, json.JSONDecodeError):
+                    return None
+            return None
  
