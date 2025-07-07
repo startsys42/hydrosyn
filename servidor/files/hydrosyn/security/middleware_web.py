@@ -83,8 +83,16 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         else:
         # No hay sesión, permitir solo acceso a rutas públicas
             # creamos una sesion, regisramos sesion y dirigimos
+            response = Response()
+    await self._create_new_session(request, response, self.key_manager.get_current_key())
             if request.url.path not in ["/web/device/device-info","/web/auth/login" , "/web/auth/recover-password","/"]:
                 return RedirectResponse(url="/web/auth/login", status_code=303)
+            # 3. Procesar la petición normal
+    inner_response = await call_next(request)
+    
+    # 4. Combinar la respuesta con la cookie de sesión
+    inner_response.headers.update(response.headers)
+    return inner_response
         
    
     
