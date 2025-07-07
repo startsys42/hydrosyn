@@ -36,75 +36,71 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         client_ip = request.client.host or "unknown"
         user_agent = request.headers.get("user-agent", "unknown")
         html_source = get_html_source(request)
-        if session_id and session_data:      
+        if session_id and session_data:
             if method == "POST":
                 current_device_fingerprint = self._get_device_fingerprint(request)
                 try:
                     headers = request.headers
+                    device_data = {
+                        "ram": headers.get("x-device-ram"),
+                        "cores": headers.get("x-device-cpu-cores"),
+                        "arch": headers.get("x-device-cpu-arch"),
+                        "gpu": headers.get("x-device-gpu"),
+                        "os": headers.get("x-device-os"),
+                    }
 
-    device_data = {
-        "ram": headers.get("x-device-ram"),
-        "cores": headers.get("x-device-cpu-cores"),
-        "arch": headers.get("x-device-cpu-arch"),
-        "gpu": headers.get("x-device-gpu"),
-        "os": headers.get("x-device-os"),
-    }
+                    clean_data = {k: v for k, v in device_data.items() 
+                                if v is not None and k in DeviceInfo.__fields__}
+                    device_info = DeviceInfo(**clean_data)
 
-    clean_data = {k: v for k, v in device_data.items() if v is not None and k in DeviceInfo.__fields__}
-    device_info = DeviceInfo(**clean_data)
+                    origin_path = headers.get("x-origin-path", "unknown")
 
-    origin_path = headers.get("x-origin-path", "unknown")
-
-    logger.info(
-        "Device Info Collected\n"
-        f"IP: {client_ip}\n"
-        f"User-Agent: {user_agent}\n"
-        f"Origin Path: {origin_path}\n"
-        f"Device Data: {device_info.dict(exclude_none=True)}"
-    )
-
-    # Aquí tu lógica para guardar en BD o lo que quieras hacer
-
-except Exception as e:
-    logger.warning(
-        "Failed to process device info\n"
-        f"IP: {client_ip}\n"
-        f"User-Agent: {user_agent}\n"
-        f"Error: {str(e)}"
-    )
-                                if path != "/web/device/device-info":
-                    else:    
-                if session_data['summary'] != current_device_fingerprint:
-                    logger.warning(f"Session detected from a different device for user '{session_data['username']}', possible cookie theft detected.")
-
-                    if session_data['language'] == 'es':
-                        message_text = (
+                    logger.info(
+                        "Device Info Collected\n"
+                        f"IP: {client_ip}\n"
+                        f"User-Agent: {user_agent}\n"
+                        f"Origin Path: {origin_path}\n"
+                        f"Device Data: {device_info.dict(exclude_none=True)}"
+                    )
+                    if path == "/web/device/device-info":
+                        method="GET"
+                    if session_data['summary'] != current_device_fingerprint:
+                        logger.warning(f"Session detected from a different device for user '{session_data['username']}', possible cookie theft detected.")
+                        if session_data['language'] == 'es':
+                            message_text = (
                             "Alerta: Posible robo de cookies detectado.\n\n"
                             f"Información del dispositivo: {request.headers.get('User-Agent')}\n"
                             f"Dirección IP: {request.client.host}\n\n"
                             "Si no fuiste tú, por favor asegura tu cuenta inmediatamente."
-                        )
-                        subject = "Posible robo de cookies detectado"
-                    else:  # <- aquí corregí el elif vacío
-                        message_text = (
+                            )
+                            subject = "Posible robo de cookies detectado"
+                       
+                        else:  # <- aquí corregí el elif vacío
+                            message_text = (
                             "Alert: Possible cookie theft detected.\n\n"
                             f"Device Info: {request.headers.get('User-Agent')}\n"
                             f"IP Address: {request.client.host}\n\n"
                             "If this wasn't you, please secure your account immediately."
-                        )
-                        subject = "Possible cookie theft detected"
+                            )
+                            subject = "Possible cookie theft detected"
 
-                    send_email(
+                        send_email(
                         sender="tu-correo@gmail.com",
                         to=session_data['email'],
                         subject=subject,
                         message_text=message_text
                     )
 
-                    delete_session_from_db(session_id)
+                        delete_session_from_db(session_id)
                     
                             
-                    return RedirectResponse(url="/web/auth/login", status_code=303)
+                        return RedirectResponse(url="/web/auth/login", status_code=303)
+                       
+
+                    
+
+            
+                    
                 else:
                      user_id = session_data['user_id']
                     is_logged_in = True
@@ -115,47 +111,36 @@ except Exception as e:
                     if is_logged_in:
                         if request.url.path in [ "/web/auth/login","/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/"]:
                             return RedirectResponse(url="/web/home/home")  # o la ruta del home de usuario
+
+                except Exception as e:
+                    logger.warning(
+                        "Failed to process device info\n"
+                        f"IP: {client_ip}\n"
+                        f"User-Agent: {user_agent}\n"
+                        f"Error: {str(e)}"
+                    )
+        
+                                    
+                
       
         else:
         # No hay sesión, permitir solo acceso a rutas públicas
             # creamos una sesion, regisramos sesion y dirigimos
             response = Response()
-    await self._create_new_session(request, response, self.key_manager.get_current_key())
+            await self._create_new_session(request, response, self.key_manager.get_current_key())
             if request.url.path not in ["/web/device/device-info","/web/auth/login" , "/web/auth/recover-password","/"]:
                 return RedirectResponse(url="/web/auth/login", status_code=303)
-            # 3. Procesar la petición normal
-    inner_response = await call_next(request)
-    
-    # 4. Combinar la respuesta con la cookie de sesión
-    inner_response.headers.update(response.headers)
-    return inner_response
-        
-   
-    
-        
-            
 
-           
-    
-    
-    
-                
-        
-        
- 
+            inner_response = await call_next(request)
+            inner_response.headers.update(response.headers)
+            return inner_response
 
-        ##BLOQUEAR ACCESOS
-        
-        # 5. Procesar la petición principal
         response = await call_next(request)
-        
-       
-        
         return response
 
 
 
-def get_html_source(request: Request) -> str:
+    def get_html_source(request: Request) -> str:
     """Extrae el nombre del HTML desde el Referer header"""
     referer = request.headers.get("referer", "")
     if not referer:
