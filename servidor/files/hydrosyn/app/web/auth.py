@@ -148,3 +148,18 @@ async def recover_password_post(request: Request, email: str = Form(...)):
         "next_theme": prefs["next_theme"],
         "message": mensaje
     })
+
+@router.get("/home", response_class=HTMLResponse)
+async def login_get(request: Request):
+    try:
+        prefs = get_user_preferences(request)
+    except ValueError as e:
+        return PlainTextResponse(str(e), status_code=400)
+
+    return templates.TemplateResponse("home.html", {
+        "request": request,
+        "texts": prefs["texts"],
+        "lang": prefs["lang"],
+        "theme": prefs["theme"],
+      
+    })
