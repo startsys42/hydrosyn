@@ -33,14 +33,14 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         session_data = get_session_from_db(session_id)
         path = request.url.path
         method = request.method
-client_ip = request.client.host or "unknown"
-    user_agent = request.headers.get("user-agent", "unknown")
-    html_source = get_html_source(request)
+        client_ip = request.client.host or "unknown"
+        user_agent = request.headers.get("user-agent", "unknown")
+        html_source = get_html_source(request)
         if session_id and session_data:      
             if method == "POST":
                 current_device_fingerprint = self._get_device_fingerprint(request)
-try:
-    headers = request.headers
+                try:
+                    headers = request.headers
 
     device_data = {
         "ram": headers.get("x-device-ram"),
