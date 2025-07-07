@@ -9,9 +9,11 @@ import json
 from urllib.parse import urlparse
 from security.email import send_email
 from datetime import datetime, timedelta
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any,Union
 from logger import logger
 from db.db_middleware import get_session_id_exists_from_db
+from pydantic import BaseModel
+
 
 
 class DeviceInfo(BaseModel):
@@ -39,7 +41,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         method = request.method
         client_ip = request.client.host or "unknown"
         user_agent = request.headers.get("user-agent", "unknown")
-        html_source = self.get_html_source(request)
+        html_source = self._get_html_source(request)
         if session_id and session_data:
             if method == "POST":
                 current_device_fingerprint = self._get_device_fingerprint(request)
@@ -144,7 +146,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
 
 
 
-    def get_html_source(request: Request) -> str:
+    def _get_html_source(self,request: Request) -> str:
     """Extrae el nombre del HTML desde el Referer header"""
     referer = request.headers.get("referer", "")
     if not referer:
