@@ -111,7 +111,14 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
 
     async def _create_new_session(self, request: Request, response: Response, current_key: str) -> Response:
         """Crea una nueva sesión después de login exitoso"""
-        session_id = secrets.token_hex(64)
+        while True:
+            session_id = secrets.token_hex(64)
+
+        # Consulta si session_id existe en la base de datos
+            exists = await self.db_handler.session_exists(session_id)
+            if not exists:
+                break
+        
         days = get_cookie_expired_time_from_db()
         expires_at = datetime.utcnow() + timedelta(days=days)  # 30 días de validez
         
@@ -124,27 +131,24 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
             ip=request.client.host
         )
         
-        # 2. Actualizar preferencias en BD si cambiaron
-        if hasattr(request.state, 'updated_prefs'):
-            self.db_handler.update_user_preferences(
-                request.state.user_id,
-                request.state.updated_prefs
-            )
+        
         
         # 3. Establecer cookie de sesión
-        signed_session = Signer(current_key).sign(session_id.encode()).decode()
+        data_str = json.dumps(data)
+
+# Firmar
+        signed_data = Signer(current_key).sign(data_str.encode()).decode()
         response.set_cookie(
             key="session_id",
-            value=signed_session,
+            value=signed_data,
             httponly=True,
             secure=True,
+            path="/",  
             samesite="Lax",
             max_age=days *86400  
         )
         
-        # 4. Limpiar cookies de guest si existían
-        response.delete_cookie("guest_theme")
-        response.delete_cookie("guest_language")
+ 
         
         return response
 
