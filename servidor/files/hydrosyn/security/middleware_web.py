@@ -3,6 +3,10 @@ from starlette.requests import Request
 from starlette.responses import Response, RedirectResponse
 from itsdangerous import Signer, BadSignature
 import uuid
+import hashlib
+import secrets
+import json
+from urllib.parse import urlparse
 from security.email import send_email
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any
@@ -110,7 +114,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                    
                     if is_logged_in:
                         if request.url.path in [ "/web/auth/login","/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/"]:
-                            return RedirectResponse(url="/web/home/home")  # o la ruta del home de usuario
+                            return RedirectResponse(url="/web/auth/home")  # o la ruta del home de usuario
 
                 except Exception as e:
                     logger.warning(
