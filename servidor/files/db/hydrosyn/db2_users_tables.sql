@@ -176,6 +176,7 @@ INSERT INTO username_blacklist (username) VALUES
 CREATE TABLE login_attempts (
     id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     user_id INT UNSIGNED NULL,
+    session_id VARCHAR(128) NOT NULL,
     attempt_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ip_address VARCHAR(39) NOT NULL,
     success BOOLEAN NOT NULL,
