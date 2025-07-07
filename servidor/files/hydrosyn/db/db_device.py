@@ -10,10 +10,11 @@ from db.db_engine import DBEngine
 
 
 def insert_login_attempts_to_db(
+    session_id: str, 
     user_id: int | None,
     ip_address: str,
     success: bool,
-     page: str, 
+    page: str, 
     http_method: Literal['GET', 'POST'],
     user_agent: str | None = None,
     ram_gb: int | float | None = None,
@@ -27,7 +28,8 @@ def insert_login_attempts_to_db(
 ) -> bool:
     sql = text("""
         INSERT INTO login_attempts (
-            user_id,
+            user_id,,
+            session_id,
             ip_address,
             success,
             user_agent,
@@ -41,6 +43,7 @@ def insert_login_attempts_to_db(
             http_method
         ) VALUES (
             :user_id,
+            :session_id
             :ip_address,
             :success,
             :user_agent,
@@ -56,6 +59,7 @@ def insert_login_attempts_to_db(
     """)
     
     params = {
+        "session_id":session_id,
         "user_id": user_id,
         "ip_address": ip_address,
         "success": success,
