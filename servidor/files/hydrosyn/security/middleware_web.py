@@ -95,7 +95,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         to=session_data['email'],
                         subject=subject,
                         message_text=message_text
-                    )
+                         )
 
                         delete_session_from_db(session_id)
                     
@@ -107,16 +107,16 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
 
             
                     
-                else:
-                     user_id = session_data['user_id']
-                    is_logged_in = True
-                    request.state.user_id = user_id
+                    else:
+                        user_id = session_data['user_id']
+                        is_logged_in = True
+                        request.state.user_id = user_id
 
                     # 2. Si todo coincide, usuario está autenticado
                    
-                    if is_logged_in:
-                        if request.url.path in [ "/web/auth/login","/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/"]:
-                            return RedirectResponse(url="/web/auth/home")  # o la ruta del home de usuario
+                        if is_logged_in:
+                            if request.url.path in [ "/web/auth/login","/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/"]:
+                                return RedirectResponse(url="/web/auth/home")  # o la ruta del home de usuario
 
                 except Exception as e:
                     logger.warning(
@@ -147,20 +147,20 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
 
 
     def _get_html_source(self,request: Request) -> str:
-    """Extrae el nombre del HTML desde el Referer header"""
-    referer = request.headers.get("referer", "")
-    if not referer:
-        return "unknown"
+        referer = request.headers.get("referer", "")
+        if not referer:
+            return "unknown"
     
-    try:
+        try:
    
-        parsed = urlparse(referer)
-        path = parsed.path
-        if path.endswith(".html"):
-            return path.split("/")[-1]  # Devuelve "formulario.html"
-        return "non_html_page"
-    except:
-        return "invalid_referer"
+            parsed = urlparse(referer)
+            path = parsed.path
+            if path.endswith(".html"):
+                return path.split("/")[-1]  # Devuelve "formulario.html"
+            return "non_html_page"
+        except:
+            return "invalid_referer"
+  
         
  
 
