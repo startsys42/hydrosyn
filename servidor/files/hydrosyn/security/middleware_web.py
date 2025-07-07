@@ -17,33 +17,67 @@ class DeviceInfo(BaseModel):
     os: Optional[str] = None
     gpu: Optional[str] = None
 
-# poenr httponly
 class AdvancedSessionMiddleware(BaseHTTPMiddleware):
     def __init__(self, app, key_manager):
         super().__init__(app)
         self.key_manager = key_manager
 
-
     async def dispatch(self, request: Request, call_next) -> Response:
         # 1. Obtener claves actuales para verificación
         current_key, old_key = self.key_manager.get_keys()
-        
+
         # 2. Verificar sesión existente
         session_id = await self._get_valid_session_id(request, current_key, old_key)
         user_id = None
         is_logged_in = False
         session_data = get_session_from_db(session_id)
-        if session_id and session_data:
-           
-       
-                # Verificar si la sesión es de ESTE dispositivo
+        path = request.url.path
+        method = request.method
+client_ip = request.client.host or "unknown"
+    user_agent = request.headers.get("user-agent", "unknown")
+    html_source = get_html_source(request)
+        if session_id and session_data:      
+            if method == "POST":
                 current_device_fingerprint = self._get_device_fingerprint(request)
-        
-                if session_data['summary'] != current_device_fingerprint:  # ⬅️ Comparación clave
-                    logger.warning(
-                        f"Session detected from a different device for user '{session_data['username']}', possible cookie theft detected."
-                    )
-                   if session_data['language'] == 'es':
+try:
+    headers = request.headers
+
+    device_data = {
+        "ram": headers.get("x-device-ram"),
+        "cores": headers.get("x-device-cpu-cores"),
+        "arch": headers.get("x-device-cpu-arch"),
+        "gpu": headers.get("x-device-gpu"),
+        "os": headers.get("x-device-os"),
+    }
+
+    clean_data = {k: v for k, v in device_data.items() if v is not None and k in DeviceInfo.__fields__}
+    device_info = DeviceInfo(**clean_data)
+
+    origin_path = headers.get("x-origin-path", "unknown")
+
+    logger.info(
+        "Device Info Collected\n"
+        f"IP: {client_ip}\n"
+        f"User-Agent: {user_agent}\n"
+        f"Origin Path: {origin_path}\n"
+        f"Device Data: {device_info.dict(exclude_none=True)}"
+    )
+
+    # Aquí tu lógica para guardar en BD o lo que quieras hacer
+
+except Exception as e:
+    logger.warning(
+        "Failed to process device info\n"
+        f"IP: {client_ip}\n"
+        f"User-Agent: {user_agent}\n"
+        f"Error: {str(e)}"
+    )
+                                if path != "/web/device/device-info":
+                    else:    
+                if session_data['summary'] != current_device_fingerprint:
+                    logger.warning(f"Session detected from a different device for user '{session_data['username']}', possible cookie theft detected.")
+
+                    if session_data['language'] == 'es':
                         message_text = (
                             "Alerta: Posible robo de cookies detectado.\n\n"
                             f"Información del dispositivo: {request.headers.get('User-Agent')}\n"
@@ -51,7 +85,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                             "Si no fuiste tú, por favor asegura tu cuenta inmediatamente."
                         )
                         subject = "Posible robo de cookies detectado"
-                    elif:
+                    else:  # <- aquí corregí el elif vacío
                         message_text = (
                             "Alert: Possible cookie theft detected.\n\n"
                             f"Device Info: {request.headers.get('User-Agent')}\n"
@@ -60,25 +94,27 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         )
                         subject = "Possible cookie theft detected"
 
-
                     send_email(
                         sender="tu-correo@gmail.com",
                         to=session_data['email'],
                         subject=subject,
                         message_text=message_text
                     )
-    
+
                     delete_session_from_db(session_id)
+                    
+                            
                     return RedirectResponse(url="/web/auth/login", status_code=303)
-                
                 else:
-                    # 2. Si todo coincide, usuario está autenticado
-                    user_id = session_data['user_id']
+                     user_id = session_data['user_id']
                     is_logged_in = True
-                    #request.state.user_id = user_id
+                    request.state.user_id = user_id
+
+                    # 2. Si todo coincide, usuario está autenticado
+                   
                     if is_logged_in:
                         if request.url.path in [ "/web/auth/login","/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/"]:
-                            return RedirectResponse(url="/dashboard")  # o la ruta del home de usuario
+                            return RedirectResponse(url="/web/home/home")  # o la ruta del home de usuario
       
         else:
         # No hay sesión, permitir solo acceso a rutas públicas
@@ -149,56 +185,13 @@ def get_html_source(request: Request) -> str:
         
         days = get_cookie_expired_time_from_db()
         expires_at = datetime.utcnow() + timedelta(days=days)  # 30 días de validez
-        client_ip = request.client.host or "unknown"
-    user_agent = request.headers.get("user-agent", "unknown")
-    html_source = get_html_source(request)
-    device_info = None
-    try:
-        # Safely extract JSON (empty dict if invalid)
-        data = await request.json() if await request.body() else {}
-        
-        # Filter only valid fields we care about
-        clean_data = {k: v for k, v in data.items() if k in DeviceInfo.__fields__}
-        device_info = DeviceInfo(**clean_data)
-        
-        # Log everything important
-        logger.info(
-            "Device Info Collected\n"
-            f"IP: {client_ip}\n"
-            f"User-Agent: {user_agent}\n"
-            f"Data: {device_info.dict(exclude_none=True)}"  # Only show provided fields
-        )
-        
-        # Here you would add database storage logic
-        # await store_to_database(device_info, client_ip, user_agent)
-        
-    except Exception as e:
-        logger.warning(
-            "Failed to process device info\n"
-            f"IP: {client_ip}\n"
-            f"User-Agent: {user_agent}\n"
-            f"Error: {str(e)}"
-        )
-
-    insert_login_attempts_to_db(
-            user_id=None,  
-            ip_address=client_ip,
-            success=False,  # O False si es un intento fallido
-            page=html_source,
-            http_method='GET',
-            user_agent=user_agent,
-            ram_gb=device_info.ram,
-            cpu_cores=device_info.cores,
-            cpu_architecture=device_info.arch,
-            gpu_info=device_info.gpu,
-            device_os=device_info.os,
-            recovery = False
-           
-     
-        )
        
         
-        
+        data = {
+            "session_id": session_id,
+            "language": "en",
+            "theme": "light"
+        }
         
         # 3. Establecer cookie de sesión
         data_str = json.dumps(data)
@@ -236,22 +229,23 @@ def get_html_source(request: Request) -> str:
         return hashlib.sha256(device_str.encode()).hexdigest()
 
     async def _get_valid_session_id(self, request: Request, current_key: str, old_key: str) -> Optional[str]:
-        session_cookie = request.cookies.get("session_id")
-        if not session_cookie:
-            return None  # No existe la cookie
+    session_cookie = request.cookies.get("session_id")
+    if not session_cookie:
+        return None  # No existe la cookie
 
-        try:
-            # Intentar con la clave actual
-            signer = Signer(current_key)
-            return signer.unsign(session_cookie).decode()
-        except BadSignature:
-            if old_key:
-                try:
-                    old_signer = Signer(old_key)
-                    return old_signer.unsign(session_cookie).decode()
-                except BadSignature:
-                    return None  # Cookie inválida
-            return None
-    
- 
+    try:
+        signer = Signer(current_key)
+        data_str = signer.unsign(session_cookie).decode()
+        data = json.loads(data_str)
+        return data.get("session_id")
+    except (BadSignature, json.JSONDecodeError):
+        if old_key:
+            try:
+                old_signer = Signer(old_key)
+                data_str = old_signer.unsign(session_cookie).decode()
+                data = json.loads(data_str)
+                return data.get("session_id")
+            except (BadSignature, json.JSONDecodeError):
+                return None  # Cookie inválida o malformada
+        return None
  
