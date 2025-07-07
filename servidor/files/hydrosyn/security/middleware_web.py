@@ -24,11 +24,10 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         session_id = await self._get_valid_session_id(request, current_key, old_key)
         user_id = None
         is_logged_in = False
-        
-        if session_id:
-            session_data = get_session_from_db(session_id)
-            # 3. Validar sesión en BD si existe
-            if session_data:
+        session_data = get_session_from_db(session_id)
+        if session_id and session_data:
+           
+       
                 # Verificar si la sesión es de ESTE dispositivo
                 current_device_fingerprint = self._get_device_fingerprint(request)
         
@@ -72,9 +71,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     if is_logged_in:
                         if request.url.path in [ "/web/auth/login","/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/"]:
                             return RedirectResponse(url="/dashboard")  # o la ruta del home de usuario
-            else:
-                if request.url.path not in [ "/web/device/device-info","/web/auth/login" ,"/web/auth/recover-password", "/"]:
-                    return RedirectResponse(url="/web/auth/login", status_code=303)
+      
         else:
         # No hay sesión, permitir solo acceso a rutas públicas
             # creamos una sesion, regisramos sesion y dirigimos
