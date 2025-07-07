@@ -23,6 +23,25 @@ def get_cookie_expired_time_from_db() -> int:
     logger.info(f"Using default cookie  expired time: 30 days")
     return 30
 
+def get_session_id_exists_from_db(session_id: str) -> bool:
+    """
+    Verifica si session_id existe en login_attempts o sessions.
+    Devuelve True si existe, False si no.
+    """
+    try:
+        with DBEngine.get_engine().connect() as conn:
+            query_login = text("SELECT 1 FROM login_attempts WHERE session_id = :session_id LIMIT 1")
+            if conn.execute(query_login, {"session_id": session_id}).fetchone():
+                return True
+
+            query_sessions = text("SELECT 1 FROM sessions WHERE session_id = :session_id LIMIT 1")
+            if conn.execute(query_sessions, {"session_id": session_id}).fetchone():
+                return True
+
+    except Exception as e:
+        logger.error(f"Error checking session_id existence: {e}")
+
+    return False
 
 def get_session_from_db(session_id: str, extend_validity: bool = True) -> dict:
     """
