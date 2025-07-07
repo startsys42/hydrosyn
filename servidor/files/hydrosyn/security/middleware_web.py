@@ -7,6 +7,7 @@ from security.email import send_email
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any
 from logger import logger
+from db.db_middleware import get_session_id_exists_from_db
 
 # poenr httponly
 class AdvancedSessionMiddleware(BaseHTTPMiddleware):
@@ -115,7 +116,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
             session_id = secrets.token_hex(64)
 
         # Consulta si session_id existe en la base de datos
-            exists = await self.db_handler.session_exists(session_id)
+            exists = await get_session_id_exists_from_db(session_id)
             if not exists:
                 break
         
