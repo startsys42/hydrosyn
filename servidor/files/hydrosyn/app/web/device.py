@@ -8,6 +8,7 @@ from db.db_device import insert_login_attempts_to_db
 
 
 router = APIRouter()
+'''
 class DeviceInfo(BaseModel):
     ram: Optional[Union[int, float]] = None
     cores: Optional[int] = None
@@ -32,11 +33,11 @@ def get_html_source(request: Request) -> str:
     except:
         return "invalid_referer"
         
-
+'''
 
 @router.post("/device-info")
 async def collect_device_info(request: Request):
-
+'''
     client_ip = request.client.host or "unknown"
     user_agent = request.headers.get("user-agent", "unknown")
     html_source = get_html_source(request)
@@ -85,5 +86,6 @@ async def collect_device_info(request: Request):
      
         )
     # Always return empty response
+    '''
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
