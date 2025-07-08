@@ -128,7 +128,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         
                                     
                 
-      
+        elif session_id and not session_data:
         else:
         # No hay sesión, permitir solo acceso a rutas públicas
             # creamos una sesion, regisramos sesion y dirigimos
