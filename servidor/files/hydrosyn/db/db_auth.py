@@ -1,18 +1,19 @@
 from sqlalchemy import text
-from sqlalchemy.exc import IntegrityError, SQLAlchemyError
-from db.db_engine import DBEngine  # Asumo que tienes DBEngine con método get_engine()
+from sqlalchemy.ext.asyncio import AsyncConnection
+from db.db_engine import DBEngine  # Asegúrate que retorna AsyncEngine
 from logger import logger
 from datetime import datetime, timedelta
 from db.db_config import obtener_tiempo_rotacion_desde_bd
 
-def delete_session_from_db(session_id: str) -> bool:
+async def delete_session_from_db(session_id: str) -> bool:
     sql = text("""
         DELETE FROM sessions WHERE session_id = :session_id
     """)
+    engine = DBEngine.get_engine()
     try:
-        with get_engine().connect() as conn:
-            result = conn.execute(sql, {"session_id": session_id})
-            conn.commit()  # Commit the transaction
+        async with engine.connect() as conn:  # obtener conexión async
+            async with conn.begin():  # transacción explícita async
+                result = await conn.execute(sql, {"session_id": session_id})
             if result.rowcount > 0:
                 logger.info(f"Session deleted successfully. Session ID: {session_id}")
                 return True
@@ -23,32 +24,37 @@ def delete_session_from_db(session_id: str) -> bool:
         logger.error(f"Error deleting session with Session ID {session_id}: {e}")
         return False
 
-def email_existe(email: str) -> bool:
+
+async def email_exist(email: str) -> bool:
     sql = text("""
         SELECT 1 FROM users WHERE email = :email LIMIT 1
     """)
+    engine = DBEngine.get_engine()
     try:
-        with get_engine().connect() as conn:
-            result = conn.execute(sql, {"email": email}).fetchone()
-            return result is not None
+        async with engine.connect() as conn:
+            result = await conn.execute(sql, {"email": email})
+            row = result.fetchone()
+            return row is not None
     except Exception as e:
-        # Puedes registrar el error si usas un logger
-        print(f"Error comprobando existencia de email: {e}")
-        return False  # Por seguridad, puedes devolver False o True según tu criterio
+        logger.error(f"Error checking email existence: {e}")
+        return False  # o True si quieres bloquear en caso de error
 
 
-def is_in_blacklist(username: str) -> bool:
+async def is_in_blacklist(username: str) -> bool:
+    sql = text("""
+        SELECT 1 FROM username_blacklist WHERE username = :username LIMIT 1
+    """)
+    engine = DBEngine.get_engine()
     try:
-        with get_engine().connect() as conn:
-            result = conn.execute(
-                text("SELECT 1 FROM username_blacklist WHERE username = :username LIMIT 1"),
-                {"username": username}
-            ).fetchone()
-            return result is not None
+        async with engine.connect() as conn:
+            result = await conn.execute(sql, {"username": username})
+            row = result.fetchone()
+            return row is not None
     except Exception as e:
         logger.error(f"Error checking blacklist for {username}: {e}")
-        # For security reasons, return True to block on error
-        return True
+        return True  # Bloquear en caso de error por seguridad
+
+
 
 
 def get_user_state(username: str) -> str:
