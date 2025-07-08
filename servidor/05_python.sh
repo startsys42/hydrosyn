@@ -42,6 +42,7 @@ packages=(
   passlib
   pydantic[email]
   pymysql
+  aiomysql
   pyotp 
   qrcode[pil]
   google-api-python-client 
