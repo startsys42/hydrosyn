@@ -130,7 +130,6 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                             
                     return RedirectResponse(url="/web/auth/login", status_code=303)
                        
-
                     
 
             
