@@ -11,8 +11,9 @@ from security.email import send_email
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any,Union
 from logger import logger
-from db.db_middleware import get_session_id_exists_from_db, get_session_from_db, delete_session_from_db, insert_login_attempts_to_db 
+from db.db_middleware import get_session_id_exists_from_db, get_session_from_db, delete_session_from_db, insert_login_attempts_to_db, get_cookie_expired_time_from_db 
 from pydantic import BaseModel
+from fastapi import HTTPException
 
 
 
@@ -36,12 +37,14 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         session_id = await self._get_valid_session_id(request, current_key, old_key)
         user_id = None
         is_logged_in = False
-        session_data = get_session_from_db(session_id)
+        session_data = await get_session_from_db(session_id)
         path = request.url.path
         method = request.method
-        client_ip = request.client.host or "unknown"
+        client_ip = request.client.host if request.client else "unknown"
         user_agent = request.headers.get("user-agent", "unknown")
         html_source = self._get_html_source(request)
+        device_info = DeviceInfo()  # valor por defecto vacío
+        origin_path = "unknown" 
         if method == "POST":
                 
                 try:
@@ -74,6 +77,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         f"User-Agent: {user_agent}\n"
                         f"Error: {str(e)}"
                     )
+                    raise HTTPException(status_code=404, detail="Invalid device information")
         if session_id and session_data:
             if method == "POST":
                 if path == "/web/device/device-info":
@@ -107,7 +111,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         message_text=message_text
                     )
 
-                    insert_login_attempts_to_db(
+                    await insert_login_attempts_to_db(
                         session_id=session_id,
                         user_id=session_data['user_id'],
                         ip_address=client_ip,
@@ -125,7 +129,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
     
      
 
-                    delete_session_from_db(session_id)
+                    await delete_session_from_db(session_id)
                     # inserta con user y dats de registro
                             
                     return RedirectResponse(url="/web/auth/login", status_code=303)
@@ -142,7 +146,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         if request.url.path in [ "/web/auth/login","/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/"]:
                             return RedirectResponse(url="/web/auth/home")  # o la ruta del home de usuario
                         elif origin_path in ["/web/auth/home"]:
-                            insert_login_attempts_to_db(
+                            await insert_login_attempts_to_db(
                                 session_id=session_id,
                                 user_id=session_data['user_id'],
                                 ip_address=client_ip,
@@ -180,7 +184,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     recovery=True
                 else:
                     recovery=False
-                insert_login_attempts_to_db(
+                await insert_login_attempts_to_db(
                             session_id=session_id,
                                 ip_address=client_ip,
                                 success=False,
@@ -234,13 +238,11 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         """Crea una nueva sesión después de login exitoso"""
         while True:
             session_id = secrets.token_hex(64)
-
-        # Consulta si session_id existe en la base de datos
             exists = await get_session_id_exists_from_db(session_id)
             if not exists:
                 break
         
-        days = get_cookie_expired_time_from_db()
+        days = await get_cookie_expired_time_from_db()
         expires_at = datetime.utcnow() + timedelta(days=days)  # 30 días de validez
        
         
