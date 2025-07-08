@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
-from db.conexion import get_engine
+from db.db_engine import get_engine
 from logger import logger  # Asegúrate de tenerlo configurado
 from db.config import obtener_tiempo_rotacion_desde_bd
 
