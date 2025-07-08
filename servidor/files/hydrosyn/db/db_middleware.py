@@ -98,14 +98,14 @@ async def get_cookie_expired_time_from_db() -> int:
         async with DBEngine.get_engine().connect() as conn:
             result = await conn.execute(
                 text("SELECT  max_value FROM config WHERE id = 4")
-            ).fetchone()
+            )
 
-            if result:
-                 max_val = result
-                if max_val > 0:
-                    return int(max_val)
-                else:
-                    logger.warning(f"Cookie expired time {max_val} error. Using default.")
+            row = await result.fetchone()
+            
+            if row and row[0] > 0:  # Acceder al primer elemento de la tupla
+                return int(row[0])
+            else:
+                logger.warning(f"Cookie expired time {row[0]} error. Using default.")
     except Exception as e:
         logger.error(f"Error fetching cookie expired time : {e}")
 
@@ -121,11 +121,13 @@ async def get_session_id_exists_from_db(session_id: str) -> bool:
     try:
         async with DBEngine.get_engine().connect() as conn:
             query_login = text("SELECT 1 FROM login_attempts WHERE session_id = :session_id LIMIT 1")
-            if conn.execute(query_login, {"session_id": session_id}).fetchone():
+            result = await conn.execute(query_login, {"session_id": session_id})
+            if await result.fetchone():
                 return True
 
             query_sessions = text("SELECT 1 FROM sessions WHERE session_id = :session_id LIMIT 1")
-            if conn.execute(query_sessions, {"session_id": session_id}).fetchone():
+            result = await conn.execute(query_sessions, {"session_id": session_id})
+            if await result.fetchone():
                 return True
 
     except Exception as e:
@@ -133,7 +135,7 @@ async def get_session_id_exists_from_db(session_id: str) -> bool:
 
     return False
 
-def get_session_from_db(session_id: str, extend_validity: bool = True) -> dict:
+async def get_session_from_db(session_id: str, extend_validity: bool = True) -> dict | None:
     """
     Obtiene los datos de sesión desde la base de datos con opción de margen de validez
     
@@ -145,7 +147,7 @@ def get_session_from_db(session_id: str, extend_validity: bool = True) -> dict:
         dict: Datos de la sesión o None si no existe o está expirada
     """
     try:
-        with DBEngine.get_engine().connect() as conn:
+        async with DBEngine.get_engine().connect() as conn:
             # Consulta base con condición de expiración flexible
             query = text("""
                 SELECT 
@@ -154,7 +156,7 @@ def get_session_from_db(session_id: str, extend_validity: bool = True) -> dict:
                     s.ram_gb,
                     s.cpu_cores,
                     s.cpu_architecture,
-                    s. gpu_info,     
+                    s.gpu_info,     
                     s.device_os,
                     s.summary,
                     s.created_at,
@@ -173,18 +175,16 @@ def get_session_from_db(session_id: str, extend_validity: bool = True) -> dict:
             if extend_validity:
                 validation_time = validation_time - timedelta(days=1)  # <- Cambio clave aquí
             
-            result = conn.execute(
-                query,
-                {
-                    'session_id': session_id,
-                    'validation_time': validation_time
-                }
-            ).fetchone()
+            result = await conn.execute(query, {
+                'session_id': session_id,
+                'validation_time': validation_time
+            })
+            row = await result.fetchone()
 
-            if result:
+            if row:
                 # Convertir resultado a diccionario
-                columns = result.keys()
-                session_data = {column: result[i] for i, column in enumerate(columns)}
+                columns = row.keys()
+                session_data = {column: row[i] for i, column in enumerate(columns)}
                 
                 # Verificar si la sesión está técnicamente expirada pero dentro del margen
                 if extend_validity and session_data['expires_at'] < datetime.utcnow():
