@@ -12,7 +12,7 @@ class DBEngine:
 
         if cls._engine is None:
             try:
-                 cls._engine = create_async_engine(
+                cls._engine = create_async_engine(
                     f"mysql+aiomysql://{user}:{password}@{host}:{port}/{db_name}",
                     pool_pre_ping=True,
                     echo=False
