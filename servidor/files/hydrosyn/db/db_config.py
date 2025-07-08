@@ -11,7 +11,7 @@ async def get_cookie_rotation_time_from_db() -> int:
             result = await conn.execute(
                 text("SELECT value, min_value, max_value FROM config WHERE id = 4")
             )
-            row = result.fetchone()
+            row = await result.fetchone()
 
             if row:
                 value, min_val, max_val = row
@@ -32,7 +32,7 @@ async def get_old_cookie_token_limit_hour_from_db() -> int:
             result = await conn.execute(
                 text("SELECT value, min_value, max_value FROM config WHERE id = 7")
             )
-            row = result.fetchone()
+            row = await result.fetchone()
 
             if row:
                 value, min_val, max_val = row
@@ -56,7 +56,7 @@ async def get_jwt_rotation_time_from_db() -> tuple[int, int]:
             result = await conn.execute(
                 text("SELECT id, value, min_value, max_value FROM config WHERE id IN (5, 6)")
             )
-            rows = result.fetchall()
+            rows = await result.fetchall()
 
             access_ttl = default_access_ttl
             refresh_ttl = default_refresh_ttl
