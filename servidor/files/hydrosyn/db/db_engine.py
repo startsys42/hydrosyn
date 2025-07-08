@@ -3,9 +3,10 @@ from logger import logger
 
 class DBEngine:
     _engine: AsyncEngine = None
+
     @classmethod
     def initialize_engine(cls, user, password, host, port, db_name):
-      #  logger.info(f"Connecting to DB with: user={user}, password={'***' if password else 'EMPTY'}, host={host}, port={port}, db={db_name}")
+        # logger.info(f"Connecting to DB with: user={user}, password={'***' if password else 'EMPTY'}, host={host}, port={port}, db={db_name}")
 
         if not user or not password or not host or not port or not db_name:
             raise ValueError("All connection parameters must have a valid value.")
