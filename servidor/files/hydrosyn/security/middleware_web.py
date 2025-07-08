@@ -98,7 +98,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                          )
 
                         delete_session_from_db(session_id)
-                    
+                    # inserta con user y dats de registro
                             
                         return RedirectResponse(url="/web/auth/login", status_code=303)
                        
@@ -117,6 +117,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         if is_logged_in:
                             if request.url.path in [ "/web/auth/login","/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/"]:
                                 return RedirectResponse(url="/web/auth/home")  # o la ruta del home de usuario
+                            elif request.url.path in ["/web/auth/home"]:
 
                 except Exception as e:
                     logger.warning(
