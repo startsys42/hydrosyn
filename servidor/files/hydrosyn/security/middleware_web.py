@@ -107,28 +107,28 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         message_text=message_text
                     )
 
-                        insert_login_attempts_to_db(
-                            session_id=session_id,
-                            user_id=session_data['user_id'],
-                            ip_address=client_ip,
-                            success=False,
-                            page=path,
-                            http_method=method,
-                            user_agent=user_agent,
-                            ram_gb=float(device_info.ram) if device_info.ram else None,
-                            cpu_cores=int(device_info.cores) if device_info.cores else None,
-                            cpu_architecture=device_info.arch,
-                            gpu_info=device_info.gpu,
-                            device_os=device_info.os,
-                            recovery=False,
-                        )
+                    insert_login_attempts_to_db(
+                        session_id=session_id,
+                        user_id=session_data['user_id'],
+                        ip_address=client_ip,
+                        success=False,
+                        page=path,
+                        http_method=method,
+                        user_agent=user_agent,
+                        ram_gb=float(device_info.ram) if device_info.ram else None,
+                        cpu_cores=int(device_info.cores) if device_info.cores else None,
+                        cpu_architecture=device_info.arch,
+                        gpu_info=device_info.gpu,
+                        device_os=device_info.os,
+                        recovery=False,
+                    )
     
      
 
-                        delete_session_from_db(session_id)
+                    delete_session_from_db(session_id)
                     # inserta con user y dats de registro
                             
-                        return RedirectResponse(url="/web/auth/login", status_code=303)
+                    return RedirectResponse(url="/web/auth/login", status_code=303)
                        
 
                     
