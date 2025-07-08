@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine
 from logger import logger
 
 class DBEngine:
-     _engine: AsyncEngine = None
+    _engine: AsyncEngine = None
     @classmethod
     def initialize_engine(cls, user, password, host, port, db_name):
       #  logger.info(f"Connecting to DB with: user={user}, password={'***' if password else 'EMPTY'}, host={host}, port={port}, db={db_name}")
