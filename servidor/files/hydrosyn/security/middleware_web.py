@@ -11,7 +11,8 @@ from security.email import send_email
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any,Union
 from logger import logger
-from db.db_middleware import get_session_id_exists_from_db, get_session_from_db, delete_session_from_db, insert_login_attempts_to_db, get_cookie_expired_time_from_db 
+from db.db_middleware import get_session_id_exists_from_db, get_session_from_db,  insert_login_attempts_to_db, get_cookie_expired_time_from_db 
+from db.db_auth import delete_session_from_db
 from pydantic import BaseModel
 from fastapi import HTTPException
 
