@@ -6,5 +6,5 @@ class User:
         self.permissions = permissions
 
     def has_permission(self, perm: str) -> bool:
-        """Chequea si el usuario tiene un permiso específico."""
+      
         return perm in self.permissions
