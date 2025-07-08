@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncConnection
 from db.db_engine import DBEngine  # Asegúrate que retorna AsyncEngine
 from logger import logger
 from datetime import datetime, timedelta
-from db.db_config import obtener_tiempo_rotacion_desde_bd
+from db.db_config import get_cookie_rotation_time_from_db
 
 async def delete_session_from_db(session_id: str) -> bool:
     sql = text("""
@@ -107,7 +107,7 @@ def get_user_state(username: str) -> str:
             return "NO_2FA"
 
 def guardar_sesion_en_bd(user_id: int, session_id: str, clave: str, user_agent: str, ip: str):
-    segundos_validez = obtener_tiempo_rotacion_desde_bd()
+    segundos_validez = get_cookie_rotation_time_from_db()
     expires_at = datetime.utcnow() + timedelta(seconds=segundos_validez)
 
     try:
