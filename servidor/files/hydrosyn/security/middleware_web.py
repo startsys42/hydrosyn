@@ -11,7 +11,7 @@ from security.email import send_email
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any,Union
 from logger import logger
-from db.db_middleware import get_session_id_exists_from_db
+from db.db_middleware import get_session_id_exists_from_db, get_session_from_db, delete_session_from_db, insert_login_attempts_to_db 
 from pydantic import BaseModel
 
 
@@ -96,6 +96,21 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         subject=subject,
                         message_text=message_text
                          )
+                          insert_login_attempts_to_db(
+        session_id=session_id,
+        user_id=session_data['user_id'],
+        ip_address=client_ip,
+        success=False,
+        page=path,
+        http_method=method,
+        user_agent=user_agent,
+       ram_gb=float(device_info.ram) if device_info.ram else None,
+                            cpu_cores=int(device_info.cores) if device_info.cores else None,
+                            cpu_architecture=device_info.arch,
+                            gpu_info=device_info.gpu,
+                            device_os=device_info.os,
+    recovery= False,
+    )
 
                         delete_session_from_db(session_id)
                     # inserta con user y dats de registro
