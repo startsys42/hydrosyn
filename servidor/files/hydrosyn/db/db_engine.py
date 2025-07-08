@@ -17,7 +17,7 @@ class DBEngine:
                     pool_pre_ping=True,
                     echo=False
                 )
-                  logger.info("Database engine initialized successfully.")
+                logger.info("Database engine initialized successfully.")
             except Exception as e:
                 logger.error(f"Error initializing DB engine: {e}")
                 raise
