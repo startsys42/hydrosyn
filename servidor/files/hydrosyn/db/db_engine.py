@@ -1,8 +1,8 @@
-from sqlalchemy import create_engine
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine
 from logger import logger
 
 class DBEngine:
-    _engine = None
+     _engine: AsyncEngine = None
 
     @classmethod
     def initialize_engine(cls, user, password, host, port, db_name):
@@ -13,9 +13,10 @@ class DBEngine:
 
         if cls._engine is None:
             try:
-                cls._engine = create_engine(
-                    f"mysql+pymysql://{user}:{password}@{host}:{port}/{db_name}",
-                    pool_pre_ping=True
+                 cls._engine = create_async_engine(
+                    f"mysql+aiomysql://{user}:{password}@{host}:{port}/{db_name}",
+                    pool_pre_ping=True,
+                    echo=False
                 )
                 logger.info("Database engine initialized successfully.")
             except Exception as e:
@@ -23,7 +24,7 @@ class DBEngine:
                 raise
 
     @classmethod
-    def get_engine(cls):
+    def get_engine(cls) -> AsyncEngine:
         if cls._engine is None:
             raise RuntimeError("Engine not initialized. Call 'initialize_engine' first.")
         return cls._engine
