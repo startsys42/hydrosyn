@@ -1,9 +1,9 @@
-from datetime import datetime, timedelta
 from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
-from db.db_engine import get_engine
-from logger import logger  # Asegúrate de tenerlo configurado
-from db.config import obtener_tiempo_rotacion_desde_bd
+from db.db_engine import DBEngine  # Asumo que tienes DBEngine con método get_engine()
+from logger import logger
+from datetime import datetime, timedelta
+from db.db_config import obtener_tiempo_rotacion_desde_bd
 
 def delete_session_from_db(session_id: str) -> bool:
     sql = text("""
