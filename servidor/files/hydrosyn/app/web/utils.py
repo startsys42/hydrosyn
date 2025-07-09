@@ -28,28 +28,38 @@ LANGS = {
 }
 allowed_langs = ["es", "en"]
 allowed_themes = ["light", "dark"]
-allowed_params = {"lang", "theme"}
 
 
 def get_user_preferences(request: Request):
     # Validar parámetros query permitidos
-    for param in request.query_params.keys():
-        if param not in allowed_params:
-            raise ValueError(f"Parámetro no permitido: {param}")
+    
+    # Leer cookie de sesión firmada
+    raw_cookie = request.cookies.get("session_id")
+    session_data = {}
+    if raw_cookie:
+        try:
+            unsigned = Signer(current_key).unsign(raw_cookie).decode()
+            session_data = json.loads(unsigned)
+        except BadSignature:
+            session_data = {}
 
-    # Obtener idioma y tema de query o sesión o defecto
-    lang = request.query_params.get("lang") or request.session.get("lang") or "en"
-    theme = request.query_params.get("theme") or request.session.get("theme") or "light"
+    # Obtener idioma y tema de query o cookie o defecto
+    lang =  session_data.get("language") or "en"
+    theme = session_data.get("theme") or "light"
+
     if lang not in allowed_langs:
-        lang =  "en"
+        lang = "en"
     if theme not in allowed_themes:
         theme = "light"
+     if request.query_params:
+        if lang == "es":
+            detail_msg = "No se permiten parámetros en la URL"
+        else:
+            detail_msg = "No query parameters are allowed in the URL"
+        raise HTTPException(status_code=400, detail=detail_msg)
 
-    # Guardar en sesión
-    request.session["lang"] = lang
-    request.session["theme"] = theme
 
- 
+    # Puedes actualizar la cookie aquí si quieres, pero eso ya sería parte del response
 
     texts = LANGS.get(lang, LANGS["en"])
 
@@ -57,4 +67,12 @@ def get_user_preferences(request: Request):
         "lang": lang,
         "theme": theme,
         "texts": texts,
-    } 
+    }
+
+
+
+
+
+
+
+ 
