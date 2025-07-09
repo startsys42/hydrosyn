@@ -32,7 +32,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(self, request: Request, call_next) -> Response:
         # 1. Obtener claves actuales para verificación
-        current_key, old_key = self.key_manager.get_keys()
+        current_key, old_key = await self.key_manager.get_keys()
 
         # 2. Verificar sesión existente
         session_id = await self._get_valid_session_id(request, current_key, old_key)
