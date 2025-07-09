@@ -40,7 +40,7 @@ def get_user_preferences(request: Request):
         lang = "en"
     if theme not in allowed_themes:
         theme = "light"
-     if request.query_params:
+    if request.query_params:
         if lang == "es":
             detail_msg = "No se permiten parámetros en la URL"
         else:
