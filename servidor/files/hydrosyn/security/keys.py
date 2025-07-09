@@ -1,10 +1,10 @@
 
 from typing import Tuple, Callable, Awaitable
-import time
+from datetime import datetime, timedelta
 import math
 import secrets
 from logger import logger
-
+import time
 
 def generate_secure_key(length: int = 128) -> str:
     n_bytes = math.ceil(length * 3 / 4)
@@ -33,24 +33,13 @@ class CookieKeyManager:
         self._next_cleanup_time = self._calculate_next_cleanup()
 
     def _calculate_next_cleanup(self) -> float:
-        now = time.localtime()
+        now = datetime.now()
         grace_hour = self._cached_grace_hour
-        
-        # Si la hora de gracia de hoy ya pasó, programar para mañana
-        if now.tm_hour >= grace_hour:
-            next_day = time.mktime((
-                now.tm_year, now.tm_mon, now.tm_mday + 1,
-                grace_hour, 0, 0, 
-                now.tm_wday, now.tm_yday, now.tm_isdst
-            ))
-            return next_day
-        else:
-            today = time.mktime((
-                now.tm_year, now.tm_mon, now.tm_mday,
-                grace_hour, 0, 0, 
-                now.tm_wday, now.tm_yday, now.tm_isdst
-            ))
-            return today
+
+        target_time = now.replace(hour=grace_hour, minute=0, second=0, microsecond=0)
+        if now.hour >= grace_hour:
+            target_time += timedelta(days=1)
+        return target_time.timestamp()
 
     async def get_keys(self) -> Tuple[str, str]:
         now = time.time()
@@ -78,45 +67,46 @@ class CookieKeyManager:
         
 
 class JWTKeyManager:             
-    def __init__(self,   get_rotation_time: Callable[[], tuple[int, int]],get_grace_period: Callable[[], int], ttl: int = 600):
+    def __init__(self,   get_rotation_time: Callable[[], Awaitable[tuple[int, int]]],get_grace_period: Callable[[], Awaitable[int]], ttl: int = 600):
         self.get_rotation_time = get_rotation_time
         self.get_grace_period = get_grace_period
-        self.ttl = ttl  # minimum time between queries, in seconds
-        self._cached_rotation_time = await self.get_rotation_time()[1]
+        self.ttl = ttl
+        self._last_query = 0
+        self.last_rotation = 0
+        self.key_jwt_new = generate_secure_key()
+        self.key_jwt_old = None
+        self._cached_rotation_time = None
+        self._cached_grace_hour = None
+        self._next_cleanup_time = None
+
+    async def initialize(self):
+        rotation_times = await self.get_rotation_time()
+        self._cached_rotation_time = rotation_times[1]
         self._cached_grace_hour = await self.get_grace_period()
         self._last_query = time.time()
         self.last_rotation = time.time()
-        self.key_jwt_new = generate_secure_key()
-        self.key_jwt_old = None
-        self._next_cleanup_time = self._calculate_next_cleanup()  
+        self._next_cleanup_time = self._calculate_next_cleanup()
+        
+      
+
 
     def _calculate_next_cleanup(self) -> float:
-        now = time.localtime()
+        now = datetime.now()
         grace_hour = self._cached_grace_hour
-        
-        # Si la hora de gracia de hoy ya pasó, programar para mañana
-        if now.tm_hour >= grace_hour:
-            next_day = time.mktime((
-                now.tm_year, now.tm_mon, now.tm_mday + 1,
-                grace_hour, 0, 0, 
-                now.tm_wday, now.tm_yday, now.tm_isdst
-            ))
-            return next_day
-        else:
-            today = time.mktime((
-                now.tm_year, now.tm_mon, now.tm_mday,
-                grace_hour, 0, 0, 
-                now.tm_wday, now.tm_yday, now.tm_isdst
-            ))
-            return today
 
-    def get_keys(self) -> Tuple[str, str]:
+        target_time = now.replace(hour=grace_hour, minute=0, second=0, microsecond=0)
+        if now.hour >= grace_hour:
+            target_time += timedelta(days=1)
+        return target_time.timestamp()
+
+    async def get_keys(self) -> Tuple[str, str]:
         now = time.time()
 
         # If more than `ttl` seconds passed, update value from the database
         if now - self._last_query >= self.ttl:
-            self._cached_rotation_time = self.get_rotation_time()[1]
-            new_grace_hour = self.get_grace_period()
+            rotation_times = await self.get_rotation_time()
+            self._cached_rotation_time = rotation_times[1]
+            new_grace_hour = await self.get_grace_period()
             if new_grace_hour != self._cached_grace_hour:
                 self._cached_grace_hour = new_grace_hour
                 self._next_cleanup_time = self._calculate_next_cleanup()
