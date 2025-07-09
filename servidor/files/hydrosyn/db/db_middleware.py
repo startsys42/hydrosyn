@@ -72,9 +72,8 @@ async def insert_login_attempts_to_db(
     }
     try:
         engine = DBEngine.get_engine()
-        async with engine.connect() as conn:
+        async with engine.begin() as conn:
             result = await conn.execute(sql, params)
-            await conn.commit()
             
             if result.rowcount == 1:
                 logger.info(f"Login attempt recorded successfully for IP: {ip_address}")
@@ -97,43 +96,42 @@ async def get_cookie_expired_time_from_db() -> int:
     try:
         async with DBEngine.get_engine().connect() as conn:
             result = await conn.execute(
-                text("SELECT  max_value FROM config WHERE id = 4")
+                text("SELECT max_value FROM config WHERE id = 4")
             )
-
-            row = await result.fetchone()
+            row = result.fetchone()  # Sin await
             
-            if row and row[0] > 0:  # Acceder al primer elemento de la tupla
-                return int(row[0])
-            else:
-                logger.warning(f"Cookie expired time {row[0]} error. Using default.")
+            if row and row.max_value is not None and row.max_value > 0:
+                return int(row.max_value)
+            
+            logger.warning("Cookie expired time not found or invalid. Using default.")
     except Exception as e:
-        logger.error(f"Error fetching cookie expired time : {e}")
-
- 
-    logger.info(f"Using default cookie  expired time: 30 days")
+        logger.error(f"Error fetching cookie expired time: {e}")
+    
+    logger.info("Using default cookie expired time: 30 days")
     return 30
+    
 
 async def get_session_id_exists_from_db(session_id: str) -> bool:
-    """
-    Verifica si session_id existe en login_attempts o sessions.
-    Devuelve True si existe, False si no.
-    """
     try:
-        async with DBEngine.get_engine().connect() as conn:
-            query_login = text("SELECT 1 FROM login_attempts WHERE session_id = :session_id LIMIT 1")
-            result = await conn.execute(query_login, {"session_id": session_id})
-            if await result.fetchone():
+        async with DBEngine.get_engine().begin() as conn:  # begin() maneja transacción
+            # Verificar en login_attempts
+            result = await conn.execute(
+                text("SELECT 1 FROM login_attempts WHERE session_id = :session_id LIMIT 1"),
+                {"session_id": session_id}
+            )
+            if result.fetchone():
                 return True
 
-            query_sessions = text("SELECT 1 FROM sessions WHERE session_id = :session_id LIMIT 1")
-            result = await conn.execute(query_sessions, {"session_id": session_id})
-            if await result.fetchone():
-                return True
+            # Verificar en sessions
+            result = await conn.execute(
+                text("SELECT 1 FROM sessions WHERE session_id = :session_id LIMIT 1"), 
+                {"session_id": session_id}
+            )
+            return result.fetchone() is not None
 
     except Exception as e:
         logger.error(f"Error checking session_id existence: {e}")
-
-    return False
+        return False
 
 async def get_session_from_db(session_id: str, extend_validity: bool = True) -> dict | None:
     """
@@ -179,7 +177,7 @@ async def get_session_from_db(session_id: str, extend_validity: bool = True) -> 
                 'session_id': session_id,
                 'validation_time': validation_time
             })
-            row = await result.fetchone()
+            row =  result.fetchone()
 
             if row:
                 # Convertir resultado a diccionario
