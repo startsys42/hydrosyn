@@ -33,19 +33,8 @@ allowed_themes = ["light", "dark"]
 def get_user_preferences(request: Request):
     # Validar parámetros query permitidos
     
-    # Leer cookie de sesión firmada
-    raw_cookie = request.cookies.get("session_id")
-    session_data = {}
-    if raw_cookie:
-        try:
-            unsigned = Signer(current_key).unsign(raw_cookie).decode()
-            session_data = json.loads(unsigned)
-        except BadSignature:
-            session_data = {}
-
-    # Obtener idioma y tema de query o cookie o defecto
-    lang =  session_data.get("language") or "en"
-    theme = session_data.get("theme") or "light"
+    lang = getattr(request.state, "language", "en")
+    theme = getattr(request.state, "theme", "light")
 
     if lang not in allowed_langs:
         lang = "en"
