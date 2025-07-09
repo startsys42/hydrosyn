@@ -150,25 +150,28 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     user_id = session_data['user_id']
                     is_logged_in = True
                     request.state.user_id = user_id
-                    if is_logged_in:
-                        if request.url.path in [ "/web/auth/login","/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/"]:
-                            return RedirectResponse(url="/web/auth/home")  # o la ruta del home de usuario
-                        elif origin_path in ["/web/auth/home"]:
-                            await insert_login_attempts_to_db(
-                                session_id=session_id,
-                                user_id=session_data['user_id'],
-                                ip_address=client_ip,
-                                success=True,
-                                page=path,
-                                http_method=method,
-                                user_agent=user_agent,
-                                ram_gb=float(device_info.ram) if device_info.ram else None,
-                                cpu_cores=int(device_info.cores) if device_info.cores else None,
-                                cpu_architecture=device_info.arch,
-                                gpu_info=device_info.gpu,
-                                device_os=device_info.os,
-                                recovery=False,
-                            )
+                   
+                    if request.url.path in [ "/web/auth/login","/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/"]:
+                        return RedirectResponse(url="/web/auth/home")  # o la ruta del home de usuario
+                    elif origin_path in ["/web/auth/home"]:
+                        await insert_login_attempts_to_db(
+                            session_id=session_id,
+                            user_id=session_data['user_id'],
+                            ip_address=client_ip,
+                            success=True,
+                            page=path,
+                            http_method=method,
+                            user_agent=user_agent,
+                            ram_gb=float(device_info.ram) if device_info.ram else None,
+                            cpu_cores=int(device_info.cores) if device_info.cores else None,
+                            cpu_architecture=device_info.arch,
+                            gpu_info=device_info.gpu,
+                            device_os=device_info.os,
+                            recovery=False,
+                        )
+                    response = await call_next(request)
+                    return response
+
             else:
                     user_id = session_data['user_id']
                     is_logged_in = True
@@ -188,24 +191,27 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                 if path == "/web/device/device-info":
                         method="GET"
                         path=origin_path
-                if request.url.path  in [ "/web/auth/recover-password"]:
-                    recovery=True
-                else:
-                    recovery=False
-                await insert_login_attempts_to_db(
-                            session_id=session_id,
-                                ip_address=client_ip,
-                                success=False,
-                                page=path,
-                                http_method=method,
-                                user_agent=user_agent,
-                                ram_gb=float(device_info.ram) if device_info.ram else None,
-                                cpu_cores=int(device_info.cores) if device_info.cores else None,
-                                cpu_architecture=device_info.arch,
-                                gpu_info=device_info.gpu,
-                                device_os=device_info.os,
-                                recovery=recovery,
-                            )
+            if request.url.path  in [ "/web/auth/recover-password"]:
+                recovery=True
+            else:
+                recovery=False
+            await insert_login_attempts_to_db(
+                    session_id=session_id,
+                    ip_address=client_ip,
+                    success=False,
+                    page=path,
+                    http_method=method,
+                    user_agent=user_agent,
+                    ram_gb=float(device_info.ram) if device_info.ram else None,
+                    cpu_cores=int(device_info.cores) if device_info.cores else None,
+                    cpu_architecture=device_info.arch,
+                    gpu_info=device_info.gpu,
+                    device_os=device_info.os,
+                    recovery=recovery,
+                )
+            response = await call_next(request)
+            return response
+
         else:
         # No hay sesión, permitir solo acceso a rutas públicas
             # creamos una sesion, regisramos sesion y dirigimos
@@ -219,8 +225,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
             inner_response.headers.update(response.headers)
             return inner_response
 
-        response = await call_next(request)
-        return response
+       
 
 
 
