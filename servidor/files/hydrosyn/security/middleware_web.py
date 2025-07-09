@@ -130,7 +130,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
     
      
 
-                    await delete_session_from_db(session_id)
+                    await delete_session_in_db(session_id)
                     # inserta con user y dats de registro
                             
                     return RedirectResponse(url="/web/auth/login", status_code=303)
