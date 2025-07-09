@@ -35,7 +35,11 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         current_key, old_key = await self.key_manager.get_keys()
 
         # 2. Verificar sesión existente
-        session_id = await self._get_valid_session_id(request, current_key, old_key)
+        session_data_dict = await self._get_valid_session_id(request, current_key, old_key)
+        session_id = session_data_dict.get("session_id") if session_data_dict else None
+        language = session_data_dict.get("language") if session_data_dict else "en"
+        theme = session_data_dict.get("theme") if session_data_dict else "light"
+
         user_id = None
         is_logged_in = False
         session_data = await get_session_from_db(session_id)
@@ -288,7 +292,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         device_str = ";".join(f"{k}={v}" for k, v in sorted(device_data.items()) if v)
         return hashlib.sha256(device_str.encode()).hexdigest()
 
-    async def _get_valid_session_id(self, request: Request, current_key: str, old_key: str) -> Optional[str]:
+    async def _get_valid_session_id(self, request: Request, current_key: str, old_key: str) -> Optional[Dict[str, Any]]:
         session_cookie = request.cookies.get("session_id")
         if not session_cookie:
             return None
@@ -297,14 +301,14 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
             signer = Signer(current_key)
             data_str = signer.unsign(session_cookie).decode()
             data = json.loads(data_str)
-            return data.get("session_id")
+            return data  # <-- Devuelve todo el diccionario
         except (BadSignature, json.JSONDecodeError):
             if old_key:
                 try:
                     old_signer = Signer(old_key)
                     data_str = old_signer.unsign(session_cookie).decode()
                     data = json.loads(data_str)
-                    return data.get("session_id")
+                    return data  # <-- Devuelve todo el diccionario
                 except (BadSignature, json.JSONDecodeError):
                     return None
             return None
