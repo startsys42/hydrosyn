@@ -105,7 +105,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         )
                         subject = "Possible cookie theft detected"
 
-                    send_email(
+                    await send_email(
                         sender="tu-correo@gmail.com",
                         to=session_data['email'],
                         subject=subject,
