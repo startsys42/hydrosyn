@@ -39,6 +39,9 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         session_id = session_data_dict.get("session_id") if session_data_dict else None
         language = session_data_dict.get("language") if session_data_dict else "en"
         theme = session_data_dict.get("theme") if session_data_dict else "light"
+        request.state.language = language
+        request.state.theme = theme
+        request.state.session_id = session_id
 
         user_id = None
         is_logged_in = False
