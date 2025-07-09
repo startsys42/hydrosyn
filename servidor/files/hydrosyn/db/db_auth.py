@@ -5,7 +5,7 @@ from logger import logger
 from datetime import datetime, timedelta
 from db.db_config import get_cookie_rotation_time_from_db
 
-async def delete_session_from_db(session_id: str) -> bool:
+async def delete_session_in_db(session_id: str) -> bool:
     sql = text("""
         DELETE FROM sessions WHERE session_id = :session_id
     """)
