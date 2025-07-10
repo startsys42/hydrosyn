@@ -11,7 +11,7 @@ CREATE TABLE notification_translations (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     notification_id INT UNSIGNED NOT NULL,
     lang_code ENUM('es', 'en') NOT NULL,
-    description VARCHAR(255) NOT NULL,
+    description VARCHAR(255) NOT NULL UNIQUE,
 
     FOREIGN KEY (notification_id) REFERENCES notifications(id)
         ON DELETE RESTRICT
