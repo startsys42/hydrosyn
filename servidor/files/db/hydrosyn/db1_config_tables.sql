@@ -6,7 +6,7 @@ USE hydrosyn_db;
 CREATE TABLE IF NOT EXISTS config_groups (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
 
-);
+)ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS config_group_translations (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS config_group_translations (
         ON UPDATE RESTRICT,
 
     UNIQUE (group_id, lang_code)
-);
+)ENGINE=InnoDB;
 
 INSERT INTO config_groups () VALUES ();
 INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS config (
     FOREIGN KEY (group_id) REFERENCES config_groups(id)
         ON DELETE RESTRICT
         ON UPDATE RESTRICT
-);
+)ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS config_translations (
     id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS config_translations (
         ON UPDATE RESTRICT,
 
     UNIQUE (config_id, lang_code)
-);
+)ENGINE=InnoDB;
 
 
 CREATE TABLE config_change_votes (
