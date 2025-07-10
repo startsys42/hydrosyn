@@ -289,22 +289,28 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
 
     async def _get_valid_session_id(self, request: Request, current_key: str, old_key: str) -> Optional[Dict[str, Any]]:
         session_cookie = request.cookies.get("session_id")
+        logger.debug(f"Cookie recibida: {session_cookie}") 
         if not session_cookie:
+            logger.debug("No se encontró cookie de sesión")
             return None
 
         try:
             signer = Signer(current_key)
             data_str = signer.unsign(session_cookie).decode()
             data = json.loads(data_str)
+            logger.debug(f"Sesión válida encontrada: {data}")  # <-- Nuevo log
             return data  # <-- Devuelve todo el diccionario
         except (BadSignature, json.JSONDecodeError):
+            logger.warning(f"Error al verificar sesión (clave actual): {str(e)}")
             if old_key:
                 try:
                     old_signer = Signer(old_key)
                     data_str = old_signer.unsign(session_cookie).decode()
                     data = json.loads(data_str)
+                    logger.debug(f"Sesión válida encontrada con clave antigua: {data}")
                     return data  # <-- Devuelve todo el diccionario
                 except (BadSignature, json.JSONDecodeError):
+                    logger.warning(f"Error al verificar sesión (clave antigua): {str(e)}")
                     return None
             return None
  
