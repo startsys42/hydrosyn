@@ -1,16 +1,40 @@
 CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE  utf8mb4_bin;
 USE hydrosyn_db;
 
-CREATE TABLE IF NOT EXISTS config (
-    id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
-    value INT UNSIGNED NOT NULL, 
-    min_value INT UNSIGNED NOT NULL,  
-    max_value INT UNSIGNED NOT NULL  
+
+
+CREATE TABLE IF NOT EXISTS config_groups (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+
+);
+
+CREATE TABLE IF NOT EXISTS config_group_translations (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    group_id INT UNSIGNED NOT NULL,
+    lang_code ENUM('es', 'en') NOT NULL,
+    name VARCHAR(100) NOT NULL UNIQUE,
+
+
+    FOREIGN KEY (group_id) REFERENCES config_groups(id)
+        ON DELETE RESTRICT
+        ON UPDATE RESTRICT,
+
+    UNIQUE (group_id, lang_code)
 );
 
 
 
-
+CREATE TABLE IF NOT EXISTS config (
+    id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
+    value INT UNSIGNED NOT NULL, 
+    min_value INT UNSIGNED NOT NULL,  
+    max_value INT UNSIGNED NOT NULL,
+     group_id INT UNSIGNED NULL,
+    
+    FOREIGN KEY (group_id) REFERENCES config_groups(id)
+        ON DELETE RESTRICT
+        ON UPDATE RESTRICT
+);
 
 CREATE TABLE IF NOT EXISTS config_translations (
     id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
