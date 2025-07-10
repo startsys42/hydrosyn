@@ -29,10 +29,46 @@ INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
 
 INSERT INTO config_groups () VALUES ();
 INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
-(2, 'es', 'Seguridad de inicio de sesión'),
-(2, 'en', 'Login Security')
+(2, 'es', 'Cambio de contraseña de base de datos'),
+(2, 'en', 'Database password change');
+
+INSERT INTO config_groups () VALUES ();
+INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
+(3, 'es', 'Seguridad de inicio de sesión'),
+(3, 'en', 'Login Security')
+
+INSERT INTO config_groups () VALUES ();
+INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
+(4, 'es', 'Duración de autenticación'),
+(4, 'en', 'Authentication Duration');
 
 
+
+CREATE TABLE IF NOT EXISTS config (
+    id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
+    value INT UNSIGNED NOT NULL, 
+    min_value INT UNSIGNED NOT NULL,  
+    max_value INT UNSIGNED NOT NULL,
+    group_id INT UNSIGNED NOT NULL,
+    
+    FOREIGN KEY (group_id) REFERENCES config_groups(id)
+        ON DELETE RESTRICT
+        ON UPDATE RESTRICT
+);
+
+CREATE TABLE IF NOT EXISTS config_translations (
+    id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
+    config_id INT UNSIGNED  NOT NULL,
+    lang_code ENUM('es', 'en') NOT NULL,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    description VARCHAR(255) NOT NULL UNIQUE,
+
+    FOREIGN KEY (config_id) REFERENCES config(id)
+        ON DELETE RESTRICT
+        ON UPDATE RESTRICT,
+
+    UNIQUE (config_id, lang_code)
+);
 
 
 CREATE TABLE config_change_votes (
@@ -58,32 +94,6 @@ CREATE TABLE config_change_requests (
     FOREIGN KEY (config_id) REFERENCES config(id),
     FOREIGN KEY (proposed_by) REFERENCES users(id),
     FOREIGN KEY (decided_by) REFERENCES users(id)
-);
-
-CREATE TABLE IF NOT EXISTS config (
-    id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
-    value INT UNSIGNED NOT NULL, 
-    min_value INT UNSIGNED NOT NULL,  
-    max_value INT UNSIGNED NOT NULL,
-     group_id INT UNSIGNED NULL,
-    
-    FOREIGN KEY (group_id) REFERENCES config_groups(id)
-        ON DELETE RESTRICT
-        ON UPDATE RESTRICT
-);
-
-CREATE TABLE IF NOT EXISTS config_translations (
-    id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
-    config_id INT UNSIGNED  NOT NULL,
-    lang_code ENUM('es', 'en') NOT NULL,
-    name VARCHAR(100) NOT NULL UNIQUE,
-    description VARCHAR(255) NOT NULL UNIQUE,
-
-    FOREIGN KEY (config_id) REFERENCES config(id)
-        ON DELETE RESTRICT
-        ON UPDATE RESTRICT,
-
-    UNIQUE (config_id, lang_code)
 );
 
 INSERT INTO config (value, min_value, max_value) VALUES
