@@ -16,8 +16,8 @@ CREATE TABLE IF NOT EXISTS config_translations (
     id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
     config_id INT UNSIGNED  NOT NULL,
     lang_code ENUM('es', 'en') NOT NULL,
-    name VARCHAR(100) NOT NULL,
-    description VARCHAR(255) NOT NULL,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    description VARCHAR(255) NOT NULL UNIQUE,
 
     FOREIGN KEY (config_id) REFERENCES config(id)
         ON DELETE RESTRICT
