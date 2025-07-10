@@ -3,7 +3,7 @@ USE hydrosyn_db;
 CREATE TABLE permissions (
     id INT PRIMARY KEY AUTO_INCREMENT
                  
-);
+)ENGINE=InnoDB;
 
 CREATE TABLE permission_translations (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -17,7 +17,7 @@ CREATE TABLE permission_translations (
         ON UPDATE RESTRICT,
 
     UNIQUE (permission_id, lang_code)
-);
+)ENGINE=InnoDB;
 
 CREATE TABLE roles (
     id INT PRIMARY KEY AUTO_INCREMENT,
