@@ -36,25 +36,29 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
 
         # 2. Verificar sesión existente
         session_data_dict = await self._get_valid_session_id(request, current_key, old_key)
-        session_id = session_data_dict.get("session_id") if session_data_dict else None
-        language = session_data_dict.get("language") if session_data_dict else "en"
-        theme = session_data_dict.get("theme") if session_data_dict else "light"
-        request.state.language = language
-        request.state.theme = theme
-        request.state.session_id = session_id
+        if session_data_dict is None:
+            response_for_cookie = Response()
+            await self._create_new_session(request, response_for_cookie, current_key)
+            final_response = RedirectResponse(url="/web/auth/login", status_code=303)
+            final_response.headers.update(response_for_cookie.headers)
+            return final_response
+        else:
+            session_id = session_data_dict.get("session_id") if session_data_dict else None
+            language = session_data_dict.get("language") if session_data_dict else "en"
+            theme = session_data_dict.get("theme") if session_data_dict else "light"
+            request.state.language = language
+            request.state.theme = theme
+            request.state.session_id = session_id
+            session_data = await get_session_from_db(session_id)
+            path = request.url.path
+            method = request.method
+            client_ip = request.client.host if request.client else "unknown"
+            user_agent = request.headers.get("user-agent", "unknown")
+            html_source = self._get_html_source(request)
+            device_info = DeviceInfo()  # valor por defecto vacío
+            origin_path = "unknown"
+            if method == "POST":
 
-        user_id = None
-        is_logged_in = False
-        session_data = await get_session_from_db(session_id)
-        path = request.url.path
-        method = request.method
-        client_ip = request.client.host if request.client else "unknown"
-        user_agent = request.headers.get("user-agent", "unknown")
-        html_source = self._get_html_source(request)
-        device_info = DeviceInfo()  # valor por defecto vacío
-        origin_path = "unknown" 
-        if method == "POST":
-                
                 try:
                     headers = request.headers
                     device_data = {
@@ -65,7 +69,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         "os": headers.get("x-device-os"),
                     }
 
-                    clean_data = {k: v for k, v in device_data.items() 
+                    clean_data = {k: v for k, v in device_data.items()
                                 if v is not None and k in DeviceInfo.__fields__}
                     device_info = DeviceInfo(**clean_data)
 
@@ -86,79 +90,44 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         f"Error: {str(e)}"
                     )
                     raise HTTPException(status_code=404, detail="Invalid device information")
-        if session_id and session_data:
-            if method == "POST":
-                if path == "/web/device/device-info":
+            if session_data is not None:
+                if method == "POST":
+                    if path == "/web/device/device-info":
                         method="GET"
                         path=origin_path
-                current_device_fingerprint = self._get_device_fingerprint(request)
-                if session_data['summary'] != current_device_fingerprint:
-                    logger.warning(f"Session detected from a different device for user '{session_data['username']}', possible cookie theft detected.")
-                    if session_data['language'] == 'es':
-                        message_text = (
-                        "Alerta: Posible robo de cookies detectado.\n\n"
-                        f"Información del dispositivo: {request.headers.get('User-Agent')}\n"
-                        f"Dirección IP: {request.client.host}\n\n"
-                        "Si no fuiste tú, por favor asegura tu cuenta inmediatamente."
+                    current_device_fingerprint = self._get_device_fingerprint(request)
+                    if session_data['summary'] != current_device_fingerprint:
+                        logger.warning(f"Session detected from a different device for user '{session_data['username']}', possible cookie theft detected.")
+                        if session_data['language'] == 'es':
+                            message_text = (
+                            "Alerta: Posible robo de cookies detectado.\n\n"
+                            f"Información del dispositivo: {request.headers.get('User-Agent')}\n"
+                            f"Dirección IP: {request.client.host}\n\n"
+                            "Si no fuiste tú, por favor asegura tu cuenta inmediatamente."
+                            )
+                            subject = "Posible robo de cookies detectado"
+
+                        else:  # <- aquí corregí el elif vacío
+                            message_text = (
+                            "Alert: Possible cookie theft detected.\n\n"
+                            f"Device Info: {request.headers.get('User-Agent')}\n"
+                            f"IP Address: {request.client.host}\n\n"
+                            "If this wasn't you, please secure your account immediately."
+                            )
+                            subject = "Possible cookie theft detected"
+
+                        await send_email(
+                            sender="tu-correo@gmail.com",
+                            to=session_data['email'],
+                            subject=subject,
+                            message_text=message_text
                         )
-                        subject = "Posible robo de cookies detectado"
-                       
-                    else:  # <- aquí corregí el elif vacío
-                        message_text = (
-                        "Alert: Possible cookie theft detected.\n\n"
-                        f"Device Info: {request.headers.get('User-Agent')}\n"
-                        f"IP Address: {request.client.host}\n\n"
-                        "If this wasn't you, please secure your account immediately."
-                        )
-                        subject = "Possible cookie theft detected"
 
-                    await send_email(
-                        sender="tu-correo@gmail.com",
-                        to=session_data['email'],
-                        subject=subject,
-                        message_text=message_text
-                    )
-
-                    await insert_login_attempts_to_db(
-                        session_id=session_id,
-                        user_id=session_data['user_id'],
-                        ip_address=client_ip,
-                        success=False,
-                        page=path,
-                        http_method=method,
-                        user_agent=user_agent,
-                        ram_gb=float(device_info.ram) if device_info.ram else None,
-                        cpu_cores=int(device_info.cores) if device_info.cores else None,
-                        cpu_architecture=device_info.arch,
-                        gpu_info=device_info.gpu,
-                        device_os=device_info.os,
-                        recovery=False,
-                    )
-    
-     
-
-                    await delete_session_in_db(session_id)
-                    # inserta con user y dats de registro
-                            
-                    return RedirectResponse(url="/web/auth/login", status_code=303)
-                       
-                    
-
-            
-                    
-                else:
-                    user_id = session_data['user_id']
-                    is_logged_in = True
-                    request.state.user_id = user_id
-                   
-                    if request.url.path in [ "/web/auth/login","/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/"]:
-                        return RedirectResponse(url="/web/auth/home")  # o la ruta del home de usuario
-                    elif origin_path in ["/web/auth/home"]:
                         await insert_login_attempts_to_db(
                             session_id=session_id,
                             user_id=session_data['user_id'],
                             ip_address=client_ip,
-                            success=True,
+                            success=False,
                             page=path,
                             http_method=method,
                             user_agent=user_agent,
@@ -169,64 +138,82 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                             device_os=device_info.os,
                             recovery=False,
                         )
-                    response = await call_next(request)
-                    return response
 
-            else:
-                    user_id = session_data['user_id']
-                    is_logged_in = True
-                    request.state.user_id = user_id
-                    if is_logged_in:
+
+
+                        await delete_session_in_db(session_id)
+                        # inserta con user y dats de registro
+
+                        return RedirectResponse(url="/web/auth/login", status_code=303)
+                    else:
                         if request.url.path in [ "/web/auth/login","/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/"]:
                             return RedirectResponse(url="/web/auth/home")
+                        else:
+                            if origin_path in ["/web/auth/home"]:
+                                await insert_login_attempts_to_db(
+                                    session_id=session_id,
+                                    user_id=session_data['user_id'],
+                                    ip_address=client_ip,
+                                    success=True,
+                                    page=path,
+                                    http_method=method,
+                                    user_agent=user_agent,
+                                    ram_gb=float(device_info.ram) if device_info.ram else None,
+                                    cpu_cores=int(device_info.cores) if device_info.cores else None,
+                                    cpu_architecture=device_info.arch,
+                                    gpu_info=device_info.gpu,
+                                    device_os=device_info.os,
+                                    recovery=False,
+                                )
 
-                
-        
-                                    
-                
-        elif session_id and not session_data:
-            if request.url.path not in ["/web/device/device-info","/web/auth/login" , "/web/auth/recover-password","/"]:
-                return RedirectResponse(url="/web/auth/login", status_code=303)
-            if method == "POST":
-                if path == "/web/device/device-info":
+                            response = await call_next(request)
+                            return response
+
+                else:
+                    if request.url.path in [ "/web/auth/login","/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/"]:
+                        return RedirectResponse(url="/web/auth/home")
+                    else:
+                        response = await call_next(request)
+                        return response
+
+
+            else:
+                if method == "POST":
+                    if path == "/web/device/device-info":
                         method="GET"
                         path=origin_path
-            if request.url.path  in [ "/web/auth/recover-password"]:
-                recovery=True
-            else:
-                recovery=False
-            await insert_login_attempts_to_db(
-                    session_id=session_id,
-                    ip_address=client_ip,
-                    success=False,
-                    page=path,
-                    http_method=method,
-                    user_agent=user_agent,
-                    ram_gb=float(device_info.ram) if device_info.ram else None,
-                    cpu_cores=int(device_info.cores) if device_info.cores else None,
-                    cpu_architecture=device_info.arch,
-                    gpu_info=device_info.gpu,
-                    device_os=device_info.os,
-                    recovery=recovery,
-                )
-            response = await call_next(request)
-            return response
+                    if request.url.path  in [ "/web/auth/recover-password"]:
+                        recovery=True
+                    else:
+                        recovery=False
+                    await insert_login_attempts_to_db(
+                        session_id=session_id,
+                        ip_address=client_ip,
+                        success=False,
+                        page=path,
+                        http_method=method,
+                        user_agent=user_agent,
+                        ram_gb=float(device_info.ram) if device_info.ram else None,
+                        cpu_cores=int(device_info.cores) if device_info.cores else None,
+                        cpu_architecture=device_info.arch,
+                        gpu_info=device_info.gpu,
+                        device_os=device_info.os,
+                        recovery=recovery,
+                    )
+                    if request.url.path not in [ "/web/auth/login","/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/","/web/device/device-info",]:
+                        return RedirectResponse(url="/web/auth/login")
+                    else:
+                        response = await call_next(request)
+                        return response
+                else:
+                    if request.url.path not in [ "/web/auth/login","/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/"]:
+                        return RedirectResponse(url="/web/auth/login")
+                    else:
+                        response = await call_next(request)
+                        return response
 
-        else:
-        # No hay sesión, permitir solo acceso a rutas públicas
-            # creamos una sesion, regisramos sesion y dirigimos
-            response = Response()
-            await self._create_new_session(request, response, current_key)
-            if request.url.path not in ["/web/device/device-info","/web/auth/login" , "/web/auth/recover-password","/"]:
-                return RedirectResponse(url="/web/auth/login", status_code=303)
-             
 
-            inner_response = await call_next(request)
-            inner_response.headers.update(response.headers)
-            return inner_response
-
-       
-
+    
 
 
     def _get_html_source(self,request: Request) -> str:
