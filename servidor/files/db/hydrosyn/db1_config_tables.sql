@@ -22,7 +22,43 @@ CREATE TABLE IF NOT EXISTS config_group_translations (
     UNIQUE (group_id, lang_code)
 );
 
+INSERT INTO config_groups () VALUES ();
+INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
+(1, 'es', 'Política de votación'),
+(1, 'en', 'Voting Policy');
 
+INSERT INTO config_groups () VALUES ();
+INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
+(2, 'es', 'Seguridad de inicio de sesión'),
+(2, 'en', 'Login Security')
+
+
+
+
+CREATE TABLE config_change_votes (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    change_request_id INT UNSIGNED NOT NULL,
+    user_id INT UNSIGNED NOT NULL,
+    vote ENUM('approve', 'reject') NOT NULL,
+    voted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (change_request_id) REFERENCES config_change_requests(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    UNIQUE (change_request_id, user_id)  -- Un usuario solo puede votar una vez por propuesta
+);
+
+CREATE TABLE config_change_requests (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    config_id INT UNSIGNED NOT NULL,          -- Qué configuración quieren cambiar
+    proposed_value INT UNSIGNED NOT NULL,     -- Nuevo valor propuesto
+    proposed_by INT UNSIGNED NOT NULL,        -- Quién propuso el cambio (user id)
+    proposed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+    decision_at DATETIME NULL,
+    decided_by INT UNSIGNED NULL,              -- Quién aprobó o rechazó
+    FOREIGN KEY (config_id) REFERENCES config(id),
+    FOREIGN KEY (proposed_by) REFERENCES users(id),
+    FOREIGN KEY (decided_by) REFERENCES users(id)
+);
 
 CREATE TABLE IF NOT EXISTS config (
     id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
