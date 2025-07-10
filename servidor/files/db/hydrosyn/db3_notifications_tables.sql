@@ -1,9 +1,12 @@
+CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE  utf8mb4_bin;
+USE hydrosyn_db;
+
 CREATE TABLE notifications (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+
 );
 
--- 2️⃣ Traducciones por idioma
+
 CREATE TABLE notification_translations (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     notification_id INT UNSIGNED NOT NULL,
@@ -17,7 +20,7 @@ CREATE TABLE notification_translations (
     UNIQUE (notification_id, lang_code)
 );
 
--- 3️⃣ Relación usuario - notificación
+
 CREATE TABLE user_notifications (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id INT UNSIGNED NOT NULL,
