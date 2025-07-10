@@ -39,20 +39,25 @@ async def email_exist(email: str) -> bool:
         logger.error(f"Error checking email existence: {e}")
         return False  # o True si quieres bloquear en caso de error
 
-
-async def is_in_blacklist(username: str) -> bool:
+async def is_in_blacklist_from_db(username: str) -> bool:
     sql = text("""
-        SELECT 1 FROM username_blacklist WHERE username = :username LIMIT 1
+        SELECT username FROM username_blacklist WHERE username = :username 
     """)
     engine = DBEngine.get_engine()
+    
     try:
-        async with engine.connect() as conn:
+        async with engine.begin() as conn:  # Usamos begin() para manejo automático de transacciones
             result = await conn.execute(sql, {"username": username})
             row = result.fetchone()
-            return row is not None
+            return row is not None  # Corrección: devuelve bool en lugar del objeto row
+            
     except Exception as e:
-        logger.error(f"Error checking blacklist for {username}: {e}")
-        return True  # Bloquear en caso de error por seguridad
+        logger.error(f"Error checking blacklist for {username}: {str(e)}", 
+                   exc_info=True,  # Registra el stack trace completo
+                   extra={"username": username})
+        return True  # Fail-safe
+
+
 
 
 
