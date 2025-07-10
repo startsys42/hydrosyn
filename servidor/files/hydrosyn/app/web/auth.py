@@ -9,7 +9,7 @@ from common.templates import templates
 from logger import logger
 
 
-router = APIRouter()
+router = APIRouter(tags=["Web Auth"])
 
 
 @router.get("/login", response_class=HTMLResponse)
