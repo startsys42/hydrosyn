@@ -42,6 +42,29 @@ INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
 (4, 'es', 'Duración de autenticación'),
 (4, 'en', 'Authentication Duration');
 
+INSERT INTO config_groups () VALUES ();
+INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
+(5, 'es', 'Tiempos de gracia y tareas'),
+(5, 'en', 'Grace periods and tasks');
+
+INSERT INTO config_groups () VALUES ();
+INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
+(6, 'es', 'Política de nombres de usuario'),
+(6, 'en', 'Username policy');
+
+INSERT INTO config_groups () VALUES ();
+INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
+(7, 'es', 'Política de contraseñas'),
+(7, 'en', 'Password policy');
+
+INSERT INTO config_groups () VALUES ();
+INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
+(8, 'es', 'Tiempos de retención históricos'),
+(8, 'en', 'Historical retention periods');
+
+
+
+
 
 
 CREATE TABLE IF NOT EXISTS config (
