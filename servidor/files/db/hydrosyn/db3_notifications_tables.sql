@@ -29,10 +29,10 @@ CREATE TABLE user_notifications (
     read_at DATETIME DEFAULT NULL,
 
     FOREIGN KEY (user_id) REFERENCES users(id)
-        ON DELETE CASCADE
+        ON DELETE RESTRICT
         ON UPDATE CASCADE,
 
     FOREIGN KEY (notification_id) REFERENCES notifications(id)
-        ON DELETE CASCADE
+        ON DELETE RESTRICT
         ON UPDATE CASCADE
 );
