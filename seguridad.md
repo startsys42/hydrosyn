@@ -13,21 +13,16 @@
 - [ ]    cgroups
 - [ ]    bashrc
 - [ ] sudo
-- [ ] particiones
-- [ ] lvm
-- [ ] raid
+
 - [ ] homes
-- [ ] montar usbs...
-- [ ] grub
-- [ ] bios
-- [ ] boot
+
 
 - [ ] acls
 - [ ] selinux
 - [ ] app armor
 - [ ] dnssec
 - [ ] fireail
-- [ ] chroot
+
 - [ ] sempcom
 - [ ] 
 
@@ -215,9 +210,9 @@ nucleo optimizado
 
 - particiones
 - sudo
-- usb
+
 - optimizar kernel
-- chroot
+
 - Open Source Security Information Management por sus siglas (OSSIM
 - ssl
 - netstat ping traceroute
@@ -245,7 +240,7 @@ nucleo optimizado
 - waf
 - cuotas
 
-- chroot
+
 
 - polkit
 
