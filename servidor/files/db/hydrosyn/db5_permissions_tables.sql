@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS permissions_group_translations (
 
 CREATE TABLE permissions (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    only_master BOLEAN DEFAULT TRUE,
+    only_master BOOLEAN NOT NULL DEFAULT TRUE,
                  
 )ENGINE=InnoDB;
 
