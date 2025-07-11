@@ -22,6 +22,17 @@ CREATE TABLE IF NOT EXISTS permissions_group_translations (
 )ENGINE=InnoDB;
 
 
+INSERT INTO permissions_groups () VALUES ();
+INSERT INTO permissions_group_translations (group_id, lang_code, name) VALUES
+(1, 'es', 'Permisos de configuración'),
+(1, 'en', 'Configuration permissions');
+
+INSERT INTO permissions_groups () VALUES ();
+INSERT INTO permissions_group_translations (group_id, lang_code, name) VALUES
+(2, 'es', 'Permisos de usuarios'),
+(2, 'en', 'User permissions');
+
+
 CREATE TABLE permissions (
     id INT PRIMARY KEY AUTO_INCREMENT,
     only_master BOOLEAN NOT NULL DEFAULT TRUE,
