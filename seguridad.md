@@ -102,14 +102,14 @@
 - [ ] sudo
 - [ ] suexec
 - [ ] proteccion abse d edtaos y transacciuones concurrentes
-- [ ] inxi comando
+
 - [ ] garafna
 - [ ] prometeus
 
 
 - [ ] linuxgms
 -
-- [ ] cacti
+
 
 
 - [ ] logstash
@@ -130,9 +130,8 @@
 - [ ] systemd
 
 - [ ] proxie
-- [ ] vpn
-- [ ] cdn
-- [ ] ipsec
+
+
 - [ ] firewall
 
 
@@ -193,7 +192,7 @@ nucleo optimizado
 - suriucata
 - antivirus
 - snort
-- grafana prometheus monit  lostats  pterodactyl cacti munin mrtg
+- grafana prometheus monit  lostats    munin mrtg
 - vnstat
 - nessus openvas nikto 
 - aide
@@ -210,7 +209,7 @@ nucleo optimizado
 - particiones
 - sudo
 
-- optimizar kernel
+
 
 - Open Source Security Information Management por sus siglas (OSSIM
 - ssl
