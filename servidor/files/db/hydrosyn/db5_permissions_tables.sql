@@ -1,9 +1,33 @@
 CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE  utf8mb4_bin;
 USE hydrosyn_db;
+
+
+CREATE TABLE IF NOT EXISTS permissions_groups (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+
+)ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS permissions_group_translations (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    group_id INT UNSIGNED NOT NULL,
+    lang_code ENUM('es', 'en') NOT NULL,
+    name VARCHAR(100) NOT NULL UNIQUE,
+
+
+    FOREIGN KEY (group_id) REFERENCES permissions_groups(id)
+        ON DELETE RESTRICT
+        ON UPDATE RESTRICT,
+
+    UNIQUE (group_id, lang_code)
+)ENGINE=InnoDB;
+
+
 CREATE TABLE permissions (
-    id INT PRIMARY KEY AUTO_INCREMENT
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    only_master BOLEAN DEFAULT TRUE,
                  
 )ENGINE=InnoDB;
+
 
 CREATE TABLE permission_translations (
     id INT PRIMARY KEY AUTO_INCREMENT,
