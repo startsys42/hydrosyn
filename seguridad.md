@@ -7,7 +7,6 @@
 
 - [ ] red
 
-- [ ]   kernel
 - [ ]   usaurios
 - [ ]   permisos
 - [ ]    cgroups
@@ -233,8 +232,7 @@ nucleo optimizado
 - csfr
 - xss
 - sqlinjection
-- bios
-- grub
+
 - tokens
 
 - waf
