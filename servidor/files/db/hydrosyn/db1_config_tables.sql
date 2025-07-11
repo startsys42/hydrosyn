@@ -63,6 +63,44 @@ INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
 
 
 
+CREATE TRIGGER block_insert_config_groups
+BEFORE INSERT ON config_groups
+FOR EACH ROW
+SIGNAL SQLSTATE '11000' SET MESSAGE_TEXT = 'Insertion into the config_groups table is prohibited';
+
+--  Prevent deletion from the 'config' table to preserve system configuration
+CREATE TRIGGER block_delete_config_groups
+BEFORE DELETE ON config_groups
+FOR EACH ROW
+SIGNAL SQLSTATE '12000' SET MESSAGE_TEXT = 'Deletion from the config_groups table is prohibited';
+
+
+CREATE TRIGGER block_update_config_groups
+BEFORE UPDATE ON config_groups
+FOR EACH ROW
+SIGNAL SQLSTATE '13000' SET MESSAGE_TEXT = 'Updation from the config_groups table is prohibited';
+
+--  Prevent insertion into the 'config_translations' table to avoid unapproved language entries
+CREATE TRIGGER block_insert_config_translations
+BEFORE INSERT ON config_translations
+FOR EACH ROW
+SIGNAL SQLSTATE '21000' SET MESSAGE_TEXT = 'Insertion into the config_translations table is prohibited';
+
+--  Prevent deletion from the 'config_translations' table to retain translation integrity
+CREATE TRIGGER block_delete_config_translations
+BEFORE DELETE ON config_translations
+FOR EACH ROW
+SIGNAL SQLSTATE '22000' SET MESSAGE_TEXT = 'Deletion from the config_translations table is prohibited';
+
+--  Prevent updates to 'config_translations' to avoid altering validated texts
+CREATE TRIGGER block_update_config_translations
+BEFORE UPDATE ON config_translations
+FOR EACH ROW
+SIGNAL SQLSTATE '23000' SET MESSAGE_TEXT = 'Updation from the config_translations table is prohibited';
+
+
+
+
 CREATE TABLE IF NOT EXISTS config (
     id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
     value INT UNSIGNED NOT NULL, 
