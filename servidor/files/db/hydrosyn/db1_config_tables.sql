@@ -22,45 +22,41 @@ CREATE TABLE IF NOT EXISTS config_group_translations (
     UNIQUE (group_id, lang_code)
 )ENGINE=InnoDB;
 
-INSERT INTO config_groups () VALUES ();
-INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
-(1, 'es', 'Política de votación'),
-(1, 'en', 'Voting Policy');
 
 INSERT INTO config_groups () VALUES ();
 INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
-(2, 'es', 'Cambio de contraseña de base de datos'),
-(2, 'en', 'Database password change');
+(1, 'es', 'Cambio de contraseña de base de datos'),
+(1, 'en', 'Database password change');
 
 INSERT INTO config_groups () VALUES ();
 INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
-(3, 'es', 'Seguridad de inicio de sesión'),
-(3, 'en', 'Login Security')
+(2, 'es', 'Seguridad de inicio de sesión'),
+(2, 'en', 'Login Security')
 
 INSERT INTO config_groups () VALUES ();
 INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
-(4, 'es', 'Duración de autenticación'),
-(4, 'en', 'Authentication Duration');
+(3, 'es', 'Duración de autenticación'),
+(3, 'en', 'Authentication Duration');
 
 INSERT INTO config_groups () VALUES ();
 INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
-(5, 'es', 'Tiempos de gracia y tareas'),
-(5, 'en', 'Grace periods and tasks');
+(4, 'es', 'Tiempos de gracia y tareas'),
+(4, 'en', 'Grace periods and tasks');
 
 INSERT INTO config_groups () VALUES ();
 INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
-(6, 'es', 'Política de nombres de usuario'),
-(6, 'en', 'Username policy');
+(5, 'es', 'Política de nombres de usuario'),
+(5, 'en', 'Username policy');
 
 INSERT INTO config_groups () VALUES ();
 INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
-(7, 'es', 'Política de contraseñas'),
-(7, 'en', 'Password policy');
+(6, 'es', 'Política de contraseñas'),
+(6, 'en', 'Password policy');
 
 INSERT INTO config_groups () VALUES ();
 INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
-(8, 'es', 'Tiempos de retención históricos'),
-(8, 'en', 'Historical retention periods');
+(7, 'es', 'Tiempos de retención históricos'),
+(7, 'en', 'Historical retention periods');
 
 
 
@@ -94,30 +90,7 @@ CREATE TABLE IF NOT EXISTS config_translations (
 )ENGINE=InnoDB;
 
 
-CREATE TABLE config_change_votes (
-    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    change_request_id INT UNSIGNED NOT NULL,
-    user_id INT UNSIGNED NOT NULL,
-    vote ENUM('approve', 'reject') NOT NULL,
-    voted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (change_request_id) REFERENCES config_change_requests(id),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    UNIQUE (change_request_id, user_id)  -- Un usuario solo puede votar una vez por propuesta
-);
 
-CREATE TABLE config_change_requests (
-    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    config_id INT UNSIGNED NOT NULL,          -- Qué configuración quieren cambiar
-    proposed_value INT UNSIGNED NOT NULL,     -- Nuevo valor propuesto
-    proposed_by INT UNSIGNED NOT NULL,        -- Quién propuso el cambio (user id)
-    proposed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
-    decision_at DATETIME NULL,
-    decided_by INT UNSIGNED NULL,              -- Quién aprobó o rechazó
-    FOREIGN KEY (config_id) REFERENCES config(id),
-    FOREIGN KEY (proposed_by) REFERENCES users(id),
-    FOREIGN KEY (decided_by) REFERENCES users(id)
-);
 
 INSERT INTO config (value, min_value, max_value) VALUES
 (3, 3, 5),       -- Failed login or password recovery attempts before temporary lockout
