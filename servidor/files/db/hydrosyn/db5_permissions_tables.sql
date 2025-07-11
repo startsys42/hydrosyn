@@ -23,7 +23,7 @@ CREATE TABLE roles (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL UNIQUE
  
-);
+)=InnoDB;
 
 CREATE TABLE role_permissions (
     role_id INT NOT NULL,
