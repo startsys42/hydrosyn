@@ -105,12 +105,9 @@ CREATE TABLE IF NOT EXISTS config (
     id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
     value INT UNSIGNED NOT NULL, 
     min_value INT UNSIGNED NOT NULL,  
-    max_value INT UNSIGNED NOT NULL,
-    group_id INT UNSIGNED NOT NULL,
-    
-    FOREIGN KEY (group_id) REFERENCES config_groups(id)
-        ON DELETE RESTRICT
-        ON UPDATE RESTRICT
+    max_value INT UNSIGNED NOT NULL
+
+
 )ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS config_translations (
