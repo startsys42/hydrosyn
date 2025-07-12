@@ -53,5 +53,11 @@ else
   exit 1
 fi
 
+## casos de uso
 
-
+- cambair configuracion
+- ver configuracion
+- crear sistema modificar ssitema borarar sistema
+- crear suaurio borrar usuario modifcar usaurio
+- asociar suuario sitema
+- alerats
