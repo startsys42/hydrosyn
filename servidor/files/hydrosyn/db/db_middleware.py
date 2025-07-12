@@ -161,7 +161,9 @@ async def get_session_from_db(session_id: str, extend_validity: bool = True) -> 
                     s.expires_at,
                     u.username,
                     u.email,
-                    u.language 
+                    u.is_activated,
+                    u.language,
+                    u.theme
                 FROM sessions s
                 JOIN users u ON s.user_id = u.id
                 WHERE s.session_id = :session_id 
