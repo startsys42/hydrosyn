@@ -230,6 +230,10 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
             return "non_html_page"
         except:
             return "invalid_referer"
+            
+    async def verify_user_login() -> dict:
+  
+        pass
   
         
  
