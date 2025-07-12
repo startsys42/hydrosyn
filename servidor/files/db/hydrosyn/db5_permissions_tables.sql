@@ -222,3 +222,37 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+
+
+
+
+
+
+DELIMITER //
+
+CREATE EVENT event_mantenimiento_automatico
+ON SCHEDULE
+    EVERY 1 WEEK
+    STARTS CONCAT(DATE_ADD(CURDATE(), INTERVAL (8 - DAYOFWEEK(CURDATE())) DAY, ' 02:00:00')
+DO
+BEGIN
+    -- Manejador de errores
+    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION 
+    BEGIN
+        INSERT INTO log_eventos (mensaje) VALUES ('Error en mantenimiento semanal');
+    END;
+    
+    -- Registrar inicio
+    INSERT INTO log_eventos (mensaje) VALUES ('Inicio mantenimiento 2AM');
+    
+    -- Llamar a tus procedimientos en orden
+    CALL sp_procedimiento1();
+    CALL sp_procedimiento2();
+    CALL sp_procedimiento3();
+    
+    -- Registrar finalización
+    INSERT INTO log_eventos (mensaje) VALUES ('Mantenimiento completado');
+END //
+
+DELIMITER ;
