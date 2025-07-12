@@ -6,6 +6,7 @@
 # añadir nombre a la lista negra
 # estadisticas y cosas
 # borra sesionde usaurios ald esactivar
+# seguridad contraseñas y  seguridad  nombres
 
 
 @router.get("/change-db-user-password")
