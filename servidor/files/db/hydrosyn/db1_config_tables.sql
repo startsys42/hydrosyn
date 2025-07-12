@@ -1,6 +1,30 @@
 CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE  utf8mb4_bin;
 USE hydrosyn_db;
 
+CREATE TABLE  IF NOT EXISTS  users (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT FALSE,
+
+
+
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by INT UNSIGNED NOT NULL,
+     language ENUM('es', 'en') NOT NULL DEFAULT 'en',
+    theme ENUM('dark', 'light') NOT NULL DEFAULT 'light',
+    use_2fa BOOLEAN NOT NULL DEFAULT FALSE,
+    twofa_secret VARCHAR(64),
+
+    CONSTRAINT fk_user_creator
+        FOREIGN KEY (created_by)
+        REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+)ENGINE=InnoDB;
+
+
 
 
 CREATE TABLE IF NOT EXISTS config_groups (
@@ -21,6 +45,34 @@ CREATE TABLE IF NOT EXISTS config_group_translations (
 
     UNIQUE (group_id, lang_code)
 )ENGINE=InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS config (
+    id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
+    value INT UNSIGNED NOT NULL, 
+    min_value INT UNSIGNED NOT NULL,  
+    max_value INT UNSIGNED NOT NULL,
+    group_id INT UNSIGNED NOT NULL,
+     FOREIGN KEY (group_id) REFERENCES config_groups(id)
+        ON DELETE RESTRICT
+        ON UPDATE RESTRICT
+
+)ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS config_translations (
+    id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
+    config_id INT UNSIGNED  NOT NULL,
+    lang_code ENUM('es', 'en') NOT NULL,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    description VARCHAR(255) NOT NULL UNIQUE,
+
+    FOREIGN KEY (config_id) REFERENCES config(id)
+        ON DELETE RESTRICT
+        ON UPDATE RESTRICT,
+
+    UNIQUE (config_id, lang_code)
+)ENGINE=InnoDB;
+
 
 
 INSERT INTO config_groups () VALUES ();
@@ -66,19 +118,19 @@ INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
 CREATE TRIGGER block_insert_config_groups
 BEFORE INSERT ON config_groups
 FOR EACH ROW
-SIGNAL SQLSTATE '11000' SET MESSAGE_TEXT = 'Insertion into the config_groups table is prohibited';
+SIGNAL SQLSTATE '21000' SET MESSAGE_TEXT = 'Insertion into the config_groups table is prohibited';
 
 --  Prevent deletion from the 'config' table to preserve system configuration
 CREATE TRIGGER block_delete_config_groups
 BEFORE DELETE ON config_groups
 FOR EACH ROW
-SIGNAL SQLSTATE '12000' SET MESSAGE_TEXT = 'Deletion from the config_groups table is prohibited';
+SIGNAL SQLSTATE '22000' SET MESSAGE_TEXT = 'Deletion from the config_groups table is prohibited';
 
 
 CREATE TRIGGER block_update_config_groups
 BEFORE UPDATE ON config_groups
 FOR EACH ROW
-SIGNAL SQLSTATE '13000' SET MESSAGE_TEXT = 'Updation from the config_groups table is prohibited';
+SIGNAL SQLSTATE '23000' SET MESSAGE_TEXT = 'Updation from the config_groups table is prohibited';
 
 --  Prevent insertion into the 'config_translations' table to avoid unapproved language entries
 CREATE TRIGGER block_insert_config_translations
@@ -101,28 +153,8 @@ SIGNAL SQLSTATE '23000' SET MESSAGE_TEXT = 'Updation from the config_translation
 
 
 
-CREATE TABLE IF NOT EXISTS config (
-    id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
-    value INT UNSIGNED NOT NULL, 
-    min_value INT UNSIGNED NOT NULL,  
-    max_value INT UNSIGNED NOT NULL
 
 
-)ENGINE=InnoDB;
-
-CREATE TABLE IF NOT EXISTS config_translations (
-    id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
-    config_id INT UNSIGNED  NOT NULL,
-    lang_code ENUM('es', 'en') NOT NULL,
-    name VARCHAR(100) NOT NULL UNIQUE,
-    description VARCHAR(255) NOT NULL UNIQUE,
-
-    FOREIGN KEY (config_id) REFERENCES config(id)
-        ON DELETE RESTRICT
-        ON UPDATE RESTRICT,
-
-    UNIQUE (config_id, lang_code)
-)ENGINE=InnoDB;
 
 
 
