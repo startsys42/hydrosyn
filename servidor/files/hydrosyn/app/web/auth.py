@@ -33,7 +33,7 @@ async def login_post(request: Request, username: str = Form(...), password: str 
         prefs = get_user_preferences(request)
     except ValueError as e:
         return PlainTextResponse(str(e), status_code=400)
-# comprobar cuenta no bloqueada, comprobar usuario existe, comprobar nomber no lista negra, comprobar usuario activado o no o comoe sta su sistuacion,... comprobar cumple reglas contraseña y nombe...
+# comprobar cuenta no bloqueada, comprobar usuario existe, comprobar nomber no lista negra, comprobar usuario activado o no o comoe sta su sistuacion,... comprobar cumple reglas contraseña y nombe... # email_verifiacion
     if authenticate_user(username, password):
         # Autenticación OK, redirigir a dashboard o página segura
         response = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
