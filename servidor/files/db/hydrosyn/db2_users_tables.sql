@@ -72,7 +72,7 @@ CREATE TABLE password_policy_current (
     max_password_age_days INT NOT NULL DEFAULT 90,
     min_password_history INT NOT NULL DEFAULT 5,
     min_password_age_history_days INT NOT NULL DEFAULT 450, -- nuevo campo
-
+allow_username_in_password BOOLEAN NOT NULL DEFAULT FALSE,
     applied_since TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     changed_by INT UNSIGNED NOT NULL,
@@ -94,7 +94,7 @@ CREATE TABLE password_policy_history (
     max_password_age_days INT NOT NULL DEFAULT 90,
     min_password_history INT NOT NULL DEFAULT 5,
     min_password_age_history_days INT NOT NULL DEFAULT 450, -- mínimo días entre cambios
-
+allow_username_in_password BOOLEAN NOT NULL DEFAULT FALSE,
     changed_by INT UNSIGNED NOT NULL, -- ID del usuario que hizo el cambio
     changed_at TIMESTAMP NOT NULL,
 
@@ -104,7 +104,11 @@ CREATE TABLE password_policy_history (
 );
 
 
+CREATE TABLE password_special_chars (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    special_char VARCHAR(1) NOT NULL UNIQUE
 
+);
 
 
 CREATE TABLE username_policy_current (
