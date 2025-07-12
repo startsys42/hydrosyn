@@ -161,7 +161,7 @@ async def get_session_from_db(session_id: str, extend_validity: bool = True) -> 
                     s.expires_at,
                     u.username,
                     u.email,
-                    u.is_activated,
+                    u.is_activate,
                     u.language,
                     u.theme
                 FROM sessions s
