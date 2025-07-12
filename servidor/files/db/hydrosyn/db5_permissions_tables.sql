@@ -1,6 +1,9 @@
 CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE  utf8mb4_bin;
 USE hydrosyn_db;
 
+-- configuraciones modificar, dividir modi
+-- crear usuarios borrar 
+
 
 CREATE TABLE IF NOT EXISTS permissions_groups (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
