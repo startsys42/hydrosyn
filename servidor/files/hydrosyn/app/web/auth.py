@@ -47,9 +47,7 @@ async def login_post(request: Request, username: str = Form(...), password: str 
             "texts": prefs["texts"],
             "lang": prefs["lang"],
             "theme": prefs["theme"],
-            "next_lang": prefs["next_lang"],
-            "next_theme": prefs["next_theme"],
-            "error": "Usuario o contraseña incorrectos"
+        "
         }, status_code=400)
 
 
