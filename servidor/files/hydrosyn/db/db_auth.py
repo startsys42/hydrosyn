@@ -24,21 +24,6 @@ async def delete_session_in_db(session_id: str) -> bool:
         logger.error(f"Error deleting session with Session ID {session_id}: {e}")
         return False
 
-
-async def email_exist(email: str) -> bool:
-    sql = text("""
-        SELECT 1 FROM users WHERE email = :email LIMIT 1
-    """)
-    engine = DBEngine.get_engine()
-    try:
-        async with engine.connect() as conn:
-            result = await conn.execute(sql, {"email": email})
-            row = result.fetchone()
-            return row is not None
-    except Exception as e:
-        logger.error(f"Error checking email existence: {e}")
-        return False  # o True si quieres bloquear en caso de error
-
 async def is_in_blacklist_from_db(username: str) -> bool:
     sql = text("""
         SELECT username FROM username_blacklist WHERE username = :username 
@@ -57,6 +42,24 @@ async def is_in_blacklist_from_db(username: str) -> bool:
                    extra={"username": username})
         return True  # Fail-safe
 
+
+
+
+
+
+async def email_exist(email: str) -> bool:
+    sql = text("""
+        SELECT 1 FROM users WHERE email = :email LIMIT 1
+    """)
+    engine = DBEngine.get_engine()
+    try:
+        async with engine.connect() as conn:
+            result = await conn.execute(sql, {"email": email})
+            row = result.fetchone()
+            return row is not None
+    except Exception as e:
+        logger.error(f"Error checking email existence: {e}")
+        return False  # o True si quieres bloquear en caso de error
 
 
 
