@@ -7,6 +7,7 @@ from fastapi import Form, status
 from fastapi.responses import RedirectResponse
 from common.templates import templates
 from logger import logger
+from security.csrf import generate_csrf_token
 
 
 router = APIRouter(tags=["Web Auth"])
@@ -16,6 +17,7 @@ router = APIRouter(tags=["Web Auth"])
 async def login_get(request: Request):
     try:
         prefs = get_user_preferences(request)
+        csrf_token = generate_csrf_token()
     except ValueError as e:
         return PlainTextResponse(str(e), status_code=400)
 
@@ -24,7 +26,7 @@ async def login_get(request: Request):
         "texts": prefs["texts"],
         "lang": prefs["lang"],
         "theme": prefs["theme"],
-      
+      "csrf_token": csrf_token
     })
     
 @router.post("/login", response_class=HTMLResponse)
@@ -47,7 +49,7 @@ async def login_post(request: Request, username: str = Form(...), password: str 
             "texts": prefs["texts"],
             "lang": prefs["lang"],
             "theme": prefs["theme"],
-        "
+        
         }, status_code=400)
 
 
@@ -103,6 +105,7 @@ async def login_post(request: Request, username: str = Form(...), password: str 
 async def recover_password_get(request: Request):
     try:
         prefs = get_user_preferences(request)
+        csrf_token = generate_csrf_token()
     except ValueError as e:
         return PlainTextResponse(str(e), status_code=400)
 
@@ -111,6 +114,7 @@ async def recover_password_get(request: Request):
         "texts": prefs["texts"],
         "lang": prefs["lang"],
         "theme": prefs["theme"],
+        "csrf_token": csrf_token
     })
 
 
