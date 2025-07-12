@@ -4,6 +4,7 @@
 # cambair clave base de datos, revocar cookies
 #extender tiempo suaurios login o recueparrc ontarseña ver logs
 # añadir nombre a la lista negra
+# estadisticas y cosas
 
 
 @router.get("/change-db-user-password")
