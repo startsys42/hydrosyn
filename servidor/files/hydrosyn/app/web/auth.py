@@ -10,7 +10,7 @@ from logger import logger
 
 
 router = APIRouter(tags=["Web Auth"])
-
+# poenr los formualrios con campos dinamicos
 
 @router.get("/login", response_class=HTMLResponse)
 async def login_get(request: Request):
