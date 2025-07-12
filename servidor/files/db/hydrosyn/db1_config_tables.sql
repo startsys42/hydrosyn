@@ -8,12 +8,13 @@ CREATE TABLE  IF NOT EXISTS  users (
     password VARCHAR(255) NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
     change_pass BOOLEAN NOT NULL FALSE,
+    delete_possible NOT NULL FALSE,
 
 
 
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by INT UNSIGNED NOT NULL,
-     language ENUM('es', 'en') NOT NULL DEFAULT 'en',
+    language ENUM('es', 'en') NOT NULL DEFAULT 'en',
     theme ENUM('dark', 'light') NOT NULL DEFAULT 'light',
     use_2fa BOOLEAN NOT NULL DEFAULT FALSE,
     twofa_secret VARCHAR(32),
