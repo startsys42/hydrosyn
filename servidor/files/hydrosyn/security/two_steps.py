@@ -39,19 +39,28 @@ def generate_two_step_token(user_id: int, session_id: int):
     
     return token
 
-def verify_two_step_token(user_id: str, token: str) -> bool:
-    """Verifica que el token coincida con el usuario"""
-    if user_id not in pending_2fa:
-        return False
-        
-    stored_data = pending_2fa[user_id]
-    
+def validate_two_step_token(token, max_age=300):
+  
     try:
-        # Verifica firma y expiración
-        data = serializer.loads(token, max_age=300)
-        # Verifica coincidencia usuario y token
-        return (data["sub"] == user_id and 
-                token == stored_data["token"] and
-                time.time() < stored_data["expires"])
-    except:
+        
+        data = serializer_two_step.loads(token)
+        
+    
+        if data["token_id"] not in two_step_tokens:
+            return False
+            
+        
+        current_time = time.time()
+        if (current_time - data["ts"]) > max_age:
+            
+            two_step_tokens.pop(data["token_id"], None)
+            return False
+            
+      
+        two_step_tokens.pop(data["token_id"], None)
+        return True
+        
+    except BadSignature:
+        return False
+    except Exception:
         return False
