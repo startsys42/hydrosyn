@@ -77,40 +77,37 @@ CREATE TABLE IF NOT EXISTS config_translations (
 
 
 
-INSERT INTO config_groups () VALUES ();
-INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
-(1, 'es', 'Cambio de contraseña de base de datos'),
-(1, 'en', 'Database password change');
+
 
 INSERT INTO config_groups () VALUES ();
 INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
-(2, 'es', 'Seguridad de inicio de sesión'),
-(2, 'en', 'Login Security')
+(1, 'es', 'Seguridad de inicio de sesión'),
+(1, 'en', 'Login Security')
 
 INSERT INTO config_groups () VALUES ();
 INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
-(3, 'es', 'Duración de autenticación'),
-(3, 'en', 'Authentication Duration');
+(2, 'es', 'Duración de autenticación'),
+(2, 'en', 'Authentication Duration');
 
 INSERT INTO config_groups () VALUES ();
 INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
-(4, 'es', 'Tiempos de gracia y tareas'),
-(4, 'en', 'Grace periods and tasks');
+(3, 'es', 'Tiempos de gracia y tareas'),
+(3, 'en', 'Grace periods and tasks');
 
 INSERT INTO config_groups () VALUES ();
 INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
-(5, 'es', 'Política de nombres de usuario'),
-(5, 'en', 'Username policy');
+(4, 'es', 'Política de nombres de usuario'),
+(4, 'en', 'Username policy');
 
 INSERT INTO config_groups () VALUES ();
 INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
-(6, 'es', 'Política de contraseñas'),
-(6, 'en', 'Password policy');
+(5, 'es', 'Política de contraseñas'),
+(5, 'en', 'Password policy');
 
 INSERT INTO config_groups () VALUES ();
 INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
-(7, 'es', 'Tiempos de retención históricos'),
-(7, 'en', 'Historical retention periods');
+(6, 'es', 'Tiempos de retención históricos'),
+(6, 'en', 'Historical retention periods');
 
 
 
