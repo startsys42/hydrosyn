@@ -231,28 +231,22 @@ DELIMITER ;
 
 DELIMITER //
 
-CREATE EVENT event_mantenimiento_automatico
+CREATE EVENT weekly_maintenance_auto
 ON SCHEDULE
-    EVERY 1 WEEK
-    STARTS CONCAT(DATE_ADD(CURDATE(), INTERVAL (8 - DAYOFWEEK(CURDATE())) DAY, ' 02:00:00')
+    EVERY 1 DAY
+    STARTS CONCAT(CURRENT_DATE + INTERVAL 1 DAY, ' 02:00:00')
 DO
 BEGIN
-    -- Manejador de errores
-    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION 
+    -- Basic error handling (will stop on first error)
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
-        INSERT INTO log_eventos (mensaje) VALUES ('Error en mantenimiento semanal');
+        -- Fail silently (or add notification logic here)
     END;
     
-    -- Registrar inicio
-    INSERT INTO log_eventos (mensaje) VALUES ('Inicio mantenimiento 2AM');
-    
-    -- Llamar a tus procedimientos en orden
-    CALL sp_procedimiento1();
-    CALL sp_procedimiento2();
-    CALL sp_procedimiento3();
-    
-    -- Registrar finalización
-    INSERT INTO log_eventos (mensaje) VALUES ('Mantenimiento completado');
+    -- Execute maintenance procedures in order
+    CALL reorganize_config_history_ids();
+
 END //
 
 DELIMITER ;
+
