@@ -56,7 +56,7 @@ CREATE TABLE permission_translations (
 
 CREATE TABLE roles (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL UNIQUE
+    name VARCHAR(50) NOT NULL UNIQUE
  
 )=InnoDB;
 
