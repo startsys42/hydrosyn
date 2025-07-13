@@ -11,7 +11,7 @@ from security.email import send_email
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any,Union
 from logger import logger
-from db.db_middleware import get_session_id_exists_from_db, get_session_from_db,  insert_login_attempts_to_db, get_cookie_expired_time_from_db 
+from db.db_middleware import get_session_id_exists_from_db, get_session_from_db,  insert_login_attempts_in_db, get_cookie_expired_time_from_db 
 from db.db_auth import delete_session_in_db
 from pydantic import BaseModel
 from fastapi import HTTPException
@@ -150,7 +150,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                             return RedirectResponse(url="/web/auth/home")
                         else:
                             if origin_path in ["/web/auth/home"]:
-                                await insert_login_attempts_to_db(
+                                await insert_login_attempts_in_db(
                                     session_id=session_id,
                                     user_id=session_data['user_id'],
                                     ip_address=client_ip,
@@ -186,7 +186,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         recovery=True
                     else:
                         recovery=False
-                    await insert_login_attempts_to_db(
+                    await insert_login_attempts_in_db(
                         session_id=session_id,
                         ip_address=client_ip,
                         success=False,
