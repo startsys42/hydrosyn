@@ -5,6 +5,59 @@ from logger import logger
 from datetime import datetime, timedelta
 from db.db_config import get_cookie_rotation_time_from_db
 
+
+from db.db_engine import DBEngine
+from logger import logger
+from typing import Optional, Dict, Any
+
+async def get_user_login_from_db(username: str, password: str) -> Optional[Dict[str, Any]]:
+  
+    """
+    sql = text("""
+        SELECT 
+            id, 
+            email, 
+            is_active, 
+            use_2fa, 
+            language, 
+            theme,
+            password
+        FROM users 
+        WHERE username = :username
+        LIMIT 1
+    """)
+    
+    engine = DBEngine.get_engine()
+    
+    try:
+        async with engine.connect() as conn:
+            result = await conn.execute(sql, {"username": username})
+            user = result.fetchone()
+            
+            if user is None:
+                logger.info(f"No user found with username: {username}")
+                return None
+
+            if user["password"] != password:
+                logger.warning(f"Password mismatch for user: {username}")
+                return None
+                
+            # Return user info (excluding the password)
+            return {
+                "id": user["id"],
+                "email": user["email"],
+                "is_active": user["is_active"],
+                "use_2fa": user["use_2fa"],
+                "language": user["language"],
+                "theme": user["theme"]
+            }
+            
+    except Exception as e:
+        logger.error(f"Error retrieving user info for {username}: {e}")
+        return None
+
+
+
 async def delete_session_in_db(session_id: str) -> bool:
     sql = text("""
         DELETE FROM sessions WHERE session_id = :session_id
