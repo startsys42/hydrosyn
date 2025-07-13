@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS config (
 
 )ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS config_translations (
+CREATE TABLE IF NOT EXISTS config_translations(
     id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
     config_id INT UNSIGNED  NOT NULL,
     lang_code ENUM('es', 'en') NOT NULL,
@@ -51,8 +51,6 @@ CREATE TABLE IF NOT EXISTS config_translations (
 
     UNIQUE (config_id, lang_code)
 )ENGINE=InnoDB;
-
-
 
 
 
@@ -296,7 +294,7 @@ DELIMITER ;
 
 
 
-CREATE TABLE  IF NOT EXISTS  users (
+CREATE TABLE  IF NOT EXISTS  users(
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL,
     username VARCHAR(255) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -304,9 +302,6 @@ CREATE TABLE  IF NOT EXISTS  users (
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
     change_pass BOOLEAN NOT NULL DEFAULT  FALSE,
     delete_possible  BOOLEAN NOT NULL DEFAULT  FALSE,
-
-
-
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by INT UNSIGNED NOT NULL,
     language ENUM('es', 'en') NOT NULL DEFAULT 'en',
