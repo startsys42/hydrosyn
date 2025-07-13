@@ -178,7 +178,7 @@ VALUES
 
 -- Config ID 16
 (16, 'es', 'Retención de intentos de acceso y recuperación', 'Días que se conservarán los intentos de inicio de sesión y recuperación de contraseña'),
-(16, 'en', 'Access and recovery attempts retention', 'Days to retain login and password recovery attempt history');
+(16, 'en', 'Access and recovery attempts retention', 'Days to retain login and password recovery attempt history'),
 
 
 -- Config ID 17 (Retención de historial de configuración)
