@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS config_translations(
 INSERT INTO config_groups  VALUES ();
 INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
 (1, 'es', 'Seguridad de inicio de sesión'),
-(1, 'en', 'Login Security')
+(1, 'en', 'Login Security');
 
 INSERT INTO config_groups  VALUES ();
 INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
