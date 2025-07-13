@@ -39,6 +39,42 @@ async def login_post(request: Request, username: str = Form(...), password: str 
 
 ## notificacion, errore en pagina e idioma , login attempt
     if await is_in_blacklist_from_db(username):
+         notification = await get_notification_details(5)
+        
+        # 2. Si está activo el envío por email
+        if notification['should_send_email']:
+            # Obtener plantilla en el idioma correcto
+            template = await get_notification_template(
+                notification_id=5,
+                lang_code=prefs['lang']
+            )
+            
+            # Formatear mensaje
+            formatted_email = template['template_text'].format(
+                usuario=username,
+                user=username,
+                ip=ip,
+                fecha=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            )
+            
+            # Obtener email de administración
+            admin_email = get_admin_email()
+            
+            # Enviar email
+            send_email(
+                to=admin_email,
+                subject=template['subject'],
+                body=formatted_email
+            )
+        
+        # 3. Registrar notificación para el usuario 1 (admin) en cualquier caso
+        await create_user_notification(
+            user_id=1,  # ID del usuario admin
+            notification_id=5,
+            username=username,
+            ip=ip,
+            lang=prefs['lang']
+        )
         return templates.TemplateResponse("login.html", {
             "request": request,
             "texts": prefs["texts"],
