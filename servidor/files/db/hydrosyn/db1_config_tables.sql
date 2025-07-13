@@ -303,7 +303,7 @@ CREATE TABLE  IF NOT EXISTS  users (
     password VARCHAR(255) NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
     change_pass BOOLEAN NOT NULL DEFAULT  FALSE,
-    delete_possible NOT NULL DEFAULT  FALSE,
+    delete_possible  BOOLEAN NOT NULL DEFAULT  FALSE,
 
 
 
