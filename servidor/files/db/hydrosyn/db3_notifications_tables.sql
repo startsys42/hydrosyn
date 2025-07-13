@@ -10,6 +10,7 @@ CREATE TABLE notifications (
 CREATE TABLE notification_email_history (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
+    lang_code ENUM('es', 'en') NOT NULL,
     changed_by INT UNSIGNED NOT NULL,
     changed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     
