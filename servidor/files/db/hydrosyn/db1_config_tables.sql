@@ -427,7 +427,7 @@ CREATE TABLE email_verifications (
 
 CREATE TABLE email_verifications_unverified_log (
     id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(255) NOT NULL,
+    user_id INT UNSIGNED NOT NULL,
     email VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NOT NULL,   -- fecha creación del token
     expires_at TIMESTAMP NOT NULL,   -- fecha de expiración
