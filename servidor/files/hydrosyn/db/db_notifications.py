@@ -4,7 +4,7 @@ from typing import Optional
 from sqlalchemy import text
 from db.db_engine import DBEngine  # Asegúrate de importar tu DBEngine
 from logger import logger
-async def should_send_email_for_notification(notification_id: int) -> bool:
+async def get_should_send_email_for_notification_from_db(notification_id: int) -> bool:
 
     """
     sql = text("""
