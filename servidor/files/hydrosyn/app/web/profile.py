@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request
 router = APIRouter()
-#  cambair idioma, cambiar contarseña, activar twofa, desativar twofa, actiavr  
+#  cambair idioma, cambiar contarseña, activar twofa, desativar twofa, actiavr  , ver correo. o inidcarloe n lso emnsajes
 
 def generate_secure_totp_secret():
     # Alfabeto Base32 oficial (mayúsculas + 2-7)
