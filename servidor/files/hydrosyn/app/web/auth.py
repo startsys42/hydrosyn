@@ -37,18 +37,7 @@ async def login_post(request: Request, username: str = Form(...), password: str 
     except ValueError as e:
         return PlainTextResponse(str(e), status_code=400)
 
-    # Validar CSRF primero
-    if not validate_csrf_token(csrf_token):
-        return templates.TemplateResponse("login.html", {
-            "request": request,
-            "texts": prefs["texts"],
-            "lang": prefs["lang"],
-            "theme": prefs["theme"],
-            "error": "Invalid CSRF token"
-        }, status_code=403)
-
-    # 1. Verificar lista negra
-    if await is_in_blacklist_from_db(username):
+  if await is_in_blacklist_from_db(username):
         # Obtener configuración de notificación
         should_send = await get_should_send_email_for_notification_from_db(5)  # ID 5 = lista negra
         
@@ -61,7 +50,7 @@ async def login_post(request: Request, username: str = Form(...), password: str 
                     lang_code=notification_lang
                 )
                 
-                if template:
+              
                     client_ip = request.client.host if request.client else "unknown"
                     formatted_msg = template['template_text'].format(
                       
@@ -85,14 +74,28 @@ async def login_post(request: Request, username: str = Form(...), password: str 
             ip=request.client.host if request.client else "unknown",
             lang=prefs['lang']
         )
-        
-        return templates.TemplateResponse("login.html", {
+    return templates.TemplateResponse("login.html", {
             "request": request,
             "texts": prefs["texts"],
             "lang": prefs["lang"],
             "theme": prefs["theme"],
             "error": "Account restricted"
         }, status_code=403)
+    # Validar CSRF primero
+
+    if not validate_csrf_token(csrf_token):
+        return templates.TemplateResponse("login.html", {
+            "request": request,
+            "texts": prefs["texts"],
+            "lang": prefs["lang"],
+            "theme": prefs["theme"],
+            "error": "Invalid CSRF token"
+        }, status_code=403)
+
+    # 1. Verificar lista negra
+  
+        
+        
 
     # 2. Verificar credenciales
     user_data = await get_user_login_from_db(username=username, password=password)
