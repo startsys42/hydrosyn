@@ -7,6 +7,7 @@
 # estadisticas y cosas
 # borra sesionde usaurios ald esactivar
 # seguridad contraseñas y  seguridad  nombres
+#notificacioens
 
 
 @router.get("/change-db-user-password")
