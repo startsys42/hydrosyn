@@ -36,7 +36,7 @@ async def get_should_send_email_for_notification_from_db(notification_id: int) -
         return None
 
 
-async def get_latest_notification_email() -> Optional[Tuple[str, str]]:
+async def   get_notifications_email_from_db() -> Optional[Tuple[str, str]]:
 
     """
     sql = text("""
