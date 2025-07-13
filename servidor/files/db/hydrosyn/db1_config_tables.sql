@@ -7,7 +7,7 @@ USE hydrosyn_db;
 
 
 CREATE TABLE IF NOT EXISTS config_groups (
-    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT
 
 )ENGINE=InnoDB;
 
@@ -302,8 +302,8 @@ CREATE TABLE  IF NOT EXISTS  users (
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    change_pass BOOLEAN NOT NULL FALSE,
-    delete_possible NOT NULL FALSE,
+    change_pass BOOLEAN NOT NULL DEFAULT  FALSE,
+    delete_possible NOT NULL DEFAULT  FALSE,
 
 
 
