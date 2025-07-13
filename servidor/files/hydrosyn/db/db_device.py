@@ -5,7 +5,7 @@ from typing import Literal
 from logger import logger  
 from db.db_engine import DBEngine 
 
-def insert_login_attempts_to_db(
+def insert_login_attempts_in_db(
     session_id: str, 
     user_id: int | None,
     ip_address: str,
