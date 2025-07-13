@@ -1,30 +1,6 @@
 CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE  utf8mb4_bin;
 USE hydrosyn_db;
 
-CREATE TABLE  IF NOT EXISTS  users (
-    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    username VARCHAR(255) NOT NULL UNIQUE,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    change_pass BOOLEAN NOT NULL FALSE,
-    delete_possible NOT NULL FALSE,
-
-
-
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_by INT UNSIGNED NOT NULL,
-    language ENUM('es', 'en') NOT NULL DEFAULT 'en',
-    theme ENUM('dark', 'light') NOT NULL DEFAULT 'light',
-    use_2fa BOOLEAN NOT NULL DEFAULT FALSE,
-    twofa_secret VARCHAR(32),
-
-    CONSTRAINT fk_user_creator
-        FOREIGN KEY (created_by)
-        REFERENCES users(id)
-        ON DELETE RESTRICT
-        ON UPDATE CASCADE
-)ENGINE=InnoDB;
 
 
 
@@ -221,37 +197,37 @@ VALUES
 CREATE TRIGGER block_insert_config_groups
 BEFORE INSERT ON config_groups
 FOR EACH ROW
-SIGNAL SQLSTATE '21000' SET MESSAGE_TEXT = 'Insertion into the config_groups table is prohibited';
+SIGNAL SQLSTATE '11000' SET MESSAGE_TEXT = 'Insertion into the config_groups table is prohibited';
 
 --  Prevent deletion from the 'config' table to preserve system configuration
 CREATE TRIGGER block_delete_config_groups
 BEFORE DELETE ON config_groups
 FOR EACH ROW
-SIGNAL SQLSTATE '22000' SET MESSAGE_TEXT = 'Deletion from the config_groups table is prohibited';
+SIGNAL SQLSTATE '12000' SET MESSAGE_TEXT = 'Deletion from the config_groups table is prohibited';
 
 
 CREATE TRIGGER block_update_config_groups
 BEFORE UPDATE ON config_groups
 FOR EACH ROW
-SIGNAL SQLSTATE '23000' SET MESSAGE_TEXT = 'Updation from the config_groups table is prohibited';
+SIGNAL SQLSTATE '13000' SET MESSAGE_TEXT = 'Updation from the config_groups table is prohibited';
 
 --  Prevent insertion into the 'config_translations' table to avoid unapproved language entries
 CREATE TRIGGER block_insert_config_translations
 BEFORE INSERT ON config_translations
 FOR EACH ROW
-SIGNAL SQLSTATE '31000' SET MESSAGE_TEXT = 'Insertion into the config_translations table is prohibited';
+SIGNAL SQLSTATE '21000' SET MESSAGE_TEXT = 'Insertion into the config_translations table is prohibited';
 
 --  Prevent deletion from the 'config_translations' table to retain translation integrity
 CREATE TRIGGER block_delete_config_translations
 BEFORE DELETE ON config_translations
 FOR EACH ROW
-SIGNAL SQLSTATE '32000' SET MESSAGE_TEXT = 'Deletion from the config_translations table is prohibited';
+SIGNAL SQLSTATE '22000' SET MESSAGE_TEXT = 'Deletion from the config_translations table is prohibited';
 
 --  Prevent updates to 'config_translations' to avoid altering validated texts
 CREATE TRIGGER block_update_config_translations
 BEFORE UPDATE ON config_translations
 FOR EACH ROW
-SIGNAL SQLSTATE '33000' SET MESSAGE_TEXT = 'Updation from the config_translations table is prohibited';
+SIGNAL SQLSTATE '23000' SET MESSAGE_TEXT = 'Updation from the config_translations table is prohibited';
 
 
 
@@ -270,31 +246,31 @@ SIGNAL SQLSTATE '33000' SET MESSAGE_TEXT = 'Updation from the config_translation
 CREATE TRIGGER block_insert_config
 BEFORE INSERT ON config
 FOR EACH ROW
-SIGNAL SQLSTATE '41000' SET MESSAGE_TEXT = 'Insertion into the config table is prohibited';
+SIGNAL SQLSTATE '31000' SET MESSAGE_TEXT = 'Insertion into the config table is prohibited';
 
 --  Prevent deletion from the 'config' table to preserve system configuration
 CREATE TRIGGER block_delete_config
 BEFORE DELETE ON config
 FOR EACH ROW
-SIGNAL SQLSTATE '42000' SET MESSAGE_TEXT = 'Deletion from the config table is prohibited';
+SIGNAL SQLSTATE '32000' SET MESSAGE_TEXT = 'Deletion from the config table is prohibited';
 
 --  Prevent insertion into the 'config_translations' table to avoid unapproved language entries
 CREATE TRIGGER block_insert_config_translations
 BEFORE INSERT ON config_translations
 FOR EACH ROW
-SIGNAL SQLSTATE '51000' SET MESSAGE_TEXT = 'Insertion into the config_translations table is prohibited';
+SIGNAL SQLSTATE '41000' SET MESSAGE_TEXT = 'Insertion into the config_translations table is prohibited';
 
 --  Prevent deletion from the 'config_translations' table to retain translation integrity
 CREATE TRIGGER block_delete_config_translations
 BEFORE DELETE ON config_translations
 FOR EACH ROW
-SIGNAL SQLSTATE '52000' SET MESSAGE_TEXT = 'Deletion from the config_translations table is prohibited';
+SIGNAL SQLSTATE '42000' SET MESSAGE_TEXT = 'Deletion from the config_translations table is prohibited';
 
 --  Prevent updates to 'config_translations' to avoid altering validated texts
 CREATE TRIGGER block_update_config_translations
 BEFORE UPDATE ON config_translations
 FOR EACH ROW
-SIGNAL SQLSTATE '53000' SET MESSAGE_TEXT = 'Updation from the config_translations table is prohibited';
+SIGNAL SQLSTATE '43000' SET MESSAGE_TEXT = 'Updation from the config_translations table is prohibited';
 
 DELIMITER $$
 
@@ -303,15 +279,15 @@ BEFORE UPDATE ON config
 FOR EACH ROW
 BEGIN
     IF NEW.min_value != OLD.min_value OR NEW.max_value != OLD.max_value THEN
-        SIGNAL SQLSTATE '43001' SET MESSAGE_TEXT = 'Only the "value" field can be updated. "min_value" and "max_value" are read-only.';
+        SIGNAL SQLSTATE '33001' SET MESSAGE_TEXT = 'Only the "value" field can be updated. "min_value" and "max_value" are read-only.';
     END IF;
 
     IF NEW.value < OLD.min_value THEN
-        SIGNAL SQLSTATE '43002' SET MESSAGE_TEXT = 'The new value is below the minimum allowed.';
+        SIGNAL SQLSTATE '33002' SET MESSAGE_TEXT = 'The new value is below the minimum allowed.';
     END IF;
 
     IF NEW.value > OLD.max_value THEN
-        SIGNAL SQLSTATE '43003' SET MESSAGE_TEXT = 'The new value exceeds the maximum allowed.';
+        SIGNAL SQLSTATE '33003' SET MESSAGE_TEXT = 'The new value exceeds the maximum allowed.';
     END IF;
 END$$
 
