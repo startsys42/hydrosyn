@@ -10,53 +10,82 @@ from db.db_engine import DBEngine
 from logger import logger
 from typing import Optional, Dict, Any
 
-async def get_user_login_from_db(username: str, password: str) -> Optional[Dict[str, Any]]:
-  
+async def get_user_login_from_db(
+    username: str,  # Obligatorio siempre
+    password: str = None,  # Opcional (Caso 2)
+    email: str = None  # Opcional (Caso 1)
+) -> Optional[Dict[str, Any]]:
     """
-    sql = text("""
-        SELECT 
-            id, 
-            email, 
-            is_active, 
-            use_2fa, 
-            language, 
-            theme,
-            password
-        FROM users 
-        WHERE username = :username
-        LIMIT 1
-    """)
-    
+    Autentica un usuario en dos casos:
+      1. username + password
+      2. username + email
+
+    Args:
+        username (str): Obligatorio siempre.
+        password (str): Obligatorio si no se envía email.
+        email (str): Obligatorio si no se envía password.
+
+    Returns:
+        dict: Datos del usuario si es válido, None si falla.
+    """
+
+    # Validación de parámetros
+    if password is None and email is None:
+        logger.error("Debes enviar 'password' o 'email' junto con 'username'")
+        return None
+
+    # Construye la consulta según el caso
+    if password is not None:
+        # Caso 1: username + password
+        sql = text("""
+            SELECT id, username, email, is_active, 
+                   use_2fa, language, theme, password
+            FROM users 
+            WHERE username = :username
+            LIMIT 1
+        """)
+        params = {"username": username}
+    else:
+        # Caso 2: username + email
+        sql = text("""
+            SELECT id, username, email, is_active, 
+                   use_2fa, language, theme, password
+            FROM users 
+            WHERE username = :username AND email = :email
+            LIMIT 1
+        """)
+        params = {"username": username, "email": email}
+
     engine = DBEngine.get_engine()
-    
+
     try:
         async with engine.connect() as conn:
-            result = await conn.execute(sql, {"username": username})
+            result = await conn.execute(sql, params)
             user = result.fetchone()
-            
+
             if user is None:
-                logger.info(f"No user found with username: {username}")
+                logger.warning(f"Usuario no encontrado o datos incorrectos: {username}")
                 return None
 
-            if user["password"] != password:
-                logger.warning(f"Password mismatch for user: {username}")
+            # Verifica la contraseña (si aplica)
+            if password is not None and user["password"] != password:
+                logger.warning(f"Contraseña incorrecta para: {username}")
                 return None
-                
-            # Return user info (excluding the password)
+
+            # Devuelve datos del usuario (sin contraseña)
             return {
                 "id": user["id"],
+                "username": user["username"],
                 "email": user["email"],
                 "is_active": user["is_active"],
                 "use_2fa": user["use_2fa"],
                 "language": user["language"],
                 "theme": user["theme"]
             }
-            
+
     except Exception as e:
-        logger.error(f"Error retrieving user info for {username}: {e}")
+        logger.error(f"Error en la base de datos: {e}")
         return None
-
-
 
 async def delete_session_in_db(session_id: str) -> bool:
     sql = text("""
