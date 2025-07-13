@@ -64,10 +64,10 @@ async def login_post(request: Request, username: str = Form(...), password: str 
                 if template:
                     client_ip = request.client.host if request.client else "unknown"
                     formatted_msg = template['template_text'].format(
-                        usuario=username,
+                      
                         user=username,
-                        ip=client_ip,
-                        fecha=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                        ip=client_ip
+                   
                     )
                     
                     # Enviar email
