@@ -44,7 +44,65 @@ async def is_in_blacklist_from_db(username: str) -> bool:
 
 
 
-
+async def get_user_by_username(username: str) -> Optional[dict]:
+    """
+    Retrieve essential user data by username from the database
+    
+    Args:
+        username: The username to search for
+        
+    Returns:
+        dict: Contains only essential user fields if found
+              {
+                  "id": int,
+                  "username": str,
+                  "email": str,
+                  "is_active": bool,
+                  "language": str,
+                  "theme": str,
+                  "use_2fa": bool
+              }
+        None: If user not found or error occurs
+    """
+    sql = text("""
+        SELECT 
+            id,
+            username,
+            email,
+            is_active,
+            language,
+            theme,
+            use_2fa
+        FROM users 
+        WHERE username = :username
+    """)
+    
+    engine = DBEngine.get_engine()
+    
+    try:
+        async with engine.begin() as conn:
+            result = await conn.execute(sql, {"username": username})
+            row = result.fetchone()
+            
+            if row:
+                return {
+                    "id": row.id,
+                    "username": row.username,
+                    "email": row.email,
+                    "is_active": row.is_active,
+                    "language": row.language,
+                    "theme": row.theme,
+                    "use_2fa": row.use_2fa
+                }
+            return None
+            
+    except Exception as e:
+        logger.error(
+            f"Error fetching user {username}: {str(e)}", 
+            exc_info=True,
+            extra={"username": username}
+        )
+        return None
 
 
 async def email_exist(email: str) -> bool:
