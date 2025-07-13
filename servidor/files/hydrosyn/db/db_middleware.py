@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from db.db_engine import DBEngine
 from logger import logger
 
-async def insert_login_attempts_to_db(
+async def insert_login_attempts_in_db(
     session_id: str, 
     user_id: int | None,
     ip_address: str,
