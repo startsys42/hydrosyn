@@ -8,6 +8,7 @@ from fastapi.responses import RedirectResponse
 from common.templates import templates
 from logger import logger
 from security.csrf import generate_csrf_token
+from db.db_notifications import get_should_send_email_for_notification_from_db, get_notifications_email_from_db
 
 
 router = APIRouter(tags=["Web Auth"])
@@ -39,12 +40,13 @@ async def login_post(request: Request, username: str = Form(...), password: str 
 
 ## notificacion, errore en pagina e idioma , login attempt
     if await is_in_blacklist_from_db(username):
-         notification = await get_notification_details(5)
+         notification = await get_should_send_email_for_notification_from_db(5)
         
         # 2. Si está activo el envío por email
         if notification['should_send_email']:
+            admin_email = get_notifications_email_from_db() 
             # Obtener plantilla en el idioma correcto
-            template = await get_notification_template(
+            template = await get_notification_template_from_db(
                 notification_id=5,
                 lang_code=prefs['lang']
             )
@@ -58,7 +60,7 @@ async def login_post(request: Request, username: str = Form(...), password: str 
             )
             
             # Obtener email de administración
-            admin_email = get_admin_email()
+            
             
             # Enviar email
             send_email(
