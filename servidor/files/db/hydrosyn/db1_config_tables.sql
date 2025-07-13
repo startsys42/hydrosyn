@@ -100,8 +100,8 @@ INSERT INTO config (value, min_value, max_value, group_id) VALUES
 (365, 90, 1825,4),  -- Days to retain users activation history before deletion
 (365, 90, 1825,4),  -- Days to retain users email changes before deletion
     
-(365, 90, 1825,4);  -- Days to retain login attempts before deletion
-(365, 90, 1825,4);  -- Days to retain config history
+(365, 90, 1825,4),  -- Days to retain login attempts before deletion
+(365, 90, 1825,4),  -- Days to retain config history
 
 (0, 0, 1,5); -- Delete user with history save
 
