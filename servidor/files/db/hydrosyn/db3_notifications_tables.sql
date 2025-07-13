@@ -4,7 +4,7 @@ USE hydrosyn_db;
 
 CREATE TABLE notifications (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-     should_send_email BOOLEAN NOT NULL DEFAULT FALSE,  -- Control por notificación
+     should_send_email BOOLEAN NOT NULL DEFAULT FALSE  -- Control por notificación
   
 );
 CREATE TABLE notification_email_history (
