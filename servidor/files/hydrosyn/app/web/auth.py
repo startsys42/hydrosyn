@@ -30,28 +30,66 @@ async def login_get(request: Request):
     })
     
 @router.post("/login", response_class=HTMLResponse)
-async def login_post(request: Request, username: str = Form(...), password: str = Form(...)):
+async def login_post(request: Request, username: str = Form(...), password: str = Form(...), csrf_token: str = Form(...)):
     try:
         prefs = get_user_preferences(request)
     except ValueError as e:
         return PlainTextResponse(str(e), status_code=400)
 # comprobar cuenta no bloqueada, comprobar usuario existe, comprobar nomber no lista negra, comprobar usuario activado o no o comoe sta su sistuacion,... comprobar cumple reglas contraseña y nombe... # email_verifiacion
-    if authenticate_user(username, password):
-        # Autenticación OK, redirigir a dashboard o página segura
-        response = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
-        # Aquí deberías crear sesión o cookie segura
-        response.set_cookie(key="session", value="token_o_id_seguro", httponly=True)
-        return response
-    else:
-        # Falló autenticación, volver a mostrar login con mensaje error
+     if not validate_csrf_token(csrf_token):
         return templates.TemplateResponse("login.html", {
             "request": request,
             "texts": prefs["texts"],
             "lang": prefs["lang"],
             "theme": prefs["theme"],
-        
+            "error": "Invalid CSRF token"
+        }, status_code=403)
+
+
+    if await is_in_blacklist_from_db(username):
+        return templates.TemplateResponse("login.html", {
+            "request": request,
+            "texts": prefs["texts"],
+            "lang": prefs["lang"],
+            "theme": prefs["theme"],
+            "error": "Account restricted"
+        }, status_code=403)
+    
+   user_data = await get_user_login_from_db(username=username, password=password)
+    
+    if not user_data:
+        return templates.TemplateResponse("login.html", {
+            "request": request,
+            "texts": prefs["texts"],
+            "lang": prefs["lang"],
+            "theme": prefs["theme"],
+            "error": "Invalid credentials",
+            "csrf_token": generate_csrf_token()  # Generar nuevo token para reintento
         }, status_code=400)
 
+    # 4. Verificar estado de la cuenta
+    if not user_data["is_active"]:
+        return templates.TemplateResponse("login.html", {
+            "request": request,
+            "texts": prefs["texts"],
+            "lang": prefs["lang"],
+            "theme": prefs["theme"],
+            "error": "Account not activated"
+        }, status_code=403)
+
+    # 5. Crear sesión segura
+    response = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
+    secure_token = f"secure_{secrets.token_urlsafe(32)}"  # En producción usar JWT
+    response.set_cookie(
+        key="session",
+        value=secure_token,
+        httponly=True,
+        secure=True,
+        samesite="lax",
+        max_age=3600  # 1 hora de validez
+    )
+    
+    return response
 
 
 
