@@ -3,30 +3,6 @@ USE hydrosyn_db;
 
 
 
-CREATE TABLE  IF NOT EXISTS  users (
-    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    username VARCHAR(255) NOT NULL UNIQUE,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    change_pass BOOLEAN NOT NULL FALSE,
-    delete_possible NOT NULL FALSE,
-
-
-
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_by INT UNSIGNED NOT NULL,
-    language ENUM('es', 'en') NOT NULL DEFAULT 'en',
-    theme ENUM('dark', 'light') NOT NULL DEFAULT 'light',
-    use_2fa BOOLEAN NOT NULL DEFAULT FALSE,
-    twofa_secret VARCHAR(32),
-
-    CONSTRAINT fk_user_creator
-        FOREIGN KEY (created_by)
-        REFERENCES users(id)
-        ON DELETE RESTRICT
-        ON UPDATE CASCADE
-)ENGINE=InnoDB;
 
 
 
@@ -317,6 +293,33 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+
+
+CREATE TABLE  IF NOT EXISTS  users (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT FALSE,
+    change_pass BOOLEAN NOT NULL FALSE,
+    delete_possible NOT NULL FALSE,
+
+
+
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by INT UNSIGNED NOT NULL,
+    language ENUM('es', 'en') NOT NULL DEFAULT 'en',
+    theme ENUM('dark', 'light') NOT NULL DEFAULT 'light',
+    use_2fa BOOLEAN NOT NULL DEFAULT FALSE,
+    twofa_secret VARCHAR(32),
+
+    CONSTRAINT fk_user_creator
+        FOREIGN KEY (created_by)
+        REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+)ENGINE=InnoDB;
 
 
 CREATE TABLE IF NOT EXISTS config_history (
