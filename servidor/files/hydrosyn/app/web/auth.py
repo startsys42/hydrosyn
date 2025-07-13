@@ -36,14 +36,6 @@ async def login_post(request: Request, username: str = Form(...), password: str 
     except ValueError as e:
         return PlainTextResponse(str(e), status_code=400)
 # comprobar cuenta no bloqueada, comprobar usuario existe, comprobar nomber no lista negra, comprobar usuario activado o no o comoe sta su sistuacion,... comprobar cumple reglas contraseña y nombe... # email_verifiacion
-     if not validate_csrf_token(csrf_token):
-        return templates.TemplateResponse("login.html", {
-            "request": request,
-            "texts": prefs["texts"],
-            "lang": prefs["lang"],
-            "theme": prefs["theme"],
-            "error": "Invalid CSRF token"
-        }, status_code=403)
 
 
     if await is_in_blacklist_from_db(username):
@@ -54,7 +46,17 @@ async def login_post(request: Request, username: str = Form(...), password: str 
             "theme": prefs["theme"],
             "error": "Account restricted"
         }, status_code=403)
-    
+
+     if not validate_csrf_token(csrf_token):
+        return templates.TemplateResponse("login.html", {
+            "request": request,
+            "texts": prefs["texts"],
+            "lang": prefs["lang"],
+            "theme": prefs["theme"],
+            "error": "Invalid CSRF token"
+        }, status_code=403)
+
+
    user_data = await get_user_login_from_db(username=username, password=password)
     
     if not user_data:
