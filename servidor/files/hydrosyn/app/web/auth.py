@@ -36,6 +36,110 @@ async def login_post(request: Request, username: str = Form(...), password: str 
         prefs = get_user_preferences(request)
     except ValueError as e:
         return PlainTextResponse(str(e), status_code=400)
+
+    # Validar CSRF primero
+    if not validate_csrf_token(csrf_token):
+        return templates.TemplateResponse("login.html", {
+            "request": request,
+            "texts": prefs["texts"],
+            "lang": prefs["lang"],
+            "theme": prefs["theme"],
+            "error": "Invalid CSRF token"
+        }, status_code=403)
+
+    # 1. Verificar lista negra
+    if await is_in_blacklist_from_db(username):
+        # Obtener configuración de notificación
+        should_send = await get_should_send_email_for_notification_from_db(5)  # ID 5 = lista negra
+        
+        if should_send and should_send['should_send_email']:
+            # Obtener email y plantilla
+            notification_email, notification_lang = await get_notifications_email_from_db()
+            if notification_email:
+                template = await get_notification_template_from_db(
+                    notification_id=5,
+                    lang_code=notification_lang
+                )
+                
+                if template:
+                    client_ip = request.client.host if request.client else "unknown"
+                    formatted_msg = template['template_text'].format(
+                        usuario=username,
+                        user=username,
+                        ip=client_ip,
+                        fecha=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    )
+                    
+                    # Enviar email
+                    send_email(
+                        to=notification_email,
+                        subject=template['subject'],
+                        body=formatted_msg
+                    )
+        
+        # Registrar notificación para admin
+        await create_user_notification(
+            user_id=1,  # ID admin
+            notification_id=5,
+            username=username,
+            ip=request.client.host if request.client else "unknown",
+            lang=prefs['lang']
+        )
+        
+        return templates.TemplateResponse("login.html", {
+            "request": request,
+            "texts": prefs["texts"],
+            "lang": prefs["lang"],
+            "theme": prefs["theme"],
+            "error": "Account restricted"
+        }, status_code=403)
+
+    # 2. Verificar credenciales
+    user_data = await get_user_login_from_db(username=username, password=password)
+    
+    if not user_data:
+        return templates.TemplateResponse("login.html", {
+            "request": request,
+            "texts": prefs["texts"],
+            "lang": prefs["lang"],
+            "theme": prefs["theme"],
+            "error": "Invalid credentials",
+            "csrf_token": generate_csrf_token()
+        }, status_code=400)
+
+    # 3. Verificar estado de cuenta
+    if not user_data.get("is_active", False):
+        return templates.TemplateResponse("login.html", {
+            "request": request,
+            "texts": prefs["texts"],
+            "lang": prefs["lang"],
+            "theme": prefs["theme"],
+            "error": "Account not activated",
+            "csrf_token": generate_csrf_token()
+        }, status_code=403)
+
+    # 4. Si requiere 2FA
+    if user_data.get("use_2fa", False):
+        # Guardar sesión temporal y redirigir a 2FA
+        session_token = await create_temp_session(user_data['id'])
+        response = RedirectResponse(url="/two-factor", status_code=303)
+        response.set_cookie("2fa_session", session_token, httponly=True, secure=True)
+        return response
+
+    # 5. Login exitoso
+    session_id = await create_user_session(user_data['id'])
+    response = RedirectResponse(url="/dashboard", status_code=303)
+    response.set_cookie("session", session_id, httponly=True, secure=True)
+    return response
+
+
+
+    
+    
+    try:
+        prefs = get_user_preferences(request)
+    except ValueError as e:
+        return PlainTextResponse(str(e), status_code=400)
 # comprobar cuenta no bloqueada, comprobar usuario existe, comprobar nomber no lista negra, comprobar usuario activado o no o comoe sta su sistuacion,... comprobar cumple reglas contraseña y nombe... # email_verifiacion
 
 ## notificacion, errore en pagina e idioma , login attempt
