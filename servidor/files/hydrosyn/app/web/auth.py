@@ -44,13 +44,13 @@ async def login_post(request: Request, username: str = Form(...), password: str 
         
         # 2. Si está activo el envío por email
         if notification['should_send_email']:
-            admin_email = get_notifications_email_from_db() 
+            notification_email, notification_lang = get_notifications_email_from_db() 
             # Obtener plantilla en el idioma correcto
-            template = await get_notification_template_from_db(
-                notification_id=5,
-                lang_code=prefs['lang']
-            )
-            
+           template = await get_notification_template_from_db(
+        notification_id=5,
+        lang_code=notification_lang
+    )
+    
             # Formatear mensaje
             formatted_email = template['template_text'].format(
                 usuario=username,
