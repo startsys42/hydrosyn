@@ -70,3 +70,45 @@ async def   get_notifications_email_from_db() -> Optional[Tuple[str, str]]:
             exc_info=True
         )
         return None
+
+async def get_notification_template_from_db(notification_id: int, lang_code: str) -> Optional[dict]:
+    """
+    Obtiene la plantilla de notificación desde la base de datos
+    
+    Args:
+        notification_id: ID de la notificación (ej: 5 para lista negra)
+        lang_code: Código de idioma ('es' o 'en')
+        
+    Returns:
+        dict: {'subject': str, 'template_text': str}
+        None: Si no encuentra la plantilla o hay error
+    """
+    sql = text("""
+        SELECT subject, template_text
+        FROM notification_translations
+        WHERE notification_id = :notification_id
+        AND lang_code = :lang_code
+        LIMIT 1
+    """)
+    
+    try:
+        async with DBEngine.get_engine().begin() as conn:
+            result = await conn.execute(sql, {
+                'notification_id': notification_id,
+                'lang_code': lang_code
+            })
+            row = result.fetchone()
+            
+            if row:
+                return {
+                    'subject': row.subject,
+                    'template_text': row.template_text
+                }
+            return None
+            
+    except Exception as e:
+        logger.error(
+            f"Error obteniendo plantilla para notificación {notification_id} en {lang_code}: {e}",
+            exc_info=True
+        )
+        return None
