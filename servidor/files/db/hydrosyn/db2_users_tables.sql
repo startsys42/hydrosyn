@@ -232,49 +232,6 @@ CREATE TABLE sessions (
 );
 
 
-CREATE TABLE user_password_history (
-    id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    user_id INT UNSIGNED NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    changed_by INT UNSIGNED NOT NULL,
-    device VARCHAR(255),
-    ip_address VARCHAR(39),
-  
-
-    CONSTRAINT fk_password_user
-        FOREIGN KEY (user_id) REFERENCES users(id)
-        ON DELETE RESTRICT
-        ON UPDATE CASCADE,
-
-    CONSTRAINT fk_password_changed_by
-        FOREIGN KEY (changed_by) REFERENCES users(id)
-        ON DELETE RESTRICT
-        ON UPDATE CASCADE
-);
-
-CREATE TABLE user_email_changes (
-    id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    user_id INT UNSIGNED NOT NULL,
-    old_email VARCHAR(255) NOT NULL,
-    new_email VARCHAR(255) NOT NULL,
-    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    changed_by INT UNSIGNED NOT NULL,
-    device VARCHAR(255),
-    ip_address VARCHAR(39),
-
-
-    CONSTRAINT fk_email_user
-        FOREIGN KEY (user_id) REFERENCES users(id)
-        ON DELETE RESTRICT
-        ON UPDATE CASCADE,
-
-    CONSTRAINT fk_email_changed_by
-        FOREIGN KEY (changed_by) REFERENCES users(id)
-        ON DELETE RESTRICT
-        ON UPDATE CASCADE
-);
-
 CREATE TABLE tokens (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT UNSIGNED NOT NULL,
