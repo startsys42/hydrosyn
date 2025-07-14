@@ -300,14 +300,14 @@ CREATE TABLE  IF NOT EXISTS  users(
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    change_pass BOOLEAN NOT NULL DEFAULT  FALSE,
+    change_pass TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     delete_possible  BOOLEAN NOT NULL DEFAULT  FALSE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by INT UNSIGNED NOT NULL,
     language ENUM('es', 'en') NOT NULL DEFAULT 'en',
     theme ENUM('dark', 'light') NOT NULL DEFAULT 'light',
     use_2fa BOOLEAN NOT NULL DEFAULT FALSE,
-    twofa_secret VARCHAR(32),
+    twofa_secret VARCHAR(32) UNIQUE,
 
     CONSTRAINT fk_user_creator
         FOREIGN KEY (created_by)
