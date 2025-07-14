@@ -42,6 +42,16 @@ CREATE TABLE IF NOT EXISTS email_verifications (
 ) ENGINE=InnoDB;
 
 
+CREATE TABLE IF NOT EXISTS username_blacklist (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(20) NOT NULL UNIQUE,
+    added_by INT UNSIGNED,  -- Usuario que añadió el nombre
+    added_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (added_by) REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
 
 
 
@@ -124,12 +134,7 @@ CREATE TABLE password_special_chars (
 
 
 
-CREATE TABLE username_blacklist (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(20) NOT NULL UNIQUE
- 
 
-);
 
 INSERT INTO username_blacklist (username) VALUES
 ('admin'),
