@@ -19,7 +19,6 @@ from fastapi.responses import RedirectResponse
 from app.web import auth as web_auth
 from app.web import config as web_config
 from app.web import profile as web_profile
-from app.web import permissions as web_permissions
 from app.web import users as web_users
 from app.web import device as web_device
 
@@ -102,7 +101,6 @@ async def root_redirect():
 app.include_router(web_auth.router, prefix="/web/auth", tags=["Web Auth"])
 app.include_router(web_config.router, prefix="/web/config", tags=["Web Config"])
 app.include_router(web_profile.router, prefix="/web/profile", tags=["Web Profile"])
-app.include_router(web_permissions.router, prefix="/web/permissions", tags=["Web Permissions"])
 app.include_router(web_users.router, prefix="/web/users", tags=["Web Users"])
 app.include_router(web_device.router, prefix="/web/device", tags=["Web Device"])
 
