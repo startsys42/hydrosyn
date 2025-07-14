@@ -156,3 +156,23 @@ CREATE TABLE IF NOT EXISTS email_verification_history (
         ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
+CREATE TABLE password_policy_history (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    min_length INT NOT NULL DEFAULT 12,
+    min_numbers INT NOT NULL DEFAULT 2,
+    min_uppercase INT NOT NULL DEFAULT 1,
+    min_special_chars INT NOT NULL DEFAULT 1,
+    min_lowercase INT NOT NULL DEFAULT 1,
+    min_distinct_chars INT NOT NULL DEFAULT 8,
+    min_distinct_digits INT NOT NULL DEFAULT 0,
+    max_password_age_days INT NOT NULL DEFAULT 90,
+    min_password_history INT NOT NULL DEFAULT 5,
+    min_password_age_history_days INT NOT NULL DEFAULT 450, -- mínimo días entre cambios
+allow_username_in_password BOOLEAN NOT NULL DEFAULT FALSE,
+    changed_by INT UNSIGNED NOT NULL, -- ID del usuario que hizo el cambio
+    changed_at TIMESTAMP NOT NULL,
+
+    CONSTRAINT fk_changed_by FOREIGN KEY (changed_by) REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
