@@ -26,19 +26,21 @@ CREATE TABLE  IF NOT EXISTS  users(
 )ENGINE=InnoDB;
 
 
-
-
-CREATE TABLE email_verifications (
-    user_id INT UNSIGNED  PRIMARY KEY,
-    email_verification_token VARCHAR(8) NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+CREATE TABLE IF NOT EXISTS email_verifications (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    token VARCHAR(8) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP NOT NULL,
-    verified BOOLEAN NOT NULL DEFAULT FALSE,
+    verified_at TIMESTAMP NULL,
+    is_used BOOLEAN NOT NULL DEFAULT FALSE,
 
     FOREIGN KEY (user_id) REFERENCES users(id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE
-);
+) ENGINE=InnoDB;
+
 
 
 
@@ -54,18 +56,6 @@ CREATE TABLE email_verifications_unverified_log (
     deleted_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP -- fecha en que se borró el registro original
 );
 
-CREATE TABLE user_activation_history (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    user_id INT UNSIGNED NOT NULL,
-    prev_is_active BOOLEAN NOT NULL,
-    new_is_active BOOLEAN NOT NULL,
-    changed_at TIMESTAMP NOT NULL,
-    changed_by INT UNSIGNED NOT NULL, -- ID de quien hizo el cambio
-    reason VARCHAR(255),              -- opcional, motivo del cambio
-
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT,
-    FOREIGN KEY (changed_by) REFERENCES users(id) ON DELETE RESTRICT
-);
 
 
 CREATE TABLE password_policy_current (
