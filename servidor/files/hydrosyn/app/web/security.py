@@ -11,16 +11,27 @@
 # extender epriodos
 
 
-@router.get("/change-db-user-password")
+@router.get("/change-user-password")
 def change_db_user_password_get(data: PasswordChangeRequest):
 
 
 
 
 
-@router.post("/change-db-user-password")
+@router.post("/change-user-password")
 def change_db_user_password_post(data: PasswordChangeRequest):
 
+
+
+@router.get("/change-user-email")
+def change_db_user_password_get(data: PasswordChangeRequest):
+
+
+
+
+
+@router.post("/change-user-email")
+def change_db_user_password_post(data: PasswordChangeRequest):
 
 
 @router.get("/db-autoincrement-status")
