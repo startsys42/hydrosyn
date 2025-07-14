@@ -153,6 +153,7 @@ async def recover_password_get(request: Request):
     })
 
 
+
 @router.post("/recover-password", response_class=HTMLResponse)
 async def recover_password_post(request: Request,username: str = Form(...), email: str = Form(...)):
     try:
