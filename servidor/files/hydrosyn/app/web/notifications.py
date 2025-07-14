@@ -4,7 +4,7 @@ router = APIRouter()
 # filtrar por tipo,leidas no leidas, fecha, palabra, amrcarcomo leidas
 
 
-@app.post("/see-notifications", response_class=HTMLResponse)
+@router.post("/see-notifications", response_class=HTMLResponse)
 async def see_notifications(
     request: Request,
     read: str = Form(None),           # "read", "unread", o None

@@ -6,18 +6,18 @@ router = APIRouter()
 # protlongar autentificar  o or ecuperar contraseña extender tiempo recuepracion oa activacion
 #listar permisos roles istemas, listar usuarios
 
-@app.get("/create-user")
+@router.get("/create-user")
 async def change_name_get():
     return {"action": "get name change form"}
 
-@app.post("/create-user")
+@router.post("/create-user")
 async def change_name_post():
     return {"action": "process name change"}
 
-@app.get("/delete-user")
+@router.get("/delete-user")
 async def change_name_get():
     return {"action": "get name change form"}
 
-@app.post("/delete-user")
+@router.post("/delete-user")
 async def change_name_post():
     return {"action": "process name change"}
