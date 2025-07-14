@@ -375,10 +375,7 @@ BEGIN
                 -- Perform the direct ID update
                 UPDATE config_history SET id = new_id WHERE id = old_id;
                 SET update_count = update_count + 1;
-            ELSE
-                -- Log conflict (you might want to handle this differently)
-                INSERT INTO system_logs (message) 
-                VALUES (CONCAT('ID conflict during reorganization: ', new_id, ' already exists'));
+        
             END IF;
         END IF;
         
