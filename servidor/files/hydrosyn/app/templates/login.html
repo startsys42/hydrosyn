@@ -10,6 +10,7 @@
     <h1>{{ texts.login }}</h1>
 
     <form method="post" action="/login">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
         <label>{{ texts.username }}: <input type="text" name="username" required></label><br>
         <label>{{ texts.password }}: <div style="display: inline-flex; align-items: center; position: relative;">
     <input type="password" id="password-input" name="password" required style="padding-right: 30px;">
