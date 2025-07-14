@@ -351,7 +351,7 @@ BEGIN
     START TRANSACTION;
     
     -- Temporarily disable foreign key checks
-    SET FOREIGN_KEY_CHECKS = 0;
+ 
     
     -- Initialize counter
     SET new_id = 1;
@@ -383,15 +383,18 @@ BEGIN
     END LOOP;
     
     CLOSE id_cursor;
-    
+    COMMIT;
     -- Reset auto-increment value
-    SELECT IFNULL(MAX(id), 0) + 1 INTO max_id FROM config_history;
-    ALTER TABLE config_history AUTO_INCREMENT = max_id;
+     SELECT IFNULL(MAX(id), 0) + 1 INTO max_id FROM config_history;
+    SET @stmt = CONCAT('ALTER TABLE config_history AUTO_INCREMENT = ', max_id);
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
     
 
     
     -- Commit all changes
-    COMMIT;
+    
     
   
 END//
