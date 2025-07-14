@@ -31,7 +31,12 @@ async def login_get(request: Request):
     })
     
 @router.post("/login", response_class=HTMLResponse)
-async def login_post(request: Request, username: str = Form(...), password: str = Form(...), csrf_token: str = Form(...)):
+async def login_post(
+    request: Request,
+    username: str = Form(...),
+    password: str = Form(...),
+    csrf_token: str = Form(...)
+):
     try:
         prefs = get_user_preferences(request)
     except ValueError as e:
@@ -39,11 +44,7 @@ async def login_post(request: Request, username: str = Form(...), password: str 
 
     if await is_in_blacklist_from_db(username):
         # Obtener configuración de notificación
-        should_send = await get_should_send_email_for_notification_from_db(5)  # ID 5 = lista negra
-        
-        if should_send and should_send['should_send_email']:
-            # Obtener email y plantilla
-            notification_email, notification_lang = await get_notifications_email_from_db()
+        should_send = await get_should_send_email_for_notification_from_db(5)
             if notification_email:
                 template = await get_notification_template_from_db(
                     notification_id=5,
