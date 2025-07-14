@@ -55,6 +55,31 @@ CREATE TABLE IF NOT EXISTS username_blacklist (
 
 
 
+INSERT INTO username_blacklist (username) VALUES
+('admin'),
+('administrator'),
+('root'),
+('superuser'),
+('support'),
+('helpdesk'),
+('test'),
+('guest'),
+('info'),
+('contact'),
+('system'),
+('null'),
+('user'),
+('users'),
+('security'),
+('owner'),
+('master'),
+('webmaster'),
+('api'),
+('backend'),
+('frontend');
+
+
+
 CREATE TABLE username_policy_current (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     
@@ -119,8 +144,28 @@ allow_username_in_password BOOLEAN NOT NULL DEFAULT FALSE,
 
     CONSTRAINT fk_current_changed_by FOREIGN KEY (changed_by) REFERENCES users(id)
         ON DELETE RESTRICT
-        ON UPDATE CASCADE
-);
+        ON UPDATE CASCADE,
+    
+    -- min_length >= suma de los requisitos mínimos
+    CONSTRAINT chk_min_length_components CHECK (
+        min_length >= (min_numbers + min_uppercase + min_special_chars + min_lowercase)
+    ),
+
+    -- min_distinct_chars <= min_uppercase + min_lowercase
+    CONSTRAINT chk_distinct_chars_vs_cases CHECK (
+        min_distinct_chars <= (min_uppercase + min_lowercase)
+    ),
+
+    -- min_distinct_digits <= min_numbers
+    CONSTRAINT chk_distinct_digits_vs_numbers CHECK (
+        min_distinct_digits <= min_numbers
+    ),
+
+    -- min_password_age_history_days >= max_password_age_days * min_password_history
+    CONSTRAINT chk_min_age_history CHECK (
+      min_password_age_history_days >= (max_password_age_days * min_password_history)
+    )
+) ENGINE=InnoDB;
 
 
 
@@ -136,28 +181,6 @@ CREATE TABLE password_special_chars (
 
 
 
-INSERT INTO username_blacklist (username) VALUES
-('admin'),
-('administrator'),
-('root'),
-('superuser'),
-('support'),
-('helpdesk'),
-('test'),
-('guest'),
-('info'),
-('contact'),
-('system'),
-('null'),
-('user'),
-('users'),
-('security'),
-('owner'),
-('master'),
-('webmaster'),
-('api'),
-('backend'),
-('frontend');
 
 CREATE TABLE login_attempts (
     id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
