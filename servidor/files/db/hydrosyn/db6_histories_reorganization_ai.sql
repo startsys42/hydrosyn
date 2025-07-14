@@ -176,3 +176,46 @@ allow_username_in_password BOOLEAN NOT NULL DEFAULT FALSE,
         ON DELETE RESTRICT
         ON UPDATE CASCADE
 );
+
+CREATE TABLE username_policy_history (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    
+    min_length INT NOT NULL DEFAULT 6,
+    max_length INT NOT NULL DEFAULT 20,
+    
+    min_lowercase INT NOT NULL DEFAULT 0,
+    min_numbers INT NOT NULL DEFAULT 0,
+    min_uppercase INT NOT NULL DEFAULT 0,
+    
+    min_distinct_chars INT NOT NULL DEFAULT 3,
+    min_distinct_digits INT NOT NULL DEFAULT 0,
+    
+    applied_since TIMESTAMP NOT NULL,
+    
+    changed_by INT UNSIGNED NOT NULL,
+    
+    CONSTRAINT fk_username_policy_history_changed_by 
+        FOREIGN KEY (changed_by) REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+    
+    -- Constraints actualizadas:
+    CONSTRAINT chk_min_length_min_hist CHECK (min_length >= 6),
+    CONSTRAINT chk_max_length_min_length_hist CHECK (max_length >= min_length),
+    
+    CONSTRAINT chk_sum_min_chars_max_length_hist CHECK (
+        (min_numbers + min_lowercase + min_uppercase) <= max_length
+    ),
+    
+    CONSTRAINT chk_sum_min_chars_min_length_hist CHECK (
+        (min_numbers + min_lowercase + min_uppercase) >= min_length
+    ),
+    
+    CONSTRAINT chk_min_distinct_chars_hist CHECK (
+        min_distinct_chars <= (min_lowercase + min_uppercase)
+    ),
+    
+    CONSTRAINT chk_min_distinct_digits_hist CHECK (
+        min_distinct_digits <= min_numbers
+    )
+);
