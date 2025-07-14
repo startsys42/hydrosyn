@@ -117,6 +117,7 @@ async def login_post(request: Request, username: str = Form(...), password: str 
     except ValueError as e:
         return PlainTextResponse(str(e), status_code=400)
 
+
     if authenticate_user(username, password):
         # Autenticación OK, redirigir a dashboard o página segura
         response = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
