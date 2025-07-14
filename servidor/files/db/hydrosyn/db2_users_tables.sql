@@ -150,7 +150,9 @@ allow_username_in_password BOOLEAN NOT NULL DEFAULT FALSE,
     CONSTRAINT chk_min_length_components CHECK (
         min_length >= (min_numbers + min_uppercase + min_special_chars + min_lowercase)
     ),
-
+CONSTRAINT chk_min_length_at_least_8 CHECK (
+        min_length >= 8
+    ),
     -- min_distinct_chars <= min_uppercase + min_lowercase
     CONSTRAINT chk_distinct_chars_vs_cases CHECK (
         min_distinct_chars <= (min_uppercase + min_lowercase)
