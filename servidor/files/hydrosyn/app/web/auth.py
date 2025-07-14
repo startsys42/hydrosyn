@@ -37,7 +37,7 @@ async def login_post(request: Request, username: str = Form(...), password: str 
     except ValueError as e:
         return PlainTextResponse(str(e), status_code=400)
 
-  if await is_in_blacklist_from_db(username):
+    if await is_in_blacklist_from_db(username):
         # Obtener configuración de notificación
         should_send = await get_should_send_email_for_notification_from_db(5)  # ID 5 = lista negra
         
