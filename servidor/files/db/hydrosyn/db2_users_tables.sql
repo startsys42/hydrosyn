@@ -28,9 +28,6 @@ CREATE TABLE  IF NOT EXISTS  users(
 
 
 
-
-
-
 CREATE TABLE email_verifications (
     user_id INT UNSIGNED  PRIMARY KEY,
     email_verification_token VARCHAR(8) NOT NULL,
