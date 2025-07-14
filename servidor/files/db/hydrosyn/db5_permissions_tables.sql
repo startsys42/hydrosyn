@@ -61,7 +61,7 @@ CREATE TABLE roles (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL UNIQUE
  
-)=InnoDB;
+)ENGINE=InnoDB;
 
 CREATE TABLE role_permissions (
     role_id INT NOT NULL,
