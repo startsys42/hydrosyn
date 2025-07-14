@@ -252,4 +252,17 @@ CREATE TABLE tokens (
 );
 
 
+CREATE TABLE IF NOT EXISTS username_history (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,          -- usuario cuyo nombre cambió
+    old_username VARCHAR(20) NOT NULL,     -- nombre anterior
+    new_username VARCHAR(20) NOT NULL,     -- nuevo nombre
+    changed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    changed_by INT UNSIGNED NOT NULL,       -- usuario que hizo el cambio
+
+    CONSTRAINT fk_unh_user FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT fk_unh_changed_by FOREIGN KEY (changed_by) REFERENCES users(id)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB;
 
