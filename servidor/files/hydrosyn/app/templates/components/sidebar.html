@@ -1,7 +1,5 @@
 <nav>
     <ul>
-        <li><a href="/dashboard">{{ texts.dashboard }}</a></li>
-
         {% if "users:menu" in permisos %}
         <li><a href="/usuarios">{{ texts.usuarios }}</a></li>
         {% endif %}
@@ -18,19 +16,19 @@
         <li><a href="/sistemas">{{ texts.sistemas }}</a></li>
         {% endif %}
 
-        {% if "profile:menu" in permisos %}
-        <li><a href="/perfil">{{ texts.perfil }}</a></li>
-        {% endif %}
+     
+   
+   
+        
+
+        <li><a href="/notifications">{{ texts.perfil }}</a></li>
 
 
-         {% if "profile:menu" in permisos %}
-        <li><a href="/perfil">{{ texts.perfil }}</a></li>
-        {% endif %}
+     
+        <li><a href="/profile">{{ texts.perfil }}</a></li>
+     
         <li><a href="/logout">{{ texts.logout }}</a></li>
     </ul>
 
-    <div class="footer-controls">
-        <a href="?lang={{ next_lang }}">{{ texts.change_lang }}</a> |
-        <a href="?theme={{ next_theme }}">{{ texts.change_theme }}</a>
-    </div>
+
 </nav>
