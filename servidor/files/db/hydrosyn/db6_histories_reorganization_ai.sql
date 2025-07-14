@@ -139,3 +139,20 @@ CREATE TABLE IF NOT EXISTS user_activation_history (
         ON DELETE RESTRICT
         ON UPDATE CASCADE
 ) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS email_verification_history (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    token VARCHAR(8),
+    requested_at TIMESTAMP NOT NULL,
+    verified_at TIMESTAMP NULL,
+    was_successful BOOLEAN NOT NULL DEFAULT FALSE,
+    request_ip VARCHAR(45) NULL,     -- opcional: IP desde donde se solicitó
+    user_agent TEXT NULL,            -- opcional: info del navegador/cliente
+
+    FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
