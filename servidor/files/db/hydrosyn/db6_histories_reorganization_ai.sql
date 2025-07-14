@@ -190,7 +190,9 @@ allow_username_in_password BOOLEAN NOT NULL DEFAULT FALSE,
     CONSTRAINT chk_distinct_digits_vs_numbers CHECK (
         min_distinct_digits <= min_numbers
     ),
-
+CONSTRAINT chk_min_length_at_least_8 CHECK (
+        min_length >= 8
+    ),
     -- min_password_age_history_days >= max_password_age_days * min_password_history
     CONSTRAINT chk_min_age_history CHECK (
       min_password_age_history_days >= (max_password_age_days * min_password_history)
