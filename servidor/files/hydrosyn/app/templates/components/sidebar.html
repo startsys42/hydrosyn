@@ -2,26 +2,30 @@
     <ul>
         <li><a href="/dashboard">{{ texts.dashboard }}</a></li>
 
-        {% if "usuarios:ver" in permisos %}
+        {% if "users:menu" in permisos %}
         <li><a href="/usuarios">{{ texts.usuarios }}</a></li>
         {% endif %}
 
-        {% if "roles:ver" in permisos %}
+        {% if "security:menu" in permisos %}
         <li><a href="/roles">{{ texts.roles }}</a></li>
         {% endif %}
 
-        {% if "permisos:ver" in permisos %}
+        {% if "configurations:menu" in permisos %}
         <li><a href="/permisos">{{ texts.permisos }}</a></li>
         {% endif %}
 
-        {% if "sistemas:ver" in permisos %}
+        {% if "systems:menu" in permisos %}
         <li><a href="/sistemas">{{ texts.sistemas }}</a></li>
         {% endif %}
 
-        {% if "perfil:ver" in permisos %}
+        {% if "profile:menu" in permisos %}
         <li><a href="/perfil">{{ texts.perfil }}</a></li>
         {% endif %}
 
+
+         {% if "profile:menu" in permisos %}
+        <li><a href="/perfil">{{ texts.perfil }}</a></li>
+        {% endif %}
         <li><a href="/logout">{{ texts.logout }}</a></li>
     </ul>
 
