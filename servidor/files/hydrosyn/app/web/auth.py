@@ -45,28 +45,25 @@ async def login_post(
     if await is_in_blacklist_from_db(username):
         # Obtener configuración de notificación
         should_send = await get_should_send_email_for_notification_from_db(5)
-            if notification_email:
-                template = await get_notification_template_from_db(
-                    notification_id=5,
-                    lang_code=notification_lang
-                )
-                
-              
-                    client_ip = request.client.host if request.client else "unknown"
-                    formatted_msg = template['template_text'].format(
-                      
-                        user=username,
-                        ip=client_ip
-                   
-                    )
-                    
-                    # Enviar email
-                    send_email(
-                        to=notification_email,
-                        subject=template['subject'],
-                        body=formatted_msg
-                    )
-        
+        notification_email = await get_notifications_email_from_db(5)
+        notification_lang = prefs["lang"]
+        if notification_email:
+            template = await get_notification_template_from_db(
+                notification_id=5,
+                lang_code=notification_lang
+            )
+            client_ip = request.client.host if request.client else "unknown"
+            formatted_msg = template['template_text'].format(
+                user=username,
+                ip=client_ip
+            )
+            # Enviar email
+            send_email(
+                to=notification_email,
+                subject=template['subject'],
+                body=formatted_msg
+            )
+
         # Registrar notificación para admin
         await create_user_notification(
             user_id=1,  # ID admin
@@ -75,7 +72,7 @@ async def login_post(
             ip=request.client.host if request.client else "unknown",
             lang=prefs['lang']
         )
-    return templates.TemplateResponse("login.html", {
+        return templates.TemplateResponse("login.html", {
             "request": request,
             "texts": prefs["texts"],
             "lang": prefs["lang"],
