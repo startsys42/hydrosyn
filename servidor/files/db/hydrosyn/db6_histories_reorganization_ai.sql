@@ -248,7 +248,8 @@ CREATE TABLE IF NOT EXISTS username_blacklist_history (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(20) NOT NULL,
     
-    changed_at TIMESTAMP NOT NULL,
+    add_at TIMESTAMP NOT NULL,
+      deleted_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     add_by INT UNSIGNED,     -- Usuario que realizó el cambio (puede ser NULL si fue automático)
     deleted_by INT UNSIGNED,     -- Usuario que eliminó el nombre (si aplica)
 
@@ -259,4 +260,26 @@ CREATE TABLE IF NOT EXISTS username_blacklist_history (
     FOREIGN KEY (deleted_by) REFERENCES users(id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS password_special_chars_history (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    special_char VARCHAR(1) NOT NULL ,
+    added_by INT UNSIGNED,  -- Usuario que añadió el nombre
+        deleted_by INT UNSIGNED,
+      add_at TIMESTAMP NOT NULL,
+   deleted_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (added_by) REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+   FOREIGN KEY (deleted_by) REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+    
+    -- Regla: el carácter no debe ser una letra ni número
+    CONSTRAINT chk_special_char_valid CHECK (
+        special_char NOT REGEXP '^[A-Za-z0-9]$'
+    )
 ) ENGINE=InnoDB;
