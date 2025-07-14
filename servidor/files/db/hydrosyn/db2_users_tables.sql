@@ -1,23 +1,22 @@
-CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE  utf8mb4_bin;
+
 USE hydrosyn_db;
 
-CREATE TABLE  IF NOT EXISTS  users (
+
+
+CREATE TABLE  IF NOT EXISTS  users(
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL,
     username VARCHAR(255) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    change_pass BOOLEAN NOT NULL FALSE,
-    delete_possible NOT NULL FALSE,
-
-
-
+    change_pass TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    delete_possible  BOOLEAN NOT NULL DEFAULT  FALSE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by INT UNSIGNED NOT NULL,
     language ENUM('es', 'en') NOT NULL DEFAULT 'en',
     theme ENUM('dark', 'light') NOT NULL DEFAULT 'light',
     use_2fa BOOLEAN NOT NULL DEFAULT FALSE,
-    twofa_secret VARCHAR(32),
+    twofa_secret VARCHAR(32) UNIQUE,
 
     CONSTRAINT fk_user_creator
         FOREIGN KEY (created_by)
@@ -27,22 +26,31 @@ CREATE TABLE  IF NOT EXISTS  users (
 )ENGINE=InnoDB;
 
 
+
+
+
+
+
 CREATE TABLE email_verifications (
     user_id INT UNSIGNED  PRIMARY KEY,
-    email_verification_token VARCHAR(255) NOT NULL,
+    email_verification_token VARCHAR(8) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP NOT NULL,
     verified BOOLEAN NOT NULL DEFAULT FALSE,
 
     FOREIGN KEY (user_id) REFERENCES users(id)
-        ON DELETE CASCADE
+        ON DELETE RESTRICT
         ON UPDATE CASCADE
 );
 
 
+
+
+
+
 CREATE TABLE email_verifications_unverified_log (
     id INT UNSIGNED  PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(255) NOT NULL,
+    user_id INT UNSIGNED NOT NULL,
     email VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NOT NULL,   -- fecha creación del token
     expires_at TIMESTAMP NOT NULL,   -- fecha de expiración
@@ -280,4 +288,6 @@ CREATE TABLE tokens (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (revoked_by) REFERENCES users(id) ON DELETE SET NULL
 );
+
+
 
