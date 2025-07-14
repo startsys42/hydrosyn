@@ -1,6 +1,24 @@
 
 USE hydrosyn_db;
 
+CREATE TABLE IF NOT EXISTS config_history (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    config_id INT UNSIGNED NOT NULL,
+    old_value INT UNSIGNED NOT NULL,
+    new_value INT UNSIGNED NOT NULL,
+    changed_by INT UNSIGNED NOT NULL ,
+    change_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  
+    
+    FOREIGN KEY (config_id) REFERENCES config(id)
+        ON DELETE RESTRICT
+        ON UPDATE RESTRICT,
+    
+    FOREIGN KEY (changed_by) REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
 
 
 DELIMITER //
