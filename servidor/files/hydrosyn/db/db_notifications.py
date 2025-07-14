@@ -1,6 +1,7 @@
 
 
-from typing import Optional
+import re
+from typing import Optional, Tuple
 from sqlalchemy import text
 from db.db_engine import DBEngine  # Asegúrate de importar tu DBEngine
 from logger import logger
@@ -9,6 +10,8 @@ EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
 
 async def get_should_send_email_for_notification_from_db(notification_id: int) -> bool:
 
+    """
+    Consulta si se debe enviar email para la notificación dada.
     """
     sql = text("""
         SELECT should_send_email 
@@ -36,8 +39,10 @@ async def get_should_send_email_for_notification_from_db(notification_id: int) -
         return None
 
 
-async def   get_notifications_email_from_db() -> Optional[Tuple[str, str]]:
+async def get_notifications_email_from_db() -> Optional[Tuple[str, str]]:
 
+    """
+    Obtiene el email y el código de idioma más reciente de la tabla notification_email_history.
     """
     sql = text("""
         SELECT email, lang_code
