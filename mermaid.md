@@ -1,6 +1,6 @@
 diagrama
 
-
+```mermaid
 flowchart TD
     A[¿Necesitas control de acceso?] -->|Sí| B[¿Un rol por usuario es suficiente?]
     A -->|No| Z[No necesitas sistema de roles]
