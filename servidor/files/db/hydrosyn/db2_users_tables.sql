@@ -122,45 +122,11 @@ CREATE TABLE password_special_chars (
 );
 
 
-CREATE TABLE username_policy_current (
-    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    min_length INT NOT NULL DEFAULT 6,
-    max_length INT NOT NULL DEFAULT 20,
-    min_lowercase INT NOT NULL DEFAULT 0,
-    min_numbers INT NOT NULL DEFAULT 0,
-    min_uppercase INT NOT NULL DEFAULT 0,
-    min_distinct_chars INT NOT NULL DEFAULT 3,
-    min_distinct_digits INT NOT NULL DEFAULT 0,
-    
 
-    applied_since TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    
-    changed_by INT UNSIGNED NOT NULL,
-    CONSTRAINT fk_username_policy_current_changed_by FOREIGN KEY (changed_by) REFERENCES users(id)
-        ON DELETE RESTRICT ON UPDATE CASCADE
-);
 
-CREATE TABLE username_policy_history (
-      id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    min_length INT NOT NULL DEFAULT 6,
-    max_length INT NOT NULL DEFAULT 20,
-    min_lowercase INT NOT NULL DEFAULT 0,
-    min_numbers INT NOT NULL DEFAULT 0,
-    min_uppercase INT NOT NULL DEFAULT 0,
-    min_distinct_chars INT NOT NULL DEFAULT 3,
-    min_distinct_digits INT NOT NULL DEFAULT 0,
-    
-
-    applied_since TIMESTAMP NOT NULL,
-    
-    changed_by INT UNSIGNED NOT NULL,
-    
-    CONSTRAINT fk_username_policy_history_changed_by FOREIGN KEY (changed_by) REFERENCES users(id)
-        ON DELETE RESTRICT ON UPDATE CASCADE
-);
 CREATE TABLE username_blacklist (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(255) NOT NULL UNIQUE
+    username VARCHAR(20) NOT NULL UNIQUE
  
 
 );
