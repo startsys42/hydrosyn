@@ -172,12 +172,21 @@ CONSTRAINT chk_min_length_at_least_8 CHECK (
 
 
 
-CREATE TABLE password_special_chars (
+CREATE TABLE IF NOT EXISTS password_special_chars (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    special_char VARCHAR(1) NOT NULL UNIQUE
+    special_char VARCHAR(1) NOT NULL UNIQUE,
+    added_by INT UNSIGNED,  -- Usuario que añadió el nombre
+    added_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-);
+    FOREIGN KEY (added_by) REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
 
+    -- Regla: el carácter no debe ser una letra ni número
+    CONSTRAINT chk_special_char_valid CHECK (
+        special_char NOT REGEXP '^[A-Za-z0-9]$'
+    )
+) ENGINE=InnoDB;
 
 
 
