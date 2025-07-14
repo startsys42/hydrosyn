@@ -219,3 +219,14 @@ CREATE TABLE username_policy_history (
         min_distinct_digits <= min_numbers
     )
 );
+
+CREATE TABLE IF NOT EXISTS username_blacklist_history (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(20) NOT NULL,
+    changed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    changed_by INT UNSIGNED,
+
+    FOREIGN KEY (changed_by) REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
