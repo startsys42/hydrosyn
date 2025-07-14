@@ -405,13 +405,13 @@ DELIMITER ;
 
 CREATE TABLE email_verifications (
     user_id INT UNSIGNED  PRIMARY KEY,
-    email_verification_token VARCHAR(255) NOT NULL,
+    email_verification_token VARCHAR(8) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP NOT NULL,
     verified BOOLEAN NOT NULL DEFAULT FALSE,
 
     FOREIGN KEY (user_id) REFERENCES users(id)
-        ON DELETE CASCADE
+        ON DELETE RESTRICT
         ON UPDATE CASCADE
 );
 
