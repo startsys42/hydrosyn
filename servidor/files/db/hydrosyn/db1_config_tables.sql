@@ -211,22 +211,22 @@ FOR EACH ROW
 SIGNAL SQLSTATE '13000' SET MESSAGE_TEXT = 'Updation from the config_groups table is prohibited';
 
 --  Prevent insertion into the 'config_translations' table to avoid unapproved language entries
-CREATE TRIGGER block_insert_config_translations
-BEFORE INSERT ON config_translations
+CREATE TRIGGER block_insert_config_groups_translations
+BEFORE INSERT ON config_group_translations
 FOR EACH ROW
-SIGNAL SQLSTATE '21000' SET MESSAGE_TEXT = 'Insertion into the config_translations table is prohibited';
+SIGNAL SQLSTATE '21000' SET MESSAGE_TEXT = 'Insertion into the config_group_translations table is prohibited';
 
 --  Prevent deletion from the 'config_translations' table to retain translation integrity
-CREATE TRIGGER block_delete_config_translations
-BEFORE DELETE ON config_translations
+CREATE TRIGGER block_delete_config_groups_translations
+BEFORE DELETE ON config_group_translations
 FOR EACH ROW
-SIGNAL SQLSTATE '22000' SET MESSAGE_TEXT = 'Deletion from the config_translations table is prohibited';
+SIGNAL SQLSTATE '22000' SET MESSAGE_TEXT = 'Deletion from the config_group_translations table is prohibited';
 
 --  Prevent updates to 'config_translations' to avoid altering validated texts
-CREATE TRIGGER block_update_config_translations
-BEFORE UPDATE ON config_translations
+CREATE TRIGGER block_update_config_groups_translations
+BEFORE UPDATE ON config_group_translations
 FOR EACH ROW
-SIGNAL SQLSTATE '23000' SET MESSAGE_TEXT = 'Updation from the config_translations table is prohibited';
+SIGNAL SQLSTATE '23000' SET MESSAGE_TEXT = 'Updation from the config_group_translations table is prohibited';
 
 
 
