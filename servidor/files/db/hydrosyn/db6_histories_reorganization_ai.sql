@@ -220,13 +220,21 @@ CREATE TABLE username_policy_history (
     )
 );
 
+
+
 CREATE TABLE IF NOT EXISTS username_blacklist_history (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(20) NOT NULL,
-    changed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    changed_by INT UNSIGNED,
+    
+    changed_at TIMESTAMP NOT NULL,
+    add_by INT UNSIGNED,     -- Usuario que realizó el cambio (puede ser NULL si fue automático)
+    deleted_by INT UNSIGNED,     -- Usuario que eliminó el nombre (si aplica)
 
-    FOREIGN KEY (changed_by) REFERENCES users(id)
+    FOREIGN KEY (add_by) REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+
+    FOREIGN KEY (deleted_by) REFERENCES users(id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE
 ) ENGINE=InnoDB;
