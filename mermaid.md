@@ -8,9 +8,10 @@ flowchart TD
     B -->|Sí| C[Crear tabla de usuarios con campo role_id]
     C --> D[Definir tabla roles]
     D --> E[Control de acceso simple: OK ✅]
+
     B -->|No| F[¿Necesitas permisos específicos por rol?]
     F -->|Sí| G[Crear tabla permissions]
-    G --> H[Crear tabla role_permissions (many-to-many)]
+    G --> H["Crear tabla role_permissions (many-to-many)"]
     H --> I[Asignar permisos a roles]
 
     F -->|No| X[Usa roles como banderas lógicas en app]
