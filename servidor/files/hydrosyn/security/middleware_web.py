@@ -264,7 +264,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         response.set_cookie(
             key="session_id",
             value=signed_data,
-            httponly=True,
+            httponly=False,
             secure=True,
             path="/",  
             samesite="Lax",
