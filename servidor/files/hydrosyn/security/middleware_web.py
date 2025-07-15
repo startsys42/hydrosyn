@@ -33,10 +33,15 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next) -> Response:
         # 1. Obtener claves actuales para verificación
         current_key, old_key = await self.key_manager.get_keys()
+        if request.method == "POST":
+            form = await request.form()
+            lang = form.get("lang")
+            theme = form.get("theme")
 
         # 2. Verificar sesión existente
         session_data_dict = await self._get_valid_session_id(request, current_key, old_key)
         if session_data_dict is None:
+            logger.warning("1")
             response_for_cookie = Response()
             await self._create_new_session(request, response_for_cookie, current_key)
             final_response = RedirectResponse(url="/web/auth/login", status_code=303)
@@ -91,7 +96,9 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     )
                     raise HTTPException(status_code=404, detail="Invalid device information")
             if session_data is not None:
+                logger.warning("2 ")
                 if method == "POST":
+                    logger.warning("2.1")
                     if path == "/web/device/device-info":
                         method="GET"
                         path=origin_path
@@ -231,9 +238,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         except:
             return "invalid_referer"
             
-    async def verify_user_login() -> dict:
-  
-        pass
+
   
         
  
@@ -265,7 +270,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
             key="session_id",
             value=signed_data,
             httponly=True,
-            secure=True,
+            secure=False,
             path="/",  
             samesite="Lax",
             max_age=days *86400  
