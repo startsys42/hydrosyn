@@ -130,7 +130,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                             message_text=message_text
                         )
 
-                        await insert_login_attempts_to_db(
+                        await insert_login_attempts_in_db(
                             session_id=session_id,
                             user_id=session_data['user_id'],
                             ip_address=client_ip,
@@ -309,7 +309,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
             data = json.loads(data_str)
             logger.debug(f"Sesión válida encontrada: {data}")  # <-- Nuevo log
             return data  # <-- Devuelve todo el diccionario
-        except (BadSignature, json.JSONDecodeError):
+        except (BadSignature, json.JSONDecodeError) as e:
             logger.warning(f"Error al verificar sesión (clave actual): {str(e)}")
             if old_key:
                 try:
@@ -318,7 +318,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     data = json.loads(data_str)
                     logger.debug(f"Sesión válida encontrada con clave antigua: {data}")
                     return data  # <-- Devuelve todo el diccionario
-                except (BadSignature, json.JSONDecodeError):
+                except (BadSignature, json.JSONDecodeError) as e:
                     logger.warning(f"Error al verificar sesión (clave antigua): {str(e)}")
                     return None
             return None
