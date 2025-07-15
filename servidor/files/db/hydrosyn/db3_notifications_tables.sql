@@ -18,6 +18,8 @@ CREATE TABLE notification_email_history (
         ON DELETE RESTRICT 
         ON UPDATE CASCADE
 ) ENGINE=InnoDB;
+
+
 CREATE TABLE notification_history (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     notification_id INT UNSIGNED NOT NULL,
@@ -49,6 +51,25 @@ template_text VARCHAR(255) NOT NULL,
 );
 
 
+CREATE TABLE notification_events (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    notification_id INT UNSIGNED NOT NULL,         -- Tipo de notificación
+    user_id INT UNSIGNED NOT NULL,                 -- A qué usuario le afecta (target)
+   
+    lang_code ENUM('es', 'en') NOT NULL,
+    formatted_message VARCHAR(255) NOT NULL,               -- Texto listo para mostrar
+    extra_data JSON DEFAULT NULL,                  -- Información adicional (IP, intentos, etc.)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (notification_id) REFERENCES notifications(id)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+
+    FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+
+    
+);
+
 CREATE TABLE user_notifications (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id INT UNSIGNED NOT NULL,
@@ -62,10 +83,11 @@ formatted_message VARCHAR(255) NOT NULL,
         ON DELETE RESTRICT
         ON UPDATE CASCADE,
 
-    FOREIGN KEY (notification_id) REFERENCES notifications(id)
+    FOREIGN KEY (notification_id) REFERENCES notification_events(id)
         ON DELETE RESTRICT
-        ON UPDATE RESTRICT
+        ON UPDATE CASCADE
 );
+
 
 
 INSERT INTO notifications (should_send_email) VALUES (FALSE);

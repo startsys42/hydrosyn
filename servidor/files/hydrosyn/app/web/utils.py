@@ -1,5 +1,17 @@
 from fastapi import Request
 
+ERROR_MESSAGES = {
+    "account_not_exists": {
+        "en": "Account does not exist",
+        "es": "La cuenta no existe",
+    },
+    "invalid_csrf": {
+        "en": "Invalid CSRF token",
+        "es": "Token CSRF inválido",
+    }
+}
+
+
 LANGS = {
     "es": {
         "title": "¡Bienvenid@!",
@@ -57,7 +69,6 @@ def get_user_preferences(request: Request):
         "theme": theme,
         "texts": texts,
     }
-
 
 
 

@@ -1,12 +1,15 @@
 CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE  utf8mb4_bin;
 USE hydrosyn_db;
 
+-- componenetes,e stadisticas ordenes permisoso
+
 CREATE TABLE systems (
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    system_name VARCHAR(100) NOT NULL UNIQUE,
+    system_name VARCHAR(100) NOT NULL UNIQUE, -- poenr restricicon nuemros guiones... historico
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deactivated_at TIMESTAMP DEFAULT NULL,
     created_by INT UNSIGNED NOT NULL,
+    delete_possible  BOOLEAN NOT NULL DEFAULT  FALSE,
     deactivated_by INT UNSIGNED DEFAULT NULL,
 
     CONSTRAINT fk_system_creator

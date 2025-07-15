@@ -7,8 +7,8 @@ from itsdangerous import URLSafeSerializer, BadSignature
 from collections import OrderedDict
 
 # Configuración de seguridad
-SECRET_KEY = secrets.token_urlsafe(32)
-csrf_serializer = URLSafeSerializer(SECRET_KEY, salt="csrf-protection")
+SECRET_KEY_CSRF = secrets.token_urlsafe(32)
+csrf_serializer = URLSafeSerializer(SECRET_KEY_CSRF, salt="csrf-protection")
 
 
 generated_tokens = OrderedDict()  # Tokens válidos pendientes de uso

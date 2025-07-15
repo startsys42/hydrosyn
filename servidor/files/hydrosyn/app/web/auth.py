@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
-from app.web.utils import get_user_preferences
+from app.web.utils import get_user_preferences, ERROR_MESSAGES
 from fastapi.responses import PlainTextResponse
 from fastapi import Form, status
 from fastapi.responses import RedirectResponse
@@ -9,10 +9,14 @@ from common.templates import templates
 from logger import logger
 from security.csrf import generate_csrf_token
 from db.db_notifications import get_should_send_email_for_notification_from_db, get_notifications_email_from_db
+from security.email import send_email
 
 
 router = APIRouter(tags=["Web Auth"])
-# poenr los formualrios con campos dinamicos
+# poenr los formualrios con campos dinamicos, si em logueo bien borrar sesiona nterior o registar el rpimer iniciod e sesion y tareas para el rpiemr usuaro iniciod e sesion notificacion
+
+
+
 
 @router.get("/login", response_class=HTMLResponse)
 async def login_get(request: Request):
@@ -43,54 +47,32 @@ async def login_post(
         return PlainTextResponse(str(e), status_code=400)
 
     if await is_in_blacklist_from_db(username):
-        # Obtener configuración de notificación
-        should_send = await get_should_send_email_for_notification_from_db(5)
-        notification_email = await get_notifications_email_from_db(5)
-        notification_lang = prefs["lang"]
-        if notification_email:
-            template = await get_notification_template_from_db(
-                notification_id=5,
-                lang_code=notification_lang
-            )
-            client_ip = request.client.host if request.client else "unknown"
-            formatted_msg = template['template_text'].format(
-                user=username,
-                ip=client_ip
-            )
-            # Enviar email
-            send_email(
-                to=notification_email,
-                subject=template['subject'],
-                body=formatted_msg
-            )
-
-        # Registrar notificación para admin
-        await create_user_notification(
-            user_id=1,  # ID admin
-            notification_id=5,
-            username=username,
-            ip=request.client.host if request.client else "unknown",
-            lang=prefs['lang']
-        )
+        client_ip = request.client.host if request.client else "unknown"
+        create_user_notification(1,5, ip=client_ip, username=username)
+        error_key = "account_not_exists"  # o "invalid_csrf"
+        error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
         return templates.TemplateResponse("login.html", {
             "request": request,
             "texts": prefs["texts"],
             "lang": prefs["lang"],
             "theme": prefs["theme"],
-            "error": "Account restricted"
+            "error": error_message
         }, status_code=403)
+    get_user_login_from_db(username,password=password)
     # Validar CSRF primero
-
+    error_key = "invalid_csrf"  # o "invalid_csrf"
+    error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
     if not validate_csrf_token(csrf_token):
         return templates.TemplateResponse("login.html", {
             "request": request,
             "texts": prefs["texts"],
             "lang": prefs["lang"],
             "theme": prefs["theme"],
-            "error": "Invalid CSRF token"
+            "error": error_message
         }, status_code=403)
+    
 
-## evrificar si esta activo si tiene two fa  y envairb codigo ye so
+## evrificar si esta activo si tiene two fa  y envairb codigo ye so , cmabiar nombre cambair apssword, ...
 
 
 
@@ -228,7 +210,7 @@ async def recover_password_post(request: Request, email: str = Form(...)):
     })
 
 @router.get("/home", response_class=HTMLResponse)
-async def login_get(request: Request):
+async def home_get(request: Request):
     try:
         prefs = get_user_preferences(request)
     except ValueError as e:
@@ -243,8 +225,9 @@ async def login_get(request: Request):
     })
 
 
-@router.post("/logout")
-async def logout(request: Request, response: Response):
+@router.post("/logout",  response_class=HTMLResponse)
+async def logout(request: Request):
+    delete_session_in_db(request.state.session_id)
     response = RedirectResponse(url="/web/auth/login", status_code=303)
     response.delete_cookie("session_id")
     return response

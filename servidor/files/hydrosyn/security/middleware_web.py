@@ -16,7 +16,7 @@ from db.db_auth import delete_session_in_db
 from pydantic import BaseModel
 from fastapi import HTTPException
 
-
+#crear notificaion robo cookie admin y usuario, controlar lo del apsswords, lo del name, 
 
 class DeviceInfo(BaseModel):
     ram: Optional[Union[int, float]] = None

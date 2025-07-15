@@ -5,33 +5,31 @@ from logger import logger
 from datetime import datetime, timedelta
 from db.db_config import get_cookie_rotation_time_from_db
 
+import bcrypt
 
 from db.db_engine import DBEngine
 from logger import logger
 from typing import Optional, Dict, Any
+
+async def get_password_policy(db) -> dict:
+    sql = text("SELECT * FROM password_policy_current ORDER BY changed_at DESC LIMIT 1")
+    row = await db.fetch_one(sql)
+    if not row:
+        raise Exception("No password policy found")
+    return dict(row)
+
 
 async def get_user_login_from_db(
     username: str,  # Obligatorio siempre
     password: str = None,  # Opcional (Caso 2)
     email: str = None  # Opcional (Caso 1)
 ) -> Optional[Dict[str, Any]]:
-    """
-    Autentica un usuario en dos casos:
-      1. username + password
-      2. username + email
 
-    Args:
-        username (str): Obligatorio siempre.
-        password (str): Obligatorio si no se envía email.
-        email (str): Obligatorio si no se envía password.
-
-    Returns:
-        dict: Datos del usuario si es válido, None si falla.
-    """
 
     # Validación de parámetros
     if password is None and email is None:
-        logger.error("Debes enviar 'password' o 'email' junto con 'username'")
+    
+        logger.error("You must send 'password' or 'email' along with 'username'")
         return None
 
     # Construye la consulta según el caso
@@ -39,7 +37,7 @@ async def get_user_login_from_db(
         # Caso 1: username + password
         sql = text("""
             SELECT id, username, email, is_active, 
-                   use_2fa, language, theme, password
+                   use_2fa, language, theme, password,first_login, change_pass
             FROM users 
             WHERE username = :username
             LIMIT 1
@@ -49,38 +47,64 @@ async def get_user_login_from_db(
         # Caso 2: username + email
         sql = text("""
             SELECT id, username, email, is_active, 
-                   use_2fa, language, theme, password
+                   use_2fa, language, theme, password, first_login, change_pass
             FROM users 
-            WHERE username = :username AND email = :email
+            WHERE username = :username OR email = :email
             LIMIT 1
         """)
         params = {"username": username, "email": email}
 
     engine = DBEngine.get_engine()
-
+#debo comprobar si inactivo, si two si  priemra vez
     try:
         async with engine.connect() as conn:
             result = await conn.execute(sql, params)
             user = result.fetchone()
 
-            if user is None:
-                logger.warning(f"Usuario no encontrado o datos incorrectos: {username}")
-                return None
+            
 
-            # Verifica la contraseña (si aplica)
-            if password is not None and user["password"] != password:
-                logger.warning(f"Contraseña incorrecta para: {username}")
+            if user is None:
+                logger.warning(f"User not found or incorrect data: {username}")
                 return None
+            if user is not None and user["username"] == username:
+                dict_username="exist_username"
+            if password is not None:
+                if validate_password(password,get_password_policy_from_db()):
+                    key="password_valid"
+                    if(bcrypt.checkpw(password.encode('utf-8'), user["password"].encode('utf-8'))):
+                        hash="same"
+                    else:
+                        hash="different"
+
+                else:
+                   
+                    key="password_not_valid"  # <- Aquí puedes añadir un campo al diccionario
+                    
+                    
+                    # <- Aquí llamas a la función de validación
+                # aquí quiero comprobar que cumple las reglas y que coincide con su hash
+                
+               
+
+            if email is not None and user["email"] == email:
+                dict_email="exist_email"
+
+            
 
             # Devuelve datos del usuario (sin contraseña)
             return {
                 "id": user["id"],
-                "username": user["username"],
+                "username":dict_username,
                 "email": user["email"],
                 "is_active": user["is_active"],
                 "use_2fa": user["use_2fa"],
                 "language": user["language"],
-                "theme": user["theme"]
+                "theme": user["theme"],
+                "first_login": user["first_login"],
+                "change_pass": user["change_pass"],
+                "key": key,  # Añade el campo si existe
+                "hash": hash,  
+                "dict_email": dict_email  
             }
 
     except Exception as e:
@@ -97,7 +121,6 @@ async def delete_session_in_db(session_id: str) -> bool:
             async with conn.begin():  # transacción explícita async
                 result = await conn.execute(sql, {"session_id": session_id})
             if result.rowcount > 0:
-                logger.info(f"Session deleted successfully. Session ID: {session_id}")
                 return True
             else:
                 logger.warning(f"No session found with Session ID: {session_id}")

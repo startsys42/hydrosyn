@@ -162,6 +162,9 @@ async def get_session_from_db(session_id: str, extend_validity: bool = True) -> 
                     u.username,
                     u.email,
                     u.is_active,
+                    u.first_login,
+                    u.change_pass,
+                    u.use_2fa,
                     u.language,
                     u.theme
                 FROM sessions s

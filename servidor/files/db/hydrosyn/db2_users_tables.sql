@@ -5,10 +5,11 @@ USE hydrosyn_db;
 
 CREATE TABLE  IF NOT EXISTS  users(
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    username VARCHAR(255) NOT NULL UNIQUE,
+    username VARCHAR(20) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
+    first_login BOOLEAN NOT NULL DEFAULT FALSE,
     change_pass TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     delete_possible  BOOLEAN NOT NULL DEFAULT  FALSE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -34,7 +35,7 @@ CREATE TABLE IF NOT EXISTS email_verifications (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP NOT NULL,
     verified_at TIMESTAMP NULL,
-    is_used BOOLEAN NOT NULL DEFAULT FALSE,
+    
 
     FOREIGN KEY (user_id) REFERENCES users(id)
         ON DELETE RESTRICT
@@ -228,7 +229,7 @@ CREATE TABLE sessions (
     summary CHAR(64) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 
@@ -252,17 +253,5 @@ CREATE TABLE tokens (
 );
 
 
-CREATE TABLE IF NOT EXISTS username_history (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    user_id INT UNSIGNED NOT NULL,          -- usuario cuyo nombre cambió
-    old_username VARCHAR(20) NOT NULL,     -- nombre anterior
-    new_username VARCHAR(20) NOT NULL,     -- nuevo nombre
-    changed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    changed_by INT UNSIGNED NOT NULL,       -- usuario que hizo el cambio
 
-    CONSTRAINT fk_unh_user FOREIGN KEY (user_id) REFERENCES users(id)
-        ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT fk_unh_changed_by FOREIGN KEY (changed_by) REFERENCES users(id)
-        ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB;
 

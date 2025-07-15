@@ -232,24 +232,3 @@ DELIMITER ;
 
 
 
-DELIMITER //
-
-CREATE EVENT weekly_maintenance_auto
-ON SCHEDULE
-    EVERY 1 DAY
-    STARTS CONCAT(CURRENT_DATE + INTERVAL 1 DAY, ' 02:00:00')
-DO
-BEGIN
-    -- Basic error handling (will stop on first error)
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        -- Fail silently (or add notification logic here)
-    END;
-    
-    -- Execute maintenance procedures in order
-    CALL reorganize_config_history_ids();
-
-END //
-
-DELIMITER ;
-
