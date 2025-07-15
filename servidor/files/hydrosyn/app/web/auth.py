@@ -241,3 +241,10 @@ async def login_get(request: Request):
         "theme": prefs["theme"],
       
     })
+
+
+@router.post("/logout")
+async def logout(request: Request, response: Response):
+    response = RedirectResponse(url="/web/auth/login", status_code=303)
+    response.delete_cookie("session_id")
+    return response
