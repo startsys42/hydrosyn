@@ -56,6 +56,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
             request.state.session_id = session_id
             session_data = await get_session_from_db(session_id)
             path = request.url.path
+            logger.info(f"path: " {path})
             method = request.method
             client_ip = request.client.host if request.client else "unknown"
             user_agent = request.headers.get("user-agent", "unknown")
