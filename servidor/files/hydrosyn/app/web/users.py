@@ -4,7 +4,9 @@ router = APIRouter()
 
 # crear susuario , borarr usuario, desactivar usuario, cambairle contraseña o correo o 2fa
 # protlongar autentificar  o or ecuperar contraseña extender tiempo recuepracion oa activacion
-#listar permisos roles istemas, listar usuarios
+#listar permisos roles istemas, listar usuarios, modificar
+
+# crear usuario, nombre cumpla reglas y noe xiste y no blacklist, contraseña cumpla reglas , correo, ... asociar ssitema preguntar si estoy seguro
 
 @router.get("/create-user")
 async def change_name_get():
