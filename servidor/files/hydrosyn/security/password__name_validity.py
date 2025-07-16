@@ -3,6 +3,40 @@
 
 from db.db_password import get_special_chars_from_db
 
+def validate_username(username: str, policy: dict) -> bool:
+    # Validación de longitud
+    if len(username) < policy["min_length"] or len(username) > policy["max_length"]:
+        return False
+
+    # Validar cantidad mínima de letras minúsculas
+    if len(re.findall(r"[a-z]", username)) < policy["min_lowercase"]:
+        return False
+
+    # Validar cantidad mínima de letras mayúsculas
+    if len(re.findall(r"[A-Z]", username)) < policy["min_uppercase"]:
+        return False
+
+    # Validar cantidad mínima de números
+    if len(re.findall(r"[0-9]", username)) < policy["min_numbers"]:
+        return False
+
+    # Validar caracteres alfabéticos distintos
+    letters = set(c for c in username if c.isalpha())
+    if len(letters) < policy["min_distinct_chars"]:
+        return False
+
+    # Validar dígitos distintos mínimos
+    digits = set(re.findall(r"\d", username))
+    if len(digits) < policy["min_distinct_digits"]:
+        return False
+
+    # Validar que solo contenga letras y números (alfa-numérico)
+    if not re.fullmatch(r"[a-zA-Z0-9]+", username):
+        return False
+
+    return True
+
+
 
 def validate_password(username: str, password: str, policy: dict) -> bool:
 

@@ -513,7 +513,7 @@ DELIMITER ;
 CREATE TABLE IF NOT EXISTS email_verification_history (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id INT UNSIGNED NOT NULL,
-    email VARCHAR(255) NOT NULL,
+    email VARCHAR(100) NOT NULL,
     token VARCHAR(8),
     requested_at TIMESTAMP NOT NULL,
     verified_at TIMESTAMP NULL,
@@ -701,6 +701,7 @@ CREATE TABLE username_policy_history (
     
     -- Constraints actualizadas:
     CONSTRAINT chk_min_length_min_hist CHECK (min_length >= 6),
+    CONSTRAINT chk_max_length_max_hist CHECK (max_length <= 20),
     CONSTRAINT chk_max_length_min_length_hist CHECK (max_length >= min_length),
     
     CONSTRAINT chk_sum_min_chars_max_length_hist CHECK (
@@ -1015,8 +1016,8 @@ DELIMITER ;
 CREATE TABLE user_email_changes (
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     user_id INT UNSIGNED NOT NULL,
-    old_email VARCHAR(255) NOT NULL,
-    new_email VARCHAR(255) NOT NULL,
+    old_email VARCHAR(100) NOT NULL,
+    new_email VARCHAR(100) NOT NULL,
     changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     changed_by INT UNSIGNED NOT NULL,
     device VARCHAR(255),
@@ -1039,7 +1040,7 @@ CREATE TRIGGER trg_user_email_changes_validate_new_email
 BEFORE INSERT ON user_email_changes
 FOR EACH ROW
 BEGIN
-    DECLARE last_email VARCHAR(255);
+    DECLARE last_email VARCHAR(100);
     -- Get the most recent email for the user
     SELECT new_email INTO last_email
     FROM user_email_changes
@@ -1114,6 +1115,8 @@ CREATE TABLE IF NOT EXISTS username_history (
     new_username VARCHAR(20) NOT NULL,     -- nuevo nombre
     changed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     changed_by INT UNSIGNED NOT NULL,       -- usuario que hizo el cambio
+    CONSTRAINT chk_new_username_alphanumeric CHECK (new_username REGEXP '^[a-zA-Z0-9]+$'),
+    CONSTRAINT chk_old_username_alphanumeric CHECK (old_username REGEXP '^[a-zA-Z0-9]+$'),
 
     CONSTRAINT fk_unh_user FOREIGN KEY (user_id) REFERENCES users(id)
         ON DELETE RESTRICT ON UPDATE CASCADE,

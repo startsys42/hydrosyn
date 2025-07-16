@@ -6,7 +6,7 @@ USE hydrosyn_db;
 CREATE TABLE  IF NOT EXISTS  users(
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL,
     username VARCHAR(20) NOT NULL UNIQUE,
-    email VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
     first_login BOOLEAN NOT NULL DEFAULT FALSE,
@@ -18,7 +18,7 @@ CREATE TABLE  IF NOT EXISTS  users(
     theme ENUM('dark', 'light') NOT NULL DEFAULT 'light',
     use_2fa BOOLEAN NOT NULL DEFAULT FALSE,
     twofa_secret VARCHAR(32) UNIQUE,
-
+     CONSTRAINT chk_username_alphanumeric CHECK (username REGEXP '^[a-zA-Z0-9]+$'),
     CONSTRAINT fk_user_creator
         FOREIGN KEY (created_by)
         REFERENCES users(id)
@@ -105,6 +105,7 @@ CREATE TABLE username_policy_current (
     
     -- Constraints actualizadas según tu pedido:
     CONSTRAINT chk_min_length_min CHECK (min_length >= 6),
+    CONSTRAINT chk_max_length_max CHECK (max_length <= 20),
     CONSTRAINT chk_max_length_min_length CHECK (max_length >= min_length),
     
     CONSTRAINT chk_sum_min_chars_max_length CHECK (

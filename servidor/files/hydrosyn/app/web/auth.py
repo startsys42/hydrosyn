@@ -58,7 +58,20 @@ async def login_post(
             "theme": prefs["theme"],
             "error": error_message
         }, status_code=403)
-    get_user_login_from_db(username,password=password)
+
+    user_data = await get_user_login_from_db(username, password=password)
+
+    if not user_data:
+        error_key = "invalid_credentials"
+        error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
+        return templates.TemplateResponse("login.html", {
+            "request": request,
+            "texts": prefs["texts"],
+            "lang": prefs["lang"],
+            "theme": prefs["theme"],
+            "error": error_message
+        }, status_code=403)
+
     # Validar CSRF primero
     error_key = "invalid_csrf"  # o "invalid_csrf"
     error_message = ERROR_MESSAGES[error_key][prefs["lang"]]

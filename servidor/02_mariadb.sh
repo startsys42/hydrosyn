@@ -130,7 +130,7 @@ modify_param_in_mysqld "plugin_load_add" "simple_password_check"
 
 modify_param_in_mysqld "port" "$DB_PORT"
 modify_param_in_mysqld "bind-address" "$DB_IP"
-
+modify_param_in_mysqld "sql_mode" "STRICT_ALL_TABLES"
 
 
 

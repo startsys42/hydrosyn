@@ -11,12 +11,7 @@ from db.db_engine import DBEngine
 from logger import logger
 from typing import Optional, Dict, Any
 
-async def get_password_policy(db) -> dict:
-    sql = text("SELECT * FROM password_policy_current ORDER BY changed_at DESC LIMIT 1")
-    row = await db.fetch_one(sql)
-    if not row:
-        raise Exception("No password policy found")
-    return dict(row)
+
 
 
 async def get_user_login_from_db(
@@ -68,17 +63,26 @@ async def get_user_login_from_db(
                 return None
             if user is not None and user["username"] == username:
                 dict_username="exist_username"
-            if password is not None:
-                if validate_password(password,get_password_policy_from_db()):
-                    key="password_valid"
-                    if(bcrypt.checkpw(password.encode('utf-8'), user["password"].encode('utf-8'))):
+                if password is not None:
+                    if bcrypt.checkpw(password.encode('utf-8'), user["password"].encode('utf-8')):
                         hash="same"
+                        if validate_password(password,get_password_policy_from_db()):
+                            key="password_valid"
+                            await reset_change_pass_to_null_in_db(username)
+                        else:
+                            key="password_not_valid"
+                            await set_change_pass_to_now_in_db(username)
+
                     else:
                         hash="different"
-
-                else:
-                   
-                    key="password_not_valid"  # <- Aquí puedes añadir un campo al diccionario
+                if email is not None:
+                    if user["email"] == email:
+                        dict_email="exist_email"
+                    else:
+                        dict_email="not_exist_email"   
+            else:
+                dict_username="not_exist_username"
+             # <- Aquí puedes añadir un campo al diccionario
                     
                     
                     # <- Aquí llamas a la función de validación
@@ -86,10 +90,9 @@ async def get_user_login_from_db(
                 
                
 
-            if email is not None and user["email"] == email:
-                dict_email="exist_email"
-
             
+
+            # Aquí puedes añadir más lógica si es necesario
 
             # Devuelve datos del usuario (sin contraseña)
             return {
@@ -102,50 +105,14 @@ async def get_user_login_from_db(
                 "theme": user["theme"],
                 "first_login": user["first_login"],
                 "change_pass": user["change_pass"],
-                "key": key,  # Añade el campo si existe
-                "hash": hash,  
-                "dict_email": dict_email  
+                "key": key if password is not None else None,
+                "hash": hash if password is not None else None,  
+                "dict_email": dict_email if email is not None else None,  
             }
 
     except Exception as e:
         logger.error(f"Error en la base de datos: {e}")
         return None
-
-async def delete_session_in_db(session_id: str) -> bool:
-    sql = text("""
-        DELETE FROM sessions WHERE session_id = :session_id
-    """)
-    engine = DBEngine.get_engine()
-    try:
-        async with engine.connect() as conn:  # obtener conexión async
-            async with conn.begin():  # transacción explícita async
-                result = await conn.execute(sql, {"session_id": session_id})
-            if result.rowcount > 0:
-                return True
-            else:
-                logger.warning(f"No session found with Session ID: {session_id}")
-                return False
-    except Exception as e:
-        logger.error(f"Error deleting session with Session ID {session_id}: {e}")
-        return False
-
-async def is_in_blacklist_from_db(username: str) -> bool:
-    sql = text("""
-        SELECT username FROM username_blacklist WHERE username = :username 
-    """)
-    engine = DBEngine.get_engine()
-    
-    try:
-        async with engine.begin() as conn:  # Usamos begin() para manejo automático de transacciones
-            result = await conn.execute(sql, {"username": username})
-            row = result.fetchone()
-            return row is not None  # Corrección: devuelve bool en lugar del objeto row
-            
-    except Exception as e:
-        logger.error(f"Error checking blacklist for {username}: {str(e)}", 
-                   exc_info=True,  # Registra el stack trace completo
-                   extra={"username": username})
-        return True  # Fail-safe
 
 
 

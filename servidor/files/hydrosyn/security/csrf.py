@@ -9,6 +9,7 @@ from collections import OrderedDict
 # Configuración de seguridad
 SECRET_KEY_CSRF = secrets.token_urlsafe(32)
 csrf_serializer = URLSafeSerializer(SECRET_KEY_CSRF, salt="csrf-protection")
+MAX_STORED_TOKENS = 1000
 
 
 generated_tokens = OrderedDict()  # Tokens válidos pendientes de uso

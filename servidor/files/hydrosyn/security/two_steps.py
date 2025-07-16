@@ -7,7 +7,7 @@ from itsdangerous import URLSafeSerializer
 
 SECRET_KEY_TWO_STEP = secrets.token_urlsafe(32)
 serializer_two_step = URLSafeSerializer(SECRET_KEY_TWO_STEP, salt="two_steps")
-
+MAX_STORED_TOKENS = 1000
 
 
 two_step_tokens = OrderedDict()  # Tokens válidos pendientes de uso
