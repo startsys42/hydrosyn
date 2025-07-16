@@ -1,3 +1,6 @@
+from db.db_engine import DBEngine  # Asegúrate que retorna AsyncEngine
+from logger import logger
+
 async def reset_change_pass_to_null_in_db(username: str) -> dict:
     engine = DBEngine.get_engine()
     sql = text("UPDATE users SET change_pass = NULL WHERE username = :username")

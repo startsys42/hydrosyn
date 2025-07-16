@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS roles (
 
 CREATE TABLE IF NOT EXISTS roles_name_changes (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    role_id INT NOT NULL,
+    role_id INT UNSIGNED NOT NULL,
     old_name VARCHAR(50) NOT NULL,
     new_name VARCHAR(50) NOT NULL,
     changed_by INT UNSIGNED NOT NULL,
