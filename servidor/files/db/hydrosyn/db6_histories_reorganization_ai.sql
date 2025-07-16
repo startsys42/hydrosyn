@@ -922,7 +922,7 @@ CREATE TABLE user_password_history (
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     user_id INT UNSIGNED NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP NOT NULL,
     changed_by INT UNSIGNED NOT NULL,
     device VARCHAR(255),
     ip_address VARCHAR(39),

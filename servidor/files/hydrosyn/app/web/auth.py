@@ -45,7 +45,7 @@ async def login_post(
         prefs = get_user_preferences(request)
     except ValueError as e:
         return PlainTextResponse(str(e), status_code=400)
-
+   # aquid ebo guardar notificacion
     if await is_in_blacklist_from_db(username):
         client_ip = request.client.host if request.client else "unknown"
         create_user_notification(1,5, ip=client_ip, username=username)
@@ -60,9 +60,9 @@ async def login_post(
         }, status_code=403)
 
     user_data = await get_user_login_from_db(username, password=password)
-
+    
     if not user_data:
-        error_key = "invalid_credentials"
+        error_key = "credentials"
         error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
         return templates.TemplateResponse("login.html", {
             "request": request,
@@ -71,7 +71,20 @@ async def login_post(
             "theme": prefs["theme"],
             "error": error_message
         }, status_code=403)
-
+    else:
+        if user_data["username"]=="exist_username":
+            if user_data["is_active"]==True:
+            # si usuario cincide epro contraseña noe nvair emnsaje notifiacion
+                if user_data["hash"]=="same":
+            error_key = "credentials"
+            error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
+            return templates.TemplateResponse("login.html", {
+                "request": request,
+                "texts": prefs["texts"],
+                "lang": prefs["lang"],
+                "theme": prefs["theme"],
+                "error": error_message
+            }, status_code=403)
     # Validar CSRF primero
     error_key = "invalid_csrf"  # o "invalid_csrf"
     error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
@@ -83,6 +96,20 @@ async def login_post(
             "theme": prefs["theme"],
             "error": error_message
         }, status_code=403)
+     return {
+                "id": user["id"],
+                "username":dict_username,
+                "email": user["email"],
+                "is_active": user["is_active"],
+                "use_2fa": user["use_2fa"],
+                "language": user["language"],
+                "theme": user["theme"],
+                "first_login": user["first_login"],
+                "change_pass": user["change_pass"],
+                "key": key if password is not None else None,
+                "hash": hash if password is not None else None,  
+                "dict_email": dict_email if email is not None else None,  
+            }
     
 
 ## evrificar si esta activo si tiene two fa  y envairb codigo ye so , cmabiar nombre cambair apssword, ...

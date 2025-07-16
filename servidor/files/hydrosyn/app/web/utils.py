@@ -1,13 +1,14 @@
 from fastapi import Request
 
 ERROR_MESSAGES = {
-    "account_not_exists": {
-        "en": "Account does not exist",
-        "es": "La cuenta no existe",
-    },
+    
     "invalid_csrf": {
         "en": "Invalid CSRF token",
         "es": "Token CSRF inválido",
+    },
+    "credentials": {
+        "en": "Invalid credentials",
+        "es": "Credenciales incorrectas",
     }
 }
 

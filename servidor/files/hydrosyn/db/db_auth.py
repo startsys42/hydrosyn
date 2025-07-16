@@ -7,8 +7,8 @@ from db.db_config import get_cookie_rotation_time_from_db
 
 import bcrypt
 
-from db.db_engine import DBEngine
-from logger import logger
+
+
 from typing import Optional, Dict, Any
 
 
@@ -68,10 +68,14 @@ async def get_user_login_from_db(
                         hash="same"
                         if validate_password(password,get_password_policy_from_db()):
                             key="password_valid"
-                            await reset_change_pass_to_null_in_db(username)
+                            if user["change_pass"] is not None:
+                                await reset_change_pass_to_null_in_db(username)
+                                user["change_pass"] = None  # Actualiza el campo en memoria
                         else:
                             key="password_not_valid"
-                            await set_change_pass_to_now_in_db(username)
+                             if user["change_pass"] is None:
+                                await set_change_pass_to_now_in_db(username)
+                                user["change_pass"] = datetime.now() + timedelta(days=1) 
 
                     else:
                         hash="different"
