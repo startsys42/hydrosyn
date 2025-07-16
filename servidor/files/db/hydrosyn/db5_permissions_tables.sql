@@ -3,6 +3,29 @@ USE hydrosyn_db;
 
 -- configuraciones modificar, dividir modi
 -- crear usuarios borrar 
+CREATE TABLE IF NOT EXISTS roles (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by INT UNSIGNED NOT NULL,
+    FOREIGN KEY (created_by) REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+    CONSTRAINT chk_name_letters_only CHECK (name REGEXP '^[A-Za-z]+$')
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS roles_name_changes (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    role_id INT NOT NULL,
+    old_name VARCHAR(50) NOT NULL,
+    new_name VARCHAR(50) NOT NULL,
+    changed_by INT UNSIGNED NOT NULL,
+    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (changed_by) REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT chk_old_name_letters_only CHECK (old_name REGEXP '^[A-Za-z]+$'),
+    CONSTRAINT chk_new_name_letters_only CHECK (new_name REGEXP '^[A-Za-z]+$')
+) ENGINE=InnoDB;
 
 
 CREATE TABLE IF NOT EXISTS permissions_groups (
@@ -37,19 +60,22 @@ INSERT INTO permissions_group_translations (group_id, lang_code, name) VALUES
 
 
 CREATE TABLE permissions (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    only_master BOOLEAN NOT NULL DEFAULT TRUE
-                 
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    group_id INT UNSIGNED NOT NULL,
+    CONSTRAINT fk_group
+        FOREIGN KEY (group_id) REFERENCES permissions_groups(id)
+        ON DELETE RESTRICT
+        ON UPDATE RESTRICT
+
 )ENGINE=InnoDB;
 
 
 CREATE TABLE permission_translations (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    permission_id INT NOT NULL,
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    permission_id INT UNSIGNED NOT NULL,
     lang_code ENUM('es', 'en') NOT NULL,
     name VARCHAR(100) NOT NULL UNIQUE,
-    description VARCHAR(250) NOT NULL UNIQUE,
-
+    description VARCHAR(255) NOT NULL UNIQUE,
     FOREIGN KEY (permission_id) REFERENCES permissions(id)
         ON DELETE RESTRICT
         ON UPDATE RESTRICT,
@@ -57,36 +83,39 @@ CREATE TABLE permission_translations (
     UNIQUE (permission_id, lang_code)
 )ENGINE=InnoDB;
 
-CREATE TABLE roles (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(50) NOT NULL UNIQUE
- 
-)ENGINE=InnoDB;
 
-CREATE TABLE role_permissions (
-    role_id INT NOT NULL,
-    permission_id INT NOT NULL,
-    PRIMARY KEY (role_id, permission_id),
-    FOREIGN KEY (role_id) REFERENCES roles(id)
-        ON DELETE RESTRICT
-        ON UPDATE RESTRICT,
-    FOREIGN KEY (permission_id) REFERENCES permissions(id)
-        ON DELETE RESTRICT
-        ON UPDATE RESTRICT
-);
 
+CREATE TABLE IF NOT EXISTS role_permissions_history (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    role_id INT UNSIGNED NOT NULL,
+    permission_id INT UNSIGNED NOT NULL,
+    
+    created_by INT UNSIGNED NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    
+    deleted_by INT UNSIGNED DEFAULT NULL,
+    deleted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (permission_id) REFERENCES permissions(id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (deleted_by) REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB;
 
 
 
 
 
 CREATE TABLE user_roles (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     user_id INT UNSIGNED NOT NULL,
-    role_id INT NOT NULL,
-    PRIMARY KEY (user_id, role_id),
+    role_id INT UNSIGNED NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by INT UNSIGNED NOT NULL,
+    UNIQUE (user_id, role_id),
     CONSTRAINT fk_user
         FOREIGN KEY (user_id) REFERENCES users(id)
-        ON DELETE CASCADE
+        ON DELETE RESTRICT
         ON UPDATE CASCADE,
     CONSTRAINT fk_role
         FOREIGN KEY (role_id) REFERENCES roles(id)
@@ -95,6 +124,32 @@ CREATE TABLE user_roles (
 ); 
 
 
+
+CREATE TABLE user_roles_history (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    user_id INT UNSIGNED NOT NULL,
+    role_id INT UNSIGNED NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by INT UNSIGNED NOT NULL,
+    deleted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_by INT UNSIGNED DEFAULT NULL,
+   
+    
+    FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+        
+    FOREIGN KEY (role_id) REFERENCES roles(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+        
+    FOREIGN KEY (created_by) REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+    FOREIGN KEY (deleted_by) REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
 
 
 
@@ -156,27 +211,6 @@ INSERT INTO permission_translations (permission_id, lang_code, name, description
 (8, 'en', 'Update Configuration', 'Allows modifying the system configuration');
 
 INSERT INTO roles (name) VALUES ('master');
-
-CREATE TABLE user_roles_history (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT UNSIGNED NOT NULL,
-    role_id INT NOT NULL,
-    action ENUM('assigned', 'removed') NOT NULL,
-    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    changed_by INT UNSIGNED, -- Usuario que hizo el cambio
-    
-    FOREIGN KEY (user_id) REFERENCES users(id)
-        ON DELETE RESTRICT
-        ON UPDATE CASCADE,
-        
-    FOREIGN KEY (role_id) REFERENCES roles(id)
-        ON DELETE RESTRICT
-        ON UPDATE CASCADE,
-        
-    FOREIGN KEY (changed_by) REFERENCES users(id)
-        ON DELETE RESTRICT
-        ON UPDATE CASCADE
-);
 
 
 -- Bloqueo para la tabla permissions

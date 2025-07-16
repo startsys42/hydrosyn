@@ -1,5 +1,7 @@
 diagrama
 
+## MIDDLEWARE
+
 ```mermaid
 flowchart TD
     A[¿Necesitas control de acceso?] -->|Sí| B[¿Un rol por usuario es suficiente?]
@@ -26,3 +28,9 @@ flowchart TD
     Z --> END[Fin]
     X --> END
     M --> END
+```
+
+## login
+
+
+## recoevry password
