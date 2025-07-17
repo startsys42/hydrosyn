@@ -5,6 +5,7 @@ from typing import Optional, Union
 from sqlalchemy.sql import text
 from fastapi import HTTPException, status
 
+
 async def reset_change_pass_to_null_in_db(username: str) -> dict:
     engine = DBEngine.get_engine()
     sql = text("UPDATE users SET change_pass = NULL WHERE username = :username")
@@ -84,7 +85,7 @@ async def generate_unique_token_and_store_in_db(
     cpu_architecture: Optional[str] = None,
     gpu_info: Optional[str] = None,
     device_os: Optional[str] = None
-) -> str:
+    ) -> str:
     engine = DBEngine.get_engine()
 
     # Paso 1: Obtener tokens usados en los últimos 6 minutos
