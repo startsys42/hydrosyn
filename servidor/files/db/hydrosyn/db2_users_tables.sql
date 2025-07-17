@@ -22,7 +22,7 @@ CREATE TABLE  IF NOT EXISTS  users(
      CONSTRAINT twofa_consistency CHECK (
         (use_2fa = FALSE AND twofa_secret IS NULL) OR
         (use_2fa = TRUE AND twofa_secret IS NOT NULL)
-    )
+    ),
     CONSTRAINT fk_user_creator
         FOREIGN KEY (created_by)
         REFERENCES users(id)
