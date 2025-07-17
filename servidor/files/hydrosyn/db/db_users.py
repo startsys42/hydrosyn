@@ -80,7 +80,7 @@ async def generate_unique_token_and_store_in_db(
     email: str,
     ip_address: str,
     user_agent: Optional[str] = None,
-    ram_gb: Optional[Union[float, int]] = None
+    ram_gb: Optional[Union[float, int]] = None,
     cpu_cores: Optional[int] = None,
     cpu_architecture: Optional[str] = None,
     gpu_info: Optional[str] = None,
