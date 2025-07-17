@@ -514,13 +514,16 @@ CREATE TABLE IF NOT EXISTS email_verification_history (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id INT UNSIGNED NOT NULL,
     email VARCHAR(100) NOT NULL,
-    token VARCHAR(8),
-    requested_at TIMESTAMP NOT NULL,
+    token VARCHAR(6) NOT NULL,
+    requested_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     verified_at TIMESTAMP NULL,
-    was_successful BOOLEAN NOT NULL DEFAULT FALSE,
-    request_ip VARCHAR(45) NULL,     -- opcional: IP desde donde se solicitó
-    user_agent TEXT NULL,            -- opcional: info del navegador/cliente
-
+    ip_address VARCHAR(39) NOT NULL,
+    user_agent VARCHAR(512),
+    ram_gb FLOAT NULL,
+    cpu_cores SMALLINT UNSIGNED NULL,
+    cpu_architecture VARCHAR(32) NULL,
+    gpu_info VARCHAR(128) NULL,
+    device_os VARCHAR(64) NULL,
 
     CONSTRAINT chk_requested_before_verified CHECK (requested_at < verified_at OR verified_at IS NULL),
 

@@ -19,6 +19,10 @@ CREATE TABLE  IF NOT EXISTS  users(
     use_2fa BOOLEAN NOT NULL DEFAULT FALSE,
     twofa_secret VARCHAR(32) UNIQUE,
      CONSTRAINT chk_username_alphanumeric CHECK (username REGEXP '^[a-zA-Z0-9]+$'),
+     CONSTRAINT twofa_consistency CHECK (
+        (use_2fa = FALSE AND twofa_secret IS NULL) OR
+        (use_2fa = TRUE AND twofa_secret IS NOT NULL)
+    )
     CONSTRAINT fk_user_creator
         FOREIGN KEY (created_by)
         REFERENCES users(id)
@@ -27,20 +31,7 @@ CREATE TABLE  IF NOT EXISTS  users(
 )ENGINE=InnoDB;
 
 
-CREATE TABLE IF NOT EXISTS email_verifications (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    user_id INT UNSIGNED NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    token VARCHAR(8) NOT NULL UNIQUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP NOT NULL,
-    verified_at TIMESTAMP NULL,
-    
 
-    FOREIGN KEY (user_id) REFERENCES users(id)
-        ON DELETE RESTRICT
-        ON UPDATE CASCADE
-) ENGINE=InnoDB;
 
 
 CREATE TABLE IF NOT EXISTS username_blacklist (

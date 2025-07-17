@@ -69,3 +69,75 @@ async def delete_session_in_db(session_id: str) -> bool:
         logger.error(f"Error deleting session with Session ID {session_id}: {e}")
         return False
 
+
+async def generate_unique_token_and_store_in_db(
+    user_id: int,
+    email: str,
+    ip_address: str,
+    user_agent: Optional[str] = None,
+    ram_gb: Optional[float] = None,
+    cpu_cores: Optional[int] = None,
+    cpu_architecture: Optional[str] = None,
+    gpu_info: Optional[str] = None,
+    device_os: Optional[str] = None
+) -> str:
+    engine = DBEngine.get_engine()
+
+    # Paso 1: Obtener tokens usados en los últimos 6 minutos
+    select_sql = text("""
+    SELECT token FROM email_verification_history
+    WHERE requested_at >= (NOW() - INTERVAL 6 MINUTE)
+    AND verified_at IS NOT NULL
+""")
+
+    try:
+        async with engine.begin() as conn:
+            result = await conn.execute(select_sql)
+            recent_tokens = {row.token for row in result if row.token is not None}
+
+            # Paso 2: Generar un token único de 6 dígitos
+       
+            new_token = None
+            while True:
+                candidate = f"{random.randint(0, 999999):06d}"  # token de 6 dígitos
+                if candidate not in recent_tokens:
+                    new_token = candidate
+                    break
+              
+              
+           
+            # Paso 3: Insertar nuevo registro
+            insert_sql = text("""
+                INSERT INTO email_verification_history (
+                    user_id, email, token, requested_at,
+                    ip_address, user_agent, ram_gb,
+                    cpu_cores, cpu_architecture, gpu_info, device_os
+                )
+                VALUES (
+                    :user_id, :email, :token, NOW(),
+                    :ip_address, :user_agent, :ram_gb,
+                    :cpu_cores, :cpu_architecture, :gpu_info, :device_os
+                )
+            """)
+
+            await conn.execute(insert_sql, {
+                "user_id": user_id,
+                "email": email,
+                "token": new_token,
+                "ip_address": ip_address,
+                "user_agent": user_agent,
+                "ram_gb": ram_gb,
+                "cpu_cores": cpu_cores,
+                "cpu_architecture": cpu_architecture,
+                "gpu_info": gpu_info,
+                "device_os": device_os
+            })
+
+            return new_token
+
+    except Exception as e:
+        logger.error(f"Error generating and saving token: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to generate and store verification token"
+        )

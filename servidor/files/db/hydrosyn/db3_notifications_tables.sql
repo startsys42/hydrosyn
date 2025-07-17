@@ -9,7 +9,7 @@ CREATE TABLE notifications (
 );
 CREATE TABLE notification_email_history (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255) NOT NULL,
+    email VARCHAR(100) NOT NULL,
     lang_code ENUM('es', 'en') NOT NULL,
     changed_by INT UNSIGNED NOT NULL,
     changed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -60,6 +60,8 @@ CREATE TABLE notification_events (
     formatted_message VARCHAR(255) NOT NULL,               -- Texto listo para mostrar
     extra_data JSON DEFAULT NULL,                  -- Información adicional (IP, intentos, etc.)
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    is_read BOOLEAN DEFAULT FALSE,
+    read_at DATETIME DEFAULT NULL,
 
     FOREIGN KEY (notification_id) REFERENCES notifications(id)
         ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -70,23 +72,6 @@ CREATE TABLE notification_events (
     
 );
 
-CREATE TABLE user_notifications (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    user_id INT UNSIGNED NOT NULL,
-    notification_id INT UNSIGNED NOT NULL,
-    is_read BOOLEAN DEFAULT FALSE,
-    read_at DATETIME DEFAULT NULL,
-    
-formatted_message VARCHAR(255) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-        ON DELETE RESTRICT
-        ON UPDATE CASCADE,
-
-    FOREIGN KEY (notification_id) REFERENCES notification_events(id)
-        ON DELETE RESTRICT
-        ON UPDATE CASCADE
-);
 
 
 

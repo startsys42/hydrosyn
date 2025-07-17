@@ -73,19 +73,20 @@ async def get_user_login_from_db(
                                 user["change_pass"] = None  # Actualiza el campo en memoria
                         else:
                             key="password_not_valid"
-                             if user["change_pass"] is None:
+                            if user["change_pass"] is None:
                                 await set_change_pass_to_now_in_db(username)
                                 user["change_pass"] = datetime.now() + timedelta(days=1) 
 
                     else:
                         hash="different"
-                if email is not None:
-                    if user["email"] == email:
-                        dict_email="exist_email"
-                    else:
-                        dict_email="not_exist_email"   
+                  
             else:
                 dict_username="not_exist_username"
+            if user is not None and email is not None and user["email"] == email:
+                    dict_email="exist_email"
+            else:
+                dict_email="not_exist_email"
+                    
              # <- Aquí puedes añadir un campo al diccionario
                     
                     
@@ -101,6 +102,7 @@ async def get_user_login_from_db(
             # Devuelve datos del usuario (sin contraseña)
             return {
                 "id": user["id"],
+                "name": user["username"],
                 "username":dict_username,
                 "email": user["email"],
                 "is_active": user["is_active"],

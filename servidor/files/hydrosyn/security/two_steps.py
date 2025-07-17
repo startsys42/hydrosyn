@@ -12,18 +12,21 @@ MAX_STORED_TOKENS = 1000
 
 two_step_tokens = OrderedDict()  # Tokens válidos pendientes de uso
 
-def generate_two_step_token(user_id: int, session_id: int):
+async def generate_two_step_token(user_id: int, session_id: int,twofa: bool):
 
     while True:
         token_value = secrets.token_urlsafe(16)  # Valor único
         if token_value  in two_step_tokens:
             continue
+        else:
+            break
     
    
     token_data = {
         "token_id": token_value,
         "user_id": user_id,
         "session_id": session_id,
+        "twofa": twofa, 
         "ts": int(time.time())
     }
     
@@ -31,15 +34,15 @@ def generate_two_step_token(user_id: int, session_id: int):
     token = serializer_two_step.dumps(token_data)
     
  
-    two_step_tokens[token_value] = token_data["ts"]
+    two_step_tokens[token_value] = token_data
     
     
     if len(two_step_tokens) > MAX_STORED_TOKENS:
         two_step_tokens.popitem(last=False)
     
-    return token
+    return token_value
 
-def validate_two_step_token(token, max_age=300):
+async def validate_two_step_token(token, max_age=300):
   
     try:
         

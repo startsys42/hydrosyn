@@ -18,6 +18,8 @@ def generate_csrf_token():
         token_value = secrets.token_urlsafe(16)  # Valor único
         if token_value  in generated_tokens:
             continue
+        else:
+            break
     
    
     token_data = {
