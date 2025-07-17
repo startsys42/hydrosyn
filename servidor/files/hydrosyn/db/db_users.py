@@ -1,5 +1,9 @@
 from db.db_engine import DBEngine  # Asegúrate que retorna AsyncEngine
 from logger import logger
+import random
+from typing import Optional, Union
+from sqlalchemy.sql import text
+from fastapi import HTTPException, status
 
 async def reset_change_pass_to_null_in_db(username: str) -> dict:
     engine = DBEngine.get_engine()
@@ -75,7 +79,7 @@ async def generate_unique_token_and_store_in_db(
     email: str,
     ip_address: str,
     user_agent: Optional[str] = None,
-    ram_gb: Optional[float] = None,
+    ram_gb: Optional[Union[float, int]] = None
     cpu_cores: Optional[int] = None,
     cpu_architecture: Optional[str] = None,
     gpu_info: Optional[str] = None,
