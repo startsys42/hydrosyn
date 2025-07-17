@@ -7,7 +7,9 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from email.mime.text import MIMEText
-from email_validator import validate_email, EmailNotValidErro
+from email_validator import validate_email, EmailNotValidError
+from email.mime.multipart import MIMEMultipart
+
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 CLIENT_SECRET_FILE = os.getenv("GMAIL_CLIENT_SECRET_FILE", "../secrets/gmail_credentials.json")

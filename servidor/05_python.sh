@@ -43,6 +43,7 @@ packages=(
   pydantic[email]
   pymysql
   aiomysql
+  email-validator
   pyotp 
   qrcode[pil]
   google-api-python-client 

@@ -157,7 +157,7 @@ $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db2_users_tables.sql
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db3_notifications_tables.sql
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db4_systems_tables.sql
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db5_permissions_tables.sql
-$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db6_histories_reorganization_ai.sq
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db6_histories_reorganization_ai.sql
 # Generar hash bcrypt con Python
 HASH_PASS=$(python3 -c "
 import bcrypt
