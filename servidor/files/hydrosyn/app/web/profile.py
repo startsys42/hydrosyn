@@ -2,10 +2,7 @@ from fastapi import APIRouter, Request
 router = APIRouter()
 #  cambair idioma, cambiar contarseña, activar twofa, desativar twofa, actiavr  , ver correo. o inidcarloe n lso emnsajes
 
-def generate_secure_totp_secret():
-    # Alfabeto Base32 oficial (mayúsculas + 2-7)
-    alphabet = string.ascii_uppercase + "234567"
-    return ''.join(secrets.choice(alphabet) for _ in range(32))
+
 
 # Endpoints para cambiar nombre
 @router.get("/change-name")

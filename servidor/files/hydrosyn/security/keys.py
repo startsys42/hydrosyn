@@ -6,11 +6,10 @@ import secrets
 from logger import logger
 import time
 
+
 def generate_secure_key(length: int = 128) -> str:
     n_bytes = math.ceil(length * 3 / 4)
     return secrets.token_urlsafe(n_bytes)[:length]
-
-
 
 class CookieKeyManager:
     def __init__(self, get_rotation_time: Callable[[], Awaitable[int]], get_grace_period: Callable[[], Awaitable[int]], ttl: int = 600):
