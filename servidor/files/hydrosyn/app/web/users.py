@@ -21,3 +21,25 @@ async def change_name_get():
 @router.post("/delete-user")
 async def change_name_post():
     return {"action": "process name change"}
+
+@router.get("/change-user-password")
+def change_db_user_password_get(data: PasswordChangeRequest):
+
+
+
+
+
+@router.post("/change-user-password")
+def change_db_user_password_post(data: PasswordChangeRequest):
+
+
+
+@router.get("/change-user-email")
+def change_db_user_password_get(data: PasswordChangeRequest):
+
+
+
+
+
+@router.post("/change-user-email")
+def change_db_user_password_post(data: PasswordChangeRequest):

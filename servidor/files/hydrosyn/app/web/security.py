@@ -1,6 +1,6 @@
 
 # cambair contraseña suaurio db
-# reajsutar db
+# reajsutar db, alerat notificacionc apacidad
 
 #extender tiempo suaurios login o recueparrc ontarseña ver logs
 # añadir nombre a la lista negra
@@ -11,27 +11,7 @@
 # extender epriodos
 
 
-@router.get("/change-user-password")
-def change_db_user_password_get(data: PasswordChangeRequest):
 
-
-
-
-
-@router.post("/change-user-password")
-def change_db_user_password_post(data: PasswordChangeRequest):
-
-
-
-@router.get("/change-user-email")
-def change_db_user_password_get(data: PasswordChangeRequest):
-
-
-
-
-
-@router.post("/change-user-email")
-def change_db_user_password_post(data: PasswordChangeRequest):
 
 
 @router.get("/db-autoincrement-status")

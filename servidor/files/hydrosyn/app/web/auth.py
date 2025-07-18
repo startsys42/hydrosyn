@@ -218,7 +218,7 @@ async def login_two_get(request: Request, two_token: str = Query(...)):
       
     })
 
-## debe comprobar nombre cookie tema e idioam contraseñas,... inactivo, mdoificar cookie
+## debe comprobar nombre cookie tema e idioam contraseñas,... inactivo, mdoificar cookie , priemr inicio  nombre reglas y contarseña, guardar sesion
 @router.post("/login-two", response_class=HTMLResponse)
 async def login_two_post(request: Request, username: str = Form(...), password: str = Form(...)):
     try:

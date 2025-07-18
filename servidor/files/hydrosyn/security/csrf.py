@@ -1,62 +1,62 @@
-import time
-import secrets
-from itsdangerous import URLSafeSerializer, BadSignature
 from collections import OrderedDict
-import threading
+from cryptography.fernet import Fernet
+import secrets
+import time
+import json
+from asyncio import Lock
 
-lock = threading.Lock()
-
-# Configuración de seguridad
-SECRET_KEY_CSRF = secrets.token_urlsafe(32)
-csrf_serializer = URLSafeSerializer(SECRET_KEY_CSRF, salt="csrf-protection")
+# Configuración
 MAX_STORED_TOKENS = 1000
+TOKEN_EXPIRATION = 300  # 5 minutos
 
+# Cifrado
+ENCRYPTION_KEY = Fernet.generate_key()
+cipher_suite = Fernet(ENCRYPTION_KEY)
 
-generated_tokens = OrderedDict()  # Tokens válidos pendientes de uso
+csrf_tokens_lock = Lock()
+csrf_tokens = OrderedDict()  # {token_id: encrypted_data}
 
-def generate_csrf_token():
-    """Genera y registra un nuevo token CSRF"""
+async def generate_csrf_token() -> str:
+    """Genera un token CSRF cifrado (similar a two_step_token)."""
     while True:
-        token_value = secrets.token_urlsafe(16)  # Valor único
-        with lock:
-            if token_value in generated_tokens:
-                continue
-            # Ya está seguro que el token no existe
-            break
+        token_id = secrets.token_urlsafe(32)
+        async with csrf_tokens_lock:
+            if token_id not in csrf_tokens:
+                break
     
-   
     token_data = {
-        "csrf": token_value,
-        "ts": int(time.time())
+        "token_id": token_id,
+        "ts": int(time.time())  # Timestamp de creación
     }
-    
-   
-    token = csrf_serializer.dumps(token_data)
-    
- 
-    with lock:
-        generated_tokens[token_value] = token_data["ts"]
-        if len(generated_tokens) > MAX_STORED_TOKENS:
-            generated_tokens.popitem(last=False)
-    
-    return token
+    encrypted_data = cipher_suite.encrypt(json.dumps(token_data).encode())
 
-def validate_csrf_token(token, max_age=3600):
+    # Almacenar en memoria (eliminando el más antiguo si hay overflow)
+    async with csrf_tokens_lock:
+        csrf_tokens[token_id] = encrypted_data
+        if len(csrf_tokens) > MAX_STORED_TOKENS:
+            csrf_tokens.popitem(last=False)
+    
+    # Devolver el token_id CIFRADO (para que el cliente lo guarde)
+    return cipher_suite.encrypt(token_id.encode()).decode()
+
+async def validate_and_remove_csrf_token(encrypted_token: str) -> bool:
+    """Valida el token CSRF y lo elimina si es válido (todo en uno)."""
     try:
-        data = csrf_serializer.loads(token)
-        token_value = data.get("csrf")
-        timestamp = data.get("ts")
-
-        with lock:
-            if not token_value or token_value not in generated_tokens:
+        # 1. Descifrar token_id del cliente
+        token_id = cipher_suite.decrypt(encrypted_token.encode()).decode()
+        
+        # 2. Obtener y eliminar el token (operación atómica)
+        async with csrf_tokens_lock:
+            encrypted_data = csrf_tokens.pop(token_id, None)  # Elimina al obtener
+            if not encrypted_data:
                 return False
-
-            if (time.time() - timestamp) > max_age:
-                generated_tokens.pop(token_value, None)
-                return False
-
-            generated_tokens.pop(token_value, None)
-            return True
-
-    except (BadSignature, KeyError, TypeError):
-        return False
+        
+        # 3. Descifrar y verificar expiración
+        token_data = json.loads(cipher_suite.decrypt(encrypted_data).decode())
+        if (time.time() - token_data["ts"]) > TOKEN_EXPIRATION:
+            return False
+        
+        return True  # Token válido y eliminado
+    
+    except Exception:
+        return False 
