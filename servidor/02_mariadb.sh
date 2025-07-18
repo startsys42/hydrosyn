@@ -9,8 +9,8 @@ ins-paq mariadb-server
 ins-paq mariadb-client 
 
 
-
-ins-paq python3-bcrypt
+ins-paq python3-argon2
+#ins-paq python3-bcrypt
 
 
 #mysql_secure_installation
@@ -159,11 +159,17 @@ $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db4_systems_tables.sq
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db5_permissions_tables.sql
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db6_histories_reorganization_ai.sql
 # Generar hash bcrypt con Python
+
 HASH_PASS=$(python3 -c "
-import bcrypt
-password = b'$FIRST_USER_PASSWORD'
-hashed = bcrypt.hashpw(password, bcrypt.gensalt())
+from argon2 import PasswordHasher
+ph = PasswordHasher()
+print(ph.hash('$FIRST_USER_PASSWORD'))
 ")
+#HASH_PASS=$(python3 -c "
+#import bcrypt
+#password = b'$FIRST_USER_PASSWORD'
+#hashed = bcrypt.hashpw(password, bcrypt.gensalt())
+#")
 
 # SQL para crear el primer usuario admin
 SQL="

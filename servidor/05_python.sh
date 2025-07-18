@@ -39,7 +39,7 @@ packages=(
   python-multipart
   sqlalchemy
   pycryptodome
-  passlib[bcrypt]
+  argon2-cffi
   pydantic[email]
   pymysql
   aiomysql
