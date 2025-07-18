@@ -10,9 +10,9 @@ from logger import logger
 from security.csrf import generate_csrf_token, validate_csrf_token
 
 from security.email import send_email
-from db.db_users import delete_session_in_db, is_in_blacklist_from_db
+from db.db_users import delete_session_in_db, is_in_blacklist_from_db, generate_unique_token_and_store_in_db
 from pydantic import BaseModel, EmailStr
-from security.two_steps import generate_two_step_token, validate_two_step_token
+from security.two_steps import generate_two_step_token, validate_two_step_token 
 from db.db_auth import get_user_login_from_db
 
 class UserInput(BaseModel):
@@ -51,10 +51,7 @@ async def login_post(
         prefs = get_user_preferences(request)
     except ValueError as e:
         return PlainTextResponse(str(e), status_code=400)
-    if not validate_csrf_token(csrf_token):
-        request.state.csrf=False
-    else:
-        request.state.csrf=True
+    
 
    # aquid ebo guardar notificacion
     if await is_in_blacklist_from_db(username):
@@ -158,17 +155,6 @@ async def login_post(
                             message_text=email_body
                         )
 
-
-                    #enviar correo
-                    two_token=generate_two_step_token(user_data["id"], request.state.session_id, twofa=user_data["use_2fa"])
-                    request.state.two_fa = True
-                    return templates.TemplateResponse("login-two", {
-                        "request": request,
-                        "texts": prefs["texts"],
-                        "lang": prefs["lang"],
-    }
-                        generate_unique_token_and_store
-
                     #enviar correo
                     two_token=generate_two_step_token(user_data["id"], request.state.session_id, twofa=user_data["use_2fa"])
                     request.state.two_fa = True
@@ -179,6 +165,8 @@ async def login_post(
                         "theme": prefs["theme"],
                         "two_token": two_token
                     })
+
+                  
                     
             else:
                 request.state.hash = False
@@ -275,7 +263,7 @@ async def recover_password_get(request: Request):
 
 
 @router.post("/recover-password", response_class=HTMLResponse)
-async def recover_password_post(request: Request,username: str = Form(...), email: EmailStr = Form(...)):
+async def recover_password_post(request: Request,username: str = Form(...), email: EmailStr = Form(...), csrf_token: str = Form(...)):
     try:
         prefs = get_user_preferences(request)
     except ValueError as e:
@@ -354,49 +342,49 @@ async def recover_password_post(request: Request,username: str = Form(...), emai
                             "os": request.headers.get("x-device-os"),
                             "origin_path": request.headers.get("x-origin-path")
                         }
-                        code=generate_unique_token_and_store_in_db(
-                            user_data["id"],
-                            user_data["email"],
-                            request.client.host,
-                            request.headers.get("user-agent"),
-                            ram_gb=device_info.get("ram"),
-                            cpu_cores=device_info.get("cpu_cores"),
-                            cpu_architecture=device_info.get("cpu_arch"),
-                            gpu_info=device_info.get("gpu"),
-                            device_os=device_info.get("os")
-                        )
-                        sender_email = os.getenv("EMAIL_SENDER")
-                        if user_data["language"] == "es":
-                            email_subject = "Hydrosyn: tu código de verificación"
+                    code=generate_unique_token_and_store_in_db(
+                        user_data["id"],
+                        user_data["email"],
+                        request.client.host,
+                        request.headers.get("user-agent"),
+                        ram_gb=device_info.get("ram"),
+                        cpu_cores=device_info.get("cpu_cores"),
+                        cpu_architecture=device_info.get("cpu_arch"),
+                        gpu_info=device_info.get("gpu"),
+                        device_os=device_info.get("os")
+                    )
+                    sender_email = os.getenv("EMAIL_SENDER")
+                    if user_data["language"] == "es":
+                        email_subject = "Hydrosyn: tu código de verificación"
+                        email_body = f"""
+                        Hola,
+
+                        Tu código de verificación es: {code}
+
+                        Este código expirará en 5 minutos.
+
+                        IP de la solicitud: {ip_address}
+                        Dispositivo: {device_os or 'Desconocido'}
+                        """
+                    else:
+                            email_subject = "Hydrosyn: your verification code"
                             email_body = f"""
-                            Hola,
+                            Hello,
 
-                            Tu código de verificación es: {code}
+                            Your verification code is: {code}
 
-                            Este código expirará en 5 minutos.
+                            This code will expire in 5 minutes.
 
-                            IP de la solicitud: {ip_address}
-                            Dispositivo: {device_os or 'Desconocido'}
+                            Request IP: {ip_address}
+                            Device: {device_os or 'Unknown'}
                             """
-                        else:
-                                email_subject = "Hydrosyn: your verification code"
-                                email_body = f"""
-                                Hello,
 
-                                Your verification code is: {code}
-
-                                This code will expire in 5 minutes.
-
-                                Request IP: {ip_address}
-                                Device: {device_os or 'Unknown'}
-                                """
-
-                        send_success = send_email(
-                            sender=sender_email,
-                            to=user_data["email"],
-                            subject=email_subject,
-                            message_text=email_body
-                        )
+                    send_success = send_email(
+                        sender=sender_email,
+                        to=user_data["email"],
+                        subject=email_subject,
+                        message_text=email_body
+                    )
                 two_token=generate_two_step_token(user_data["id"], request.state.session_id, twofa=user_data["use_2fa"])
                 request.state.two_fa = True
                 return templates.TemplateResponse("recovery-password-two", {
