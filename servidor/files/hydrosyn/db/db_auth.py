@@ -5,14 +5,20 @@ from logger import logger
 from datetime import datetime, timedelta
 from db.db_config import get_cookie_rotation_time_from_db
 
-import bcrypt
+from argon2 import PasswordHasher
+from argon2.exceptions import VerifyMismatchError
 
 
 
 from typing import Optional, Dict, Any
+ph = PasswordHasher()
 
-
-
+def check_password(plain_password, hashed_password):
+    try:
+        ph.verify(hashed_password, plain_password)
+        return True
+    except VerifyMismatchError:
+        return False
 
 async def get_user_login_from_db(
     username: str,  # Obligatorio siempre
@@ -64,7 +70,7 @@ async def get_user_login_from_db(
             if user is not None and user["username"] == username:
                 dict_username="exist_username"
                 if password is not None:
-                    if bcrypt.checkpw(password.encode('utf-8'), user["password"].encode('utf-8')):
+                    if check_password(password, user["password"]):
                         hash="same"
                         if validate_password(password,get_password_policy_from_db()):
                             key="password_valid"
