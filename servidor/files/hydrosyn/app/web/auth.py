@@ -8,6 +8,8 @@ from fastapi.responses import RedirectResponse
 from common.templates import templates
 from logger import logger
 from security.csrf import generate_csrf_token, validate_csrf_token
+import os
+from fastapi import Query
 
 from security.email import send_email
 from db.db_users import delete_session_in_db, is_in_blacklist_from_db, generate_unique_token_and_store_in_db
@@ -132,8 +134,8 @@ async def login_post(
 
                             Este código expirará en 5 minutos.
 
-                            IP de la solicitud: {ip_address}
-                            Dispositivo: {device_os or 'Desconocido'}
+                            IP de la solicitud: {request.client.host}
+                            Dispositivo: {device_info.get("os") or 'Desconocido'}
                             """
                         else:
                                 email_subject = "Hydrosyn: your verification code"
@@ -144,8 +146,8 @@ async def login_post(
 
                                 This code will expire in 5 minutes.
 
-                                Request IP: {ip_address}
-                                Device: {device_os or 'Unknown'}
+                                Request IP: {request.client.host}
+                                Device: {device_info.get("os") or 'Unknown'}
                                 """
 
                         send_success = send_email(
@@ -355,28 +357,28 @@ async def recover_password_post(request: Request,username: str = Form(...), emai
                     )
                     sender_email = os.getenv("EMAIL_SENDER")
                     if user_data["language"] == "es":
-                        email_subject = "Hydrosyn: tu código de verificación"
+                        email_subject = "Hydrosyn: tu código de recuperación"
                         email_body = f"""
                         Hola,
 
-                        Tu código de verificación es: {code}
+                        Tu código de recuperación es: {code}
 
                         Este código expirará en 5 minutos.
 
-                        IP de la solicitud: {ip_address}
-                        Dispositivo: {device_os or 'Desconocido'}
+                        IP de la solicitud: {request.client.host}
+                        Dispositivo: {device_info.get("os") or 'Desconocido'}
                         """
                     else:
-                            email_subject = "Hydrosyn: your verification code"
+                            email_subject = "Hydrosyn: your recovery code"
                             email_body = f"""
                             Hello,
 
-                            Your verification code is: {code}
+                            Your recovery code is: {code}
 
                             This code will expire in 5 minutes.
 
-                            Request IP: {ip_address}
-                            Device: {device_os or 'Unknown'}
+                            Request IP: {request.client.host}
+                            Device: {device_info.get("os") or 'Unknown'}
                             """
 
                     send_success = send_email(
