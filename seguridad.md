@@ -130,6 +130,7 @@
 - [ ] systemd
 
 - [ ] proxie
+goacces
 
 
 - [ ] firewall
@@ -211,7 +212,7 @@ nucleo optimizado
 
 
 
-- Open Source Security Information Management por sus siglas (OSSIM
+
 - ssl
 - netstat ping traceroute
 

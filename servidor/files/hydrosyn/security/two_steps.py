@@ -47,7 +47,7 @@ async def generate_two_step_token(user_id: int, session_id: int,twofa: bool):
     # Devolvemos el token_value CIFRADO al cliente
     return cipher_suite.encrypt(token_value.encode()).decode()
 
-async def validate_token(encrypted_token: str):
+async def validate_two_step_token(encrypted_token: str):
     """SOLO VALIDA (sin eliminar)"""
     try:
         # 1. Descifrar token del cliente
@@ -71,7 +71,7 @@ async def validate_token(encrypted_token: str):
     except Exception:
         return None
 
-async def remove_used_token(encrypted_token: str):
+async def remove_two_step_token(encrypted_token: str):
     """ELIMINA el token después de su uso"""
     try:
         token_value = cipher_suite.decrypt(encrypted_token.encode()).decode()

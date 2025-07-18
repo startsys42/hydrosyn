@@ -7,14 +7,14 @@ from fastapi import Form, status
 from fastapi.responses import RedirectResponse
 from common.templates import templates
 from logger import logger
-from security.csrf import generate_csrf_token, validate_csrf_token
+from security.csrf import generate_csrf_token, validate_and_remove_csrf_token
 import os
 from fastapi import Query
 
 from security.email import send_email
 from db.db_users import delete_session_in_db, is_in_blacklist_from_db, generate_unique_token_and_store_in_db
 from pydantic import BaseModel, EmailStr
-from security.two_steps import generate_two_step_token, validate_two_step_token 
+from security.two_steps import generate_two_step_token, validate_two_step_token , remove_two_step_token
 from db.db_auth import get_user_login_from_db
 
 class UserInput(BaseModel):

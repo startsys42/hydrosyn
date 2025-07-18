@@ -7,39 +7,35 @@ router = APIRouter()
 #listar permisos roles istemas, listar usuarios, modificar usuario, ver ordenes
 
 @router.get("/create-user")
-async def change_name_get():
-    return {"action": "get name change form"}
+async def create_user_get():
+    return {"action": "get create user form"}
 
 @router.post("/create-user")
-async def change_name_post():
-    return {"action": "process name change"}
+async def create_user_post():
+    return {"action": "process create user"}
 
 @router.get("/delete-user")
-async def change_name_get():
-    return {"action": "get name change form"}
+async def delete_user_get():
+    return {"action": "get delete user form"}
 
 @router.post("/delete-user")
-async def change_name_post():
-    return {"action": "process name change"}
+async def delete_user_post():
+    return {"action": "process delete user"}
 
 @router.get("/change-user-password")
-def change_db_user_password_get(data: PasswordChangeRequest):
-
-
-
-
+async def change_user_password_get():
+    return {"action": "get change password form"}
 
 @router.post("/change-user-password")
-def change_db_user_password_post(data: PasswordChangeRequest):
+async def change_user_password_post():
+    return {"action": "process password change"}
 
 
 
 @router.get("/change-user-email")
-def change_db_user_password_get(data: PasswordChangeRequest):
-
-
-
-
+async def change_user_email_get():
+    return {"action": "get change email form"}
 
 @router.post("/change-user-email")
-def change_db_user_password_post(data: PasswordChangeRequest):
+async def change_user_email_post():
+    return {"action": "process email change"}
