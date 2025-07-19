@@ -6,13 +6,66 @@ USE hydrosyn_db;
 CREATE TABLE IF NOT EXISTS roles (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL UNIQUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     created_by INT UNSIGNED NOT NULL,
     FOREIGN KEY (created_by) REFERENCES users(id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE,
     CONSTRAINT chk_name_letters_only CHECK (name REGEXP '^[A-Za-z]+$')
 ) ENGINE=InnoDB;
+
+DELIMITER $$
+
+CREATE PROCEDURE reorganize_role_ids()
+BEGIN      
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE old_id, new_id, max_id INT UNSIGNED;
+    DECLARE update_count INT DEFAULT 0;
+    DECLARE id_cursor CURSOR FOR SELECT id FROM roles ORDER BY id;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    -- Start transaction
+    START TRANSACTION;
+
+    -- Initialize counter
+    SET new_id = 1;
+
+    -- Open cursor
+    OPEN id_cursor;
+
+    read_loop: LOOP
+        FETCH id_cursor INTO old_id;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        IF old_id != new_id THEN
+            -- Check for ID conflict
+            SET @id_exists = 0;
+            SELECT COUNT(*) INTO @id_exists FROM roles WHERE id = new_id;
+
+            IF @id_exists = 0 THEN
+                -- Update the ID
+                UPDATE roles SET id = new_id WHERE id = old_id;
+                SET update_count = update_count + 1;
+            END IF;
+        END IF;
+
+        SET new_id = new_id + 1;
+    END LOOP;
+
+    CLOSE id_cursor;
+
+    -- Adjust AUTO_INCREMENT to next available ID
+    SELECT IFNULL(MAX(id), 0) + 1 INTO max_id FROM roles;
+    SET @stmt = CONCAT('ALTER TABLE roles AUTO_INCREMENT = ', max_id);
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+
+    COMMIT;
+END$$
+DELIMITER ;
 
 CREATE TABLE IF NOT EXISTS roles_name_changes (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
@@ -24,8 +77,87 @@ CREATE TABLE IF NOT EXISTS roles_name_changes (
     FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (changed_by) REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT chk_old_name_letters_only CHECK (old_name REGEXP '^[A-Za-z]+$'),
-    CONSTRAINT chk_new_name_letters_only CHECK (new_name REGEXP '^[A-Za-z]+$')
+    CONSTRAINT chk_new_name_letters_only CHECK (new_name REGEXP '^[A-Za-z]+$'),
+    CONSTRAINT chk_names_different CHECK (old_name <> new_name)
 ) ENGINE=InnoDB;
+
+
+
+
+DELIMITER $$
+
+CREATE TRIGGER trg_roles_name_changes_validate_new_name
+BEFORE INSERT ON roles_name_changes
+FOR EACH ROW
+BEGIN
+  DECLARE last_new_name VARCHAR(50);
+
+  SELECT new_name INTO last_new_name
+  FROM roles_name_changes
+  WHERE role_id = NEW.role_id
+  ORDER BY changed_at DESC, id DESC
+  LIMIT 1;
+
+  IF last_new_name IS NOT NULL AND NEW.old_name <> last_new_name THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'The old_name must be equal to the last new_name recorded for this role_id';
+  END IF;
+
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE reorganize_roles_name_changes_ids()
+BEGIN      
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE old_id, new_id, max_id INT UNSIGNED;
+    DECLARE update_count INT DEFAULT 0;
+    DECLARE id_cursor CURSOR FOR SELECT id FROM roles_name_changes ORDER BY id;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    -- Start transaction
+    START TRANSACTION;
+
+    -- Initialize counter
+    SET new_id = 1;
+
+    -- Open cursor
+    OPEN id_cursor;
+
+    read_loop: LOOP
+        FETCH id_cursor INTO old_id;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        IF old_id != new_id THEN
+            -- Check for ID conflict
+            SET @id_exists = 0;
+            SELECT COUNT(*) INTO @id_exists FROM roles_name_changes WHERE id = new_id;
+
+            IF @id_exists = 0 THEN
+                -- Update the ID
+                UPDATE roles_name_changes SET id = new_id WHERE id = old_id;
+                SET update_count = update_count + 1;
+            END IF;
+        END IF;
+
+        SET new_id = new_id + 1;
+    END LOOP;
+
+    CLOSE id_cursor;
+
+    -- Adjust AUTO_INCREMENT to next available ID
+    SELECT IFNULL(MAX(id), 0) + 1 INTO max_id FROM roles_name_changes;
+    SET @stmt = CONCAT('ALTER TABLE roles_name_changes AUTO_INCREMENT = ', max_id);
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+
+    COMMIT;
+END$$
+DELIMITER ;
 
 
 CREATE TABLE IF NOT EXISTS permissions_groups (
@@ -58,6 +190,20 @@ INSERT INTO permissions_group_translations (group_id, lang_code, name) VALUES
 (2, 'es', 'Permisos de usuarios'),
 (2, 'en', 'User permissions');
 
+INSERT INTO permissions_groups () VALUES (); -- id = 3
+INSERT INTO permissions_group_translations (group_id, lang_code, name) VALUES
+(3, 'es', 'Permisos de notificaciones'),
+(3, 'en', 'Notification permissions');
+
+INSERT INTO permissions_groups () VALUES (); -- id = 4
+INSERT INTO permissions_group_translations (group_id, lang_code, name) VALUES
+(4, 'es', 'Permisos de sistema'),
+(4, 'en', 'System permissions');
+
+INSERT INTO permissions_groups () VALUES (); -- id = 5
+INSERT INTO permissions_group_translations (group_id, lang_code, name) VALUES
+(5, 'es', 'Permisos de roles'),
+(5, 'en', 'Role permissions');
 
 CREATE TABLE permissions (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
@@ -85,6 +231,18 @@ CREATE TABLE permission_translations (
 
 
 
+CREATE TABLE IF NOT EXISTS role_permissions (
+    role_id INT UNSIGNED NOT NULL,
+    permission_id INT UNSIGNED NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    created_by INT UNSIGNED NOT NULL,
+    PRIMARY KEY (role_id, permission_id),
+    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (permission_id) REFERENCES permissions(id) ON DELETE RESTRICT ON UPDATE CASCADE
+
+) ENGINE=InnoDB;
+
 CREATE TABLE IF NOT EXISTS role_permissions_history (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     role_id INT UNSIGNED NOT NULL,
@@ -93,8 +251,8 @@ CREATE TABLE IF NOT EXISTS role_permissions_history (
     created_by INT UNSIGNED NOT NULL,
     created_at TIMESTAMP NOT NULL,
     
-    deleted_by INT UNSIGNED DEFAULT NULL,
-    deleted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_by INT UNSIGNED NOT NULL,
+    deleted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     
     FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (permission_id) REFERENCES permissions(id) ON DELETE RESTRICT ON UPDATE RESTRICT,
@@ -110,7 +268,7 @@ CREATE TABLE user_roles (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     user_id INT UNSIGNED NOT NULL,
     role_id INT UNSIGNED NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     created_by INT UNSIGNED NOT NULL,
     UNIQUE (user_id, role_id),
     CONSTRAINT fk_user
@@ -129,10 +287,10 @@ CREATE TABLE user_roles_history (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     user_id INT UNSIGNED NOT NULL,
     role_id INT UNSIGNED NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP NOT NULL,
     created_by INT UNSIGNED NOT NULL,
-    deleted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_by INT UNSIGNED DEFAULT NULL,
+    deleted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_by INT UNSIGNED NOT NULL,
    
     
     FOREIGN KEY (user_id) REFERENCES users(id)

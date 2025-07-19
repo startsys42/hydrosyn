@@ -21,7 +21,7 @@ from app.web import config as web_config
 from app.web import profile as web_profile
 from app.web import users as web_users
 from app.web import device as web_device
-from
+from app.web import settings as web_settings
 
 #from app.api import auth as api_auth
 #from app.api import users as api_users
@@ -99,12 +99,12 @@ async def root_redirect():
 # 3) Rutas Web (HTML + sesiones)
 #    - web_auth.router: login, logout, formulario, etc.
 #    - web_views.router: páginas protegidas (home, dashboard, etc.)
-app.include_router(web_auth.router, prefix="/web/", tags=["Web Auth"])
-app.include_router(web_config.router, prefix="/web/", tags=["Web Config"])
-app.include_router(web_profile.router, prefix="/web/", tags=["Web Profile"])
-app.include_router(web_users.router, prefix="/web/", tags=["Web Users"])
-app.include_router(web_device.router, prefix="/web/", tags=["Web Device"])
-app.include_router(web_settings.router, prefix="/web/", tags=["Web Settings"])
+app.include_router(web_auth.router, prefix="/web", tags=["Web Auth"])
+app.include_router(web_config.router, prefix="/web", tags=["Web Config"])
+app.include_router(web_profile.router, prefix="/web", tags=["Web Profile"])
+app.include_router(web_users.router, prefix="/web", tags=["Web Users"])
+app.include_router(web_device.router, prefix="/web", tags=["Web Device"])
+app.include_router(web_settings.router, prefix="/web", tags=["Web Settings"])
 # 4) Rutas API (JSON + JWT)
 #    - api_auth.router: /api/token, validación de credenciales, emisión de JWT
 #    - api_users.router: /api/users, endpoints protegidos por token

@@ -97,7 +97,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                 logger.warning("2 ")
                 if method == "POST":
                     logger.warning("2.1")
-                    if path == "/web/device/device-info":
+                    if path == "/web/device-info":
                         method="GET"
                         path=origin_path
                     current_device_fingerprint = self._get_device_fingerprint(request)
@@ -186,7 +186,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
 
                 else:
                     if request.url.path in [ "/web/login","/web/recover-password", "/web/login-two", "/web/recover-password-two","/"]:
-                        return RedirectResponse(url="/web/auth/home")
+                        return RedirectResponse(url="/web/home")
                     else:
                         response = await call_next(request)
                         return response
@@ -216,7 +216,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         recovery=recovery,
                     )
                     if request.url.path not in [ "/web/login","/web/recover-password", "/web/login-two", "/web/recover-password-two","/","/web/device-info","/web/change-lang-theme"]:
-                        return RedirectResponse(url="/web/auth/login")
+                        return RedirectResponse(url="/web/login")
                     else:
                         response = await call_next(request)
                         if request.url.path == "/web/change-lang-theme":
