@@ -33,10 +33,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next) -> Response:
         # 1. Obtener claves actuales para verificación
         current_key, old_key = await self.key_manager.get_keys()
-        if request.method == "POST":
-            form = await request.form()
-            lang = form.get("lang")
-            theme = form.get("theme")
+      
 
         # 2. Verificar sesión existente
         session_data_dict = await self._get_valid_session_id(request, current_key, old_key)
@@ -152,12 +149,12 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         await delete_session_in_db(session_id)
                         # inserta con user y dats de registro
 
-                        return RedirectResponse(url="/web/auth/login", status_code=303)
+                        return RedirectResponse(url="/web/login", status_code=303)
                     else:
-                        if request.url.path in [ "/web/auth/login","/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/"]:
-                            return RedirectResponse(url="/web/auth/home")
+                        if request.url.path in [ "/web/login","/web/recover-password", "/web/login-two", "/web/recover-password-two","/"]:
+                            return RedirectResponse(url="/web/home")
                         else:
-                            if origin_path in ["/web/auth/home"]:
+                            if origin_path in ["/web/home"]:
                                 await insert_login_attempts_in_db(
                                     session_id=session_id,
                                     user_id=session_data['user_id'],
@@ -173,12 +170,22 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                                     device_os=device_info.os,
                                     recovery=False,
                                 )
+                            
 
                             response = await call_next(request)
+                            if request.url.path == "/web/change-lang-theme":
+                                await update_cookie_lang_theme(
+                                    request=request,
+                                    response=response,
+                                    current_key=current_key,
+                                    old_key=old_key,
+                                    new_lang=request.state.language,
+                                    new_theme=request.state.theme
+                                )
                             return response
 
                 else:
-                    if request.url.path in [ "/web/auth/login","/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/"]:
+                    if request.url.path in [ "/web/login","/web/recover-password", "/web/login-two", "/web/recover-password-two","/"]:
                         return RedirectResponse(url="/web/auth/home")
                     else:
                         response = await call_next(request)
@@ -187,10 +194,10 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
 
             else:
                 if method == "POST":
-                    if path == "/web/device/device-info":
+                    if path == "/web/device-info":
                         method="GET"
                         path=origin_path
-                    if request.url.path  in [ "/web/auth/recover-password"]:
+                    if request.url.path  in [ "/web/recover-password"]:
                         recovery=True
                     else:
                         recovery=False
@@ -208,14 +215,26 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         device_os=device_info.os,
                         recovery=recovery,
                     )
-                    if request.url.path not in [ "/web/auth/login","/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/","/web/device/device-info",]:
+                    if request.url.path not in [ "/web/login","/web/recover-password", "/web/login-two", "/web/recover-password-two","/","/web/device-info","/web/change-lang-theme"]:
                         return RedirectResponse(url="/web/auth/login")
                     else:
                         response = await call_next(request)
+                        if request.url.path == "/web/change-lang-theme":
+                            
+
+        # Ejemplo: forzar que siempre se actualice a idioma inglés y tema claro
+                            await update_cookie_lang_theme(
+                                request=request,
+                                response=response,
+                                current_key=current_key,
+                                old_key=old_key,
+                                new_lang=request.state.language,
+                                new_theme=request.state.theme
+                            )
                         return response
                 else:
-                    if request.url.path not in [ "/web/auth/login","/web/auth/recover-password", "/web/auth/login-two", "/web/auth/recover-password-two","/"]:
-                        return RedirectResponse(url="/web/auth/login")
+                    if request.url.path not in [ "/web/login","/web/recover-password", "/web/login-two", "/web/recover-password-two","/"]:
+                        return RedirectResponse(url="/web/login")
                     else:
                         response = await call_next(request)
                         return response
@@ -268,7 +287,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
 # Firmar
         signed_data = Signer(current_key).sign(data_str.encode()).decode()
         response.set_cookie(
-            key="session_id",
+            key="hydrosyn_session_id",
             value=signed_data,
             httponly=True,
             secure=False,
@@ -324,3 +343,56 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     return None
             return None
  
+async def update_cookie_lang_theme(
+    request: Request,
+    response: Response,
+    current_key: str,
+    old_key: str | None = None,
+    new_lang: str = "en",
+    new_theme: str = "light"
+) -> None:
+    
+
+    session_cookie = request.cookies.get("hydrosyn_session_id")
+    if not session_cookie:
+        logger.warning("No session cookie found")
+        raise HTTPException(
+            status_code=401,  # or 400 if you prefer
+            detail="Session cookie not found"
+        )
+
+    try:
+        signer = Signer(current_key)
+        data_str = signer.unsign(session_cookie).decode()
+    except BadSignature:
+        if old_key:
+            try:
+                signer = Signer(old_key)
+                data_str = signer.unsign(session_cookie).decode()
+            except BadSignature:
+                return
+        else:
+            return
+
+    try:
+        data = json.loads(data_str)
+    except json.JSONDecodeError:
+        return
+
+    # Actualiza idioma y tema
+    data["language"] = new_lang
+    data["theme"] = new_theme
+
+    # Vuelve a firmar y guardar en cookie
+    new_signed = Signer(current_key).sign(json.dumps(data).encode()).decode()
+    days = await get_cookie_expired_time_from_db()
+
+    response.set_cookie(
+        key="hydrosyn_session_id",
+        value=new_signed,
+        httponly=True,
+        secure=False,
+        path="/",
+        samesite="Lax",
+        max_age=days * 86400
+    )

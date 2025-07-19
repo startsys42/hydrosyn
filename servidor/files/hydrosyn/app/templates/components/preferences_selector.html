@@ -1,4 +1,4 @@
-<form method="post" action="{{ request.url.path }}" style="margin-bottom: 20px;">
+<form method="post" action="/change-lang-theme" style="margin-bottom: 20px;">
     <label for="lang-select">{{ texts.change_lang }}:</label>
     <select name="lang" id="lang-select" onchange="this.form.submit()">
         <option value="es" {% if lang == "es" %}selected{% endif %}>Español</option>
@@ -10,4 +10,5 @@
         <option value="light" {% if theme == "light" %}selected{% endif %}>Light</option>
         <option value="dark" {% if theme == "dark" %}selected{% endif %}>Dark</option>
     </select>
+     <input type="hidden" name="next" value="{{ request.url }}">
 </form>

@@ -5,6 +5,39 @@ from typing import Optional, Union
 from sqlalchemy.sql import text
 from fastapi import HTTPException, status
 
+async def update_user_preferences_in_db(user_id: int, lang: str, theme: str) -> bool:
+    engine = DBEngine.get_engine()
+    sql = text("""
+        UPDATE users 
+        SET language = :lang, theme = :theme 
+        WHERE id = :user_id
+    """)
+
+    try:
+        async with engine.begin() as conn:
+            result = await conn.execute(sql, {"lang": lang, "theme": theme, "user_id": user_id})
+            if result.rowcount == 0:
+                return False  # No se actualizó nada, usuario no encontrado
+        return True
+    except Exception as e:
+        logger.error(f"Error updating user preferences: {e}")
+        return False
+    
+async def get_user_id_from_db(session_id: str) -> int | None:
+    try:
+        engine = DBEngine.get_engine()
+        async with engine.connect() as conn:
+            result = await conn.execute(
+                text("SELECT user_id FROM sessions WHERE session_id = :session_id "),
+                {"session_id": session_id}
+            )
+            row = result.fetchone()
+            if row:
+                return row[0]  # user_id
+    except Exception as e:
+        logger.error(f"Error fetching user_id from session_id: {e}")
+    
+    return None
 
 async def reset_change_pass_to_null_in_db(username: str) -> dict:
     engine = DBEngine.get_engine()

@@ -2,7 +2,7 @@ import asyncio
 from datetime import datetime, time, timedelta
 from logger import logger  # Import your custom logger
 from events.tasks import *
-from common.keys_managers import cookie_key_manager, jwt_key_manager
+from common.keys_managers import cookie_key_manager #, jwt_key_manager
 
 async def get_next_cleanup_time():
     now = datetime.utcnow()
@@ -42,7 +42,7 @@ async def periodic_event_dynamic_schedule(name: str, get_next_run_time, task_cor
 
 async def on_startup():
     await cookie_key_manager.initialize()
-    await jwt_key_manager.initialize()
+    #await jwt_key_manager.initialize()
     asyncio.create_task(
         periodic_event_dynamic_schedule(
             name="General Clean",
