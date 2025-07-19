@@ -56,8 +56,8 @@ CREATE TABLE IF NOT EXISTS config_translations(
 
 INSERT INTO config_groups  VALUES ();
 INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
-(1, 'es', 'Seguridad de inicio de sesión'),
-(1, 'en', 'Login Security');
+(1, 'es', 'Seguridad de sesión'),
+(1, 'en', 'Session Security');
 
 INSERT INTO config_groups  VALUES ();
 INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
@@ -70,40 +70,44 @@ INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
 (3, 'en', 'Grace periods and tasks');
 
 
-INSERT INTO config_groups VALUES ();
-INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
-(4, 'es', 'Tiempos de retención históricos'),
-(4, 'en', 'Historical retention periods');
 
 
 INSERT INTO config_groups  VALUES ();
 INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
-(5, 'es', 'Borra usuario antes de tiempo'),
-(5, 'en', 'Delete user before time');
+(4, 'es', 'Borra usuario antes de tiempo'),
+(4, 'en', 'Delete user before time');
 
 
+INSERT INTO config_groups VALUES ();
+INSERT INTO config_group_translations (group_id, lang_code, name) VALUES
+(5, 'es', 'Tiempos de retención históricos'),
+(5, 'en', 'Historical retention periods');
 
 INSERT INTO config (value, min_value, max_value, group_id) VALUES
 (3, 3, 5,1),       -- Failed login or password recovery attempts before temporary lockout
 (5, 1, 10,1),      -- Time window (in minutes) to count failed attempts
 (15, 1, 3600,1),   -- Lockout duration (in minutes) after exceeding failed attempts
 (1, 1, 30,2),      -- Maximum session duration (in days)
-(15, 1, 60,2),   -- Access token duration (in minutes)
-(90, 1, 90,2),      -- Refresh token duration (in days)
-(2, 0, 23,3),      -- Daily cleanup hour sessions and tokens (0 to 23)
-(24, 1, 24,3),    -- Time limit to verify email or change password (in hours)
-(365, 90, 1825,4),  -- Days to retain unverified users before deletion
-(2, 1, 10,3),      -- Time to force username change after policy update (in days)
-(365, 90, 1825,4),  -- Days to retain username policy history before deletion
-(2, 1, 10,3),      -- Time to force password change after policy update (in days)
-(365, 90, 1825,4),  -- Days to retain password policy history before deletion
-(365, 90, 1825,4),  -- Days to retain users activation history before deletion
-(365, 90, 1825,4),  -- Days to retain users email changes before deletion
-    
-(365, 90, 1825,4),  -- Days to retain login attempts before deletion
-(365, 90, 1825,4),  -- Days to retain config history
+--(15, 1, 60,2),   -- Access token duration (in minutes)
+--(90, 1, 90,2),      -- Refresh token duration (in days)
+(2, 0, 23,3),      -- Daily cleanup hour  (0 to 23)
+(24, 1, 24,3),    -- Time limit to first login (in hours)
+(0, 0, 1,4); -- Delete user with history save
+(365, 90, 1825,5),  -- Days to retain config history
 
-(0, 0, 1,5); -- Delete user with history save
+
+(365, 90, 1825,5),  -- Days to retain unverified users before deletion
+
+(365, 90, 1825,5),  -- Days to retain username policy history before deletion
+
+(365, 90, 1825,5),  -- Days to retain password policy history before deletion
+(365, 90, 1825,5),  -- Days to retain users activation history before deletion
+(365, 90, 1825,5),  -- Days to retain users email changes before deletion
+    
+(365, 90, 1825,5),  -- Days to retain login attempts before deletion
+
+
+
 
     
 -- Para intentos de sesión
@@ -128,22 +132,29 @@ VALUES
 (4, 'en', 'Max session duration', 'Number of days a session can remain active without logout'),
 
 -- Config ID 5
-(5, 'es', 'Duración del Access Token', 'Duración en minutos del token de acceso JWT antes de expirar'),
-(5, 'en', 'Access token duration', 'JWT access token lifespan in minutes before expiration'),
+--(5, 'es', 'Duración del Access Token', 'Duración en minutos del token de acceso JWT antes de expirar'),
+--(5, 'en', 'Access token duration', 'JWT access token lifespan in minutes before expiration'),
 
 -- Config ID 6
-(6, 'es', 'Duración del Refresh Token', 'Duración en días del token de renovación JWT antes de expirar'),
-(6, 'en', 'Refresh token duration', 'JWT refresh token lifespan in days before expiration'),
+--(6, 'es', 'Duración del Refresh Token', 'Duración en días del token de renovación JWT antes de expirar'),
+--(6, 'en', 'Refresh token duration', 'JWT refresh token lifespan in days before expiration'),
 
--- Config ID 7
-(7, 'es', 'Hora de limpieza diaria', 'Hora del día (0-23) en que se eliminarán sesiones y tokens expirados'),
-(7, 'en', 'Daily cleanup hour', 'Hour of the day (0–23) to remove expired sessions and tokens'),
 
--- Config ID 8
-(8, 'es', 'Tiempo para verificar cuenta', 'Horas disponibles para verificar el correo y cambiar la contraseña temporal'),
-(8, 'en', 'Initial verification window', 'Hours available to verify email and update temporary password'),
+(5, 'es', 'Hora de limpieza diaria', 'Hora del día (0-23) en que se eliminarán sesiones y tokens expirados'),
+(5, 'en', 'Daily cleanup hour', 'Hour of the day (0–23) to remove expired sessions and tokens'),
 
--- Config ID 9
+
+(6, 'es', 'Tiempo para verificar cuenta', 'Horas disponibles para verificar el correo y cambiar la contraseña temporal'),
+(6, 'en', 'Initial verification window', 'Hours available to verify email and update temporary password'),
+
+(7, 'es', 'Eliminar usuario con historial', 'Indica si se puede borrar un usuariocon historial.El historico sera propiedad del admin (0=No, 1=Sí)'),
+(7, 'en', 'Delete user with history', 'Whether a user can be deleted while preserving their history. The history will be assigned to admin (0=No, 1=Yes)');
+INSERT INTO config_translations (config_id, lang_code, name, description) VALUES
+(8, 'es', 'Retención de historial de configuración', 'Días que se conservarán los registros históricos de cambios en la configuración del sistema'),
+(8, 'en', 'Config history retention', 'Days to retain system configuration change history'),
+
+
+
 (9, 'es', 'Retención de usuarios no verificados', 'Número de días que se conservarán las cuentas sin verificar'),
 (9, 'en', 'Unverified user retention', 'Number of days unverified user accounts are retained'),
 
@@ -181,13 +192,8 @@ VALUES
 (16, 'en', 'Access and recovery attempts retention', 'Days to retain login and password recovery attempt history'),
 
 
--- Config ID 17 (Retención de historial de configuración)
-(17, 'es', 'Retención de historial de configuración', 'Días que se conservarán los registros históricos de cambios en la configuración del sistema'),
-(17, 'en', 'Config history retention', 'Days to retain system configuration change history'),
 
--- Config ID 18 (Eliminar usuario conservando historial)
-(18, 'es', 'Eliminar usuario con historial', 'Indica si se puede borrar un usuariocon historial.El historico sera propiedad del admin (0=No, 1=Sí)'),
-(18, 'en', 'Delete user with history', 'Whether a user can be deleted while preserving their history. The history will be assigned to admin (0=No, 1=Yes)');
+
 
 
 
@@ -292,3 +298,153 @@ END$$
 
 DELIMITER ;
 
+
+
+CREATE TABLE IF NOT EXISTS config_history (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    config_id INT UNSIGNED NOT NULL,
+    old_value INT UNSIGNED NOT NULL,
+    new_value INT UNSIGNED NOT NULL,
+    changed_by INT UNSIGNED NOT NULL ,
+    change_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  
+    
+    FOREIGN KEY (config_id) REFERENCES config(id)
+        ON DELETE RESTRICT
+        ON UPDATE RESTRICT,
+    
+    FOREIGN KEY (changed_by) REFERENCES users(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+DELIMITER $$
+
+CREATE TRIGGER trg_config_history_validate_value_ranges
+BEFORE INSERT ON config_history
+FOR EACH ROW
+BEGIN
+    DECLARE config_min_value INT UNSIGNED ;
+    DECLARE config_max_value INT UNSIGNED ;
+    DECLARE last_new_value INT UNSIGNED;
+
+    -- Get min and max allowed values from config table
+    SELECT min_value, max_value INTO config_min_value, config_max_value 
+    FROM config 
+    WHERE id = NEW.config_id;
+
+    -- Validate old_value is within allowed range
+   IF NEW.old_value < config_min_value OR NEW.old_value > config_max_value THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = CONCAT('Config history old_value is outside allowed range (min: ', 
+                                 config_min_value, ', max: ', config_max_value, ')');
+    END IF;
+
+    -- Validate new_value is within allowed range
+    IF NEW.new_value < config_min_value OR NEW.new_value > config_max_value THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = CONCAT('Config history new_value is outside allowed range (min: ', 
+                                 config_min_value, ', max: ', config_max_value, ')');
+    END IF;
+
+    SELECT new_value INTO last_new_value
+FROM config_history
+WHERE config_id = NEW.config_id
+ORDER BY change_timestamp DESC, id DESC
+LIMIT 1;
+
+-- If there is a previous record, validate old_value = last_new_value
+IF last_new_value IS NOT NULL THEN
+    IF NEW.old_value <> last_new_value THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = CONCAT('The old_value (', NEW.old_value, 
+                                 ') must be equal to the last recorded new_value (', last_new_value, ') for config_id ', NEW.config_id);
+    END IF;
+END IF;
+END$$
+
+
+
+CREATE TRIGGER trg_config_history_prevent_latest_record_deletion
+BEFORE DELETE ON config_history
+FOR EACH ROW
+BEGIN
+    DECLARE latest_history_id INT UNSIGNED ;
+
+    -- Get the most recent record ID for this config_id
+    SELECT MAX(id) INTO latest_history_id 
+    FROM config_history 
+    WHERE config_id = OLD.config_id;
+
+    -- Prevent deletion if this is the most recent record
+IF OLD.id = latest_history_id THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = CONCAT('Cannot delete the most recent configuration history record for config_id: ', 
+                                OLD.config_id);
+    END IF;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE reorganize_config_history_ids()
+BEGIN
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE old_id, new_id, max_id INT UNSIGNED ;
+    DECLARE update_count INT DEFAULT 0;
+    DECLARE id_cursor CURSOR FOR SELECT id FROM config_history ORDER BY id;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    
+    -- Start transaction for safety
+    START TRANSACTION;
+    
+    -- Temporarily disable foreign key checks
+ 
+    
+    -- Initialize counter
+    SET new_id = 1;
+    
+    -- Open cursor to scan through existing IDs
+    OPEN id_cursor;
+    
+    id_loop: LOOP
+        FETCH id_cursor INTO old_id;
+        IF done THEN
+            LEAVE id_loop;
+        END IF;
+        
+        -- Only update if current ID doesn't match the desired sequence
+        IF old_id != new_id THEN
+            -- Check if target ID is available
+            SET @id_exists = 0;
+            SELECT COUNT(*) INTO @id_exists FROM config_history WHERE id = new_id;
+            
+            IF @id_exists = 0 THEN
+                -- Perform the direct ID update
+                UPDATE config_history SET id = new_id WHERE id = old_id;
+                SET update_count = update_count + 1;
+        
+            END IF;
+        END IF;
+        
+        SET new_id = new_id + 1;
+    END LOOP;
+    
+    CLOSE id_cursor;
+    COMMIT;
+    -- Reset auto-increment value
+     SELECT IFNULL(MAX(id), 0) + 1 INTO max_id FROM config_history;
+    SET @stmt = CONCAT('ALTER TABLE config_history AUTO_INCREMENT = ', max_id);
+    PREPARE stmt FROM @stmt;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+    
+
+    
+    -- Commit all changes
+    
+    
+  
+END$$
+
+DELIMITER ;
