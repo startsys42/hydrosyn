@@ -1593,10 +1593,7 @@ BEGIN
         SET MESSAGE_TEXT = 'New username must be different from the old username.';
     END IF;
 END$$
-DELIMITER ;
-        SET MESSAGE_TEXT = 'New username must be different from the old username.';
-    END IF;
-END;
+
 DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER trg_username_history_prevent_latest_deletion

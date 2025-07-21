@@ -748,7 +748,7 @@ END$$
 
 DELIMITER ;
 
-
+DELIMITER $$
 CREATE TRIGGER trg_prevent_delete_user_roles_history_before_time
 BEFORE DELETE ON user_roles_history
 FOR EACH ROW
