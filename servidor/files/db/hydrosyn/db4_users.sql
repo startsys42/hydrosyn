@@ -157,7 +157,7 @@ DELIMITER ;
 
 DELIMITER $$
 
-CREATE TRIGGER trg_prevent_delete_before_retention
+CREATE TRIGGER trg_prevent_delete_before_possible_users_history
 BEFORE DELETE ON delete_possible_users_history
 FOR EACH ROW
 BEGIN
@@ -318,7 +318,7 @@ DELIMITER ;
 
 DELIMITER $$
 
-CREATE TRIGGER trg_prevent_delete_before_retention
+CREATE TRIGGER trg_prevent_delete_before_twofa_activation_history
 BEFORE DELETE ON twofa_activation_history
 FOR EACH ROW
 BEGIN
@@ -462,7 +462,7 @@ BEGIN
     ORDER BY changed_at DESC, id DESC
     LIMIT 1;
 
-    IF latest_id = OLD.id THEN
+    IF latest_id IS NOT NULL AND latest_id = OLD.id THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Cannot delete the latest activation history record for a user.';
     END IF;
@@ -471,7 +471,7 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE TRIGGER trg_prevent_delete_before_retention
+CREATE TRIGGER trg_prevent_delete_before_user_activation_history
 BEFORE DELETE ON user_activation_history
 FOR EACH ROW
 BEGIN

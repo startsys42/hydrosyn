@@ -215,6 +215,8 @@ END$$
 DELIMITER ;
 
 
+
+DELIMITER $$
 CREATE TRIGGER trg_notification_should_send_email_history_insert
 BEFORE INSERT ON notification_should_send_email_history
 FOR EACH ROW

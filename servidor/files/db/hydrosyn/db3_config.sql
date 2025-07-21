@@ -34,8 +34,6 @@ INSERT INTO config (value, min_value, max_value, group_id) VALUES
 (5, 1, 10,1),      -- Time window (in minutes) to count failed attempts
 (15, 1, 3600,1),   -- Lockout duration (in minutes) after exceeding failed attempts
 (1, 1, 30,2),      -- Maximum session duration (in days)
---(15, 1, 60,2),   -- Access token duration (in minutes)
---(90, 1, 90,2),      -- Refresh token duration (in days)
 (2, 0, 23,3),      -- Daily cleanup hour  (0 to 23)
 (24, 1, 24,3),    -- Time limit to first login (in hours)
 (0, 0, 1,4), -- Delete user with history save
