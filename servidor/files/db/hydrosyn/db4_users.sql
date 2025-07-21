@@ -1574,6 +1574,8 @@ CREATE TABLE IF NOT EXISTS username_history (
     CONSTRAINT fk_unh_user FOREIGN KEY (user_id) REFERENCES users(id)
         ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT fk_unh_changed_by FOREIGN KEY (changed_by) REFERENCES users(id)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+);
 DELIMITER $$
 CREATE TRIGGER trg_username_history_before_insert
 BEFORE INSERT ON username_history
@@ -1595,7 +1597,7 @@ DELIMITER ;
         SET MESSAGE_TEXT = 'New username must be different from the old username.';
     END IF;
 END;
-
+DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER trg_username_history_prevent_latest_deletion
 BEFORE DELETE ON username_history
