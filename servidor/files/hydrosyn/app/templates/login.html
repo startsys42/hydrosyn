@@ -9,6 +9,11 @@
        {% include "components/preferences_selector.html" %}
     <h1>{{ texts.login }}</h1>
 
+    {% if error %}
+      <div class="alert alert-danger" style="color: red; margin-bottom: 1rem;">
+        {{ error }}
+      </div>
+    {% endif %}
     <form method="post" action="/login">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
         <label>{{ texts.username }}: <input type="text" name="username" required></label><br>

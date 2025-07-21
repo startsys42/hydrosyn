@@ -1131,8 +1131,39 @@ CREATE TABLE IF NOT EXISTS username_blacklist (
         ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
+DELIMITER $$
 
+CREATE TRIGGER trg_username_blacklist_before_insert
+BEFORE INSERT ON username_blacklist
+FOR EACH ROW
+BEGIN
+    DECLARE user_exists INT;
 
+    SELECT COUNT(*) INTO user_exists
+    FROM users
+    WHERE username = NEW.username;
+
+    IF user_exists > 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Username already exists in users table';
+    END IF;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER trg_username_blacklist_prevent_update
+BEFORE UPDATE ON username_blacklist
+FOR EACH ROW
+BEGIN
+    IF NEW.username <> OLD.username THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Username in blacklist cannot be changed';
+    END IF;
+END$$
+
+DELIMITER ;
 INSERT INTO username_blacklist (username) VALUES
 ('admin'),
 ('administrator'),

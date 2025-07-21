@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Request, Form
 from fastapi.responses import RedirectResponse
 from urllib.parse import urlparse
+from db.db_users import update_user_preferences_in_db, get_user_id_from_db
 
 router = APIRouter(tags=["Web Settings"])
 

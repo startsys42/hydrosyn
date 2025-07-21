@@ -317,11 +317,12 @@ CREATE TABLE notification_events (
    
     lang_code ENUM('es', 'en') NOT NULL,
     formatted_message VARCHAR(255) NOT NULL,               -- Texto listo para mostrar
-    extra_data JSON DEFAULT NULL,                  -- Información adicional (IP, intentos, etc.)
+  
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     is_read BOOLEAN DEFAULT FALSE,
     read_at DATETIME DEFAULT NULL,
-
+CHECK (is_read = TRUE AND read_at IS NOT NULL) OR (is_read = FALSE AND read_at IS NULL),
+CHECK (read_at IS NULL OR read_at >= created_at), -- read_at debe ser NULL o posterior a created_at
     FOREIGN KEY (notification_id) REFERENCES notifications(id)
         ON DELETE RESTRICT ON UPDATE CASCADE,
 
@@ -331,6 +332,42 @@ CREATE TABLE notification_events (
     
 );
 
+DELIMITER $$
+
+CREATE TRIGGER trg_notification_events_before_insert
+BEFORE INSERT ON notification_events
+FOR EACH ROW
+BEGIN
+    -- On insert, is_read must be FALSE and read_at must be NULL
+    IF NEW.is_read <> FALSE THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'On insert, is_read must be FALSE';
+    END IF;
+
+    IF NEW.read_at IS NOT NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'On insert, read_at must be NULL';
+    END IF;
+END$$
+
+CREATE TRIGGER trg_notification_events_before_update
+BEFORE UPDATE ON notification_events
+FOR EACH ROW
+BEGIN
+    -- Validate is_read and read_at relationship on update
+    IF (NEW.is_read = TRUE AND NEW.read_at IS NULL) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'read_at cannot be NULL when is_read is TRUE';
+    END IF;
+
+    IF (NEW.is_read = FALSE AND NEW.read_at IS NOT NULL) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'read_at must be NULL when is_read is FALSE';
+    END IF;
+
+    -- Validate that read_at is NULL or >= created_at
+    IF (NEW.read_at IS NOT NULL AND NEW.read_at < NEW.created_at) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'read_at must be NULL or later than created_at';
+    END IF;
+END$$
+
+DELIMITER ;
 
 
 DELIMITER $$

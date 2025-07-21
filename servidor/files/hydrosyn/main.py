@@ -22,6 +22,7 @@ from app.web import profile as web_profile
 from app.web import users as web_users
 from app.web import device as web_device
 from app.web import settings as web_settings
+from services.notifications import create_user_notification
 
 #from app.api import auth as api_auth
 #from app.api import users as api_users
@@ -111,7 +112,7 @@ app.include_router(web_settings.router, prefix="/web", tags=["Web Settings"])
 #app.include_router(api_auth.router, prefix="/api", tags=["API"])
 #app.include_router(api_users.router, prefix="/api", tags=["API"])
 
-logger.info("Starting application...")
+
 
 @app.on_event("startup")
 async def startup_event():
@@ -119,3 +120,7 @@ async def startup_event():
 
 
 
+import datetime
+
+logger.info("Starting application...")
+create_user_notification(notification_id=1, date=datetime.datetime.now())

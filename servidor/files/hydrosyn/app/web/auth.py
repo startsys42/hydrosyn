@@ -54,10 +54,11 @@ async def login_post(
     except ValueError as e:
         return PlainTextResponse(str(e), status_code=400)
     
-
+    request.state.username = username
    # aquid ebo guardar notificacion
     if await is_in_blacklist_from_db(username):
         request.state.blacklist = True
+       
         error_key = "account_not_exists"  # o "invalid_csrf"
         error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
         return templates.TemplateResponse("login", {
@@ -65,6 +66,7 @@ async def login_post(
             "texts": prefs["texts"],
             "lang": prefs["lang"],
             "theme": prefs["theme"],
+            "csrf_token":generate_csrf_token(),
             "error": error_message
         }, status_code=403)
     else:
@@ -81,6 +83,7 @@ async def login_post(
             "texts": prefs["texts"],
             "lang": prefs["lang"],
             "theme": prefs["theme"],
+            "csrf_token": generate_csrf_token(),
             "error": error_message
         }, status_code=403)
     else:
@@ -100,6 +103,7 @@ async def login_post(
                         "texts": prefs["texts"],
                         "lang": prefs["lang"],
                         "theme": prefs["theme"],
+                        "csrf_token": generate_csrf_token(),
                         "error": error_message
                     }, status_code=403)
                 else:
@@ -179,6 +183,7 @@ async def login_post(
                     "texts": prefs["texts"],
                     "lang": prefs["lang"],
                     "theme": prefs["theme"],
+                    "csrf_token": generate_csrf_token(),
                     "error": error_message
                 }, status_code=403)
         else:
@@ -190,6 +195,7 @@ async def login_post(
                 "texts": prefs["texts"],
                 "lang": prefs["lang"],
                 "theme": prefs["theme"],
+                "csrf_token": generate_csrf_token(),
                 "error": error_message
             }, status_code=403)
                 
@@ -271,9 +277,10 @@ async def recover_password_post(request: Request,username: str = Form(...), emai
         prefs = get_user_preferences(request)
     except ValueError as e:
         return PlainTextResponse(str(e), status_code=400)
-    
+    request.state.username = username
     if await is_in_blacklist_from_db(username):
         request.state.blacklist = True
+        
         error_key = "account_not_exists"  # o "invalid_csrf"
         error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
         return templates.TemplateResponse("recover-password", {
@@ -281,6 +288,7 @@ async def recover_password_post(request: Request,username: str = Form(...), emai
             "texts": prefs["texts"],
             "lang": prefs["lang"],
             "theme": prefs["theme"],
+            "csrf_token": generate_csrf_token(),
             "error": error_message
         }, status_code=403)
     else:
@@ -296,6 +304,7 @@ async def recover_password_post(request: Request,username: str = Form(...), emai
             "texts": prefs["texts"],
             "lang": prefs["lang"],
             "theme": prefs["theme"],
+            "csrf_token": csrf_token,
             "error": error_message
         }, status_code=403)
     else:
@@ -319,6 +328,7 @@ async def recover_password_post(request: Request,username: str = Form(...), emai
                 "texts": prefs["texts"],
                 "lang": prefs["lang"],
                 "theme": prefs["theme"],
+                "csrf_token": csrf_token,
                 "error": error_message
             }, status_code=403)
             
@@ -332,6 +342,7 @@ async def recover_password_post(request: Request,username: str = Form(...), emai
                         "texts": prefs["texts"],
                         "lang": prefs["lang"],
                         "theme": prefs["theme"],
+                        "csrf_token": csrf_token,
                         "error": error_message
                     }, status_code=403)
             else:
@@ -449,7 +460,7 @@ async def recover_password_post(request: Request, email: str = Form(...)):
 @router.get("/home", response_class=HTMLResponse)
 async def home_get(request: Request):
     try:
-        prefs = get_user_preferences(request)
+        prefs = get_user_preferences(request) #AQUI DEBO GESTIOANR EL CAMBAIR IDIOAM TEMA , GUARDAR SESION CMABAIR CONTARSEÑA O NOMBRE FORZOSO, SOTRAR NOTIFICACIONES
     except ValueError as e:
         return PlainTextResponse(str(e), status_code=400)
 
@@ -465,6 +476,6 @@ async def home_get(request: Request):
 @router.post("/logout",  response_class=HTMLResponse)
 async def logout(request: Request):
     delete_session_in_db(request.state.session_id)
-    response = RedirectResponse(url="/web/auth/login", status_code=303)
-    response.delete_cookie("session_id")
+    response = RedirectResponse(url="/web/login", status_code=303)
+    response.delete_cookie("hydrosyn_session_id")
     return response

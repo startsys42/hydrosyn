@@ -39,6 +39,39 @@ async def get_user_id_from_db(session_id: str) -> int | None:
     
     return None
 
+async def get_user_email_and_language_from_db(user_id: int) -> Optional[Tuple[str, str]]:
+    """
+    Devuelve el email y el idioma del usuario si está activo.
+
+    Args:
+        user_id (int): ID del usuario
+
+    Returns:
+        Tuple[str, str] | None: (email, language) si el usuario está activo, o None si no existe o no está activo.
+    """
+    sql = text("""
+        SELECT email, language
+        FROM users
+        WHERE id = :user_id AND is_active = TRUE
+        LIMIT 1
+    """)
+
+    try:
+        async with DBEngine.get_engine().connect() as conn:
+            result = await conn.execute(sql, {"user_id": user_id})
+            row = result.fetchone()
+            if row:
+                return row.email, row.language
+            return None
+    except Exception as e:
+        logger.error(
+            f"Error obteniendo email e idioma para user_id={user_id}: {e}",
+            exc_info=True,
+            extra={"user_id": user_id}
+        )
+        return None
+
+
 async def reset_change_pass_to_null_in_db(username: str) -> dict:
     engine = DBEngine.get_engine()
     sql = text("UPDATE users SET change_pass = NULL WHERE username = :username")

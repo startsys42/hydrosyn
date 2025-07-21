@@ -52,6 +52,11 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
             request.state.theme = theme
             request.state.session_id = session_id
             session_data = await get_session_from_db(session_id)
+            if session_data and session_data['is_active'] == False:
+                logger.warning(f"Session {session_id} is inactive, redirecting to login")
+                await delete_session_in_db(session_id)
+                return RedirectResponse(url="/web/login", status_code=303)
+            
             path = request.url.path
             logger.info(f"path:  {path}")
             method = request.method
@@ -78,13 +83,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
 
                     origin_path = headers.get("x-origin-path", "unknown")
 
-                    logger.info(
-                        "Device Info Collected\n"
-                        f"IP: {client_ip}\n"
-                        f"User-Agent: {user_agent}\n"
-                        f"Origin Path: {origin_path}\n"
-                        f"Device Data: {device_info.dict(exclude_none=True)}"
-                    )
+    
                 except Exception as e:
                     logger.warning(
                         "Failed to process device info\n"
@@ -103,29 +102,14 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     current_device_fingerprint = self._get_device_fingerprint(request)
                     if session_data['summary'] != current_device_fingerprint:
                         logger.warning(f"Session detected from a different device for user '{session_data['username']}', possible cookie theft detected.")
-                        if session_data['language'] == 'es':
-                            message_text = (
-                            "Alerta: Posible robo de cookies detectado.\n\n"
-                            f"Información del dispositivo: {request.headers.get('User-Agent')}\n"
-                            f"Dirección IP: {request.client.host}\n\n"
-                            "Si no fuiste tú, por favor asegura tu cuenta inmediatamente."
-                            )
-                            subject = "Posible robo de cookies detectado"
-
-                        else:  # <- aquí corregí el elif vacío
-                            message_text = (
-                            "Alert: Possible cookie theft detected.\n\n"
-                            f"Device Info: {request.headers.get('User-Agent')}\n"
-                            f"IP Address: {request.client.host}\n\n"
-                            "If this wasn't you, please secure your account immediately."
-                            )
-                            subject = "Possible cookie theft detected"
-
-                        await send_email(
-                            sender="tu-correo@gmail.com",
-                            to=session_data['email'],
-                            subject=subject,
-                            message_text=message_text
+                        create_user_notification(
+                            notification_id=2,  # ID de la notificación de robo de cookies
+                            user_id=session_data['user_id'],
+                            username=session_data['username'],
+                            ip=client_ip,
+                            lang=session_data['language'],
+                            email=session_data['email'],
+                            date=datetime.now(),   
                         )
 
                         await insert_login_attempts_in_db(
@@ -197,11 +181,13 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     if path == "/web/device-info":
                         method="GET"
                         path=origin_path
-                    if request.url.path  in [ "/web/recover-password"]:
+                    if request.url.path  in [ "/web/recover-password", "/web/recover-password-two"]:
                         recovery=True
                     else:
                         recovery=False
-                    await insert_login_attempts_in_db(
+                    
+                    if request.url.path not in [ "/web/login","/web/recover-password", "/web/login-two", "/web/recover-password-two","/","/web/device-info","/web/change-lang-theme"]:
+                        await insert_login_attempts_in_db(
                         session_id=session_id,
                         ip_address=client_ip,
                         success=False,
@@ -215,7 +201,6 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         device_os=device_info.os,
                         recovery=recovery,
                     )
-                    if request.url.path not in [ "/web/login","/web/recover-password", "/web/login-two", "/web/recover-password-two","/","/web/device-info","/web/change-lang-theme"]:
                         return RedirectResponse(url="/web/login")
                     else:
                         response = await call_next(request)
@@ -231,6 +216,71 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                                 new_lang=request.state.language,
                                 new_theme=request.state.theme
                             )
+                        if hasattr(request.state, "blacklist"):
+                            if request.state.blacklist == True:
+                                if request.url.path == "/web/login":
+                                    create_user_notification(
+                                        notification_id=5,  # ID de la notificación de bloqueo
+                                        username=request.state.username,
+                                        ip=client_ip,
+                                        date=datetime.now(),
+                                    )
+                                
+                                elif request.url.path == "/web/recover-password":
+                                    create_user_notification(
+                                        notification_id=6,  # ID de la notificación de bloqueo
+                                        username=request.state.username,
+                                        ip=client_ip,
+                                        date=datetime.now(),
+                                    )
+                        if hasattr(request.state, "user_exist"):
+                            if request.state.user_exist == True:
+                                if hasattr(request.state, "is_active"):
+                                    if request.state.is_active != True:
+                                        if request.url.path == "/web/login":
+                                            create_user_notification(
+                                                notification_id=7,  # ID de la notificación de cuenta inactiva
+                                                username=request.state.username,
+                                                ip=client_ip,
+                                                date=datetime.now(),
+                                            )
+                                        elif request.url.path == "/web/recover-password":
+                                            create_user_notification(
+                                                notification_id=8,  # ID de la notificación de cuenta inactiva
+                                                username=request.state.username,
+                                                ip=client_ip,
+                                                date=datetime.now(),
+                                            )
+                                    else:
+                                        if hasattr(request.state, "hash"):
+                                            if request.state.hash == True:
+                                                if request.url.path == "/web/login":
+                                                    create_user_notification(
+                                                        notification_id=9,  # ID de la notificación de hash incorrecto
+                                                        username=request.state.username,
+                                                        ip=client_ip,
+                                                        date=datetime.now(),
+                                                    )
+                                                elif request.url.path == "/web/recover-password":
+                                                    create_user_notification(
+                                                        notification_id=10,  # ID de la notificación de hash incorrecto
+                                                        username=request.state.username,
+                                                        ip=client_ip,
+                                                        date=datetime.now(),
+                                                    )
+                            else:
+                                elif hasattr(request.state, 
+                                
+                            
+                        
+                                
+                            
+                        if  request.state.blacklist == True:
+                            request.state.user_exist = False
+                            request.state.is_active = True
+                            request.state.hash = True
+                            request.state.csrf = False
+                            request.state.email_exist = True
                         return response
                 else:
                     if request.url.path not in [ "/web/login","/web/recover-password", "/web/login-two", "/web/recover-password-two","/"]:

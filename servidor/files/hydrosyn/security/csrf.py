@@ -7,7 +7,7 @@ from asyncio import Lock
 
 # Configuración
 MAX_STORED_TOKENS = 1000
-TOKEN_EXPIRATION = 300  # 5 minutos
+TOKEN_EXPIRATION = 2400  # 40 minutos
 
 # Cifrado
 ENCRYPTION_KEY = Fernet.generate_key()
