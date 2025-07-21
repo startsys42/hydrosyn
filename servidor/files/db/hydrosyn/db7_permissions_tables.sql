@@ -726,7 +726,7 @@ CREATE TABLE user_roles_history (
 DELIMITER $$
 
 CREATE TRIGGER trg_check_user_roles_history_insert
-BEFORE INSERT ON role_permissions_history
+BEFORE INSERT ON user_roles_history
 FOR EACH ROW
 BEGIN
     DECLARE last_deleted_at TIMESTAMP;

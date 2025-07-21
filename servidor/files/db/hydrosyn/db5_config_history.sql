@@ -37,7 +37,7 @@ BEGIN
     DECLARE config_min_value INT UNSIGNED ;
     DECLARE config_max_value INT UNSIGNED ;
     DECLARE last_new_value INT UNSIGNED;
-
+  DECLARE msg TEXT;
     -- Get min and max allowed values from config table
     SELECT min_value, max_value INTO config_min_value, config_max_value 
     FROM config 
@@ -83,7 +83,7 @@ BEFORE DELETE ON config_history
 FOR EACH ROW
 BEGIN
     DECLARE latest_history_id INT UNSIGNED ;
-
+  DECLARE msg TEXT;
     -- Get the most recent record ID for this config_id
     SELECT MAX(id) INTO latest_history_id 
     FROM config_history 
