@@ -30,7 +30,7 @@ async def get_old_cookie_token_limit_hour_from_db() -> int:
         engine = DBEngine.get_engine()
         async with engine.connect() as conn:
             result = await conn.execute(
-                text("SELECT value, min_value, max_value FROM config WHERE id = 7")
+                text("SELECT value, min_value, max_value FROM config WHERE id = 5")
             )
             row =  result.fetchone()
 
@@ -46,6 +46,7 @@ async def get_old_cookie_token_limit_hour_from_db() -> int:
     logger.info(f"Using default old cookie/token rotation time limit")
     return DEFAULT_HOUR_ROTATION
 
+'''
 async def get_jwt_rotation_time_from_db() -> tuple[int, int]:
     default_access_ttl = 3600  # 1 hour 
     default_refresh_ttl = 7 * 86400  # 7 days
@@ -84,5 +85,6 @@ async def get_jwt_rotation_time_from_db() -> tuple[int, int]:
     
 
        
+'''
 
  

@@ -317,7 +317,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         return hashlib.sha256(device_str.encode()).hexdigest()
 
     async def _get_valid_session_id(self, request: Request, current_key: str, old_key: str) -> Optional[Dict[str, Any]]:
-        session_cookie = request.cookies.get("session_id")
+        session_cookie = request.cookies.get("hydrosyn_session_id")
         logger.debug(f"Cookie recibida: {session_cookie}") 
         if not session_cookie:
             logger.debug("No se encontró cookie de sesión")
