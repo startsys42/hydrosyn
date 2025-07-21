@@ -1638,6 +1638,7 @@ BEGIN
 END$$
 DELIMITER ;
 
+DELIMITER $$
 CREATE PROCEDURE reorganize_username_history_ids()
 BEGIN
     DECLARE done INT DEFAULT FALSE;
