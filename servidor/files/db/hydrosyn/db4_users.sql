@@ -1185,6 +1185,7 @@ CREATE TABLE IF NOT EXISTS username_blacklist_history (
         ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
+DELIMITER $$
 CREATE TRIGGER trg_prevent_delete_username_blacklist_history
 BEFORE DELETE ON username_blacklist_history
 FOR EACH ROW
@@ -1207,6 +1208,7 @@ BEGIN
     END IF;
 END$$
 
+DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE reorganize_username_blacklist_history_ids()

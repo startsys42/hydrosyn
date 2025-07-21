@@ -45,16 +45,18 @@ BEGIN
 
     -- Validate old_value is within allowed range
    IF NEW.old_value < config_min_value OR NEW.old_value > config_max_value THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = CONCAT('Config history old_value is outside allowed range (min: ', 
+         SET msg =CONCAT('Config history old_value is outside allowed range (min: ', 
                                  config_min_value, ', max: ', config_max_value, ')');
+                                 SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = msg;
     END IF;
 
     -- Validate new_value is within allowed range
     IF NEW.new_value < config_min_value OR NEW.new_value > config_max_value THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = CONCAT('Config history new_value is outside allowed range (min: ', 
+        SET msg = CONCAT('Config history new_value is outside allowed range (min: ', 
                                  config_min_value, ', max: ', config_max_value, ')');
+                                 SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = msg;
     END IF;
 
     SELECT new_value INTO last_new_value
@@ -66,9 +68,10 @@ LIMIT 1;
 -- If there is a previous record, validate old_value = last_new_value
 IF last_new_value IS NOT NULL THEN
     IF NEW.old_value <> last_new_value THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = CONCAT('The old_value (', NEW.old_value, 
+        SET msg = CONCAT('The old_value (', NEW.old_value, 
                                  ') must be equal to the last recorded new_value (', last_new_value, ') for config_id ', NEW.config_id);
+                                 SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = msg;
     END IF;
 END IF;
 END$$
@@ -88,9 +91,10 @@ BEGIN
 
     -- Prevent deletion if this is the most recent record
 IF OLD.id = latest_history_id THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = CONCAT('Cannot delete the most recent configuration history record for config_id: ', 
+        SET msg = CONCAT('Cannot delete the most recent configuration history record for config_id: ', 
                                 OLD.config_id);
+                                SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = msg;
     END IF;
 END$$
 
