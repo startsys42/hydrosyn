@@ -766,6 +766,7 @@ BEGIN
 END$$
 DELIMITER ;
 
+DELIMITER $$
 CREATE PROCEDURE reorganize_user_roles_history_ids()
 BEGIN
     DECLARE done INT DEFAULT FALSE;
