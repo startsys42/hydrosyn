@@ -33,7 +33,7 @@ BEGIN
     ORDER BY changed_at DESC, id DESC
     LIMIT 1;
 
-    IF NEW.email = last_email THEN
+    IF last_email IS NOT NULL AND NEW.email = last_email THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'The email is the same as the most recently stored email.';
     END IF;
@@ -41,7 +41,7 @@ END$$
 
 DELIMITER ;
 
-DELIMITER //
+DELIMITER $$
 CREATE TRIGGER trg_notification_email_history_delete
 BEFORE DELETE ON notification_email_history
 FOR EACH ROW
@@ -52,14 +52,14 @@ BEGIN
     ORDER BY changed_at DESC, id DESC
     LIMIT 1;
 
-    IF latest_id = OLD.id THEN      
+    IF latest_id IS NOT NULL AND latest_id = OLD.id THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Cannot delete the latest email change record for a user.';
     END IF;
-END;
+END$$
 DELIMITER ;
 
-DELIMITER //
+DELIMITER $$
 CREATE TRIGGER trg_notification_email_history_retain
 BEFORE DELETE ON notification_email_history
 FOR EACH ROW
@@ -110,11 +110,11 @@ BEGIN
         IF old_id != new_id THEN
             -- Check for ID conflict
             SET @id_exists = 0;
-            SELECT COUNT(*) INTO @id_exists FROM roles WHERE id = new_id;
+            SELECT COUNT(*) INTO @id_exists FROM notification_email_history WHERE id = new_id;
 
             IF @id_exists = 0 THEN
                 -- Update the ID
-                UPDATE roles SET id = new_id WHERE id = old_id;
+                UPDATE notification_email_history SET id = new_id WHERE id = old_id;
                 SET update_count = update_count + 1;
             END IF;
         END IF;

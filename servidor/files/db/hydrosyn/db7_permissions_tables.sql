@@ -564,7 +564,7 @@ BEGIN
 END$$
 
 DELIMITER ;
-
+DELIMITER $$
 
 CREATE TRIGGER trg_prevent_delete_role_permissions_history_before_time
 BEFORE DELETE ON role_permissions_history   
@@ -583,7 +583,7 @@ BEGIN
 END$$
 DELIMITER ;
 
-
+DELIMITER $$
 CREATE PROCEDURE reorganize_role_permissions_history_ids()
 BEGIN
     DECLARE done INT DEFAULT FALSE;
@@ -657,7 +657,7 @@ CREATE TABLE user_roles (
         ON UPDATE CASCADE
 ); 
 
-
+DELIMITER $$
 CREATE TRIGGER trg_block_insert_user_roles
 BEFORE INSERT ON user_roles
 FOR EACH ROW
@@ -676,6 +676,10 @@ BEGIN
     END IF;
 END$$
 
+DELIMITER ;
+
+DELIMITER $$
+
 CREATE TRIGGER trg_block_delete_user_roles
 BEFORE DELETE ON user_roles
 FOR EACH ROW
@@ -688,6 +692,8 @@ BEGIN
         SET MESSAGE_TEXT = 'Cannot delete the admin role from a user.';
     END IF;
 END$$
+
+DELIMITER ;
 
 CREATE TABLE user_roles_history (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
