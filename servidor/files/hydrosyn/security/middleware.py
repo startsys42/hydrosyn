@@ -204,6 +204,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         return RedirectResponse(url="/web/login")
                     else:
                         response = await call_next(request)
+                        succes=False
                         if request.url.path == "/web/change-lang-theme":
                             
 
@@ -216,71 +217,30 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                                 new_lang=request.state.language,
                                 new_theme=request.state.theme
                             )
-                        if hasattr(request.state, "blacklist"):
-                            if request.state.blacklist == True:
-                                if request.url.path == "/web/login":
-                                    create_user_notification(
-                                        notification_id=5,  # ID de la notificación de bloqueo
-                                        username=request.state.username,
-                                        ip=client_ip,
-                                        date=datetime.now(),
-                                    )
-                                
-                                elif request.url.path == "/web/recover-password":
-                                    create_user_notification(
-                                        notification_id=6,  # ID de la notificación de bloqueo
-                                        username=request.state.username,
-                                        ip=client_ip,
-                                        date=datetime.now(),
-                                    )
-                        if hasattr(request.state, "user_exist"):
-                            if request.state.user_exist == True:
-                                if hasattr(request.state, "is_active"):
-                                    if request.state.is_active != True:
-                                        if request.url.path == "/web/login":
-                                            create_user_notification(
-                                                notification_id=7,  # ID de la notificación de cuenta inactiva
-                                                username=request.state.username,
-                                                ip=client_ip,
-                                                date=datetime.now(),
-                                            )
-                                        elif request.url.path == "/web/recover-password":
-                                            create_user_notification(
-                                                notification_id=8,  # ID de la notificación de cuenta inactiva
-                                                username=request.state.username,
-                                                ip=client_ip,
-                                                date=datetime.now(),
-                                            )
-                                    else:
-                                        if hasattr(request.state, "hash"):
-                                            if request.state.hash == True:
-                                                if request.url.path == "/web/login":
-                                                    create_user_notification(
-                                                        notification_id=9,  # ID de la notificación de hash incorrecto
-                                                        username=request.state.username,
-                                                        ip=client_ip,
-                                                        date=datetime.now(),
-                                                    )
-                                                elif request.url.path == "/web/recover-password":
-                                                    create_user_notification(
-                                                        notification_id=10,  # ID de la notificación de hash incorrecto
-                                                        username=request.state.username,
-                                                        ip=client_ip,
-                                                        date=datetime.now(),
-                                                    )
-                            else:
-                                elif hasattr(request.state, 
-                                
-                            
-                        
-                                
-                            
-                        if  request.state.blacklist == True:
-                            request.state.user_exist = False
-                            request.state.is_active = True
-                            request.state.hash = True
-                            request.state.csrf = False
-                            request.state.email_exist = True
+                            #el di el time
+                        if hasattr(request.state, 'success'):
+                            if request.state.success:
+                                success=True
+                        if hasattr(request.state, 'user_id'):
+                            user_id = request.state.user_id if hasattr(request.state, 'user_id') else None
+                        if hasattr(request.state, 'date'):
+                            date = request.state.date if hasattr(request.state, 'date') else None
+                        await insert_login_attempts_in_db(
+                        session_id=session_id,
+                        user_id=user_id,
+                        ip_address=client_ip,
+                        success=success,
+                        page=path,
+                        http_method=method,
+                        attempt_time=date,
+                        user_agent=user_agent,
+                        ram_gb=float(device_info.ram) if device_info.ram else None,
+                        cpu_cores=int(device_info.cores) if device_info.cores else None,
+                        cpu_architecture=device_info.arch,
+                        gpu_info=device_info.gpu,
+                        device_os=device_info.os,
+                        recovery=recovery,
+                    )
                         return response
                 else:
                     if request.url.path not in [ "/web/login","/web/recover-password", "/web/login-two", "/web/recover-password-two","/"]:

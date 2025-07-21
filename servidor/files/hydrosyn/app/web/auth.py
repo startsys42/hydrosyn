@@ -16,6 +16,8 @@ from db.db_users import delete_session_in_db, is_in_blacklist_from_db, generate_
 from pydantic import BaseModel, EmailStr
 from security.two_steps import generate_two_step_token, validate_two_step_token , remove_two_step_token
 from db.db_auth import get_user_login_from_db
+from servidor.files.hydrosyn.security.email_messages import email_login_error
+from servidor.files.hydrosyn.services.notifications import create_user_notification
 
 class UserInput(BaseModel):
     email: EmailStr
@@ -55,9 +57,17 @@ async def login_post(
         return PlainTextResponse(str(e), status_code=400)
     
     request.state.username = username
+    request.state.date= datetime.now()
    # aquid ebo guardar notificacion
     if await is_in_blacklist_from_db(username):
         request.state.blacklist = True
+        create_user_notification(
+                                        notification_id=5,  # ID de la notificación de bloqueo
+                                        username=request.state.username,
+                                        ip=client_ip,
+                                        date=request.state.date,
+                                    )
+                                
        
         error_key = "account_not_exists"  # o "invalid_csrf"
         error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
@@ -89,12 +99,15 @@ async def login_post(
     else:
 
         request.state.user_exist = True
+        request.state.user_id = user_data["id"]
+        request.state.email = user_data["email"]
         if user_data["is_active"]==True:
             request.state.is_active = True
         # si usuario cincide epro contraseña noe nvair emnsaje notifiacion
             if user_data["hash"]=="same":
                 request.state.hash = True
                 if not validate_csrf_token(csrf_token):
+                    email_login_error(user_data["email"], user_data["language"], request.client.host)
                     request.state.csrf = False
                     error_key = "invalid_csrf"  # o "invalid_csrf"
                     error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
@@ -108,6 +121,7 @@ async def login_post(
                     }, status_code=403)
                 else:
                     request.state.csrf = True
+                    request.state.success = True
                     if user_data["two_fa"] is False:
                         device_info = {
                             "ram": request.headers.get("x-device-ram"),
@@ -175,6 +189,7 @@ async def login_post(
                   
                     
             else:
+                email_login_error(user_data["email"], user_data["language"], request.client.host)
                 request.state.hash = False
                 error_key = "credentials"
                 error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
@@ -188,6 +203,12 @@ async def login_post(
                 }, status_code=403)
         else:
             request.state.is_active = False
+            create_user_notification(
+                                                notification_id=7,  # ID de la notificación de cuenta inactiva
+                                                username=request.state.username,
+                                                ip=client_ip,
+                                                date=request.state.date,
+                                            )
             error_key = "credentials"
             error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
             return templates.TemplateResponse("login", {
@@ -278,9 +299,16 @@ async def recover_password_post(request: Request,username: str = Form(...), emai
     except ValueError as e:
         return PlainTextResponse(str(e), status_code=400)
     request.state.username = username
+    request.state.date= datetime.now()
     if await is_in_blacklist_from_db(username):
         request.state.blacklist = True
-        
+      
+        create_user_notification(
+                                        notification_id=6,  # ID de la notificación de bloqueo
+                                        username=request.state.username,
+                                        ip=client_ip,
+                                        date=request.state.date,
+                                    )
         error_key = "account_not_exists"  # o "invalid_csrf"
         error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
         return templates.TemplateResponse("recover-password", {
@@ -304,10 +332,12 @@ async def recover_password_post(request: Request,username: str = Form(...), emai
             "texts": prefs["texts"],
             "lang": prefs["lang"],
             "theme": prefs["theme"],
-            "csrf_token": csrf_token,
+            "csrf_token": generate_csrf_token(),
             "error": error_message
         }, status_code=403)
     else:
+        request.state.user_id = user_data["id"]
+        request.state.email = user_data["email"]
         if user_data["username"]=="exist_username":
             request.state.user_exist = True
         else:
@@ -319,8 +349,18 @@ async def recover_password_post(request: Request,username: str = Form(...), emai
         if user_data["is_active"]==True:
             request.state.is_active = True
         else:
+            create_user_notification(
+                notification_id=8,  # ID de la notificación de cuenta inactiva
+                username=request.state.username,
+                ip=client_ip,
+                date=request.state.date,
+            )
             request.state.is_active = False
         if request.state.user_exist==False or request.state.email_exist==False or request.state.is_active==False:
+            if request.state.user_exist==False and request.state.email_exist==True:
+                email_password_recovery_error(email, user_data["language"], request.client.host)
+            elif request.state.email_exist==False and request.state.user_exist==True:
+                email_password_recovery_error(user_data["email"], user_data["language"], request.client.host)
             error_key = "credentials"
             error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
             return templates.TemplateResponse("recover-password", {
@@ -328,13 +368,14 @@ async def recover_password_post(request: Request,username: str = Form(...), emai
                 "texts": prefs["texts"],
                 "lang": prefs["lang"],
                 "theme": prefs["theme"],
-                "csrf_token": csrf_token,
+                "csrf_token": generate_csrf_token(),
                 "error": error_message
             }, status_code=403)
             
         else:
             if not validate_csrf_token(csrf_token):
                     request.state.csrf = False
+                    email_password_recovery_error(email, user_data["language"], request.client.host)
                     error_key = "invalid_csrf"  # o "invalid_csrf"
                     error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
                     return templates.TemplateResponse("recover-password", {
@@ -347,6 +388,7 @@ async def recover_password_post(request: Request,username: str = Form(...), emai
                     }, status_code=403)
             else:
                 request.state.csrf = True
+                request.state.success = True
                 if user_data["two_fa"] is False:
                     device_info = {
                             "ram": request.headers.get("x-device-ram"),

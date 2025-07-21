@@ -13,6 +13,7 @@ async def insert_login_attempts_in_db(
     success: bool,
     page: str, 
     http_method: Literal['GET', 'POST'],
+    attempt_time: datetime | None = None,
     user_agent: str | None = None,
     ram_gb: int | float | None = None,
     cpu_cores: int | None = None,
@@ -37,7 +38,8 @@ async def insert_login_attempts_in_db(
             device_os,
             recovery,
             page,              
-            http_method
+            http_method,
+            attempt_time
         ) VALUES (
             :user_id,
             :session_id,
@@ -51,7 +53,8 @@ async def insert_login_attempts_in_db(
             :device_os,
             :recovery,
             :page,              
-            :http_method  
+            :http_method,
+            :attempt_time
         )
     """)
     
@@ -68,7 +71,8 @@ async def insert_login_attempts_in_db(
         "device_os": device_os,
         "recovery": recovery,
         "page": page,                     
-        "http_method": http_method.upper()
+        "http_method": http_method.upper(),
+        "attempt_time": attempt_time
     }
     try:
         engine = DBEngine.get_engine()
