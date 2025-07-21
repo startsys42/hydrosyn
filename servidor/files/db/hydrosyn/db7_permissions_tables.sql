@@ -663,10 +663,11 @@ BEFORE INSERT ON user_roles
 FOR EACH ROW
 BEGIN
     DECLARE role_name VARCHAR(50);
+    DECLARE user_count INT;
     SELECT name INTO role_name FROM roles WHERE id = NEW.role_id;
 
     IF role_name = 'admin' THEN
-        DECLARE user_count INT;
+        
         SELECT COUNT(*) INTO user_count FROM user_roles WHERE role_id = NEW.role_id;
 
         IF user_count > 0 THEN

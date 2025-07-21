@@ -55,7 +55,7 @@ SET u.created_by = sysUser.id;
 
 -- Reactivar chequeo de claves foráneas
 SET FOREIGN_KEY_CHECKS = 1;
-DELIMITER //
+DELIMITER $$
 CREATE TRIGGER prevent_system_update
 BEFORE UPDATE ON users
 FOR EACH ROW
@@ -63,8 +63,9 @@ BEGIN
     IF OLD.username = 'system' THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'The system user cannot be modified';
     END IF;
-END;
-//
+END$$
+
+
 
 CREATE TRIGGER prevent_system_delete
 BEFORE DELETE ON users
@@ -73,8 +74,8 @@ BEGIN
     IF OLD.username = 'system' THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'The system user cannot be deleted';
     END IF;
-END;
-//
+END$$
+
 DELIMITER ;
 
 
@@ -993,9 +994,7 @@ BEGIN
         SET MESSAGE_TEXT = 'Cannot delete record before retention period expires.';
     END IF;
 END$$
-
-
-
+DELIMITER ;
 
 CREATE TABLE IF NOT EXISTS password_special_chars (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
@@ -1067,6 +1066,8 @@ BEGIN
     END IF;
 END$$
 DELIMITER ;
+
+DELIMITER $$
 CREATE PROCEDURE reorganize_password_special_chars_history_ids()
 BEGIN
     DECLARE done INT DEFAULT FALSE;
