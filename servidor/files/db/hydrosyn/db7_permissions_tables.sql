@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS roles (
 INSERT INTO roles (name, created_by)
 VALUES (
     'admin',
-    (SELECT id FROM users WHERE name = 'system')
+    (SELECT id FROM users WHERE username = 'system')
 );
 
 
@@ -437,14 +437,14 @@ CROSS JOIN permissions p
 CROSS JOIN users u
 WHERE r.name = 'admin' AND u.username = 'system';
 
-
+DELIMITER $$
 
 CREATE TRIGGER trg_block_role_permissions_delete
 BEFORE DELETE ON role_permissions
 FOR EACH ROW
 BEGIN
     DECLARE role_name VARCHAR(50);
-    SELECT name INTO role_name FROM roles WHERE id = OLD.role_id;
+    SELECT name INTO role_name FROM roles WHERE id = OLD.role_id AND permission_id = OLD.permission_id;
     
     IF role_name = 'admin' THEN
         SIGNAL SQLSTATE '45000'
@@ -452,12 +452,13 @@ BEGIN
     END IF;
 END$$
 
+
 CREATE TRIGGER trg_block_role_permissions_update
 BEFORE UPDATE ON role_permissions
 FOR EACH ROW
 BEGIN
     DECLARE role_name VARCHAR(50);
-    SELECT name INTO role_name FROM roles WHERE id = OLD.role_id;
+    SELECT name INTO role_name FROM roles WHERE id = OLD.role_id AND permission_id = OLD.permission_id;
     
     IF role_name = 'admin' THEN
         SIGNAL SQLSTATE '45000'
@@ -465,6 +466,8 @@ BEGIN
     END IF;
 END$$
 
+
+DELIMITER ;
 DELIMITER $$
 CREATE PROCEDURE reorganize_role_permissions_ids()
 BEGIN

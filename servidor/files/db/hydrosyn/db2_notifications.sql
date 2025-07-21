@@ -3,7 +3,7 @@ USE hydrosyn_db;
 
 CREATE TABLE IF NOT EXISTS notifications (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    should_send_email BOOLEAN NOT NULL DEFAULT FALSE,
+    should_send_email BOOLEAN NOT NULL DEFAULT FALSE
 
 
        -- Control por notificación
