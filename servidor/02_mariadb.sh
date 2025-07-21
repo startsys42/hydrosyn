@@ -151,13 +151,14 @@ systemctl status mariadb
 
 echo -e "\e[32mMySQL asegurado correctamente.\e[0m"
 
-$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db1_config_tables.sql
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db1_config_groups.sql
 
-$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db2_users_tables.sql
-$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db3_notifications_tables.sql
-$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db4_systems_tables.sql
-$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db5_permissions_tables.sql
-$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db6_histories_reorganization_ai.sql
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db2_notifications.sql
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db3_config.sql
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db4_users.sql
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db5_config_history.sql
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db6_notifications_history.sql
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db7_permissions_tables.sql
 # Generar hash bcrypt con Python
 
 HASH_PASS=$(python3 -c "
@@ -174,18 +175,18 @@ print(ph.hash('$FIRST_USER_PASSWORD'))
 # SQL para crear el primer usuario admin
 SQL="
 USE hydrosyn_db;
-SET FOREIGN_KEY_CHECKS=0;
+
 INSERT INTO users (
-    id, username, email, password, is_active,
+     username, email, password, is_active,
     change_pass, delete_possible,
-    created_by, language, theme, use_2fa, twofa_secret
+    created_by, language, theme, use_2fa, twofa_secret, fa_verified, first_login
 )
 VALUES (
-    1, '$FIRST_USER', '$FIRST_USER_EMAIL', '$HASH_PASS', TRUE,
+     '$FIRST_USER', '$FIRST_USER_EMAIL', '$HASH_PASS', TRUE,
     FALSE, FALSE,
-    1, 'en', 'light', FALSE, NULL
+    1, 'en', 'light', FALSE, NULL, FALSE, TRUE
 );
-SET FOREIGN_KEY_CHECKS=1;
+
 "
 
 # Ejecutar el SQL

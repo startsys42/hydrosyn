@@ -1,45 +1,15 @@
-CREATE DATABASE IF NOT EXISTS hydrosyn_db CHARACTER SET utf8mb4 COLLATE  utf8mb4_bin;
 USE hydrosyn_db;
 
 
 CREATE TABLE IF NOT EXISTS notifications (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     should_send_email BOOLEAN NOT NULL DEFAULT FALSE,
-    
+
 
        -- Control por notificación
 
   
 );
-CREATE TABLE notification_email_history (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(100) NOT NULL,
-    lang_code ENUM('es', 'en') NOT NULL,
-    changed_by INT UNSIGNED NOT NULL,
-    changed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    
-    FOREIGN KEY (changed_by) REFERENCES users(id) 
-        ON DELETE RESTRICT 
-        ON UPDATE CASCADE
-) ENGINE=InnoDB;
-
-
-CREATE TABLE notification_history (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    notification_id INT UNSIGNED NOT NULL,
-    changed_by INT UNSIGNED NOT NULL,
-    changed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    should_send_email_old_value BOOLEAN NOT NULL,
-    
-    FOREIGN KEY (notification_id) REFERENCES notifications(id) 
-        ON DELETE RESTRICT
-        ON UPDATE RESTRICT,
-    FOREIGN KEY (changed_by) REFERENCES users(id) 
-        ON DELETE RESTRICT
-        ON UPDATE CASCADE
-) ENGINE=InnoDB;
-
-
 CREATE TABLE notification_translations (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     notification_id INT UNSIGNED NOT NULL,
@@ -53,29 +23,6 @@ template_text VARCHAR(255) NOT NULL,
 
     UNIQUE (notification_id, lang_code)
 );
-
-
-CREATE TABLE notification_events (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    notification_id INT UNSIGNED NOT NULL,         -- Tipo de notificación
-    user_id INT UNSIGNED NOT NULL,                 -- A qué usuario le afecta (target)
-   
-    lang_code ENUM('es', 'en') NOT NULL,
-    formatted_message VARCHAR(255) NOT NULL,               -- Texto listo para mostrar
-    extra_data JSON DEFAULT NULL,                  -- Información adicional (IP, intentos, etc.)
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    is_read BOOLEAN DEFAULT FALSE,
-    read_at DATETIME DEFAULT NULL,
-
-    FOREIGN KEY (notification_id) REFERENCES notifications(id)
-        ON DELETE RESTRICT ON UPDATE CASCADE,
-
-    FOREIGN KEY (user_id) REFERENCES users(id)
-        ON DELETE RESTRICT ON UPDATE CASCADE
-
-    
-);
-
 
 
 
@@ -129,3 +76,72 @@ INSERT INTO notifications (should_send_email) VALUES (FALSE);
 INSERT INTO notification_translations (notification_id, lang_code, description, subject, template_text) VALUES
 (8, 'es', 'Intento de recuperacion con usuario no activo', 'Intento de recuperación inactivo', 'El usuario inactivo {user} intentó recuperar contraseña desde la IP {ip}'),
 (8, 'en', 'Inactive user recovery attempt', 'Inactive Recovery Attempt', 'Inactive user {user} tried password recovery from IP {ip}');
+
+
+INSERT INTO notifications (should_send_email) VALUES (FALSE);
+INSERT INTO notification_translations (notification_id, lang_code, description, subject, template_text) VALUES
+(9, 'es', 'Primer inicio de sesión no realizado a tiempo', 'Inicio de sesión pendiente expirado', 'El usuario {user} no inició sesión por primera vez dentro del plazo permitido.'),
+(9, 'en', 'First login not completed on time', 'Pending First Login Expired', 'User {user} did not log in for the first time within the allowed time window.');
+
+DELIMITER $$
+
+CREATE TRIGGER trg_block_notifications_insert
+BEFORE INSERT ON notifications
+FOR EACH ROW
+BEGIN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Inserting into notifications is not allowed.';
+END$$
+
+CREATE TRIGGER trg_block_notifications_delete
+BEFORE DELETE ON notifications
+FOR EACH ROW
+BEGIN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Deleting from notifications is not allowed.';
+END$$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+CREATE TRIGGER trg_block_notification_translations_insert
+BEFORE INSERT ON notification_translations
+FOR EACH ROW
+BEGIN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Inserting into notification_translations is not allowed.';
+END$$
+
+CREATE TRIGGER trg_block_notification_translations_delete
+BEFORE DELETE ON notification_translations
+FOR EACH ROW
+BEGIN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Deleting from notification_translations is not allowed.';
+END$$
+
+CREATE TRIGGER trg_block_notification_translations_update
+BEFORE UPDATE ON notification_translations
+FOR EACH ROW
+BEGIN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Updating notification_translations is not allowed.';
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER trg_block_notifications_id_update
+BEFORE UPDATE ON notifications
+FOR EACH ROW
+BEGIN
+    IF NEW.id != OLD.id THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Updating the notification ID is not allowed.';
+    END IF;
+END$$
+
+DELIMITER ;
