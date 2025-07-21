@@ -41,7 +41,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
             logger.warning("1")
             response_for_cookie = Response()
             await self._create_new_session(request, response_for_cookie, current_key)
-            final_response = RedirectResponse(url="/web/auth/login", status_code=303)
+            final_response = RedirectResponse(url="/web/login", status_code=303)
             final_response.headers.update(response_for_cookie.headers)
             return final_response
         else:
