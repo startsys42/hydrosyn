@@ -15,7 +15,7 @@ CREATE TABLE  IF NOT EXISTS  users(
     created_by INT UNSIGNED NOT NULL,
     language ENUM('es', 'en') NOT NULL DEFAULT 'en',
     theme ENUM('dark', 'light') NOT NULL DEFAULT 'light',
-    timezone VARCHAR(50) DEFAULT 'UTC';
+    timezone VARCHAR(50) DEFAULT 'UTC',
     use_2fa BOOLEAN NOT NULL DEFAULT FALSE,
     fa_verified BOOLEAN NOT NULL DEFAULT FALSE,
     twofa_secret VARCHAR(32) UNIQUE,
