@@ -162,7 +162,6 @@ async def get_session_from_db(session_id: str, extend_validity: bool = True) -> 
                     s.device_os,
                     s.summary,
                     s.created_at,
-                    s.expires_at,
                     u.username,
                     u.email,
                     u.is_active,
@@ -193,9 +192,7 @@ async def get_session_from_db(session_id: str, extend_validity: bool = True) -> 
                 columns = row.keys()
                 session_data = {column: row[i] for i, column in enumerate(columns)}
                 
-                # Verificar si la sesión está técnicamente expirada pero dentro del margen
-                if extend_validity and session_data['expires_at'] < datetime.utcnow():
-                    logger.info(f"Session {session_id} is expired but within grace period")
+                
                 
                 return session_data
             
