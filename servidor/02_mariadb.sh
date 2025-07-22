@@ -193,6 +193,12 @@ VALUES (
     1, 'en', 'light', FALSE, NULL, FALSE, TRUE
 );
 
+INSERT INTO user_roles (
+    user_id, role_id, created_by
+) VALUES (
+    2, 1, 1
+);
+
 "
 
 # Ejecutar el SQL
