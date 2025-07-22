@@ -16,8 +16,8 @@ from db.db_users import delete_session_in_db, is_in_blacklist_from_db, generate_
 from pydantic import BaseModel, EmailStr
 from security.two_steps import generate_two_step_token, validate_two_step_token , remove_two_step_token
 from db.db_auth import get_user_login_from_db
-from servidor.files.hydrosyn.security.email_messages import email_login_error
-from servidor.files.hydrosyn.services.notifications import create_user_notification
+from security.email_messages import email_login_error
+from services.notifications import create_user_notification
 
 class UserInput(BaseModel):
     email: EmailStr

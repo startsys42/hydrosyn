@@ -60,7 +60,11 @@ def validate_password(username: str, password: str, policy: dict) -> bool:
     # Caracteres especiales
     list_special_chars=await get_special_chars_from_db()
     special_chars_pattern = f"[{re.escape(''.join(list_special_chars))}]"
+    pattern = f"^[a-zA-Z0-9{re.escape(allowed_special_chars)}]+$"
 
+    # Validar caracteres permitidos
+    if not re.fullmatch(pattern, password):
+        return False
     matches = re.findall(special_chars_pattern, password)
     if len(matches) < policy["min_special_chars"]:
         return False

@@ -1,10 +1,11 @@
 
 
 import re
-from typing import Optional, Tuple
+from typing import Optional, Tuple, List, Dict
 from sqlalchemy import text
 from db.db_engine import DBEngine  # Asegúrate de importar tu DBEngine
 from logger import logger
+from datetime import datetime
 
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
 

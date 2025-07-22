@@ -10,7 +10,7 @@ from db.db_config import get_cookie_rotation_time_from_db, get_old_cookie_token_
 from db.db_engine import DBEngine
 from security.middleware import AdvancedSessionMiddleware
 from dotenv import load_dotenv
-
+from services.notifications import create_user_notification
 from events.startup import on_startup
 from fastapi.responses import RedirectResponse
 
@@ -49,7 +49,7 @@ db_password  = get_most_recent_password(user_shadow_path, km)
 
 
 
-logger.info(f"Conectando a BD con: usuario={db_user}, password={'***' if password else 'VACÍO'}, host={db_host}, puerto={db_port}, bd={db_name}")
+logger.info(f"Conectando a BD con: usuario={db_user}, password={'***' if db_password else 'VACÍO'}, host={db_host}, puerto={db_port}, bd={db_name}")
 
 
 try:
