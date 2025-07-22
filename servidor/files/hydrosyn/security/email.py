@@ -10,19 +10,25 @@ from email.mime.text import MIMEText
 from email_validator import validate_email, EmailNotValidError
 from email.mime.multipart import MIMEMultipart
 
+from dotenv import load_dotenv
+
+load_dotenv(".env")
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
+EMAIL_SENDER = os.getenv("EMAIL_SENDER")
 CLIENT_SECRET_FILE = os.getenv("GMAIL_CLIENT_SECRET_FILE", "../secrets/gmail_credentials.json")
 TOKEN_FILE = os.getenv("GMAIL_TOKEN_FILE", "../secrets/gmail_token.json")
 
-def validate_email_address(email):
+
+
+async def validate_email_address(email):
     try:
         v = validate_email(email)
         return True
     except EmailNotValidError as e:
         return False
 
-def get_gmail_service():
+async def get_gmail_service():
     creds = None
     if os.path.exists(TOKEN_FILE):
         creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
@@ -34,7 +40,7 @@ def get_gmail_service():
     return build('gmail', 'v1', credentials=creds)
 
 
-def create_message(sender: str, to: list, subject: str, message_text: str, cc: list = None, bcc: list = None):
+async def create_message(sender: str, to: list, subject: str, message_text: str, cc: list = None, bcc: list = None):
     # Validaciones básicas
     if not sender or not to:
         raise ValueError("Sender and recipient(s) cannot be empty.")
@@ -81,7 +87,7 @@ def create_message(sender: str, to: list, subject: str, message_text: str, cc: l
     return {'raw': raw.decode()}
 
 
-def send_email(sender: str, to, subject: str, message_text: str, cc=None, bcc=None) -> bool:
+async def send_email(sender: str, to, subject: str, message_text: str, cc=None, bcc=None) -> bool:
     # Asegurarse que to, cc y bcc sean listas
     if isinstance(to, str):
         to = [to]

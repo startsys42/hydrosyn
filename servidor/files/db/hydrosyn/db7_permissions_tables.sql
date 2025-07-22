@@ -298,8 +298,8 @@ INSERT INTO permission_translations (permission_id, lang_code, name, description
 (15, 'es', 'Activar/desactivar usuarios', 'Permiso para activar o desactivar usuarios'),
 (15, 'en', 'Activate/deactivate users', 'Permission to activate or deactivate users'),
 
-(16, 'es', 'Cambiar contraseña usuario', 'Permiso para cambiar la contraseña de un usuario'),
-(16, 'en', 'Change user password', 'Permission to change user password'),
+(16, 'es', 'Cambiar contraseña y nombre usuario', 'Permiso para cambiar la contraseña y nombre de un usuario'),
+(16, 'en', 'Change user password and username', 'Permission to change user password and username'),
 
 (17, 'es', 'Activar/desactivar 2FA', 'Permiso para activar o desactivar la autenticación de dos factores'),
 (17, 'en', 'Activate/deactivate 2FA', 'Permission to activate or deactivate two-factor authentication'),

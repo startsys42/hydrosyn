@@ -1,7 +1,7 @@
 from db.db_engine import DBEngine  # Asegúrate que retorna AsyncEngine
 from logger import logger
 import random
-from typing import Optional, Union
+from typing import Optional, Union, Tuple
 from sqlalchemy.sql import text
 from fastapi import HTTPException, status
 

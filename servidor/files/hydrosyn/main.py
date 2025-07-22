@@ -6,7 +6,7 @@ import sys
 from logger import logger
 from security.secrets import get_most_recent_password, load_master_data
 from common.keys_managers import cookie_key_manager #, jwt_key_manager
-from db.db_config import get_cookie_rotation_time_from_db, get_old_cookie_token_limit_hour_from_db, get_jwt_rotation_time_from_db
+from db.db_config import get_cookie_rotation_time_from_db, get_old_cookie_token_limit_hour_from_db
 from db.db_engine import DBEngine
 from security.middleware import AdvancedSessionMiddleware
 from dotenv import load_dotenv
@@ -45,13 +45,15 @@ km, db_port = load_master_data(k_db_path)
 db_user = os.getenv("DB_USER")
 db_host = os.getenv("DB_HOST")
 db_name = os.getenv("DB_NAME")
-password  = get_most_recent_password(user_shadow_path, km)
+db_password  = get_most_recent_password(user_shadow_path, km)
+
+
 
 logger.info(f"Conectando a BD con: usuario={db_user}, password={'***' if password else 'VACÍO'}, host={db_host}, puerto={db_port}, bd={db_name}")
 
 
 try:
-    DBEngine.initialize_engine(db_user, password, db_host, db_port, db_name)
+    DBEngine.initialize_engine(db_user, db_password, db_host, db_port, db_name)
 except Exception as e:
     logger.error(f"Error initializing DB engine: {e}")
     sys.exit(1)
