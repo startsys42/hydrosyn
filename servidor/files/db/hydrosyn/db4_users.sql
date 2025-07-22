@@ -1181,7 +1181,6 @@ INSERT INTO username_blacklist (username) VALUES
 ('guest'),
 ('info'),
 ('contact'),
-('system'),
 ('null'),
 ('user'),
 ('users'),

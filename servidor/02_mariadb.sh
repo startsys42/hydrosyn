@@ -158,16 +158,16 @@ from zoneinfo import  available_timezones
 
 
 
-print('USE $DB_NAME;')
-print('INSERT INTO timezones (name) VALUES')
-
-values = []
-for tz_name in sorted(available_timezones()):
-    # Escapar comillas simples en nombres de zonas horarias
-    tz_name_escaped = tz_name.replace(\"'\", \"''\")
-    values.append(f\"('{tz_name_escaped}')\")
-
-print(',\n'.join(values) + ';')
+with open('timezones.sql', 'w') as f:
+    f.write('USE $DB_NAME;\n')
+    f.write('INSERT INTO timezones (name) VALUES\n')
+    
+    values = []
+    for tz_name in sorted(available_timezones()):
+        tz_name_escaped = tz_name.replace(\"'\", \"\\\\'\")  # Escapar comillas para SQL
+        values.append(f\"('{tz_name_escaped}')\")
+    
+    f.write(',\\n'.join(values) + ';\\n')
 "
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< timezones.sql 2>> errores.txt
 
