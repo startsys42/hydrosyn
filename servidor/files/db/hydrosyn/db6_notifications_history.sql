@@ -321,7 +321,7 @@ CREATE TABLE notification_events (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     is_read BOOLEAN DEFAULT FALSE,
     read_at DATETIME DEFAULT NULL,
-CHECK (is_read = TRUE AND read_at IS NOT NULL) OR (is_read = FALSE AND read_at IS NULL),
+CHECK ((is_read = TRUE AND read_at IS NOT NULL) OR (is_read = FALSE AND read_at IS NULL)),
 CHECK (read_at IS NULL OR read_at >= created_at), -- read_at debe ser NULL o posterior a created_at
     FOREIGN KEY (notification_id) REFERENCES notifications(id)
         ON DELETE RESTRICT ON UPDATE CASCADE,
