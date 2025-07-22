@@ -15,10 +15,16 @@ CREATE TABLE  IF NOT EXISTS  users(
     created_by INT UNSIGNED NOT NULL,
     language ENUM('es', 'en') NOT NULL DEFAULT 'en',
     theme ENUM('dark', 'light') NOT NULL DEFAULT 'light',
+    timezone VARCHAR(50) DEFAULT 'UTC';
     use_2fa BOOLEAN NOT NULL DEFAULT FALSE,
     fa_verified BOOLEAN NOT NULL DEFAULT FALSE,
     twofa_secret VARCHAR(32) UNIQUE,
     
+    CONSTRAINT fk_usuario_timezone
+    FOREIGN KEY (timezone)
+    REFERENCES timezones(name)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT;
      CONSTRAINT chk_username_alphanumeric CHECK (username REGEXP '^[a-zA-Z0-9]+$'),
      CONSTRAINT twofa_consistency CHECK (
         (use_2fa = FALSE AND twofa_secret IS NULL) OR

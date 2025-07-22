@@ -91,3 +91,9 @@ CREATE TRIGGER trg_block_update_config_groups_translations
 BEFORE UPDATE ON config_group_translations
 FOR EACH ROW
 SIGNAL SQLSTATE '23000' SET MESSAGE_TEXT = 'Updation from the config_group_translations table is prohibited';
+
+
+CREATE TABLE timezones (
+    name VARCHAR(50) NOT NULL PRIMARY KEY
+  
+);

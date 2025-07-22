@@ -133,7 +133,7 @@ modify_param_in_mysqld "bind-address" "$DB_IP"
 modify_param_in_mysqld "sql_mode" "STRICT_ALL_TABLES"
 
 
-
+modify_param_in_mysqld "default_time_zone" "+00:00"
 
 
 
@@ -153,11 +153,31 @@ echo -e "\e[32mMySQL asegurado correctamente.\e[0m"
 
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db1_config_groups.sql  2>> errores.txt
 
+python3 -c "
+from zoneinfo import  available_timezones
+
+
+
+print('USE $DB_NAME;')
+print('INSERT INTO timezones (name) VALUES')
+
+values = []
+for tz_name in sorted(available_timezones()):
+    # Escapar comillas simples en nombres de zonas horarias
+    tz_name_escaped = tz_name.replace(\"'\", \"''\")
+    values.append(f\"('{tz_name_escaped}')\")
+
+print(',\n'.join(values) + ';')
+"
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< timezones.sql 2>> errores.txt
+
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db2_notifications.sql  2>> errores.txt
 
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db3_config.sql  2>> errores.txt
 
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db4_users.sql  2>> errores.txt
+
+
 
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db5_config_history.sql  2>> errores.txt
 
