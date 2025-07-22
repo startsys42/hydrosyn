@@ -190,6 +190,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         await insert_login_attempts_in_db(
                         session_id=session_id,
                         ip_address=client_ip,
+                        user_id=None,
                         success=False,
                         page=path,
                         http_method=method,

@@ -173,7 +173,7 @@ async def get_session_from_db(session_id: str, extend_validity: bool = True) -> 
                 FROM sessions s
                 JOIN users u ON s.user_id = u.id
                 WHERE s.session_id = :session_id 
-                AND s.expires_at > :validation_time
+               
             """)
             
             # Determinar el tiempo de validación
