@@ -24,7 +24,7 @@ CREATE TABLE  IF NOT EXISTS  users(
     FOREIGN KEY (timezone)
     REFERENCES timezones(name)
     ON UPDATE CASCADE
-    ON DELETE RESTRICT;
+    ON DELETE RESTRICT,
      CONSTRAINT chk_username_alphanumeric CHECK (username REGEXP '^[a-zA-Z0-9]+$'),
      CONSTRAINT twofa_consistency CHECK (
         (use_2fa = FALSE AND twofa_secret IS NULL) OR
