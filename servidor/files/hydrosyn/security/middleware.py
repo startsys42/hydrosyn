@@ -17,7 +17,7 @@ from pydantic import BaseModel
 from fastapi import HTTPException
 from services.notifications import create_user_notification
 
-f
+
 #crear notificaion robo cookie admin y usuario, controlar lo del apsswords, lo del name, 
 
 class DeviceInfo(BaseModel):
@@ -221,6 +221,8 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                                 new_theme=request.state.theme
                             )
                             #el di el time
+                        user_id = None
+                        date=None
                         if hasattr(request.state, 'success'):
                             if request.state.success:
                                 success=True
@@ -357,6 +359,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
             return None
  
     async def update_cookie_lang_theme(
+        self,
         request: Request,
         response: Response,
         current_key: str,
