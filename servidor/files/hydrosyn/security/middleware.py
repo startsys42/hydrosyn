@@ -15,7 +15,9 @@ from db.db_middleware import get_session_id_exists_from_db, get_session_from_db,
 from db.db_users import delete_session_in_db
 from pydantic import BaseModel
 from fastapi import HTTPException
+from services.notifications import create_user_notification
 
+f
 #crear notificaion robo cookie admin y usuario, controlar lo del apsswords, lo del name, 
 
 class DeviceInfo(BaseModel):
@@ -188,20 +190,20 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     
                     if request.url.path not in [ "/web/login","/web/recover-password", "/web/login-two", "/web/recover-password-two","/","/web/device-info","/web/change-lang-theme"]:
                         await insert_login_attempts_in_db(
-                        session_id=session_id,
-                        ip_address=client_ip,
-                        user_id=None,
-                        success=False,
-                        page=path,
-                        http_method=method,
-                        user_agent=user_agent,
-                        ram_gb=float(device_info.ram) if device_info.ram else None,
-                        cpu_cores=int(device_info.cores) if device_info.cores else None,
-                        cpu_architecture=device_info.arch,
-                        gpu_info=device_info.gpu,
-                        device_os=device_info.os,
-                        recovery=recovery,
-                    )
+                            session_id=session_id,
+                            ip_address=client_ip,
+                            user_id=None,
+                            success=False,
+                            page=path,
+                            http_method=method,
+                            user_agent=user_agent,
+                            ram_gb=float(device_info.ram) if device_info.ram else None,
+                            cpu_cores=int(device_info.cores) if device_info.cores else None,
+                            cpu_architecture=device_info.arch,
+                            gpu_info=device_info.gpu,
+                            device_os=device_info.os,
+                            recovery=recovery,
+                        )
                         return RedirectResponse(url="/web/login")
                     else:
                         response = await call_next(request)
@@ -227,21 +229,21 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         if hasattr(request.state, 'date'):
                             date = request.state.date if hasattr(request.state, 'date') else None
                         await insert_login_attempts_in_db(
-                        session_id=session_id,
-                        user_id=user_id,
-                        ip_address=client_ip,
-                        success=success,
-                        page=path,
-                        http_method=method,
-                        attempt_time=date,
-                        user_agent=user_agent,
-                        ram_gb=float(device_info.ram) if device_info.ram else None,
-                        cpu_cores=int(device_info.cores) if device_info.cores else None,
-                        cpu_architecture=device_info.arch,
-                        gpu_info=device_info.gpu,
-                        device_os=device_info.os,
-                        recovery=recovery,
-                    )
+                            session_id=session_id,
+                            user_id=user_id,
+                            ip_address=client_ip,
+                            success=success,
+                            page=path,
+                            http_method=method,
+                            attempt_time=date,
+                            user_agent=user_agent,
+                            ram_gb=float(device_info.ram) if device_info.ram else None,
+                            cpu_cores=int(device_info.cores) if device_info.cores else None,
+                            cpu_architecture=device_info.arch,
+                            gpu_info=device_info.gpu,
+                            device_os=device_info.os,
+                            recovery=recovery,
+                        )
                         return response
                 else:
                     if request.url.path not in [ "/web/login","/web/recover-password", "/web/login-two", "/web/recover-password-two","/"]:
@@ -354,56 +356,56 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     return None
             return None
  
-async def update_cookie_lang_theme(
-    request: Request,
-    response: Response,
-    current_key: str,
-    old_key: str | None = None,
-    new_lang: str = "en",
-    new_theme: str = "light"
-) -> None:
-    
+    async def update_cookie_lang_theme(
+        request: Request,
+        response: Response,
+        current_key: str,
+        old_key: str | None = None,
+        new_lang: str = "en",
+        new_theme: str = "light"
+    ) -> None:
+        
 
-    session_cookie = request.cookies.get("hydrosyn_session_id")
-    if not session_cookie:
-        logger.warning("No session cookie found")
-        raise HTTPException(
-            status_code=401,  # or 400 if you prefer
-            detail="Session cookie not found"
-        )
+        session_cookie = request.cookies.get("hydrosyn_session_id")
+        if not session_cookie:
+            logger.warning("No session cookie found")
+            raise HTTPException(
+                status_code=401,  # or 400 if you prefer
+                detail="Session cookie not found"
+            )
 
-    try:
-        signer = Signer(current_key)
-        data_str = signer.unsign(session_cookie).decode()
-    except BadSignature:
-        if old_key:
-            try:
-                signer = Signer(old_key)
-                data_str = signer.unsign(session_cookie).decode()
-            except BadSignature:
+        try:
+            signer = Signer(current_key)
+            data_str = signer.unsign(session_cookie).decode()
+        except BadSignature:
+            if old_key:
+                try:
+                    signer = Signer(old_key)
+                    data_str = signer.unsign(session_cookie).decode()
+                except BadSignature:
+                    return
+            else:
                 return
-        else:
+
+        try:
+            data = json.loads(data_str)
+        except json.JSONDecodeError:
             return
 
-    try:
-        data = json.loads(data_str)
-    except json.JSONDecodeError:
-        return
+        # Actualiza idioma y tema
+        data["language"] = new_lang
+        data["theme"] = new_theme
 
-    # Actualiza idioma y tema
-    data["language"] = new_lang
-    data["theme"] = new_theme
+        # Vuelve a firmar y guardar en cookie
+        new_signed = Signer(current_key).sign(json.dumps(data).encode()).decode()
+        days = await get_cookie_expired_time_from_db()
 
-    # Vuelve a firmar y guardar en cookie
-    new_signed = Signer(current_key).sign(json.dumps(data).encode()).decode()
-    days = await get_cookie_expired_time_from_db()
-
-    response.set_cookie(
-        key="hydrosyn_session_id",
-        value=new_signed,
-        httponly=True,
-        secure=False,
-        path="/",
-        samesite="Lax",
-        max_age=days * 86400
-    )
+        response.set_cookie(
+            key="hydrosyn_session_id",
+            value=new_signed,
+            httponly=True,
+            secure=False,
+            path="/",
+            samesite="Lax",
+            max_age=days * 86400
+        )

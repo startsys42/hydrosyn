@@ -1,3 +1,4 @@
+
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -15,6 +16,7 @@ from events.startup import on_startup
 from fastapi.responses import RedirectResponse
 
 
+from datetime import datetime, timezone
 # Importamos routers
 from app.web import auth as web_auth
 from app.web import config as web_config
@@ -122,7 +124,7 @@ async def startup_event():
 
 
 
-import datetime
+
 
 logger.info("Starting application...")
-create_user_notification(notification_id=1, date=datetime.datetime.now())
+create_user_notification(notification_id=1, date=datetime.now(timezone.utc))
