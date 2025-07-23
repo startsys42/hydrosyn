@@ -17,7 +17,6 @@ async def create_user_notification( notification_id: int, **kwargs):
     date = kwargs.get('date', None)
     status = kwargs.get('status', None)
     context = {
-    "date": date,
     "user": username,
     "ip": ip,
     "old_email": old_email,

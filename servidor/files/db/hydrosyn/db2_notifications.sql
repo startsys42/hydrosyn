@@ -28,8 +28,8 @@ template_text VARCHAR(255) NOT NULL,
 
 INSERT INTO notifications (should_send_email) VALUES (FALSE);
 INSERT INTO notification_translations (notification_id, lang_code, description, subject, template_text) VALUES
-(1, 'es', 'Arranque de servidor hydrosyn', 'Servidor Hydrosyn iniciado', 'El servidor Hydrosyn se ha iniciado correctamente a {date}'),
-(1, 'en', 'Hydrosyn server startup', 'Hydrosyn Server Started', 'Hydrosyn server has started successfully on {date}');
+(1, 'es', 'Arranque de servidor hydrosyn', 'Servidor Hydrosyn iniciado', 'El servidor Hydrosyn se ha iniciado correctamente'),
+(1, 'en', 'Hydrosyn server startup', 'Hydrosyn Server Started', 'Hydrosyn server has started successfully');
 
 -- 2. Posible robo de cookies
 INSERT INTO notifications (should_send_email) VALUES (FALSE);

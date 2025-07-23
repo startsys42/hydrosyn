@@ -8,7 +8,7 @@ import secrets
 import json
 from urllib.parse import urlparse
 from security.email import send_email
-from datetime import datetime, timedelta
+from datetime import datetime, timezone
 from typing import Optional, Dict, Any,Union
 from logger import logger
 from db.db_middleware import get_session_id_exists_from_db, get_session_from_db,  insert_login_attempts_in_db, get_cookie_expired_time_from_db 
@@ -109,7 +109,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                             ip=client_ip,
                             lang=session_data['language'],
                             email=session_data['email'],
-                            date=datetime.now(),   
+                            date=datetime.now(timezone.utc),   
                         )
 
                         await insert_login_attempts_in_db(
@@ -283,7 +283,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                 break
         
         days = await get_cookie_expired_time_from_db()
-        expires_at = datetime.utcnow() + timedelta(days=days)  # 30 días de validez
+         # 30 días de validez
        
         
         data = {
