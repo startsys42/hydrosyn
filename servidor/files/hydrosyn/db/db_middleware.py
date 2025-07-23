@@ -2,7 +2,7 @@ from sqlalchemy import text
 
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from typing import Literal
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from db.db_engine import DBEngine
 from logger import logger
 
@@ -177,7 +177,7 @@ async def get_session_from_db(session_id: str, extend_validity: bool = True) -> 
             """)
             
             # Determinar el tiempo de validación
-            validation_time = datetime.utcnow()
+            validation_time = datetime.now(timezone.utc)
             if extend_validity:
                 validation_time = validation_time - timedelta(days=1)  # <- Cambio clave aquí
             

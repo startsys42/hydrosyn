@@ -5,7 +5,7 @@ from typing import Optional, Tuple, List, Dict
 from sqlalchemy import text
 from db.db_engine import DBEngine  # Asegúrate de importar tu DBEngine
 from logger import logger
-from datetime import datetime
+from datetime import datetime, timezone
 
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
 
@@ -202,7 +202,7 @@ async def insert_notification_event_in_db(
         "user_id": user_id,
         "lang_code": lang_code,
         "formatted_message": formatted_message,
-        "created_at": created_at if created_at else datetime.utcnow(),
+        "created_at": created_at if created_at else datetime.now(timezone.utc),
     }
 
     engine = DBEngine.get_engine()  # corregido indentación
