@@ -108,7 +108,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                             notification_id=2,  # ID de la notificación de robo de cookies
                             user_id=session_data['user_id'],
                             username=session_data['username'],
-                            ip=client_ip,
+                            ip=request.client.host,
                             lang=session_data['language'],
                             email=session_data['email'],
                             date=datetime.now(timezone.utc),   
@@ -117,7 +117,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         await insert_login_attempts_in_db(
                             session_id=session_id,
                             user_id=session_data['user_id'],
-                            ip_address=client_ip,
+                            ip_address=request.client.host,
                             success=False,
                             page=path,
                             http_method=method,
@@ -144,7 +144,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                                 await insert_login_attempts_in_db(
                                     session_id=session_id,
                                     user_id=session_data['user_id'],
-                                    ip_address=client_ip,
+                                    ip_address=request.client.host,
                                     success=True,
                                     page=path,
                                     http_method=method,
@@ -191,7 +191,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     if request.url.path not in [ "/web/login","/web/recover-password", "/web/login-two", "/web/recover-password-two","/","/web/device-info","/web/change-lang-theme"]:
                         await insert_login_attempts_in_db(
                             session_id=session_id,
-                            ip_address=client_ip,
+                            ip_address=request.client.host,
                             user_id=None,
                             success=False,
                             page=path,
