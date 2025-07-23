@@ -57,7 +57,7 @@ async def login_post(
         return PlainTextResponse(str(e), status_code=400)
     
     request.state.username = username
-    request.state.date= datetime.now()
+    request.state.date= datetime.now(timezone.utc)
    # aquid ebo guardar notificacion
     if await is_in_blacklist_from_db(username):
         request.state.blacklist = True
@@ -299,7 +299,7 @@ async def recover_password_post(request: Request,username: str = Form(...), emai
     except ValueError as e:
         return PlainTextResponse(str(e), status_code=400)
     request.state.username = username
-    request.state.date= datetime.now()
+    request.state.date= datetime.now(timezone.utc)
     if await is_in_blacklist_from_db(username):
         request.state.blacklist = True
       
