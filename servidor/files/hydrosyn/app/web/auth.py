@@ -62,13 +62,12 @@ async def login_post(
     if await is_in_blacklist_from_db(username):
         request.state.blacklist = True
         create_user_notification(
-                                        notification_id=5,  # ID de la notificación de bloqueo
-                                        username=request.state.username,
-                                        ip=client_ip,
-                                        date=request.state.date,
-                                    )
-                                
-       
+            notification_id=5,  # ID de la notificación de bloqueo
+            username=request.state.username,
+            ip=request.client.host,
+            date=request.state.date,
+        )
+
         error_key = "account_not_exists"  # o "invalid_csrf"
         error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
         return templates.TemplateResponse("login.html", {
@@ -304,11 +303,11 @@ async def recover_password_post(request: Request,username: str = Form(...), emai
         request.state.blacklist = True
       
         create_user_notification(
-                                        notification_id=6,  # ID de la notificación de bloqueo
-                                        username=request.state.username,
-                                        ip=client_ip,
-                                        date=request.state.date,
-                                    )
+            notification_id=6,  # ID de la notificación de bloqueo
+            username=request.state.username,
+            ip=request.client.host,
+            date=request.state.date,
+        )
         error_key = "account_not_exists"  # o "invalid_csrf"
         error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
         return templates.TemplateResponse("recover-password", {
@@ -352,7 +351,7 @@ async def recover_password_post(request: Request,username: str = Form(...), emai
             create_user_notification(
                 notification_id=8,  # ID de la notificación de cuenta inactiva
                 username=request.state.username,
-                ip=client_ip,
+                ip=request.client.host,
                 date=request.state.date,
             )
             request.state.is_active = False

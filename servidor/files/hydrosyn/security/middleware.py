@@ -207,11 +207,11 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         return RedirectResponse(url="/web/login")
                     else:
                         response = await call_next(request)
-                        success=False
+                        
                         if request.url.path == "/web/change-lang-theme":
                             
 
-        # Ejemplo: forzar que siempre se actualice a idioma inglés y tema claro
+     
                             await update_cookie_lang_theme(
                                 request=request,
                                 response=response,
@@ -223,6 +223,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                             #el di el time
                         user_id = None
                         date=None
+                        success=False
                         if hasattr(request.state, 'success'):
                             if request.state.success:
                                 success=True

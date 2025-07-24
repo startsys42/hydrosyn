@@ -26,7 +26,10 @@ async def get_user_login_from_db(
     email: str = None  # Opcional (Caso 1)
 ) -> Optional[Dict[str, Any]]:
 
-
+    key = None
+    hash_value = None
+    dict_username = "not_exist_username"
+    dict_email = "not_exist_email"
     # Validación de parámetros
     if password is None and email is None:
     
@@ -60,7 +63,7 @@ async def get_user_login_from_db(
     try:
         async with engine.connect() as conn:
             result = await conn.execute(sql, params)
-            user = result.fetchone()
+            user = result.mappings().first()
 
             
 
@@ -71,7 +74,7 @@ async def get_user_login_from_db(
                 dict_username="exist_username"
                 if password is not None:
                     if check_password(password, user["password"]):
-                        hash="same"
+                        hash_value="same"
                         if validate_password(password,get_password_policy_from_db()):
                             key="password_valid"
                             if user["change_pass"] is not None:
@@ -81,10 +84,10 @@ async def get_user_login_from_db(
                             key="password_not_valid"
                             if user["change_pass"] is None:
                                 await set_change_pass_to_now_in_db(username)
-                                user["change_pass"] = datetime.now() + timedelta(days=1) 
+                                user["change_pass"] = datetime.now(datetime.utc) + timedelta(days=1) 
 
                     else:
-                        hash="different"
+                        hash_value="different"
                   
             else:
                 dict_username="not_exist_username"
@@ -118,7 +121,7 @@ async def get_user_login_from_db(
                 "first_login": user["first_login"],
                 "change_pass": user["change_pass"],
                 "key": key if password is not None else None,
-                "hash": hash if password is not None else None,  
+                "hash": hash_value if password is not None else None,  
                 "dict_email": dict_email if email is not None else None,  
             }
 
