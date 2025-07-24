@@ -2,6 +2,7 @@ from fastapi import APIRouter, Request, Form
 from fastapi.responses import RedirectResponse
 from urllib.parse import urlparse
 from db.db_users import update_user_preferences_in_db, get_user_id_from_db
+from logger import logger
 
 router = APIRouter(tags=["Web Settings"])
 
@@ -29,6 +30,7 @@ async def change_lang_theme_post(
         await update_user_preferences_in_db(user_id, lang, theme)
     
     if next=="/web/login":
+        logger.info("llegue al redirect login de settings")
         return RedirectResponse(url="/web/login", status_code=303)
     elif next=="/web/recover-password":
         return RedirectResponse(url="/web/recover-password", status_code=303)
