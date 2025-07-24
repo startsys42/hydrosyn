@@ -207,7 +207,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         return RedirectResponse(url="/web/login")
                     else:
                         response = await call_next(request)
-                        succes=False
+                        success=False
                         if request.url.path == "/web/change-lang-theme":
                             
 
@@ -233,7 +233,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         await insert_login_attempts_in_db(
                             session_id=session_id,
                             user_id=user_id,
-                            ip_address=client_ip,
+                            ip_address=request.client.host,
                             success=success,
                             page=path,
                             http_method=method,

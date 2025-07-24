@@ -71,7 +71,7 @@ async def login_post(
        
         error_key = "account_not_exists"  # o "invalid_csrf"
         error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
-        return templates.TemplateResponse("login", {
+        return templates.TemplateResponse("login.html", {
             "request": request,
             "texts": prefs["texts"],
             "lang": prefs["lang"],
@@ -88,7 +88,7 @@ async def login_post(
         request.state.user_exist = False
         error_key = "credentials"
         error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
-        return templates.TemplateResponse("login", {
+        return templates.TemplateResponse("login.html", {
             "request": request,
             "texts": prefs["texts"],
             "lang": prefs["lang"],
@@ -111,7 +111,7 @@ async def login_post(
                     request.state.csrf = False
                     error_key = "invalid_csrf"  # o "invalid_csrf"
                     error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
-                    return templates.TemplateResponse("login", {
+                    return templates.TemplateResponse("login.html", {
                         "request": request,
                         "texts": prefs["texts"],
                         "lang": prefs["lang"],
@@ -193,7 +193,7 @@ async def login_post(
                 request.state.hash = False
                 error_key = "credentials"
                 error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
-                return templates.TemplateResponse("login", {
+                return templates.TemplateResponse("login.html", {
                     "request": request,
                     "texts": prefs["texts"],
                     "lang": prefs["lang"],
@@ -211,7 +211,7 @@ async def login_post(
                                             )
             error_key = "credentials"
             error_message = ERROR_MESSAGES[error_key][prefs["lang"]]
-            return templates.TemplateResponse("login", {
+            return templates.TemplateResponse("login.html", {
                 "request": request,
                 "texts": prefs["texts"],
                 "lang": prefs["lang"],
