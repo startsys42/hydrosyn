@@ -6,6 +6,9 @@ router = APIRouter()
 # protlongar autentificar  o or ecuperar contraseña extender tiempo recuepracion oa activacion
 #listar permisos roles istemas, listar usuarios, modificar usuario, ver ordenes
 
+
+## lsitar usuarios, buscar usuarios , activar desactivar
+
 @router.get("/create-user")
 async def create_user_get():
     return {"action": "get create user form"}

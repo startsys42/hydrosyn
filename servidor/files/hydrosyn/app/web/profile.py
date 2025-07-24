@@ -1,49 +1,68 @@
 from fastapi import APIRouter, Request
+from app.web.utils import get_user_preferences
+from security.csrf import generate_csrf_token
+from common.templates import templates
+from fastapi.responses import HTMLResponse, PlainTextResponse
 router = APIRouter()
 #  cambair idioma, cambiar contarseña, activar twofa, desativar twofa, actiavr  , ver correo. o inidcarloe n lso emnsajes
 
 
 
 # Endpoints para cambiar nombre
-@router.get("/change-name")
-async def change_name_get():
-    return {"action": "get name change form"}
+@router.get("/change-name", response_class=HTMLResponse)
+async def change_name_get(requqest: Request):
+    try:
+        prefs = get_user_preferences(request)
+        csrf_token = generate_csrf_token()
+    except ValueError as e:
+        return PlainTextResponse(str(e), status_code=400)
+
+    return templates.TemplateResponse("name.html", {
+        "request": request,
+        "texts": prefs["texts"],
+        "lang": prefs["lang"],
+        "theme": prefs["theme"],
+        "csrf_token": csrf_token
+    })
+
+
+@router.get("/change-password", response_class=HTMLResponse)
+async def change_password_get(request: Request):
+    try:
+        prefs = get_user_preferences(request)
+        csrf_token = generate_csrf_token()
+    except ValueError as e:
+        return PlainTextResponse(str(e), status_code=400)
+
+    return templates.TemplateResponse("password.html", {
+        "request": request,
+        "texts": prefs["texts"],
+        "lang": prefs["lang"],
+        "theme": prefs["theme"],
+        "csrf_token": csrf_token
+    })
+
+    
+
+
+
+
 
 @router.post("/change-name")
 async def change_name_post():
     return {"action": "process name change"}
 
 # Endpoints para cambiar email
-@router.get("/change-email")
-async def change_email_get():
-    return {"action": "get email change form"}
+
+
 
 @router.post("/change-email")
 async def change_email_post():
     return {"action": "process email change"}
 
-# Endpoints para cambiar idioma
-@router.get("/change-language")
-async def change_language_get():
-    return {"action": "get language options"}
 
-@router.post("/change-language")
-async def change_language_post():
-    return {"action": "process language change"}
 
-# Endpoints para cambiar tema
-@router.get("/change-theme")
-async def change_theme_get():
-    return {"action": "get theme options"}
 
-@router.post("/change-theme")
-async def change_theme_post():
-    return {"action": "process theme change"}
-
-# Endpoints para cambiar contraseña
-@router.get("/change-password")
-async def change_password_get():
-    return {"action": "get password change form"}
 
 @router.post("/change-password")
 async def change_password_post():

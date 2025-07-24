@@ -12,6 +12,24 @@
 
 
 
+@router.get("/see-blacklist", response_class=HTMLResponse)
+async def see_blacklist_get(request: Request):
+    try:
+        prefs = get_user_preferences(request)
+        csrf_token = generate_csrf_token()
+    except ValueError as e:
+        return PlainTextResponse(str(e), status_code=400)
+
+    return templates.TemplateResponse("blacklist.html", {
+        "request": request,
+        "texts": prefs["texts"],
+        "lang": prefs["lang"],
+        "theme": prefs["theme"],
+        "csrf_token": csrf_token
+    })
+
+
+
 
 
 @router.get("/db-autoincrement")
@@ -35,6 +53,9 @@ def autoincrement_post():
 -- permiso 5
 (5, 'es', 'Eliminar nombres lista negra', 'Permiso para eliminar nombres de la lista negra'),
 (5, 'en', 'Remove blacklist names', 'Permission to remove names from blacklist'),
+
+
+
 
 -- permiso 6
 (6, 'es', 'Ver política de nombres', 'Permiso para ver la política de nombres'),
