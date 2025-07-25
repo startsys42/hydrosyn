@@ -18,12 +18,14 @@ from fastapi.responses import RedirectResponse
 
 from datetime import datetime, timezone
 # Importamos routers
-from app.web import auth as web_auth
-from app.web import config as web_config
-from app.web import profile as web_profile
-from app.web import users as web_users
-from app.web import device as web_device
-from app.web import settings as web_settings
+from endpoints import (
+    auth as web_auth,
+    config as web_config,
+    profile as web_profile,
+    users as web_users,
+    device as web_device,
+    settings as web_settings
+)
 from services.notifications import create_user_notification
 
 #from app.api import auth as api_auth

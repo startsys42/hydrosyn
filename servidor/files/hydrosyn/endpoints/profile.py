@@ -72,11 +72,3 @@ async def change_password_post():
 
 
 
-
-@router.get("/activate-2fa")
-async def activate_2fa_get():
-    return {"action": "activate 2fa"}
-
-@router.get("/deactivate-2fa")
-async def deactivate_2fa_get():
-    return {"action": "deactivate 2fa"}
