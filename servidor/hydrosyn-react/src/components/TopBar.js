@@ -1,6 +1,7 @@
 import React from 'react';
+import texts from '../i18n/locales';
 
-export default function TopBar({ language, theme, texts }) {
+export default function TopBar({ language, theme }) {
     const handleChangeSetting = async (type, value) => {
         try {
             await fetch('https://127.0.0.1/change-language-theme', {

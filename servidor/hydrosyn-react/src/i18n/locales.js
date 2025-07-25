@@ -1,28 +1,27 @@
-const textos = {
-  es: {
-    login: 'Iniciar sesión',
-    usuario: 'Usuario',
-    contraseña: 'Contraseña',
-    mostrar: 'Mostrar',
-    ocultar: 'Ocultar',
-    cambiarIdioma: 'Cambiar idioma',
-    cambiarTema: 'Cambiar tema',
-    recuperarContraseña: 'Recuperar contraseña',
-    errorUsuario: 'El usuario debe tener al menos 3 caracteres',
-    errorContraseña: 'La contraseña debe tener al menos 6 caracteres',
-  },
-  en: {
-    login: 'Login',
-    usuario: 'Username',
-    contraseña: 'Password',
-    mostrar: 'Show',
-    ocultar: 'Hide',
-    cambiarIdioma: 'Change Language',
-    cambiarTema: 'Toggle Theme',
-    recuperarContraseña: 'Recover Password',
-    errorUsuario: 'Username must be at least 3 characters',
-    errorContraseña: 'Password must be at least 6 characters',
-  },
+const texts = {
+    es: {
+        language: 'Idioma',
+        theme: 'Tema',
+        login: 'Iniciar sesión',
+        username: 'Usuario',
+        password: 'Contraseña',
+        changeLanguage: 'Cambiar idioma',
+        changeTheme: 'Cambiar tema',
+        recoverPassword: 'Recuperar contraseña',
+
+    },
+    en: {
+        language: 'Language',
+        theme: 'Theme',
+        login: 'Login',
+        username: 'Username',
+        password: 'Password',
+
+        changeLanguage: 'Change Language',
+        changeTheme: 'Toggle Theme',
+        recoverPassword: 'Recover Password',
+
+    },
 };
 
-export default textos;
+export default texts;

@@ -8,6 +8,9 @@ import ServerErrorPage from './components/ServerErrorPage';
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ChangePasswordForced from './components/ChangePasswordForced';
+import ChangeUsernameForced from './components/ChangeUsernameForced';
+import PrivateRoute from './components/PrivateRoute';
 
 
 function getGpuInfo() {

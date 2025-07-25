@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
+
 function ServerErrorPage() {
     const location = useLocation();
     const navigate = useNavigate();
@@ -25,7 +26,7 @@ function ServerErrorPage() {
         <div style={{ padding: 40, textAlign: 'center' }}>
             <h1>🚨 Error {code || 'Unknown'}</h1>
             <p>{message || 'An unexpected error occurred. Please try again later.'}</p>
-            <button onClick={() => navigate('/')}>🔁 Back to Home</button>
+            <button onClick={() => navigate('/')}> Back to Home</button>
         </div>
     );
 }

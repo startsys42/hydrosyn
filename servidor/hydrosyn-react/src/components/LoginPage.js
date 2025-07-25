@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { texts } from './texts';
+import { useLocation, useNavigate } from 'react-router-dom';
 import TopBar from './TopBar'
+import texts from '../i18n/locales';
 export default function LoginPage() {
 
     const location = useLocation();
@@ -63,16 +64,7 @@ export default function LoginPage() {
                 </button>
             </form>
 
-            <button
-                onClick={toggleLanguage}
-                style={{ marginTop: 20, marginRight: 10 }}
-            >
-                {texts[language].changeLanguage}
-            </button>
 
-            <button onClick={toggleTheme} style={{ marginTop: 20 }}>
-                {texts[language].changeTheme}
-            </button>
 
             <div style={{ marginTop: 30 }}>
                 <button

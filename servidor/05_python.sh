@@ -43,8 +43,6 @@ packages=(
   pymysql
   aiomysql
   email-validator
-  pyotp 
-  qrcode[pil]
   google-api-python-client 
   google-auth-httplib2 
   google-auth-oauthlib
@@ -96,7 +94,7 @@ chown root:root /etc/systemd/system/hydrosyn.service
 chmod 644 /etc/systemd/system/hydrosyn.service
 
 cat <<EOF > /opt/hydrosyn/.env
-LOG_DIR=logs
+LOG_DIR=/var/log/hydrosyn
 
 DB_USER=$DB_USER_HYDRO
 DB_HOST=$DB_IP
