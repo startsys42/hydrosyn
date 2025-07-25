@@ -14,22 +14,20 @@ systemctl start nginx
 
 systemctl status nginx --no-pager
 
+IP_LOCAL=$(ip -4 addr show | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | grep -v '127.0.0.1' | head -1)
 
 
-
-cat > /etc/nginx/sites-available/hydrosyn << "EOF"
+tee /etc/nginx/sites-available/hydrosyn > /dev/null <<EOF
 server {
     listen 80;
-    server_name hydrosyn.com;  # Cambia por tu dominio/IP
+    server_name $IP_LOCAL;
 
     root /var/www/hydrosyn/build;
     index index.html;
 
     location / {
-        try_files $uri $uri/ /index.html;
+        try_files \$uri \$uri/ /index.html;
     }
-
-   
 }
 EOF
 
@@ -53,8 +51,6 @@ mkdir -p /var/www/hydrosyn
 # 4. Dar permisos seguros:
  chmod -R 755 /var/www/hydrosyn
 
-# 5. Verificar la estructura resultante:
-tree /var/www/hydrosyn
 
 
 # Verifica y reinicia Nginx
