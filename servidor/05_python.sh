@@ -56,6 +56,9 @@ packages=(
   ins-pip "$PIP_HYDROSYN" "${packages[@]}"
 
 
+mkdir /var/log/hydrosyn
+chown $APP_USER:$APP_USER /var/log/hydrosyn
+chmod 750 /var/log/hydrosyn
 
 
 

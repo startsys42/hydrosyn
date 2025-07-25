@@ -1,87 +1,88 @@
-return (
-    <div className={`app ${tema}`} style={{ padding: 20, fontFamily: 'Arial' }}>
-        <h1>{textos[idioma].login}</h1>
-        <form onSubmit={handleSubmit} style={{ maxWidth: 300 }}>
-            <label>
-                {textos[idioma].usuario}:
-                <input
-                    type="text"
-                    value={usuario}
-                    onChange={(e) => setUsuario(e.target.value)}
-                    style={{ width: '100%', marginBottom: 5 }}
-                />
-                {errores.usuario && (
-                    <div style={{ color: 'red', fontSize: 12 }}>{errores.usuario}</div>
-                )}
-            </label>
+import React, { useState } from 'react';
+import { texts } from './texts';
+import TopBar from './TopBar'
+export default function LoginPage() {
 
-            <label>
-                {textos[idioma].contraseña}:
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+    const location = useLocation();
+    const { language = 'en', theme = 'light', csrfToken = null } = location.state || {}; // valores por defecto
+
+    // Aquí ya tienes idioma, tema y csrfToken pasados por navigate()
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [errors, setErrors] = useState({});
+    const [showPassword, setShowPassword] = useState(false);
+
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Aquí iría la lógica de submit
+    };
+    return (
+        <div className={`app ${theme}`} style={{ padding: 20, fontFamily: 'Arial' }}>
+            <TopBar language={language} theme={theme} texts={texts} />
+            <h1>{texts[language].login}</h1>
+            <form onSubmit={handleSubmit} style={{ maxWidth: 300 }}>
+                <input type="hidden" name="csrfToken" value={csrfToken} />
+                <label>
+                    {texts[language].username}:
                     <input
-                        type={mostrarPass ? 'text' : 'password'}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        style={{ flex: 1, marginBottom: 5 }}
+                        type="text"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        style={{ width: '100%', marginBottom: 5 }}
                     />
-                    <button
-                        type="button"
-                        onClick={() => setMostrarPass(!mostrarPass)}
-                        style={{ marginLeft: 5 }}
-                    >
-                        {mostrarPass ? textos[idioma].ocultar : textos[idioma].mostrar}
-                    </button>
-                </div>
-                {errores.password && (
-                    <div style={{ color: 'red', fontSize: 12 }}>{errores.password}</div>
-                )}
-            </label>
+                    {errors.username && (
+                        <div style={{ color: 'red', fontSize: 12 }}>{errors.username}</div>
+                    )}
+                </label>
 
-            <button type="submit" style={{ marginTop: 10, width: '100%' }}>
-                {textos[idioma].login}
-            </button>
-        </form>
+                <label>
+                    {texts[language].password}:
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            style={{ flex: 1, marginBottom: 5 }}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            style={{ marginLeft: 5 }}
+                        >
+                            {showPassword ? texts[language].hide : texts[language].show}
+                        </button>
+                    </div>
+                    {errors.password && (
+                        <div style={{ color: 'red', fontSize: 12 }}>{errors.password}</div>
+                    )}
+                </label>
 
-        <button
-            onClick={toggleIdioma}
-            style={{ marginTop: 20, marginRight: 10 }}
-        >
-            {textos[idioma].cambiarIdioma}
-        </button>
+                <button type="submit" style={{ marginTop: 10, width: '100%' }}>
+                    {texts[language].login}
+                </button>
+            </form>
 
-        <button onClick={toggleTema} style={{ marginTop: 20 }}>
-            {textos[idioma].cambiarTema}
-        </button>
-
-        <div style={{ marginTop: 30 }}>
             <button
-                onClick={() => alert('Funcionalidad de recuperar contraseña')}
-                style={{ color: 'blue', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}
+                onClick={toggleLanguage}
+                style={{ marginTop: 20, marginRight: 10 }}
             >
-                {textos[idioma].recuperarContraseña}
+                {texts[language].changeLanguage}
             </button>
-        </div>
 
-        <style>{`
-        .app.claro {
-          background: #fff;
-          color: #000;
-          min-height: 100vh;
-        }
-        .app.oscuro {
-          background: #222;
-          color: #eee;
-          min-height: 100vh;
-        }
-        input {
-          padding: 5px;
-          font-size: 14px;
-        }
-        button {
-          padding: 8px;
-          font-size: 14px;
-        }
-      `}</style>
-    </div>
-);
+            <button onClick={toggleTheme} style={{ marginTop: 20 }}>
+                {texts[language].changeTheme}
+            </button>
+
+            <div style={{ marginTop: 30 }}>
+                <button
+                    onClick={() => alert('Funcionalidad de recuperar contraseña')}
+                    style={{ color: 'blue', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}
+                >
+                    {texts[language].forgotPassword}
+                </button>
+            </div>
+
+        </div>
+    );
 }

@@ -3,7 +3,7 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import Dashboard from './components/Dashboard';
-import RecoverPassword from './components/RecoverPassword';
+
 import ServerErrorPage from './components/ServerErrorPage';
 
 import { useState, useEffect } from 'react';
@@ -67,7 +67,7 @@ function App() {
             };
 
             try {
-                const res = await fetch('http://127.0.0.1:5617/api/me', {
+                const res = await fetch('http://127.0.0.1:5617/', {
                     method: 'POST', // usamos POST para enviar datos
                     headers: {
                         'Content-Type': 'application/json',
@@ -164,7 +164,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<LoginPage />} />
                 <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/recover-password" element={<RecoverPassword />} />
+
                 <Route path="/error" element={<ServerErrorPage />} />
                 <Route
                     path="/dashboard"
