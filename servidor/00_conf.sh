@@ -172,8 +172,7 @@ fi
 
 
 
-# gcc
-ins-paq gcc
+
 
 
 FILES=("/etc/pam.d/sshd" "/etc/pam.d/login")

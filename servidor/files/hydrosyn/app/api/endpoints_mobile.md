@@ -1,1 +1,0 @@
-Add mobile endpoints  in this folder
