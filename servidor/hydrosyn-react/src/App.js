@@ -70,7 +70,7 @@ function App() {
             };
 
             try {
-                const res = await fetch('http://127.0.0.1:5617/', {
+                const res = await fetch('http://127.0.0.1:5617/initial', {
                     method: 'POST', // usamos POST para enviar datos
                     headers: {
                         'Content-Type': 'application/json',
