@@ -33,12 +33,9 @@ from services.notifications import create_user_notification
 load_dotenv(".env")
 
 
-user_shadow_path = "/var/lib/hydrosyn/user_db.shadow"
-k_db_path = "/var/lib/hydrosyn/session.key"
 
 
 
-km, db_port = load_master_data(k_db_path)
 
 
 
@@ -47,8 +44,8 @@ km, db_port = load_master_data(k_db_path)
 db_user = os.getenv("DB_USER")
 db_host = os.getenv("DB_HOST")
 db_name = os.getenv("DB_NAME")
-db_password  = get_most_recent_password(user_shadow_path, km)
-
+db_password  = os.getenv("DB_PASSWORD")
+db_port = os.getenv("DB_PORT")  
 
 
 logger.info(f"Conectando a BD con: usuario={db_user}, password={'***' if db_password else 'VACÍO'}, host={db_host}, puerto={db_port}, bd={db_name}")
@@ -86,9 +83,8 @@ app = FastAPI()
 # Middleware personalizado con rotación de clave
 app.add_middleware(AdvancedSessionMiddleware, key_manager=cookie_key_manager)
 
-# 2) Montar carpeta de archivos estáticos y plantillas (clientes web)
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
-templates = Jinja2Templates(directory="app/templates")
+
+
 
 
 @app.get("/")
