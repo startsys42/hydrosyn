@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 from services.notifications import create_user_notification
 from events.startup import on_startup
 from fastapi.middleware.cors import CORSMiddleware
+from secure.middleware import SecureHeadersMiddleware
 
 from datetime import datetime, timezone
 # Importamos routers
