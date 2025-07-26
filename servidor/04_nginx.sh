@@ -37,8 +37,8 @@ server {
 
         # Proxy a FastAPI
         proxy_pass http://127.0.0.1:5671;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
         
         # Cabeceras de seguridad adicionales
         proxy_set_header X-Frame-Options "DENY";
