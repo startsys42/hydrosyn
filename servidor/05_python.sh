@@ -49,7 +49,7 @@ packages=(
   python-dotenv
   paho-mqtt
   cryptography
-  
+  secure
 )
 
   ins-pip "$PIP_HYDROSYN" "${packages[@]}"
