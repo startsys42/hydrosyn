@@ -11,7 +11,7 @@ function ServerErrorPage() {
     // Si no hay info (por ejemplo, si recargaron la página), redirige a "/"
     useEffect(() => {
         if (!errorInfo) {
-            navigate('/', { replace: true });
+            navigate('/login', { replace: true });
         }
     }, [errorInfo, navigate]);
 
