@@ -27,6 +27,22 @@ server {
 
     location / {
         try_files \$uri \$uri/ /index.html;
+         add_header X-Frame-Options "DENY";
+        add_header Content-Security-Policy "frame-ancestors 'none';";
+    }
+    location /api {
+        # Restricción de acceso (solo permite desde el mismo servidor)
+        allow 127.0.0.1;
+        deny all;
+
+        # Proxy a FastAPI
+        proxy_pass http://127.0.0.1:5671;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        
+        # Cabeceras de seguridad adicionales
+        proxy_set_header X-Frame-Options "DENY";
+        proxy_set_header Content-Security-Policy "frame-ancestors 'none';";
     }
 }
 EOF

@@ -20,13 +20,14 @@ async def change_lang_theme_post(
             status_code=400
         )
 
-    #request.state.lang = lang
-    #request.state.theme = theme
-    
-    user_id=get_user_id_from_db(request.state.session_id)
+    if type == "language":
+         request.state.language = value
+    elif type == "theme":
+        request.state.theme = value
+
+    user_id = get_user_id_from_db(request.state.session_id)
     if user_id:
-        # Actualizar preferencias del usuario en la base de datos
-        await update_user_preferences_in_db(user_id, lang, theme)
+        await update_user_preferences_in_db(user_id, type, value)
     
 
 

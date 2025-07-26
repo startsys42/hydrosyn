@@ -5,17 +5,27 @@ from typing import Optional, Union, Tuple
 from sqlalchemy.sql import text
 from fastapi import HTTPException, status
 
-async def update_user_preferences_in_db(user_id: int, lang: str, theme: str) -> bool:
+async def update_user_preferences_in_db(user_id: int, type: str, value: str) -> bool:
     engine = DBEngine.get_engine()
-    sql = text("""
-        UPDATE users 
-        SET language = :lang, theme = :theme 
-        WHERE id = :user_id
-    """)
+    if type == "language":
+        sql = text("""
+            UPDATE users 
+            SET language = :value 
+            WHERE id = :user_id
+        """)
+    elif type == "theme":
+        sql = text("""
+            UPDATE users 
+            SET theme = :value 
+            WHERE id = :user_id
+        """)
+    else:
+        logger.error(f"Type preference not valid: {type}")
+        return False
 
     try:
         async with engine.begin() as conn:
-            result = await conn.execute(sql, {"lang": lang, "theme": theme, "user_id": user_id})
+            result =await conn.execute(sql, {"value": value, "user_id": user_id})
             if result.rowcount == 0:
                 return False  # No se actualizó nada, usuario no encontrado
         return True

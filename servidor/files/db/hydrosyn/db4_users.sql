@@ -10,6 +10,7 @@ CREATE TABLE  IF NOT EXISTS  users(
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
     first_login BOOLEAN NOT NULL DEFAULT FALSE,
     change_pass TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    change_pass TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     delete_possible  BOOLEAN NOT NULL DEFAULT  FALSE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by INT UNSIGNED NOT NULL,
@@ -1739,10 +1740,8 @@ CREATE TABLE login_attempts (
     user_agent VARCHAR(512),
     ram_gb FLOAT NULL,
     cpu_cores SMALLINT UNSIGNED NULL,
-    cpu_architecture VARCHAR(32) NULL,
     gpu_info VARCHAR(128) NULL,
     device_os VARCHAR(64) NULL,
-    recovery BOOLEAN NOT NULL,
     page VARCHAR(64) NOT NULL,          
     http_method ENUM('GET', 'POST') NOT NULL,
     CONSTRAINT fk_login_attempts_user

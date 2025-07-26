@@ -19,12 +19,87 @@ from db.db_auth import get_user_login_from_db
 from security.email_messages import email_login_error
 from services.notifications import create_user_notification
 from datetime import datetime, timezone
+from security.same_device import sameDevice
 class UserInput(BaseModel):
     email: EmailStr
+
+
+
+
 
 router = APIRouter(tags=["Web Auth"])
 # poenr los formualrios con campos dinamicos, si em logueo bien borrar sesiona nterior o registar el rpimer iniciod e sesion y tareas para el rpiemr usuaro iniciod e sesion notificacion
 
+@router.post("/check-access")
+async def check_access(request: Request):
+    cookie_value = request.cookies.get("hydrosyn_session_id")
+    if not cookie_value:
+        return {
+            "loggedIn": False,
+            "changeName": False,
+            "changePass": False,
+            "csrf": generate_csrf_token(),
+            "language": "en",
+            "theme": "light",
+            "permission": False
+        }
+    else:
+        # quiero leer el json que recibe
+        data = await request.json()
+        ip = data.get("ip")
+        user_agent = data.get("userAgent")
+        gpu_info = data.get("gpuInfo")
+        cpu_cores = data.get("cpuCores")
+        device_memory = data.get("deviceMemory")
+        os = data.get("os")
+        origin = data.get("origin")
+        logger.info(f"Received data: IP={ip}, User-Agent={user_agent}, GPU={gpu_info}, CPU Cores={cpu_cores}, Device Memory={device_memory}, OS={os}, Origin={origin}")
+        if origin not in ["web", "mobile"]:
+            device_data = {
+                "user_agent": data.get("userAgent"),
+                "gpu_info": data.get("gpuInfo"),
+                "cpu_cores": data.get("cpuCores"),
+                "device_memory": data.get("deviceMemory"),
+                "os": data.get("os"),
+                "ip": request.client.host  # IP del cliente (desde FastAPI)
+            }
+
+            if sameDevice(device_data, request.state.summary, request.state.user_id, request.state.username, ip, request.state.language, request.state.email):
+                await delete_session_in_db(request.state.session_id)
+                #insertar en login attempts
+                return JSONResponse(
+                    status_code=400,  # Bad Request
+                    content={
+                        "redirect": "/login"  # Opcional: para que React sepa a dónde redirigir
+                    }
+                )
+            else:
+                #MODIFICAR PRO AHORA UN SOLO ADMIN
+                if get_admin_from_db(request.state.user_id):
+                    admin = True
+                else:
+                    admin = False
+                return {
+                    "loggedIn": True,
+                    "changeName": request.state.change_name,
+                    "changePass": request.state.change_pass,
+                    "csrf": generate_csrf_token(),
+                    "language": request.state.lang or "en",
+                    "theme": request.state.theme or "light",
+                    "permission": False
+                }
+        else:
+            #insertar en login attempts
+            return {
+                "loggedIn": False,
+                "changeName": False,
+                "changePass": False,
+                "csrf": generate_csrf_token(),
+                "language": request.state.lang or "en",
+                "theme": request.state.theme or "light",
+                "permission": False
+            }
+        
 
 
 

@@ -77,9 +77,24 @@ app = FastAPI()
 
 # 1) Middleware para sesiones (solo para rutas web) con la clave cargada desde shadow
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:80"],  # SOLO tu dominio en producción
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],  # Solo estos métodos
+    allow_headers=[
+        "Content-Type",
+    ],
 
 
+    max_age=600  # Tiempo que el navegador cachea la configuración CORS
+)
 
+app.add_middleware(
+    SecureHeadersMiddleware,
+    x_frame_options="DENY",  # Anti-iframe
+    content_security_policy="frame-ancestors 'none';",  # Doble protección
+)
 
 
 # Middleware personalizado con rotación de clave
@@ -89,25 +104,16 @@ app.add_middleware(AdvancedSessionMiddleware, key_manager=cookie_key_manager)
 
 
 
-@app.get("/")
-async def root_redirect():
-    """Redirige la raíz a la página de login."""
-    
-    # Asumiendo que tu login está en /web/auth/
-    return RedirectResponse(url="/web/login", status_code=302)
-
-
-
 
 # 3) Rutas Web (HTML + sesiones)
 #    - web_auth.router: login, logout, formulario, etc.
 #    - web_views.router: páginas protegidas (home, dashboard, etc.)
-app.include_router(web_auth.router, prefix="/web", tags=["Web Auth"])
-app.include_router(web_config.router, prefix="/web", tags=["Web Config"])
-app.include_router(web_profile.router, prefix="/web", tags=["Web Profile"])
-app.include_router(web_users.router, prefix="/web", tags=["Web Users"])
-app.include_router(web_device.router, prefix="/web", tags=["Web Device"])
-app.include_router(web_settings.router, prefix="/web", tags=["Web Settings"])
+app.include_router(web_auth.router, prefix="/api", tags=["Web Auth"])
+app.include_router(web_config.router, prefix="/api", tags=["Web Config"])
+app.include_router(web_profile.router, prefix="/api", tags=["Web Profile"])
+app.include_router(web_users.router, prefix="/api", tags=["Web Users"])
+app.include_router(web_device.router, prefix="/api", tags=["Web Device"])
+app.include_router(web_settings.router, prefix="/api", tags=["Web Settings"])
 # 4) Rutas API (JSON + JWT)
 #    - api_auth.router: /api/token, validación de credenciales, emisión de JWT
 #    - api_users.router: /api/users, endpoints protegidos por token

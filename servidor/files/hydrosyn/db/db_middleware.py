@@ -167,11 +167,13 @@ async def get_session_from_db(session_id: str, extend_validity: bool = True) -> 
                     u.is_active,
                     u.first_login,
                     u.change_pass,
+                    u.change_name,
                     u.use_2fa,
                     u.language,
                     u.theme
                 FROM sessions s
                 JOIN users u ON s.user_id = u.id
+                JOIN login_attempts la ON s.session_id = la.session_id
                 WHERE s.session_id = :session_id 
                
             """)

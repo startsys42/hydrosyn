@@ -207,6 +207,20 @@ async def email_exist(email: str) -> bool:
         return False  # o True si quieres bloquear en caso de error
 
 
+async def get_admin_from_db(user_id: str) -> bool:
+    sql = text("""
+        SELECT * FROM user_roles WHERE user_id = :user_id and role_id=1 LIMIT 1
+    """)
+    engine = DBEngine.get_engine()
+    try:
+        async with engine.connect() as conn:
+            result = await conn.execute(sql, {"user_id": user_id})
+            row = result.fetchone()
+            return row is not None 
+    except Exception as e:
+        logger.error(f"Error checking admin existence: {e}")
+        return False  # o True si quieres bloquear en caso de error
+
 
 
 
