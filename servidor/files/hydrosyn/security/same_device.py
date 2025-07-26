@@ -1,6 +1,6 @@
 from venv import logger
 from fastapi import Request
-from typing import Dict, Anyfrom
+from typing import Dict, Any
 from services.notifications import create_user_notification
 import json
 from datetime import datetime, timezone

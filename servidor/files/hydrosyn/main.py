@@ -1,7 +1,6 @@
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 import os
 import sys
 from logger import logger
@@ -13,8 +12,7 @@ from security.middleware import AdvancedSessionMiddleware
 from dotenv import load_dotenv
 from services.notifications import create_user_notification
 from events.startup import on_startup
-from fastapi.responses import RedirectResponse
-
+from fastapi.middleware.cors import CORSMiddleware
 
 from datetime import datetime, timezone
 # Importamos routers
