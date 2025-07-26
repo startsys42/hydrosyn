@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 from services.notifications import create_user_notification
 from events.startup import on_startup
 from fastapi.middleware.cors import CORSMiddleware
-from secure import SecureHeaders 
+
 
 from datetime import datetime, timezone
 # Importamos routers
@@ -88,15 +88,13 @@ app.add_middleware(
 
     max_age=600  # Tiempo que el navegador cachea la configuración CORS
 )
-secure_headers = SecureHeaders(
-    x_frame_options="DENY",
-    content_security_policy="frame-ancestors 'none';"
-)
+
 
 @app.middleware("http")
 async def set_secure_headers(request, call_next):
     response = await call_next(request)
-    secure_headers.starlette(response)
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Content-Security-Policy"] = "frame-ancestors 'none';"
     return response
 
 
