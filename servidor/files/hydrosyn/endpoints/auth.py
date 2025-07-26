@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
-from app.web.utils import get_user_preferences, ERROR_MESSAGES
+from endpoints.utils import get_user_preferences, ERROR_MESSAGES
 from fastapi.responses import PlainTextResponse
 from fastapi import Form, status
 from fastapi.responses import RedirectResponse

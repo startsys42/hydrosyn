@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request
-from app.web.utils import get_user_preferences
+from endpoints.utils import get_user_preferences
 from security.csrf import generate_csrf_token
-from common.templates import templates
+
 from fastapi.responses import HTMLResponse, PlainTextResponse
 router = APIRouter()
 #  cambair idioma, cambiar contarseña, activar twofa, desativar twofa, actiavr  , ver correo. o inidcarloe n lso emnsajes
