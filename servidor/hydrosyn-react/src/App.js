@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import ChangePassword from './components/ChangePassword';
 import ChangeUsername from './components/ChangeUsername';
 import PrivateRoute from './components/PrivateRoute';
+import RecoverPassword from './components/RecoverPassword';
 import { checkAccess } from './utils/checks';
 
 
