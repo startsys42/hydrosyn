@@ -62,7 +62,6 @@ chmod 750 /var/log/hydrosyn
 
 
 
-
 cat <<EOF > /etc/systemd/system/hydrosyn.service
 [Unit]
 Description=FastAPI app Hydrosyn
