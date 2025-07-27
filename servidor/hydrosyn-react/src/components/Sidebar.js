@@ -16,16 +16,34 @@ const Sidebar = ({ userHasAdvancedAccess }) => {  // true/false
             requiresAdvanced: false, // Siempre visible
         },
         {
-            title: 'Usuarios',
+            title: 'Users',
 
             path: '/users',
             requiresAdvanced: true, // Solo visible con permiso
         },
         {
-            title: 'Configuración',
+            title: 'Settings',
 
             path: '/settings',
             requiresAdvanced: false, // Siempre visible
+        },
+        {
+            title: 'Profile',
+
+            path: '/profile',
+            requiresAdvanced: false, // Siempre visible
+        },
+        {
+            title: 'Security',
+
+            path: '/security',
+            requiresAdvanced: true, // Siempre visible
+        },
+        {
+            title: 'Notifications',
+
+            path: '/notifications',
+            requiresAdvanced: true, // Siempre visible
         },
     ];
 
