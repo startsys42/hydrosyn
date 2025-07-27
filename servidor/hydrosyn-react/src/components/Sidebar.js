@@ -10,22 +10,10 @@ const Sidebar = ({ userHasAdvancedAccess }) => {  // true/false
     // Items del menú
     const menuItems = [
         {
-            title: 'Dashboard',
-
-            path: '/dashboard',
-            requiresAdvanced: false, // Siempre visible
-        },
-        {
             title: 'Users',
 
             path: '/users',
             requiresAdvanced: true, // Solo visible con permiso
-        },
-        {
-            title: 'Settings',
-
-            path: '/settings',
-            requiresAdvanced: false, // Siempre visible
         },
         {
             title: 'Profile',
