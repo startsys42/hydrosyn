@@ -32,8 +32,8 @@ server {
     }
     location /api {
         # Restricción de acceso (solo permite desde el mismo servidor)
-        allow 127.0.0.1;
-        deny all;
+        #allow 127.0.0.1;
+        d#eny all;
 
         # Proxy a FastAPI
         proxy_pass http://127.0.0.1:5671;
