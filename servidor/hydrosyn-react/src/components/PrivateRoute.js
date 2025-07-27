@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import checkAccess from '../utils/checks';
 
 const PrivateRoute = ({ checkCondition, children }) => {
     const [isVerified, setIsVerified] = useState(false);

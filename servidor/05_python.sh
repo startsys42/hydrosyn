@@ -71,7 +71,7 @@ Description=FastAPI app Hydrosyn
 User=$APP_USER
 Group=$APP_USER
 WorkingDirectory=/opt/hydrosyn
-ExecStart=/opt/hydrosyn/venv/bin/uvicorn main:app --host 0.0.0.0--port $APP_PORT
+ExecStart=/opt/hydrosyn/venv/bin/uvicorn main:app --host 0.0.0.0 --port $APP_PORT
 Restart=on-failure
 RestartSec=15
 

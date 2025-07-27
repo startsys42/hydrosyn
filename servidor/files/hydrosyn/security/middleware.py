@@ -71,12 +71,12 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
             html_source = self._get_html_source(request)
 
             if session_data is not None:
-                request.state.summary = session_data['summary']
+                #request.state.summary = session_data['summary']
                 request.state.user_id = session_data['user_id']
                 request.state.username = session_data['username']
                 request.state.email = session_data['email']
-                request.state.change_pass = True if session_data.get('change_pass') is not None else False
-                request.state.change_name = True if session_data.get('change_name') is not None else False
+                #request.state.change_pass = True if session_data.get('change_pass') is not None else False
+                #request.state.change_name = True if session_data.get('change_name') is not None else False
 
                 response = await call_next(request)
                 if request.path == "/api/change-lang-theme":
@@ -105,11 +105,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         new_theme=request.state.theme
                     )
                 return response
-                return response
-
-    
-
- 
+               
 
     async def _create_new_session(self, request: Request, response: Response, current_key: str) -> Response:
         """Crea una nueva sesión después de login exitoso"""

@@ -1,5 +1,5 @@
 import config from '../config';
-
+/*
 function getGpuInfo() {
     const canvas = document.createElement('canvas');
     const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -28,9 +28,10 @@ function getOS() {
 }
 
 
-
+*/
 export async function checkAccess() {
     try {
+        /*
         const gpuInfo = getGpuInfo();
         const cpuCores = navigator.hardwareConcurrency || null;
         const deviceMemory = navigator.deviceMemory || null; // GB aproximados
@@ -38,10 +39,7 @@ export async function checkAccess() {
         const os = getOS();
 
 
-        // Nota: IP pública la pide backend o servicio externo (opcional)
-        // Aquí omitimos la IP porque fetch no puede acceder a ella directamente.
-        // Si quieres, pide a un servicio externo y añádelo a este objeto.
-
+      
         const clientInfo = {
 
             userAgent,
@@ -51,17 +49,18 @@ export async function checkAccess() {
             os,
             origin: window.location.pathname,
         };
-
+*/
         try {
             const res = await fetch(`${config.API_URL}/check-access`, {
-                method: 'POST', // usamos POST para enviar datos
+                method: 'GET', // usamos GET 
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include', // importante para enviar y recibir cookies
-                body: JSON.stringify(clientInfo),
+
             });
             const data = await res.json();
+            console.log(data); // Aquí tienes los datos
             return {
                 ok: true,
                 status: res.status,
