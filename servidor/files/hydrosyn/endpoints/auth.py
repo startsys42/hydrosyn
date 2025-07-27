@@ -45,7 +45,7 @@ async def check_access(request: Request):
     else:
         # quiero leer el json que recibe
         data = await request.json()
-        ip = data.get("ip")
+        ip =  request.headers.get('x-forwarded-for').split(",")[0].strip()
         user_agent = data.get("userAgent")
         gpu_info = data.get("gpuInfo")
         cpu_cores = data.get("cpuCores")

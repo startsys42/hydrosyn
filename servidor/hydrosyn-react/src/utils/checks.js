@@ -36,15 +36,14 @@ export async function checkAccess() {
         const deviceMemory = navigator.deviceMemory || null; // GB aproximados
         const userAgent = navigator.userAgent;
         const os = getOS();
-        const ipResponse = await fetch('https://api.ipify.org?format=json');
-        const ipData = await ipResponse.json();
-        const ip = ipData.ip || 'Unknown';
+
+
         // Nota: IP pública la pide backend o servicio externo (opcional)
         // Aquí omitimos la IP porque fetch no puede acceder a ella directamente.
         // Si quieres, pide a un servicio externo y añádelo a este objeto.
 
         const clientInfo = {
-            ip,
+
             userAgent,
             gpuInfo,
             cpuCores,

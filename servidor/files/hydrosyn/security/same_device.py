@@ -9,7 +9,7 @@ def hash_dict(data: dict) -> str:
     json_str = json.dumps(data, sort_keys=True)
     return hashlib.sha256(json_str.encode()).hexdigest()
 
-def sameDevice(stored_device_data: Dict[str, Any], summary: str, user_id, username, ip, language, email) -> bool:
+async def sameDevice(stored_device_data: Dict[str, Any], summary: str, user_id, username, ip, language, email) -> bool:
     if hash_dict(stored_device_data) != summary:
         logger.warning(
             f"Session detected from a different device for user '{username}', possible cookie theft detected."
