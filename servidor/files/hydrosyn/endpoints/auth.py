@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request
 
-from fastapi.responses import HTMLResponse
+from fastapi.responses import JSONResponse
 from endpoints.utils import get_user_preferences, ERROR_MESSAGES
 from fastapi.responses import PlainTextResponse
 from fastapi import Form, status
