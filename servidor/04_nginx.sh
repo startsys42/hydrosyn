@@ -33,7 +33,7 @@ server {
     location /api {
         # Restricción de acceso (solo permite desde el mismo servidor)
         #allow 127.0.0.1;
-        d#eny all;
+        #deny all;
 
         # Proxy a FastAPI
         proxy_pass http://127.0.0.1:5671;
@@ -42,8 +42,8 @@ server {
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;   
         
         # Cabeceras de seguridad adicionales
-        proxy_set_header X-Frame-Options "DENY";
-        proxy_set_header Content-Security-Policy "frame-ancestors 'none';";
+        #proxy_set_header X-Frame-Options "DENY";
+        #proxy_set_header Content-Security-Policy "frame-ancestors 'none';";
     }
 }
 EOF
