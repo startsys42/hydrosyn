@@ -76,6 +76,8 @@ app = FastAPI()
 
 # 1) Middleware para sesiones (solo para rutas web) con la clave cargada desde shadow
 
+'''
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:80"],  # SOLO tu dominio en producción
@@ -97,10 +99,10 @@ app.add_middleware(
 @app.middleware("http")
 async def set_secure_headers(request, call_next):
     response = await call_next(request)
-    response.headers["X-Frame-Options"] = "DENY"
-    response.headers["Content-Security-Policy"] = "frame-ancestors 'none';"
+    #response.headers["X-Frame-Options"] = "DENY"
+    #response.headers["Content-Security-Policy"] = "frame-ancestors 'none';"
     return response
-
+'''
 
 # Middleware personalizado con rotación de clave
 app.add_middleware(AdvancedSessionMiddleware, key_manager=cookie_key_manager)
