@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 const PrivateRoute = ({ checkCondition, children }) => {
-
+    const [isVerified, setIsVerified] = useState(false);
 
     const location = useLocation();
     const navigate = useNavigate();
+
 
     useEffect(() => {
         let isMounted = true;
@@ -55,34 +56,44 @@ const PrivateRoute = ({ checkCondition, children }) => {
                             message: data.message,
                         },
                     });
-                } else if (data.loggedIn && !data.changeName && !data.changePass) {
+                    return;
+                } else if (data.loggedIn) {
 
-                    navigate('/dashboard', {
-                        state: {
-                            csrfToken: data.csrf,
-                            language: data.language,
-                            theme: data.theme,
-                            permission: data.permission,
-                        },
-                    });
-                } else if (data.loggedIn && !data.changeName && data.changePass) {
-
-                    navigate('/change-password', {
-                        state: {
-                            csrfToken: data.csrf,
-                            language: data.language,
-                            theme: data.theme,
-                        },
-                    });
-                } else if (data.loggedIn && data.changeName && !data.changePass) {
-
-                    navigate('/change-username', {
-                        state: {
-                            csrfToken: data.csrf,
-                            language: data.language,
-                            theme: data.theme,
-                        },
-                    });
+                    if (data.changeName) {
+                        navigate('/change-username', {
+                            state: {
+                                csrfToken: data.csrf,
+                                language: data.language,
+                                theme: data.theme,
+                                permission: data.permission,
+                            },
+                        });
+                        return;
+                    } else if (data.changePass) {
+                        navigate('/change-password', {
+                            state: {
+                                csrfToken: data.csrf,
+                                language: data.language,
+                                theme: data.theme,
+                                permission: data.permission,
+                            },
+                        });
+                        return;
+                    }
+                    else {
+                        navigate('/dashboard', {
+                            state: {
+                                csrfToken: data.csrf,
+                                language: data.language,
+                                theme: data.theme,
+                                permission: data.permission,
+                            }
+                        });
+                        return;
+                    }
+                }
+                if (isMounted) {
+                    setIsVerified(true);
                 }
             } catch (error) {
 
@@ -104,7 +115,7 @@ const PrivateRoute = ({ checkCondition, children }) => {
         };
     }, [checkCondition, location.pathname, navigate]);
 
-    return children;
+    return isVerified ? children : null;
 };
 export default PrivateRoute;
 
