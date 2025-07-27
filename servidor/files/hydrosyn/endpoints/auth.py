@@ -85,7 +85,7 @@ async def check_access(request: Request):
                     "csrf": generate_csrf_token(),
                     "language": request.state.lang or "en",
                     "theme": request.state.theme or "light",
-                    "permission": False
+                    "permission": admin
                 }
         else:
             #insertar en login attempts

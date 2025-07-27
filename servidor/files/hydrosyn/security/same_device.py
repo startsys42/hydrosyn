@@ -14,7 +14,7 @@ def sameDevice(stored_device_data: Dict[str, Any], summary: str, user_id, userna
         logger.warning(
             f"Session detected from a different device for user '{username}', possible cookie theft detected."
         )
-        create_user_notification(
+        await create_user_notification(
             notification_id=2,  # ID de la notificación de robo de cookies
             user_id=user_id,
             username=username,

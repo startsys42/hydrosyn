@@ -1,13 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import Dashboard from './components/Dashboard';
 
 import ServerErrorPage from './components/ServerErrorPage';
 
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+
 import ChangePassword from './components/ChangePassword';
 import ChangeUsername from './components/ChangeUsername';
 import PrivateRoute from './components/PrivateRoute';
@@ -18,13 +17,14 @@ import { checkAccess } from './utils/checks';
 
 
 function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const navigate = useNavigate();
+
+
 
 
     return (
         <Router>
             <Routes>
+                <Route path="/" element={<Navigate to="/login" replace />} />
                 <Route path="/login" element={<PrivateRoute checkCondition={checkAccess}> <LoginPage />
                 </PrivateRoute>} />
 
