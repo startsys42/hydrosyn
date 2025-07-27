@@ -132,4 +132,4 @@ async def startup_event():
 
 
 logger.info("Starting application...")
-create_user_notification(notification_id=1, date=datetime.now(timezone.utc))
+await create_user_notification(notification_id=1, date=datetime.now(timezone.utc))

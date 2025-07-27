@@ -14,7 +14,7 @@ from security.email import send_email
 from db.db_users import delete_session_in_db, is_in_blacklist_from_db, generate_unique_token_and_store_in_db
 from pydantic import BaseModel, EmailStr
 from security.two_steps import generate_two_step_token, validate_two_step_token , remove_two_step_token
-from db.db_auth import get_user_login_from_db
+from db.db_auth import get_user_login_from_db, get_admin_from_db, 
 from security.email_messages import email_login_error
 from services.notifications import create_user_notification
 from datetime import datetime, timezone
@@ -74,7 +74,7 @@ async def check_access(request: Request):
                 )
             else:
                 #MODIFICAR PRO AHORA UN SOLO ADMIN
-                if get_admin_from_db(request.state.user_id):
+                if await get_admin_from_db(request.state.user_id):
                     admin = True
                 else:
                     admin = False
