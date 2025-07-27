@@ -34,7 +34,11 @@ async def check_access(request: Request):
     logger.info("Checking access for user")
     cookie_value = request.cookies.get("hydrosyn_session_id")
     if not cookie_value:
-        return {
+        return JSONResponse(
+            status_code=200,
+            content={
+            "ok": True,
+            "status": 200,
             "loggedIn": False,
             "changeName": False,
             "changePass": False,
@@ -42,7 +46,8 @@ async def check_access(request: Request):
             "language": "en",
             "theme": "light",
             "permission": False
-        }
+            }
+        )
     else:
         # quiero leer el json que recibe
         data = await request.json()
@@ -68,9 +73,12 @@ async def check_access(request: Request):
                 await delete_session_in_db(request.state.session_id)
                 #insertar en login attempts
                 return JSONResponse(
-                    status_code=400,  # Bad Request
+                    status_code=400,
                     content={
-                        "redirect": "/login"  # Opcional: para que React sepa a dónde redirigir
+                        "ok": False,
+                        "status": 400,
+                        "message": "Device verification failed",
+                        "redirect": "/login"
                     }
                 )
             else:
@@ -79,7 +87,11 @@ async def check_access(request: Request):
                     admin = True
                 else:
                     admin = False
-                return {
+                return JSONResponse(
+                status_code=200,
+                content={
+                    "ok": True,
+                    "status": 200,
                     "loggedIn": True,
                     "changeName": request.state.change_name,
                     "changePass": request.state.change_pass,
@@ -88,17 +100,23 @@ async def check_access(request: Request):
                     "theme": request.state.theme or "light",
                     "permission": admin
                 }
+            )
         else:
             #insertar en login attempts
-            return {
-                "loggedIn": False,
-                "changeName": False,
-                "changePass": False,
-                "csrf": generate_csrf_token(),
-                "language": request.state.lang or "en",
-                "theme": request.state.theme or "light",
-                "permission": False
-            }
+            return JSONResponse(
+                status_code=200,
+                content={
+                    "ok": True,
+                    "status": 200,
+                    "loggedIn": False,
+                    "changeName": False,
+                    "changePass": False,
+                    "csrf": generate_csrf_token(),
+                    "language": request.state.lang or "en",
+                    "theme": request.state.theme or "light",
+                    "permission": False
+                }
+            )
         
 
 

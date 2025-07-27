@@ -63,7 +63,7 @@ export async function checkAccess() {
             });
             const data = await res.json();
             return {
-                ok: res.ok,
+                ok: true,
                 status: res.status,
                 ...data,
             };

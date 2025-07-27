@@ -14,6 +14,12 @@ const PrivateRoute = ({ checkCondition, children }) => {
         const verify = async () => {
             try {
                 const res = await checkCondition();
+                console.log("Response:", {
+                    status: res.status,
+                    ok: res.ok,
+                    headers: [...res.headers.entries()],
+                    body: await res.clone().json().catch(() => "No body")
+                });
                 if (!isMounted) return;
                 if (!res.ok) {
 

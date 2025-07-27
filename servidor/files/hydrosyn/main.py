@@ -83,6 +83,10 @@ app.add_middleware(
     allow_methods=["GET", "POST"],  # Solo estos métodos
     allow_headers=[
         "Content-Type",
+        "Authorization",
+        "X-Requested-With",
+        "Cookie",  # Permite leer cookies
+        "Set-Cookie"
     ],
 
 
@@ -123,13 +127,12 @@ app.include_router(web_settings.router, prefix="/api", tags=["Web Settings"])
 
 
 
-@app.on_event("startup")
-async def startup_event():
+async def on_startup_event():
     await on_startup()
+    try:
+        await create_user_notification(notification_id=1, date=datetime.now(timezone.utc))
+        logger.info("Application started successfully")
+    except Exception as e:
+        logger.error(f"Error during startup: {e}")
 
-
-
-
-
-logger.info("Starting application...")
-await create_user_notification(notification_id=1, date=datetime.now(timezone.utc))
+logger.info("Application configuration completed")
