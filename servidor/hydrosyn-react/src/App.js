@@ -5,6 +5,9 @@ import LoginPage from './components/LoginPage';
 import Dashboard from './components/Dashboard';
 
 import ServerErrorPage from './components/ServerErrorPage';
+import Notifications from './components/Notifications';
+import Blacklist from './components/Blacklist';
+import IDs from './components/IDs';
 
 
 import ChangePassword from './components/ChangePassword';
@@ -62,6 +65,10 @@ function App() {
                 <Route
                     path="/notifications"
                     element={<Notifications />}
+                />
+                <Route
+                    path="/ids"
+                    element={<IDs />}
                 />
             </Routes>
         </Router>

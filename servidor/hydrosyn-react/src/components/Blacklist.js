@@ -11,11 +11,15 @@ function Blacklist() {
     const [selectedItems, setSelectedItems] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
-
-    // Obtener preferencias de idioma y tema (ejemplo)
     const [language, setLanguage] = useState('es');
     const [theme, setTheme] = useState('light');
+
+    // Obtener preferencias de idioma y tema (ejemplo)
+
+
+
     useEffect(() => {
+        navigate('/blacklist', { replace: true });
         const fetchData = async () => {
             try {
                 const res = await fetch(`${config.API_URL}/blacklist`, {
@@ -27,9 +31,9 @@ function Blacklist() {
                     body: JSON.stringify(),
 
                 });
-                if (!response.ok) throw new Error(`Error ${response.status}`);
+                if (!res.ok) throw new Error(`Error ${res.status}`);
 
-                const jsonData = await response.json();
+                const jsonData = await res.json();
 
                 // 1. Validación explícita de autenticación
                 if (jsonData.isLoggedIn !== true) {  // !== true cubre false/undefined
