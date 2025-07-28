@@ -146,34 +146,8 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                 return response
                 # regsitro y check y cambair idioma tema
             #insertar en login
-            path = request.path
-            logger.info(f"path:  {path}")
-            method = request.method
-            client_ip = request.client.host if request.client else "unknown"
-            user_agent = request.headers.get("user-agent", "unknown")
             
-
-            if session_data is not None:
-                
-
-                
-
-               
-
-
-            else:
-                response = await call_next(request)
-                if request.path == "/api/change-lang-theme":
-                    await self.update_cookie_lang_theme(
-                        request=request,
-                        response=response,
-                        current_key=current_key,
-                        old_key=old_key,
-                        new_lang=request.state.language,
-                        new_theme=request.state.theme
-                    )
-                return response
-               
+           
 
     async def _create_new_session(self, request: Request, response: Response, current_key: str, json_data: dict) -> Response:
         """Crea una nueva sesión después de login exitoso"""
