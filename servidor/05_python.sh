@@ -43,9 +43,9 @@ packages=(
   pymysql
   aiomysql
   email-validator
-  google-api-python-client 
-  google-auth-httplib2 
-  google-auth-oauthlib
+  #google-api-python-client 
+  #google-auth-httplib2 
+ # google-auth-oauthlib
   python-dotenv
   paho-mqtt
   cryptography
