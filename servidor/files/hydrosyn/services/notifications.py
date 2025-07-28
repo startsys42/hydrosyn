@@ -64,9 +64,10 @@ async def create_user_notification( notification_id: int, **kwargs):
         except KeyError as e:
             logger.warning(f"Falta variable en plantilla: {e}")
             continue  # O manejar el error de otra manera
+        '''
         if user_id  and lang_code == lang:  
             send_email(
-                        to=email,
+                        to=os.getenv("EMAIL_SENDER"),
                         subject=subject,
                         body=formatted_msg
                     )
@@ -79,7 +80,7 @@ async def create_user_notification( notification_id: int, **kwargs):
                         body=formatted_msg
                     )
         
-
+'''
         
         for user in users_notified:
             if user["language"] == lang_code:
