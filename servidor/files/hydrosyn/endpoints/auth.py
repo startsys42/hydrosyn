@@ -34,52 +34,52 @@ async def check_access(request: Request):
     logger.info("Checking access for user")
     
         # quiero leer el json que recibe
-        data = await request.json()
-        ip =  request.headers.get('x-forwarded-for').split(",")[0].strip()
-        user_agent = data.get("userAgent")
-        gpu_info = data.get("gpuInfo")
-        cpu_cores = data.get("cpuCores")
-        device_memory = data.get("deviceMemory")
-        os = data.get("os")
-        origin = data.get("origin")
-        logger.info(f"Received data: IP={ip}, User-Agent={user_agent}, GPU={gpu_info}, CPU Cores={cpu_cores}, Device Memory={device_memory}, OS={os}, Origin={origin}")
-        if hasattr(request.state, "user_id"):
-        #insert
-            if await get_admin_from_db(request.state.user_id):
-                admin = True
-            else:
-                admin = False
-            return JSONResponse(
+    data = await request.json()
+    ip =  request.headers.get('x-forwarded-for').split(",")[0].strip()
+    user_agent = data.get("userAgent")
+    gpu_info = data.get("gpuInfo")
+    cpu_cores = data.get("cpuCores")
+    device_memory = data.get("deviceMemory")
+    os = data.get("os")
+    origin = data.get("origin")
+    logger.info(f"Received data: IP={ip}, User-Agent={user_agent}, GPU={gpu_info}, CPU Cores={cpu_cores}, Device Memory={device_memory}, OS={os}, Origin={origin}")
+    if hasattr(request.state, "user_id"):
+    #insert
+        if await get_admin_from_db(request.state.user_id):
+            admin = True
+        else:
+            admin = False
+        return JSONResponse(
+        status_code=200,
+        content={
+            "ok": True,
+            "status": 200,
+            "loggedIn": True,
+            "changeName": request.state.change_name,
+            "changePassword": request.state.change_pass,
+            "csrf": generate_csrf_token(),
+            "language": request.state.lang or "en",
+            "theme": request.state.theme or "light",
+            "permission": admin
+        }
+        )
+    else:
+        #insertar en login attempts
+        return JSONResponse(
             status_code=200,
             content={
                 "ok": True,
                 "status": 200,
-                "loggedIn": True,
-                "changeName": request.state.change_name,
-                "changePass": request.state.change_pass,
+                "loggedIn": False,
+                "changeName": False,
+                "changePassword": False,
                 "csrf": generate_csrf_token(),
                 "language": request.state.lang or "en",
                 "theme": request.state.theme or "light",
-                "permission": admin
+                "permission": False
             }
-            )
-        else:
-            #insertar en login attempts
-            return JSONResponse(
-                status_code=200,
-                content={
-                    "ok": True,
-                    "status": 200,
-                    "loggedIn": False,
-                    "changeName": False,
-                    "changePass": False,
-                    "csrf": generate_csrf_token(),
-                    "language": request.state.lang or "en",
-                    "theme": request.state.theme or "light",
-                    "permission": False
-                }
-            )
-        
+        )
+    
 
 
 

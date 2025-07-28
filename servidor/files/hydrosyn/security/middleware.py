@@ -19,7 +19,7 @@ from pydantic import BaseModel
 from fastapi import HTTPException
 from services.notifications import create_user_notification
 
-
+#bloquear por rutas publcias si no hays esion id
 #crear notificaion robo cookie admin y usuario, controlar lo del apsswords, lo del name, 
 
 
@@ -57,7 +57,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                    "status": 200,
                    "loggedIn": False,
                     "changeName": False,
-                    "changePass": False,
+                    "changePassword": False,
                     "csrf": generate_csrf_token(),
                     "language": "en",
                     "theme": "light",
@@ -133,6 +133,14 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     )
                 return response
             else:
+                if request.path not in ["/api/change-language-theme", "/api/check-access"]:
+                    #login attemp
+                    return JSONResponse()
+                        
+                        
+
+                    # Si es una ruta pública, no se requiere sesión
+               
                 response = await call_next(request)
                 if request.path == "/api/change-lang-theme":
                     await self.update_cookie_lang_theme(

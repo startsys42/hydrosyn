@@ -76,7 +76,7 @@ const PrivateRoute = ({ checkCondition, children }) => {
                             },
                         });
                         return;
-                    } else if (data.changePass) {
+                    } else if (data.changePassword) {
                         navigate('/change-password', {
                             state: {
                                 csrfToken: data.csrf,

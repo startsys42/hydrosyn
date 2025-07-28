@@ -12,7 +12,7 @@
 
 #ber posy y añadir
 
-@router.get("/see-blacklist", response_class=HTMLResponse)
+@router.get("/blacklist", response_class=HTMLResponse)
 async def see_blacklist_get(request: Request):
     try:
         prefs = get_user_preferences(request)

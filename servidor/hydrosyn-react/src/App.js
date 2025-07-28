@@ -55,6 +55,14 @@ function App() {
                         </PrivateRoute>
                     }
                 />
+                <Route
+                    path="/blacklist"
+                    element={<Blacklist />}  // Correcto en v6+
+                />
+                <Route
+                    path="/notifications"
+                    element={<Notifications />}
+                />
             </Routes>
         </Router>
     );
