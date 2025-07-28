@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Request
-from endpoints.utils import get_user_preferences
 from security.csrf import generate_csrf_token
 
 from fastapi.responses import HTMLResponse, PlainTextResponse

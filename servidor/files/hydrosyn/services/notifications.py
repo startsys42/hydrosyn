@@ -1,8 +1,8 @@
 from db.db_notifications import get_templates_by_languages_from_db
 from security.email import send_email
-from db.db_notifications import get_should_send_email_for_notification_from_db, insert_notification_event_in_db
+from db.db_notifications import get_should_send_email_for_notification_from_db, insert_notification_event_in_db, get_notifications_email_from_db
 from db.db_roles import get_users_with_permission_notifications_from_db
-
+from logger import logger
 
 
 async def create_user_notification( notification_id: int, **kwargs):
@@ -54,7 +54,7 @@ async def create_user_notification( notification_id: int, **kwargs):
                     unique_langs.add(notification_lang)
                     
                     
-    templates=get_templates_by_languages_from_db(notification_id, unique_langs)
+    templates= await get_templates_by_languages_from_db(notification_id, unique_langs)
 
     for lang_code, data in templates.items():
         subject = data["subject"]

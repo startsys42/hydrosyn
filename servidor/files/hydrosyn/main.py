@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 from services.notifications import create_user_notification
 from events.startup import on_startup
 from fastapi.middleware.cors import CORSMiddleware
-
+import socket
 
 from datetime import datetime, timezone
 # Importamos routers
@@ -48,7 +48,7 @@ db_password  = os.getenv("DB_PASSWORD")
 db_port = os.getenv("DB_PORT")  
 
 
-logger.info(f"Conectando a BD con: usuario={db_user}, password={'***' if db_password else 'VACÍO'}, host={db_host}, puerto={db_port}, bd={db_name}")
+#logger.info(f"Conectando a BD con: usuario={db_user}, password={'***' if db_password else 'VACÍO'}, host={db_host}, puerto={db_port}, bd={db_name}")
 
 
 try:
@@ -137,12 +137,12 @@ app.include_router(web_settings.router, prefix="/api", tags=["Web Settings"])
 
 
 
-
+@app.on_event("startup")
 async def on_startup_event():
     await on_startup()
     try:
         await create_user_notification(notification_id=1, date=datetime.now(timezone.utc))
-        logger.info("Application started successfully")
+      
     except Exception as e:
         logger.error(f"Error during startup: {e}")
 
