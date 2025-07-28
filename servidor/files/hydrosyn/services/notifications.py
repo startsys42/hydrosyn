@@ -85,7 +85,7 @@ async def create_user_notification( notification_id: int, **kwargs):
         
         for user in users_notified:
             if user["language"] == lang_code:
-                insert_notification_event_in_db(
+                await insert_notification_event_in_db(
                     notification_id=notification_id,
                     user_id=user["id"],
                     lang_code=lang_code,
