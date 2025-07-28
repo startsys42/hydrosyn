@@ -3,22 +3,16 @@ import os
 import base64
 import re
 from logger import logger
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
+import smtplib
+from email.message import EmailMessage
 from email.mime.text import MIMEText
 from email_validator import validate_email, EmailNotValidError
 from email.mime.multipart import MIMEMultipart
 
-from dotenv import load_dotenv
 
-load_dotenv(".env")
 
-SCOPES = ['https://www.googleapis.com/auth/gmail.send']
-EMAIL_SENDER = os.getenv("EMAIL_SENDER")
-CLIENT_SECRET_FILE = os.getenv("GMAIL_CLIENT_SECRET_FILE", "../secrets/gmail_credentials.json")
-TOKEN_FILE = os.getenv("GMAIL_TOKEN_FILE", "../secrets/gmail_token.json")
 
+ 
 
 
 async def validate_email_address(email):
@@ -28,26 +22,14 @@ async def validate_email_address(email):
     except EmailNotValidError as e:
         return False
 
-async def get_gmail_service():
-    creds = None
-    if os.path.exists(TOKEN_FILE):
-        creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
-    if not creds or not creds.valid:
-        flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, SCOPES)
-        creds = flow.run_local_server(port=0)
-        with open(TOKEN_FILE, 'w') as token:
-            token.write(creds.to_json())
-    return build('gmail', 'v1', credentials=creds)
 
 
-async def create_message(sender: str, to: list, subject: str, message_text: str, cc: list = None, bcc: list = None):
+
+async def create_message( to: list, subject: str, message_text: str, cc: list = None, bcc: list = None):
     # Validaciones básicas
-    if not sender or not to:
-        raise ValueError("Sender and recipient(s) cannot be empty.")
+  
     
-    # Validar sender
-    if not validate_email_address(sender):
-        raise ValueError(f"Invalid sender email address: {sender}")
+    
 
     # Validar destinatarios to
     for addr in to:
@@ -73,21 +55,24 @@ async def create_message(sender: str, to: list, subject: str, message_text: str,
         raise ValueError("Message body cannot be empty.")
 
     msg = MIMEMultipart()
-    msg['From'] = sender
+    msg['From'] = os.getenv("EMAIL_SENDER")  # Usar variable ya cargada
     msg['To'] = ", ".join(to)
     if cc:
         msg['Cc'] = ", ".join(cc)
     if bcc:
         msg['Bcc'] = ", ".join(bcc)
     msg['Subject'] = subject
-
     msg.attach(MIMEText(message_text, "plain", "utf-8"))
+    
+    return msg 
 
-    raw = base64.urlsafe_b64encode(msg.as_bytes())
-    return {'raw': raw.decode()}
 
-
-async def send_email(sender: str, to, subject: str, message_text: str, cc=None, bcc=None) -> bool:
+async def send_email(to, subject: str, message_text: str, cc=None, bcc=None) -> bool:
+    sender = os.getenv("EMAIL_SENDER")
+    password = os.getenv("EMAIL_PASSWORD")
+    
+    if not sender or not password:
+        raise ValueError("Email credentials not configured")
     # Asegurarse que to, cc y bcc sean listas
     if isinstance(to, str):
         to = [to]
@@ -100,20 +85,22 @@ async def send_email(sender: str, to, subject: str, message_text: str, cc=None, 
     elif isinstance(bcc, str):
         bcc = [bcc]
 
-    service = get_gmail_service()
-    message = create_message(sender, to, subject, message_text, cc, bcc)
+ 
+  
     # El envío debe incluir todos los destinatarios reales
     all_recipients = to + cc + bcc
 
     try:
-        sent = service.users().messages().send(
-            userId="me",
-            body=message,
-            # Agregamos el parámetro para especificar destinatarios reales
-            # (a veces la API no lo necesita explícito, pero es mejor)
-        ).execute()
-        logger.info(f"Email sent. Message Id: {sent['id']}, To: {all_recipients}, Subject: {subject}")
+        # Crear mensaje (con await porque es async)
+        msg = await create_message(to, subject, message_text, cc, bcc)
+        
+        # Enviar via SMTP
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(sender, password)
+            server.send_message(msg)
+        
+        logger.info(f"Email sent to {to}")
         return True
     except Exception as e:
-        logger.error(f"Error sending email to {all_recipients} with subject '{subject}': {e}")
+        logger.error(f"Error sending email: {e}")
         return False
