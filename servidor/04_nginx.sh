@@ -16,7 +16,12 @@ systemctl status nginx --no-pager
 
 IP_LOCAL=$(ip -4 addr show | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | grep -v '127.0.0.1' | head -1)
 
+if ! grep -q "limit_req_zone \$binary_remote_addr zone=api_limit:10m rate=10r/s;" /etc/nginx/nginx.conf; then
+    # Inserta la línea después de la apertura del bloque http
+     sed -i '/http {/a \    limit_req_zone $binary_remote_addr zone=api_limit:10m rate=10r/s;' /etc/nginx/nginx.conf
+  
 
+fi
 tee /etc/nginx/sites-available/hydrosyn > /dev/null <<EOF
 server {
     listen 80;
@@ -27,7 +32,7 @@ server {
     add_header X-XSS-Protection "1; mode=block";
 
     # Rate Limiting (10 peticiones/segundo por IP)
-    limit_req_zone \$binary_remote_addr zone=api_limit:10m rate=10r/s;
+ 
 
     root /var/www/hydrosyn/build;
     index index.html;

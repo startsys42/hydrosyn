@@ -88,7 +88,6 @@ app.add_middleware(
     allow_methods=["GET", "POST"],  # Solo estos métodos
     allow_headers=[
         "Content-Type",
-        "Authorization",
         "Cookie",  # Permite leer cookies
         "Set-Cookie"
     ],
