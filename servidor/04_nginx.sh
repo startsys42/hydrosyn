@@ -21,26 +21,35 @@ tee /etc/nginx/sites-available/hydrosyn > /dev/null <<EOF
 server {
     listen 80;
     server_name $IP_LOCAL;
+    add_header X-Frame-Options "DENY";
+    add_header Content-Security-Policy "frame-ancestors 'none'";
+    add_header X-Content-Type-Options "nosniff" always
+
+    # Rate Limiting (10 peticiones/segundo por IP)
+    limit_req_zone $binary_remote_addr zone=api_limit:10m rate=10r/s;
 
     root /var/www/hydrosyn/build;
     index index.html;
 
     location / {
         try_files \$uri \$uri/ /index.html;
-         add_header X-Frame-Options "DENY";
-        add_header Content-Security-Policy "frame-ancestors 'none';";
+         #add_header X-Frame-Options "DENY";
+        #add_header Content-Security-Policy "frame-ancestors 'none';";
     }
     location /api {
         # Restricción de acceso (solo permite desde el mismo servidor)
         #allow 127.0.0.1;
         #deny all;
-
+if ($http_user_agent ~* (curl|wget|python-requests)) {
+            return 403 "Acceso no permitido";
+        }
         # Proxy a FastAPI
         proxy_pass http://127.0.0.1:5671;
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;   
-        
+        proxy_set_header X-Content-Type-Options "nosniff";
+        limit_req zone=api_limit burst=20 nodelay;
         # Cabeceras de seguridad adicionales
         #proxy_set_header X-Frame-Options "DENY";
         #proxy_set_header Content-Security-Policy "frame-ancestors 'none';";
