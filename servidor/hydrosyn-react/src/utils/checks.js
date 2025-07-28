@@ -1,5 +1,5 @@
 import config from '../config';
-/*
+
 function getGpuInfo() {
     const canvas = document.createElement('canvas');
     const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -28,10 +28,10 @@ function getOS() {
 }
 
 
-*/
+
 export async function checkAccess() {
     try {
-        /*
+
         const gpuInfo = getGpuInfo();
         const cpuCores = navigator.hardwareConcurrency || null;
         const deviceMemory = navigator.deviceMemory || null; // GB aproximados
@@ -39,7 +39,7 @@ export async function checkAccess() {
         const os = getOS();
 
 
-      
+
         const clientInfo = {
 
             userAgent,
@@ -49,14 +49,16 @@ export async function checkAccess() {
             os,
             origin: window.location.pathname,
         };
-*/
+
         try {
             const res = await fetch(`${config.API_URL}/check-access`, {
-                method: 'GET', // usamos GET 
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include', // importante para enviar y recibir cookies
+                body: JSON.stringify(clientInfo),
+
 
             });
             const data = await res.json();

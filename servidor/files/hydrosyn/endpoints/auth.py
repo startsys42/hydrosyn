@@ -34,6 +34,7 @@ async def check_access(request: Request):
     logger.info("Checking access for user")
     cookie_value = request.cookies.get("hydrosyn_session_id")
     if not cookie_value:
+    
         return JSONResponse(
             status_code=200,
             content={

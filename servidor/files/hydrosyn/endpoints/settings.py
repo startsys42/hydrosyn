@@ -8,7 +8,7 @@ router = APIRouter(tags=["Web Settings"])
 
 @router.post("/change-language-theme")
 async def change_lang_theme_post(
-     request: Request,
+    request: Request,
     type: str,  # "idioma" o "tema"
     value: str  # "es", "en", "light", "dark"
 ):

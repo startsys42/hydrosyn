@@ -1,3 +1,4 @@
+from urllib import request
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response, RedirectResponse, JSONResponse
@@ -11,6 +12,7 @@ from security.email import send_email
 from datetime import datetime, timezone
 from typing import Optional, Dict, Any,Union
 from logger import logger
+from security.csrf import generate_csrf_token
 from db.db_middleware import get_session_id_exists_from_db, get_session_from_db,  insert_login_attempts_in_db, get_cookie_expired_time_from_db 
 from db.db_users import delete_session_in_db
 from pydantic import BaseModel
@@ -37,10 +39,32 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
 
         # 2. Verificar sesión existente
         session_data_dict = await self._get_valid_session_id(request, current_key, old_key)
-        if session_data_dict is None and request.url.path != '/api/check-access':
+        if session_data_dict is None:
             response_for_cookie = Response()
-            await self._create_new_session(request, response_for_cookie, current_key)
-            response = await call_next(request)
+            request.state.json_data = json_data
+
+        # 🔁 Reinyectar el body para que el endpoint lo pueda volver a leer
+            async def receive():
+                return {"type": "http.request", "body": body_bytes}
+
+            request._receive = receive
+            await self._create_new_session(request, response_for_cookie, current_key,request.state.json_data)
+        
+            return JSONResponse(
+                status_code=200,
+                content={
+                    "ok": True,
+                    "status": 200,
+                    "loggedIn": False,
+                    "changeName": False,
+                    "changePass": False,
+                    "csrf": generate_csrf_token(),
+                    "language": "en",
+                    "theme": "light",
+                    "permission": False
+                }
+            )
+            #response = await call_next(request)
             
             response.headers.update(response_for_cookie.headers)
             #falta un insert login attempts
@@ -107,7 +131,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                 return response
                
 
-    async def _create_new_session(self, request: Request, response: Response, current_key: str) -> Response:
+    async def _create_new_session(self, request: Request, response: Response, current_key: str, json_data: dict) -> Response:
         """Crea una nueva sesión después de login exitoso"""
         while True:
             session_id = secrets.token_hex(64)
@@ -124,8 +148,32 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
             "language": "en",
             "theme": "light"
         }
-        
-         
+        x_forwarded_for = request.headers.get("x-forwarded-for")
+        if x_forwarded_for:
+            # Puede contener varias IPs separadas por coma, la primera es la real
+            ip = x_forwarded_for.split(",")[0].strip()
+        else:
+            # Fallback a la IP del cliente que conectó directamente (NGINX)
+            ip = request.client.host
+        logger.info(f"IP del cliente: {ip}, json_data: {json_data}")
+
+        recovery = False
+        await insert_login_attempts_in_db(None,
+            session_id,
+            ip,
+            False,
+            json_data.get("userAgent"),
+            json_data.get("deviceMemory"),
+            json_data.get("cpuCores"),
+            None,
+            json.data.get("gpuInfo"),
+            json_data.get("os"),
+            recovery,
+            json_data.get("origin"),              
+            request.method,
+            datetime.now(timezone.utc),
+        )
+
         # 3. Establecer cookie de sesión
         data_str = json.dumps(data)
 
