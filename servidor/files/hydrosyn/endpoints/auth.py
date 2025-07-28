@@ -29,7 +29,7 @@ class UserInput(BaseModel):
 router = APIRouter(tags=["Web Auth"])
 # poenr los formualrios con campos dinamicos, si em logueo bien borrar sesiona nterior o registar el rpimer iniciod e sesion y tareas para el rpiemr usuaro iniciod e sesion notificacion
 
-@router.get("/check-access")
+@router.post("/check-access")
 async def check_access(request: Request):
     logger.info("Checking access for user")
     cookie_value = request.cookies.get("hydrosyn_session_id")

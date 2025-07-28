@@ -23,10 +23,11 @@ server {
     server_name $IP_LOCAL;
     add_header X-Frame-Options "DENY";
     add_header Content-Security-Policy "frame-ancestors 'none'";
-    add_header X-Content-Type-Options "nosniff" always
+    add_header X-Content-Type-Options "nosniff";
+    add_header X-XSS-Protection "1; mode=block";
 
     # Rate Limiting (10 peticiones/segundo por IP)
-    limit_req_zone $binary_remote_addr zone=api_limit:10m rate=10r/s;
+    limit_req_zone \$binary_remote_addr zone=api_limit:10m rate=10r/s;
 
     root /var/www/hydrosyn/build;
     index index.html;
@@ -40,7 +41,7 @@ server {
         # Restricción de acceso (solo permite desde el mismo servidor)
         #allow 127.0.0.1;
         #deny all;
-if ($http_user_agent ~* (curl|wget|python-requests)) {
+        if (\$http_user_agent ~* (curl|wget|python-requests)) {
             return 403 "Acceso no permitido";
         }
         # Proxy a FastAPI
