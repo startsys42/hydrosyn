@@ -81,7 +81,7 @@ async def check_access(request: Request):
         )
     
 
-
+'''
 
 @router.get("/login", response_class=HTMLResponse)
 async def login_get(request: Request):
@@ -575,3 +575,4 @@ async def logout(request: Request):
     response = RedirectResponse(url="/web/login", status_code=303)
     response.delete_cookie("hydrosyn_session_id")
     return response
+    '''
