@@ -49,13 +49,13 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
 
             request._receive = receive
             await self._create_new_session(request, response_for_cookie, current_key,request.state.json_data)
-        
-            return JSONResponse(
-                status_code=200,
-                content={
-                    "ok": True,
-                    "status": 200,
-                    "loggedIn": False,
+
+            response= JSONResponse(
+               status_code=200,
+               content={
+                   "ok": True,
+                   "status": 200,
+                   "loggedIn": False,
                     "changeName": False,
                     "changePass": False,
                     "csrf": generate_csrf_token(),

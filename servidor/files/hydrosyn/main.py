@@ -131,19 +131,13 @@ app.include_router(web_settings.router, prefix="/api", tags=["Web Settings"])
 #    - api_users.router: /api/users, endpoints protegidos por token
 #app.include_router(api_auth.router, prefix="/api", tags=["API"])
 #app.include_router(api_users.router, prefix="/api", tags=["API"])
-async def run():
-    # Cargar datos maestros (usuarios, roles, etc.)
-    try:
-        await create_user_notification(notification_id=1, date=datetime.now(timezone.utc))
-        logger.info("Application started successfully")
-    except Exception as e:
-        logger.error(f"Error during startup: {e}")
+
 
       
 
 
 
-'''
+
 
 async def on_startup_event():
     await on_startup()
@@ -154,4 +148,3 @@ async def on_startup_event():
         logger.error(f"Error during startup: {e}")
 
 logger.info("Application configuration completed")
-'''
