@@ -1,14 +1,14 @@
 from urllib import request
+from security.same_device import sameDevice
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
-from starlette.responses import Response, RedirectResponse, JSONResponse
+from starlette.responses import Response, JSONResponse
 from itsdangerous import Signer, BadSignature
 import uuid
 import hashlib
 import secrets
 import json
-from urllib.parse import urlparse
-from security.email import send_email
+
 from datetime import datetime, timezone
 from typing import Optional, Dict, Any,Union
 from logger import logger
@@ -86,22 +86,53 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         "redirect": "/login"  # Opcional: para que React sepa a dónde redirigir
                     }
                 )
-            #insertar en login
-            path = request.path
-            logger.info(f"path:  {path}")
-            method = request.method
-            client_ip = request.client.host if request.client else "unknown"
-            user_agent = request.headers.get("user-agent", "unknown")
-            html_source = self._get_html_source(request)
-
-            if session_data is not None:
-                #request.state.summary = session_data['summary']
+            elif session_data is not  None:
                 request.state.user_id = session_data['user_id']
                 request.state.username = session_data['username']
                 request.state.email = session_data['email']
-                #request.state.change_pass = True if session_data.get('change_pass') is not None else False
-                #request.state.change_name = True if session_data.get('change_name') is not None else False
+                request.state.summary = session_data['summary']
+                
+                request.state.change_pass = True if session_data.get('change_pass') is not None else False
+                request.state.change_name = True if session_data.get('change_name') is not None else False
+                body_bytes = await request.body()
+    
+    # 2. Crear una función de receive para reenviar el body intacto
+                async def receive():
+                    return {"type": "http.request", "body": body_bytes}
 
+                # 3. Reasignar el método _receive para preservar los datos
+                request._receive = receive
+                try:
+                    body_dict = json.loads(body_bytes.decode())
+                except json.JSONDecodeError:
+                    body_dict = {}
+                logger.info(f"body_dict: {body_dict}")
+                if sameDevice(body_dict,request.state.summary, request.state.user_id, request.state.username, request.client.host, request.state.language, request.state.email):
+                    await delete_session_in_db(session_id)
+                    #REGISTRO LOGGIN ATTEMP
+                    return JSONResponse(
+                        status_code=403,
+                        content={
+                            "ok": False,
+                            "status": 403,
+                        
+                        }
+                    )
+
+    
+                response = await call_next(request)
+                # los registro login
+                if request.path == "/api/change-lang-theme":
+                    await self.update_cookie_lang_theme(
+                        request=request,
+                        response=response,
+                        current_key=current_key,
+                        old_key=old_key,
+                        new_lang=request.state.language,
+                        new_theme=request.state.theme
+                    )
+                return response
+            else:
                 response = await call_next(request)
                 if request.path == "/api/change-lang-theme":
                     await self.update_cookie_lang_theme(
@@ -113,6 +144,19 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         new_theme=request.state.theme
                     )
                 return response
+                # regsitro y check y cambair idioma tema
+            #insertar en login
+            path = request.path
+            logger.info(f"path:  {path}")
+            method = request.method
+            client_ip = request.client.host if request.client else "unknown"
+            user_agent = request.headers.get("user-agent", "unknown")
+            
+
+            if session_data is not None:
+                
+
+                
 
                
 

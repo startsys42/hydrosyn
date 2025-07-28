@@ -1,6 +1,5 @@
 
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
 import os
 import sys
 from logger import logger

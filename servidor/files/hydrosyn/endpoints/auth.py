@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request
 
 from fastapi.responses import JSONResponse
-from endpoints.utils import get_user_preferences, ERROR_MESSAGES
+from endpoints.utils import  ERROR_MESSAGES
 from fastapi.responses import PlainTextResponse
 from fastapi import Form, status
 from fastapi.responses import RedirectResponse
@@ -32,36 +32,19 @@ router = APIRouter(tags=["Web Auth"])
 @router.post("/check-access")
 async def check_access(request: Request):
     logger.info("Checking access for user")
-    cookie_value = request.cookies.get("hydrosyn_session_id")
-    if not cookie_value:
     
-        return JSONResponse(
-            status_code=200,
-            content={
-            "ok": True,
-            "status": 200,
-            "loggedIn": False,
-            "changeName": False,
-            "changePass": False,
-            "csrf": generate_csrf_token(),
-            "language": "en",
-            "theme": "light",
-            "permission": False
-            }
-        )
-    else:
         # quiero leer el json que recibe
         data = await request.json()
         ip =  request.headers.get('x-forwarded-for').split(",")[0].strip()
-        #user_agent = data.get("userAgent")
-        #gpu_info = data.get("gpuInfo")
-        #cpu_cores = data.get("cpuCores")
-        #device_memory = data.get("deviceMemory")
-        #os = data.get("os")
-        #origin = data.get("origin")
-        #logger.info(f"Received data: IP={ip}, User-Agent={user_agent}, GPU={gpu_info}, CPU Cores={cpu_cores}, Device Memory={device_memory}, OS={os}, Origin={origin}")
+        user_agent = data.get("userAgent")
+        gpu_info = data.get("gpuInfo")
+        cpu_cores = data.get("cpuCores")
+        device_memory = data.get("deviceMemory")
+        os = data.get("os")
+        origin = data.get("origin")
+        logger.info(f"Received data: IP={ip}, User-Agent={user_agent}, GPU={gpu_info}, CPU Cores={cpu_cores}, Device Memory={device_memory}, OS={os}, Origin={origin}")
         if hasattr(request.state, "user_id"):
-            # MODIFICAR PRO AHORA UN SOLO ADMIN
+        #insert
             if await get_admin_from_db(request.state.user_id):
                 admin = True
             else:
@@ -72,6 +55,8 @@ async def check_access(request: Request):
                 "ok": True,
                 "status": 200,
                 "loggedIn": True,
+                "changeName": request.state.change_name,
+                "changePass": request.state.change_pass,
                 "csrf": generate_csrf_token(),
                 "language": request.state.lang or "en",
                 "theme": request.state.theme or "light",
@@ -86,6 +71,8 @@ async def check_access(request: Request):
                     "ok": True,
                     "status": 200,
                     "loggedIn": False,
+                    "changeName": False,
+                    "changePass": False,
                     "csrf": generate_csrf_token(),
                     "language": request.state.lang or "en",
                     "theme": request.state.theme or "light",
