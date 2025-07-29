@@ -55,3 +55,10 @@ EOF
 docker --version
 systemctl restart docker
  systemctl enable docker
+
+ mkdir -p /opt/supabase
+cd /opt/supabase
+
+# Descargar archivos de configuración
+ curl -L https://github.com/supabase/supabase/releases/latest/download/docker-compose.yml -o docker-compose.yml
+ curl -L https://github.com/supabase/supabase/raw/master/docker/.env.example -o .env
