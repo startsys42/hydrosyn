@@ -15,53 +15,30 @@ systemctl start nginx
 systemctl status nginx --no-pager
 
 IP_LOCAL=$(ip -4 addr show | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | grep -v '127.0.0.1' | head -1)
-
-if ! grep -q "limit_req_zone \$binary_remote_addr zone=api_limit:10m rate=10r/s;" /etc/nginx/nginx.conf; then
-    # Inserta la línea después de la apertura del bloque http
-     sed -i '/http {/a \    limit_req_zone $binary_remote_addr zone=api_limit:10m rate=10r/s;' /etc/nginx/nginx.conf
-  
-
-fi
 tee /etc/nginx/sites-available/hydrosyn > /dev/null <<EOF
 server {
     listen 80;
-    server_name $IP_LOCAL;
-    add_header X-Frame-Options "DENY";
-    add_header Content-Security-Policy "frame-ancestors 'none'";
-    add_header X-Content-Type-Options "nosniff";
-    add_header X-XSS-Protection "1; mode=block";
-
-    # Rate Limiting (10 peticiones/segundo por IP)
- 
+    server_name  $IP_LOCAL;
 
     root /var/www/hydrosyn/build;
     index index.html;
 
+    # Servir el frontend de React
     location / {
         try_files \$uri \$uri/ /index.html;
-         #add_header X-Frame-Options "DENY";
-        #add_header Content-Security-Policy "frame-ancestors 'none';";
     }
-    location /api {
-        # Restricción de acceso (solo permite desde el mismo servidor)
-        #allow 127.0.0.1;
-        #deny all;
-        if (\$http_user_agent ~* (curl|wget|python-requests)) {
-            return 403 "Acceso no permitido";
-        }
-        # Proxy a FastAPI
+
+    # Proxy para FastAPI
+    location /api/ {
         proxy_pass http://127.0.0.1:5671;
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;   
-        proxy_set_header X-Content-Type-Options "nosniff";
-        limit_req zone=api_limit burst=20 nodelay;
-        # Cabeceras de seguridad adicionales
-        #proxy_set_header X-Frame-Options "DENY";
-        #proxy_set_header Content-Security-Policy "frame-ancestors 'none';";
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
     }
 }
 EOF
+
+
 
 
  chown root:root /etc/nginx/sites-available/hydrosyn
