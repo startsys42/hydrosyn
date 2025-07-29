@@ -12,7 +12,8 @@ import PrivateRouteInfo from './components/PrivateRouteInfo';
 
 import ChangePassword from './components/ChangePassword';
 import ChangeUsername from './components/ChangeUsername';
-import PrivateRoute from './components/PrivateRoute';
+import PrivateRoute from './components/route/PrivateRoute';
+import RouteDashboard from './components/route/RouteDashboard';
 import RecoverPassword from './components/RecoverPassword';
 
 
@@ -30,7 +31,7 @@ function App() {
                 <Route path="/" element={<Navigate to="/login" replace />} />
                 <Route path="/login" element={<PrivateRoute> <LoginPage /></PrivateRoute>} />
                 <Route path="/recover-password" element={<PrivateRoute> <RecoverPassword /> </PrivateRoute>} />
-                <Route path="/dashboard" element={<PrivateRoute> <Dashboard /></PrivateRoute>} />
+                <Route path="/dashboard" element={<RouteDashboard> <Dashboard /></RouteDashboard>} />
                 <Route path="/change-password" element={<PrivateRouteInfo><ChangePassword /> </PrivateRouteInfo>} />
                 <Route path="/change-username" element={<PrivateRouteInfo ><ChangeUsername /></PrivateRouteInfo>} />
                 <Route path="/blacklist"

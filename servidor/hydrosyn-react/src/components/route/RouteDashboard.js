@@ -28,7 +28,7 @@ function getOS() {
     return "Unknown";
 }
 
-const PrivateRoute = ({ children }) => {
+const RouteDashboard = ({ children }) => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
 
@@ -71,7 +71,7 @@ const PrivateRoute = ({ children }) => {
                             message: err.message || 'Network error or server not reachable',
                         },
                     });
-
+                    return;
                 }
 
                 if (res.status === 401) {
@@ -81,7 +81,7 @@ const PrivateRoute = ({ children }) => {
                             message: 'Unauthorized. Please log in.',
                         },
                     });
-
+                    return;
                 } else if (res.status >= 500) {
                     navigate('/error', {
                         state: {
@@ -89,7 +89,7 @@ const PrivateRoute = ({ children }) => {
                             message: 'Server error. Please try again later.',
                         },
                     });
-
+                    return;
                 } else if (res.status >= 400) {
                     navigate('/error', {
                         state: {
@@ -97,7 +97,7 @@ const PrivateRoute = ({ children }) => {
                             message: 'Request error. Please check your data.',
                         },
                     });
-
+                    return;
                 }
 
                 if (data.message && data.message.trim() !== "") {
@@ -107,7 +107,7 @@ const PrivateRoute = ({ children }) => {
                             message: data.message,
                         },
                     });
-
+                    return;
                 } else if (data.loggedIn) {
                     if (data.changeName) {
                         navigate('/change-username', {
@@ -118,7 +118,7 @@ const PrivateRoute = ({ children }) => {
                                 permission: data.permission,
                             },
                         });
-
+                        return;
                     } else if (data.changePassword) {
                         navigate('/change-password', {
                             state: {
@@ -128,18 +128,17 @@ const PrivateRoute = ({ children }) => {
                                 permission: data.permission,
                             },
                         });
-
-                    } else {
-                        navigate('/dashboard', {
-                            state: {
-                                csrfToken: data.csrf,
-                                language: data.language,
-                                theme: data.theme,
-                                permission: data.permission,
-                            },
-                        });
-
+                        return;
                     }
+                } else {
+                    navigate('/login', {
+                        state: {
+                            csrfToken: data.csrf,
+                            language: data.language,
+                            theme: data.theme,
+                            permission: data.permission,
+                        },
+                    });
                 }
             } catch (error) {
                 navigate('/error', {
@@ -148,6 +147,7 @@ const PrivateRoute = ({ children }) => {
                         message: error.message || 'Failed to gather client information',
                     },
                 });
+                return;
             } finally {
                 setIsLoading(false);
             }
@@ -163,4 +163,4 @@ const PrivateRoute = ({ children }) => {
     return children;
 };
 
-export default PrivateRoute;
+export default RouteDashboard;
