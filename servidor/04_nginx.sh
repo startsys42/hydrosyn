@@ -15,10 +15,24 @@ systemctl start nginx
 systemctl status nginx --no-pager
 
 IP_LOCAL=$(ip -4 addr show | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | grep -v '127.0.0.1' | head -1)
+
+
+
+if ! grep -q "limit_req_zone \$binary_remote_addr zone=api_limit:10m rate=10r/s;" /etc/nginx/nginx.conf; then
+    # Inserta la línea después de la apertura del bloque http
+     sed -i '/http {/a \    limit_req_zone $binary_remote_addr zone=api_limit:10m rate=10r/s;' /etc/nginx/nginx.conf
+  
+
+fi
+
 tee /etc/nginx/sites-available/hydrosyn > /dev/null <<EOF
 server {
     listen 80;
     server_name  $IP_LOCAL;
+    add_header X-Frame-Options "DENY";
+    add_header Content-Security-Policy "frame-ancestors 'none'";
+    add_header X-Content-Type-Options "nosniff";
+    add_header X-XSS-Protection "1; mode=block";
 
     root /var/www/hydrosyn/build;
     index index.html;
@@ -34,6 +48,16 @@ server {
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+
+        if (\$http_user_agent ~* (curl|wget|python-requests)) {
+            return 403 "Acceso no permitido";
+        }
+        limit_req zone=api_limit burst=20 nodelay;
+        proxy_cookie_path / /api/;
+        proxy_pass_header Set-Cookie; 
+
+        # Para que no recorte el path original /api/
+ 
     }
 }
 EOF

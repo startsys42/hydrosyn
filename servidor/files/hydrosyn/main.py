@@ -11,8 +11,10 @@ from security.middleware import AdvancedSessionMiddleware
 from dotenv import load_dotenv
 from services.notifications import create_user_notification
 from events.startup import on_startup
-
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
 from datetime import datetime, timezone
+import socket
 # Importamos routers
 from endpoints import (
     auth as web_auth,
@@ -57,6 +59,10 @@ except Exception as e:
 
 
 # Función para leer la clave secreta del fichero
+def get_server_ip():
+    """Obtiene la IP local del servidor (solo para desarrollo)"""
+    hostname = socket.gethostname()
+    return f"http://{socket.gethostbyname(hostname)}"
 
 
 
@@ -73,6 +79,32 @@ app = FastAPI()
 # 1) Middleware para sesiones (solo para rutas web) con la clave cargada desde shadow
 
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[get_server_ip()],  # SOLO tu dominio en producción
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],  # Solo estos métodos
+    allow_headers=[
+        "Content-Type",
+        "Cookie",  # Permite leer cookies
+        "Set-Cookie"
+    ],
+
+
+    max_age=600  # Tiempo que el navegador cachea la configuración CORS
+)
+
+
+@app.middleware("http")
+async def set_secure_headers(request, call_next):
+    logger.info(f"middleare Processing request: {request.method} {request.url}")
+    response = await call_next(request)
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Content-Security-Policy"] = "frame-ancestors 'none';"
+    response.headers["X-Content-Type-Options"] = "nosniff"  # Previene MIME sniffing
+    response.headers["X-XSS-Protection"] = "1; mode=block"  # Protección básica XSS
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin" 
+    return response
 
 
 

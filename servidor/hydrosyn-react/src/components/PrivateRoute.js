@@ -107,8 +107,8 @@ const PrivateRoute = ({ checkCondition, children }) => {
                 if (isMounted) {
                     navigate('/error', {
                         state: {
-                            code: 500,
-                            message: 'Error connecting.',
+                            code: 506,
+                            message: String(error),
                         },
                     });
                 }

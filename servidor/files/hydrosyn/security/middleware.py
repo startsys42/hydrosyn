@@ -36,12 +36,12 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
             '/api/change-language-theme',
             '/api/check-access',
         }
-
+        logger.info("entro al middleware")
         # 2. Verificar sesión existente
         session_data_dict = await self._get_valid_session_id(request, current_key, old_key)
         if session_data_dict is None:
             response_for_cookie = Response()
-            request.state.json_data = json_data
+            request.state.json_data = request.json if request.method == "POST" else {}
 
         # 🔁 Reinyectar el body para que el endpoint lo pueda volver a leer
             async def receive():
