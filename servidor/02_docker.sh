@@ -56,6 +56,8 @@ docker --version
 systemctl restart docker
  systemctl enable docker
 
+mkdir -p /opt/supabase
+cd /opt/supabase
 git clone --depth 1 https://github.com/supabase/supabase
 cd supabase/docker
 cp .env.example .env
