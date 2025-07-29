@@ -147,6 +147,7 @@ const RouteDashboard = ({ children }) => {
                             permission: data.permission,
                         },
                     });
+                    return;
                 }
             } catch (error) {
                 navigate('/error', {
