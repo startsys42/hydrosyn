@@ -6,15 +6,23 @@ function getGpuInfo() {
     const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
     if (!gl) return "Unknown GPU";
 
-    const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-    if (debugInfo) {
-        const vendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
-        const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-        if (vendor && renderer) {
-            return `${vendor} - ${renderer}`;
+    try {
+        // Try new standard first
+        const renderer = gl.getParameter(gl.RENDERER);
+        if (renderer) return renderer;
+
+        // Fallback to deprecated extension if needed
+        const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+        if (debugInfo) {
+            const vendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
+            const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+            if (vendor && renderer) return `${vendor} - ${renderer}`;
         }
+
+        return "Unknown GPU";
+    } catch (e) {
+        return "GPU Info Unavailable";
     }
-    return "Unknown GPU";
 }
 
 function getOS() {
