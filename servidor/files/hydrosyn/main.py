@@ -12,8 +12,6 @@ from dotenv import load_dotenv
 from services.notifications import create_user_notification
 from events.startup import on_startup
 
-
-
 from datetime import datetime, timezone
 # Importamos routers
 from endpoints import (
@@ -66,7 +64,6 @@ except Exception as e:
 
 #cookie_key_manager = CookieKeyManager(get_rotation_time=get_cookie_rotation_time_from_db,get_grace_period = get_old_cookie_token_limit_hour_from_db,ttl=600  # 10 minutes )
 
-}"
 
 
 #jwt_key_manager = JWTKeyManager(get_rotation_time=get_jwt_rotation_time_from_db, get_grace_period = get_old_cookie_token_limit_hour_from_db,ttl=600)
