@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import config from '../config';
 
 
 function Blacklist() {
@@ -22,7 +21,7 @@ function Blacklist() {
         navigate('/blacklist', { replace: true });
         const fetchData = async () => {
             try {
-                const res = await fetch(`${config.API_URL}/blacklist`, {
+                const res = await fetch('/api/blacklist', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -92,7 +91,7 @@ function Blacklist() {
 
         if (confirmDelete) {
             try {
-                const response = await fetch(`${config.API_URL}/blacklist/delete`, {
+                const response = await fetch('/api/blacklist-delete', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',

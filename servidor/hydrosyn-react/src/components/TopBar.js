@@ -1,11 +1,11 @@
 import React from 'react';
 import texts from '../i18n/locales';
-import config from '../config';
+
 
 export default function TopBar({ language, theme }) {
     const handleChangeSetting = async (type, value) => {
         try {
-            await fetch(`${config.API_URL}/change-language-theme`, {
+            await fetch('/api/change-language-theme', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
