@@ -133,7 +133,7 @@ modify_param_in_mysqld "bind-address" "$DB_IP"
 modify_param_in_mysqld "sql_mode" "STRICT_ALL_TABLES"
 
 
-modify_param_in_mysqld "default_time_zone" "+00:00"
+#modify_param_in_mysqld "default_time_zone" "+00:00"
 
 
 

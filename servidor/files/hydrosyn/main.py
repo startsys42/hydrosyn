@@ -11,8 +11,8 @@ from security.middleware import AdvancedSessionMiddleware
 from dotenv import load_dotenv
 from services.notifications import create_user_notification
 from events.startup import on_startup
-from fastapi.middleware.cors import CORSMiddleware
-import socket
+
+
 
 from datetime import datetime, timezone
 # Importamos routers
@@ -66,10 +66,7 @@ except Exception as e:
 
 #cookie_key_manager = CookieKeyManager(get_rotation_time=get_cookie_rotation_time_from_db,get_grace_period = get_old_cookie_token_limit_hour_from_db,ttl=600  # 10 minutes )
 
-def get_server_ip():
-    """Obtiene la IP local del servidor (solo para desarrollo)"""
-    hostname = socket.gethostname()
-    return f"http://{socket.gethostbyname(hostname)}"
+}"
 
 
 #jwt_key_manager = JWTKeyManager(get_rotation_time=get_jwt_rotation_time_from_db, get_grace_period = get_old_cookie_token_limit_hour_from_db,ttl=600)
@@ -80,32 +77,6 @@ app = FastAPI()
 
 
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[get_server_ip()],  # SOLO tu dominio en producción
-    allow_credentials=True,
-    allow_methods=["GET", "POST"],  # Solo estos métodos
-    allow_headers=[
-        "Content-Type",
-        "Cookie",  # Permite leer cookies
-        "Set-Cookie"
-    ],
-
-
-    max_age=600  # Tiempo que el navegador cachea la configuración CORS
-)
-
-
-@app.middleware("http")
-async def set_secure_headers(request, call_next):
-    logger.info(f"middleare Processing request: {request.method} {request.url}")
-    response = await call_next(request)
-    response.headers["X-Frame-Options"] = "DENY"
-    response.headers["Content-Security-Policy"] = "frame-ancestors 'none';"
-    response.headers["X-Content-Type-Options"] = "nosniff"  # Previene MIME sniffing
-    response.headers["X-XSS-Protection"] = "1; mode=block"  # Protección básica XSS
-    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin" 
-    return response
 
 
 # Middleware personalizado con rotación de clave
