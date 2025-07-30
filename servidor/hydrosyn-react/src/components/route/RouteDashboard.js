@@ -116,29 +116,8 @@ const RouteDashboard = ({ children }) => {
                         },
                     });
                     return;
-                } else if (data.loggedIn) {
-                    if (data.changeName) {
-                        navigate('/change-username', {
-                            state: {
-                                csrfToken: data.csrf,
-                                language: data.language,
-                                theme: data.theme,
-                                permission: data.permission,
-                            },
-                        });
-                        return;
-                    } else if (data.changePassword) {
-                        navigate('/change-password', {
-                            state: {
-                                csrfToken: data.csrf,
-                                language: data.language,
-                                theme: data.theme,
-                                permission: data.permission,
-                            },
-                        });
-                        return;
-                    }
-                } else {
+                } else if (!data.loggedIn) {
+
                     navigate('/login', {
                         state: {
                             csrfToken: data.csrf,
