@@ -43,8 +43,12 @@ async def check_access(request: Request):
     os = data.get("os")
     origin = data.get("origin")
     logger.info(f"Received data: IP={ip}, User-Agent={user_agent}, GPU={gpu_info}, CPU Cores={cpu_cores}, Device Memory={device_memory}, OS={os}, Origin={origin}")
+    token= await generate_csrf_token()
+    language = request.state.language or "en"
+    theme = request.state.theme  or "light"
     if hasattr(request.state, "user_id"):
-    #insert
+        name = request.state.change_name
+        password = request.state.change_pass
         if await get_admin_from_db(request.state.user_id):
             admin = True
         else:
@@ -55,11 +59,11 @@ async def check_access(request: Request):
             "ok": True,
             "status": 200,
             "loggedIn": True,
-            "changeName": request.state.change_name,
-            "changePassword": request.state.change_pass,
-            "csrf": generate_csrf_token(),
-            "language": request.state.lang or "en",
-            "theme": request.state.theme or "light",
+            "changeName": name,
+            "changePassword": password,
+            "csrf": token,
+            "language": language,
+            "theme": theme,
             "permission": admin
         }
         )
@@ -73,9 +77,9 @@ async def check_access(request: Request):
                 "loggedIn": False,
                 "changeName": False,
                 "changePassword": False,
-                "csrf": generate_csrf_token(),
-                "language": request.state.lang or "en",
-                "theme": request.state.theme or "light",
+                "csrf": token,
+                "language": language,
+                "theme": theme,
                 "permission": False
             }
         )
