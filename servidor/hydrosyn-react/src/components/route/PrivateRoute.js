@@ -117,37 +117,17 @@ const PrivateRoute = ({ children }) => {
                     });
                     return;
                 } else if (data.loggedIn) {
-                    if (data.changeName) {
-                        navigate('/change-username', {
-                            state: {
-                                csrfToken: data.csrf,
-                                language: data.language,
-                                theme: data.theme,
-                                permission: data.permission,
-                            },
-                        });
-                        return;
-                    } else if (data.changePassword) {
-                        navigate('/change-password', {
-                            state: {
-                                csrfToken: data.csrf,
-                                language: data.language,
-                                theme: data.theme,
-                                permission: data.permission,
-                            },
-                        });
-                        return;
-                    } else {
-                        navigate('/dashboard', {
-                            state: {
-                                csrfToken: data.csrf,
-                                language: data.language,
-                                theme: data.theme,
-                                permission: data.permission,
-                            },
-                        });
-                        return;
-                    }
+
+                    navigate('/dashboard', {
+                        state: {
+                            csrfToken: data.csrf,
+                            language: data.language,
+                            theme: data.theme,
+                            permission: data.permission,
+                        },
+                    });
+                    return;
+
                 }
             } catch (error) {
                 navigate('/error', {
