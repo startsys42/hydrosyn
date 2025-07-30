@@ -184,19 +184,18 @@ USE hydrosyn_db;
 
 INSERT INTO users (
      username, email, password, is_active,
-    change_pass, delete_possible,
-    created_by, language, theme, use_2fa, twofa_secret, fa_verified, first_login
+    created_by, language, theme
 )
 VALUES (
      '$FIRST_USER', '$FIRST_USER_EMAIL', '$HASH_PASS', TRUE,
-    FALSE, FALSE,
-    1, 'en', 'light', FALSE, NULL, FALSE, TRUE
+   
+    1, 'en', 'light'
 );
 
-INSERT INTO user_roles (
-    user_id, role_id, created_by
+INSERT INTO rol_admin (
+    user_id, created_by
 ) VALUES (
-    2, 1, 1
+    2, 1
 );
 
 "
