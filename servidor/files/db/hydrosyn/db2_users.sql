@@ -9,9 +9,7 @@ CREATE TABLE  IF NOT EXISTS  users(
     password VARCHAR(255) NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
 
-    change_pass BOOLEAN NOT NULL DEFAULT FALSE,
-    change_name BOOLEAN NOT NULL DEFAULT FALSE,
-    delete_possible  BOOLEAN NOT NULL DEFAULT  FALSE,
+
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by INT UNSIGNED NOT NULL,
     language ENUM('es', 'en') NOT NULL DEFAULT 'en',
@@ -42,9 +40,9 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 -- Insertar usuario system con created_by temporal (0)
 INSERT INTO users (
-    username, email, password, is_active, first_login, delete_possible, created_by, language, theme, , ,
+    username, email, password, is_active, created_by, language, theme
 ) VALUES (
-    'system', 'system@example.com', 'hashed_password', FALSE, FALSE, FALSE, 0, 'en', 'light', FALSE, FALSE, NULL
+    'system', 'system@example.com', 'hashed_password', FALSE, 0, 'en', 'light'
 );
 
 -- Actualizar created_by para que apunte a sí mismo
