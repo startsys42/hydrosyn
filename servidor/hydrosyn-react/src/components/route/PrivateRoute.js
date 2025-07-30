@@ -69,13 +69,7 @@ const PrivateRoute = ({ children }) => {
                             'Content-Type': 'application/json',
                         },
                         credentials: 'include',
-                        body: JSON.stringify(const gpuInfo = getGpuInfo() || "Unknown GPU";
-                        const cpuCores = navigator.hardwareConcurrency || null;
-                        const deviceMemory = navigator.deviceMemory || null;
-                        const userAgent = navigator.userAgent || "Unknown User Agent";
-                        const os = getOS() || "Unknown OS";
-                        origin: window.location.pathname,
-),
+                        body: JSON.stringify(clientInfo)
                     });
     data = await res.json();
 } catch (err) {
