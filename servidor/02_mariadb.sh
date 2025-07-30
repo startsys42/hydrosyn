@@ -153,18 +153,17 @@ echo -e "\e[32mMySQL asegurado correctamente.\e[0m"
 
 
 
-$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db2_notifications.sql  2>> errores.txt
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db1_notifications.sql  2>> errores.txt
 
 
-$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db4_users.sql  2>> errores.txt
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db2_users.sql  2>> errores.txt
 
 
 
-$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db5_config_history.sql  2>> errores.txt
 
-$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db6_notifications_history.sql  2>> errores.txt
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db3_notifications_history.sql  2>> errores.txt
 
-$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db7_permissions_tables.sql  2>> errores.txt
+$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db4_permissions_tables.sql  2>> errores.txt
 
 # Generar hash bcrypt con Python
 
