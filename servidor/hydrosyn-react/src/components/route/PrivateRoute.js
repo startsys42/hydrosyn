@@ -45,7 +45,12 @@ const PrivateRoute = ({ children }) => {
 
 
             try {
-
+                const gpuInfo = getGpuInfo() || "Unknown GPU";
+                const cpuCores = navigator.hardwareConcurrency || null;
+                const deviceMemory = navigator.deviceMemory || null;
+                const userAgent = navigator.userAgent || "Unknown User Agent";
+                const os = getOS() || "Unknown OS";
+                const origin = window.location.pathname;
                 const clientInfo = {
                     userAgent,
                     gpuInfo,
