@@ -4,7 +4,7 @@ import os
 import sys
 from logger import logger
 from security.secrets import get_most_recent_password, load_master_data
-from common.keys_managers import cookie_key_manager #, jwt_key_manager
+
 from db.db_config import get_cookie_rotation_time_from_db, get_old_cookie_token_limit_hour_from_db
 from db.db_engine import DBEngine
 from security.middleware import AdvancedSessionMiddleware
@@ -14,6 +14,8 @@ from events.startup import on_startup
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from datetime import datetime, timezone
+from security.keys import CookieKeyManager #, JWTKeyManager
+from db.db_config import get_cookie_rotation_time_from_db, get_old_cookie_token_limit_hour_from_db 
 import socket
 # Importamos routers
 from endpoints import (
@@ -65,7 +67,11 @@ def get_server_ip():
     return f"http://{socket.gethostbyname(hostname)}"
 
 
-
+cookie_key_manager = CookieKeyManager(
+    get_rotation_time=get_cookie_rotation_time_from_db,
+    get_grace_period=get_old_cookie_token_limit_hour_from_db,
+    ttl=600
+)
 
 
 #cookie_key_manager = CookieKeyManager(get_rotation_time=get_cookie_rotation_time_from_db,get_grace_period = get_old_cookie_token_limit_hour_from_db,ttl=600  # 10 minutes )
