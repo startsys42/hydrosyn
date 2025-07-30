@@ -17,10 +17,9 @@ async def insert_login_attempts_in_db(
     user_agent: str | None = None,
     ram_gb: int | float | None = None,
     cpu_cores: int | None = None,
-    cpu_architecture: str | None = None,
     gpu_info: str | None = None,
     device_os: str | None = None,
-    recovery: bool = False,
+    
    
     
 ) -> bool:
@@ -33,10 +32,8 @@ async def insert_login_attempts_in_db(
             user_agent,
             ram_gb,
             cpu_cores,
-            cpu_architecture,
             gpu_info,
             device_os,
-            recovery,
             page,              
             http_method,
             attempt_time
@@ -48,10 +45,8 @@ async def insert_login_attempts_in_db(
             :user_agent,
             :ram_gb,
             :cpu_cores,
-            :cpu_architecture,
             :gpu_info,
             :device_os,
-            :recovery,
             :page,              
             :http_method,
             :attempt_time
@@ -66,10 +61,8 @@ async def insert_login_attempts_in_db(
         "user_agent": user_agent,
         "ram_gb": float(ram_gb) if ram_gb is not None else None, 
         "cpu_cores": cpu_cores,
-        "cpu_architecture": cpu_architecture,
         "gpu_info": gpu_info,
         "device_os": device_os,
-        "recovery": recovery,
         "page": page,                     
         "http_method": http_method.upper(),
         "attempt_time": attempt_time
@@ -157,7 +150,6 @@ async def get_session_from_db(session_id: str, extend_validity: bool = True) -> 
                     s.user_agent,
                     s.ram_gb,
                     s.cpu_cores,
-                    s.cpu_architecture,
                     s.gpu_info,     
                     s.device_os,
                     s.summary,
