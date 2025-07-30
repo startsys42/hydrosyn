@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+
 import TopBar from './TopBar'
 import texts from '../i18n/locales';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 export default function LoginPage() {
-
+    const navigate = useNavigate();
     const location = useLocation();
     const { language = 'en', theme = 'light', csrfToken = null } = location.state || {}; // valores por defecto
 
@@ -14,10 +17,44 @@ export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Aquí iría la lógica de submit
+
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Si usas csrfToken, puedes enviarlo aquí también
+                    //'X-CSRF-Token': csrfToken,
+                },
+                body: JSON.stringify({
+                    username,
+                    password,
+                    csrfToken,
+                }),
+            });
+
+            if (!response.ok) {
+                // Aquí manejas errores de la API
+                const errorData = await response.json();
+                setErrors({ general: errorData.message || 'Error en login' });
+                return;
+            }
+
+            const data = await response.json();
+            // Por ejemplo, si login es OK:
+            console.log('Login OK, token:', data.token);
+
+            // Puedes guardar token y navegar a otra página
+            // localStorage.setItem('token', data.token);
+            // navigate('/dashboard');
+
+        } catch (error) {
+            setErrors({ general: 'Error de red o inesperado' });
+        }
     };
+
     return (
         <div className={`app ${theme}`} style={{ padding: 20, fontFamily: 'Arial' }}>
             <TopBar language={language} theme={theme} texts={texts} />
@@ -49,9 +86,9 @@ export default function LoginPage() {
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            style={{ marginLeft: 5 }}
+                            style={{ marginLeft: 5, background: 'none', border: 'none' }}
                         >
-                            {showPassword ? texts[language].hide : texts[language].show}
+                            <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
                         </button>
                     </div>
                     {errors.password && (
@@ -62,18 +99,17 @@ export default function LoginPage() {
                 <button type="submit" style={{ marginTop: 10, width: '100%' }}>
                     {texts[language].login}
                 </button>
+                <button
+                    onClick={() => navigate('/recover-password')}
+
+                >
+                    {texts[language].recoverPassword}
+                </button>
             </form>
 
 
 
-            <div style={{ marginTop: 30 }}>
-                <button
-                    onClick={() => alert('Funcionalidad de recuperar contraseña')}
-                    style={{ color: 'blue', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}
-                >
-                    {texts[language].forgotPassword}
-                </button>
-            </div>
+
 
         </div>
     );

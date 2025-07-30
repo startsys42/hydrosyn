@@ -153,22 +153,7 @@ echo -e "\e[32mMySQL asegurado correctamente.\e[0m"
 
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db1_config_groups.sql  2>> errores.txt
 
-python3 -c "
-from zoneinfo import  available_timezones
 
-
-
-with open('timezones.sql', 'w') as f:
-    f.write('USE $DB_NAME;\n')
-    f.write('INSERT INTO timezones (name) VALUES\n')
-    
-    values = []
-    for tz_name in sorted(available_timezones()):
-        tz_name_escaped = tz_name.replace(\"'\", \"\\\\'\")  # Escapar comillas para SQL
-        values.append(f\"('{tz_name_escaped}')\")
-    
-    f.write(',\\n'.join(values) + ';\\n')
-"
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< timezones.sql 2>> errores.txt
 
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db2_notifications.sql  2>> errores.txt

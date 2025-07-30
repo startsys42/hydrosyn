@@ -3,7 +3,7 @@ from fastapi import FastAPI
 import os
 import sys
 from logger import logger
-from security.secrets import get_most_recent_password, load_master_data
+
 
 from db.db_config import get_cookie_rotation_time_from_db, get_old_cookie_token_limit_hour_from_db
 from db.db_engine import DBEngine
@@ -143,13 +143,5 @@ app.include_router(web_settings.router, prefix="/api", tags=["Web Settings"])
 
 
 
-@app.on_event("startup")
-async def on_startup_event():
-    await on_startup()
-    try:
-        await create_user_notification(notification_id=1, date=datetime.now(timezone.utc))
-      
-    except Exception as e:
-        logger.error(f"Error during startup: {e}")
 
 logger.info("Application configuration completed")

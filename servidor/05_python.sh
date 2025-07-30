@@ -34,7 +34,7 @@ packages=(
   itsdangerous
   fastapi
   uvicorn
-  python-jose
+  #python-jose
   python-multipart
   sqlalchemy
   pycryptodome

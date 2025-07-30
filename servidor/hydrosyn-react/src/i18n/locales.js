@@ -8,6 +8,14 @@ const texts = {
         changeLanguage: 'Cambiar idioma',
         changeTheme: 'Cambiar tema',
         recoverPassword: 'Recuperar contraseña',
+        email: 'Email',
+        backToLogin: 'Volver al inicio de sesión',
+        recoverySent: 'Nueva contraseña enviada al correo',
+        users: 'Usuarios',
+        profile: 'Perfil',
+        security: 'Seguridad',
+        notifications: 'Notificaciones',
+        configuration: 'Configuración',
 
     },
     en: {
@@ -18,10 +26,20 @@ const texts = {
         password: 'Password',
 
         changeLanguage: 'Change Language',
-        changeTheme: 'Toggle Theme',
+        changeTheme: 'Change Theme',
         recoverPassword: 'Recover Password',
+        email: 'Email',
+        backToLogin: 'Back to Login',
+        recoverySent: 'New password sent to email',
+        users: 'Users',
+        profile: 'Profile',
+        security: 'Security',
+        notifications: 'Notifications',
+        configuration: 'Configuration',
 
     },
 };
 
 export default texts;
+
+

@@ -2,37 +2,18 @@ import { useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import texts from '../i18n/locales';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 const Sidebar = ({ userHasAdvancedAccess }) => {  // true/false
     const [isCollapsed, setIsCollapsed] = useState(false);
     const location = useLocation();
-
-    // Items del menú
     const menuItems = [
-        {
-            title: 'Users',
-
-            path: '/users',
-            requiresAdvanced: true, // Solo visible con permiso
-        },
-        {
-            title: 'Profile',
-
-            path: '/profile',
-            requiresAdvanced: false, // Siempre visible
-        },
-        {
-            title: 'Security',
-
-            path: '/security',
-            requiresAdvanced: true, // Siempre visible
-        },
-        {
-            title: 'Notifications',
-
-            path: '/notifications',
-            requiresAdvanced: true, // Siempre visible
-        },
+        { id: 'users', path: '/users', requiresAdvanced: true },
+        { id: 'profile', path: '/profile', requiresAdvanced: false },
+        { id: 'security', path: '/security', requiresAdvanced: true },
+        { id: 'notifications', path: '/notifications', requiresAdvanced: true },
+        { id: 'configuration', path: '/configuration', requiresAdvanced: true },
     ];
 
     // Filtra items
@@ -45,8 +26,15 @@ const Sidebar = ({ userHasAdvancedAccess }) => {  // true/false
             <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
                 className="menu-toggle"
+                style={{
+                    background: 'none',
+                    border: 'none',
+                    fontSize: '24px',
+                    cursor: 'pointer',
+                    margin: '10px',
+                }}
             >
-                {isCollapsed ? '🍔' : '✖'}
+                <FontAwesomeIcon icon={isCollapsed ? faBars : faTimes} />
             </button>
 
             <ul>
@@ -57,7 +45,9 @@ const Sidebar = ({ userHasAdvancedAccess }) => {  // true/false
                     >
                         <Link to={item.path}>
                             <span className="icon">{item.icon}</span>
-                            {!isCollapsed && <span className="title">{item.title}</span>}
+                            {!isCollapsed && (
+                                <span className="title">{texts[language][item.id]}</span>
+                            )}
                         </Link>
                     </li>
                 ))}
@@ -65,3 +55,5 @@ const Sidebar = ({ userHasAdvancedAccess }) => {  // true/false
         </div>
     );
 };
+
+export default Sidebar;
