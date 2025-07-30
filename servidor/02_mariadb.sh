@@ -151,14 +151,10 @@ systemctl status mariadb
 
 echo -e "\e[32mMySQL asegurado correctamente.\e[0m"
 
-$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db1_config_groups.sql  2>> errores.txt
 
-
-$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< timezones.sql 2>> errores.txt
 
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db2_notifications.sql  2>> errores.txt
 
-$MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db3_config.sql  2>> errores.txt
 
 $MYSQL -u root -p"$MYSQL_ROOT_PASSWORD"< files/db/hydrosyn/db4_users.sql  2>> errores.txt
 
