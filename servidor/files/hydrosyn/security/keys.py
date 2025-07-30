@@ -1,5 +1,5 @@
 
-from typing import Tuple, Callable, Awaitable
+from typing import Tuple
 from datetime import datetime, timedelta
 import math
 import secrets
@@ -12,9 +12,9 @@ def generate_secure_key(length: int = 128) -> str:
     return secrets.token_urlsafe(n_bytes)[:length]
 
 class CookieKeyManager:
-    def __init__(self, get_rotation_time: Callable[[], Awaitable[int]], get_grace_period: Callable[[], Awaitable[int]], ttl: int = 600):
-        self.get_rotation_time = get_rotation_time
-        self.get_grace_period = get_grace_period
+    def __init__(self, rotation_time: int, grace_period: int, ttl: int = 600):
+        self.rotation_time = rotation_time
+        self.grace_period = grace_period
         self.ttl = ttl
         self._last_query = 0
         self.last_rotation = 0
@@ -25,8 +25,8 @@ class CookieKeyManager:
         self._next_cleanup_time = None
 
     async def initialize(self):
-        self._cached_rotation_time = await self.get_rotation_time()
-        self._cached_grace_hour = await self.get_grace_period()
+        self._cached_rotation_time = self.rotation_time
+        self._cached_grace_hour = self.grace_period
         self._last_query = time.time()
         self.last_rotation = time.time()
         self._next_cleanup_time = self._calculate_next_cleanup()
@@ -44,8 +44,8 @@ class CookieKeyManager:
         now = time.time()
 
         if now - self._last_query >= self.ttl:
-            self._cached_rotation_time = await self.get_rotation_time()
-            new_grace_hour = await self.get_grace_period()
+            self._cached_rotation_time = self.rotation_time
+            new_grace_hour = self.grace_period
             if new_grace_hour != self._cached_grace_hour:
                 self._cached_grace_hour = new_grace_hour
                 self._next_cleanup_time = self._calculate_next_cleanup()

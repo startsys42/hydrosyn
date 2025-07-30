@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncConnection
 from db.db_engine import DBEngine  # Asegúrate que retorna AsyncEngine
 from logger import logger
 from datetime import datetime, timedelta
-from db.db_config import get_cookie_rotation_time_from_db
+
 
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError

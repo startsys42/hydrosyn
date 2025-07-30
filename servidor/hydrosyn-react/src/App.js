@@ -15,10 +15,8 @@ import ChangeUsername from './components/ChangeUsername';
 import PrivateRoute from './components/route/PrivateRoute';
 import RouteDashboard from './components/route/RouteDashboard';
 import RecoverPassword from './components/RecoverPassword';
-import PasswordPolicy from './components/PasswordPolicy';
 import AddBlacklist from './components/AddBlacklist';
 import ChangeEmail from './components/ChangeEmail';
-import NamePolicy from './components/NamePolicy';
 import Users from './components/Users';
 import CreateUser from './components/CreateUser';
 import Configuration from './components/Configuration';
@@ -52,8 +50,6 @@ function App() {
                 <Route path="/users" element={<Users />} />
                 <Route path="/create-user" element={<CreateUser />} />
                 <Route path="/eliminate-user" element={<EliminateUser />} />
-                <Route path="/password-policy" element={<PasswordPolicy />} />
-                <Route path="/name-policy" element={<NamePolicy />} />
                 <Route path="/config" element={<Configuration />} />
                 <Route path="/error" element={<ServerErrorPage />} />
             </Routes>

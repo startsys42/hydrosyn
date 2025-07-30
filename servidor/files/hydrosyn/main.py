@@ -5,7 +5,7 @@ import sys
 from logger import logger
 
 
-from db.db_config import get_cookie_rotation_time_from_db, get_old_cookie_token_limit_hour_from_db
+
 from db.db_engine import DBEngine
 from security.middleware import AdvancedSessionMiddleware
 from dotenv import load_dotenv
@@ -15,7 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from datetime import datetime, timezone
 from security.keys import CookieKeyManager #, JWTKeyManager
-from db.db_config import get_cookie_rotation_time_from_db, get_old_cookie_token_limit_hour_from_db 
+
 import socket
 # Importamos routers
 from endpoints import (
@@ -68,8 +68,8 @@ def get_server_ip():
 
 
 cookie_key_manager = CookieKeyManager(
-    get_rotation_time=get_cookie_rotation_time_from_db,
-    get_grace_period=get_old_cookie_token_limit_hour_from_db,
+    rotation_time=30, # days rotation
+   grace_period=2, # hour limit
     ttl=600
 )
 
