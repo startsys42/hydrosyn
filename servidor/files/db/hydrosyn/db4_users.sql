@@ -26,7 +26,7 @@ CHECK (
   CHAR_LENGTH(username) >= 6 
   AND 
   (LENGTH(REGEXP_REPLACE(username, '[^a-zA-Z]', '')) >= 4)
-)
+),
    
    
     CONSTRAINT fk_user_creator
