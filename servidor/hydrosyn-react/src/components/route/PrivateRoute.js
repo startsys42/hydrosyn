@@ -57,7 +57,7 @@ const PrivateRoute = ({ children }) => {
                     cpuCores,
                     deviceMemory,
                     os,
-
+                    origin
                 };
                 let res;
                 let data;
