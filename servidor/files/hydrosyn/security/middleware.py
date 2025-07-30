@@ -1,3 +1,4 @@
+from email.mime import message
 from urllib import request
 from security.same_device import sameDevice
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -32,23 +33,20 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next) -> Response:
         # 1. Obtener claves actuales para verificación
         current_key, old_key = await self.key_manager.get_keys()
-        PUBLIC_ROUTES = {
-            '/api/change-language-theme',
-            '/api/check-access',
-        }
+        
         logger.info("entro al middleware")
         # 2. Verificar sesión existente
         session_data_dict = await self._get_valid_session_id(request, current_key, old_key)
         if session_data_dict is None:
-            response_for_cookie = Response()
-            request.state.json_data = request.json if request.method == "POST" else {}
+            
+            request.state.json_data = await request.json() if request.method == "POST" else {}
 
         # 🔁 Reinyectar el body para que el endpoint lo pueda volver a leer
             async def receive():
                 return {"type": "http.request", "body": body_bytes}
 
             request._receive = receive
-            await self._create_new_session(request, response_for_cookie, current_key,request.state.json_data)
+            token = await generate_csrf_token()
 
             response= JSONResponse(
                status_code=200,
@@ -58,15 +56,16 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                    "loggedIn": False,
                     "changeName": False,
                     "changePassword": False,
-                    "csrf": generate_csrf_token(),
+                    "csrf": token,
                     "language": "en",
                     "theme": "light",
                     "permission": False
                 }
             )
+            await self._create_new_session(request, response, current_key, request.state.json_data)
             #response = await call_next(request)
             
-            response.headers.update(response_for_cookie.headers)
+          
             #falta un insert login attempts
             return response
         else:
@@ -133,16 +132,25 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     )
                 return response
             else:
-                if request.path not in ["/api/change-language-theme", "/api/check-access"]:
+                if request.url.path not in ["/api/change-language-theme", "/api/check-access"]:
                     #login attemp
-                    return JSONResponse()
+                    return JSONResponse(
+                        status_code=203,
+                        content={
+                            "ok": True,
+                            "status": 203,
+                            "message": "Session expired or invalid, please login again",
+
+                        }
+                    )
+
                         
                         
 
                     # Si es una ruta pública, no se requiere sesión
                
                 response = await call_next(request)
-                if request.path == "/api/change-lang-theme":
+                if request.url.path == "/api/change-lang-theme":
                     await self.update_cookie_lang_theme(
                         request=request,
                         response=response,
@@ -157,7 +165,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
             
            
 
-    async def _create_new_session(self, request: Request, response: Response, current_key: str, json_data: dict) -> Response:
+    async def _create_new_session(self, request: Request, response: Response, current_key: str, json_data: dict):
         """Crea una nueva sesión después de login exitoso"""
         while True:
             session_id = secrets.token_hex(64)
@@ -184,20 +192,23 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         logger.info(f"IP del cliente: {ip}, json_data: {json_data}")
 
         recovery = False
-        await insert_login_attempts_in_db(None,
+        await insert_login_attempts_in_db(
             session_id,
+            None,
             ip,
             False,
-            json_data.get("userAgent"),
-            json_data.get("deviceMemory"),
-            json_data.get("cpuCores"),
-            None,
-            json.data.get("gpuInfo"),
-            json_data.get("os"),
-            recovery,
             json_data.get("origin"),              
             request.method,
             datetime.now(timezone.utc),
+            json_data.get("userAgent"),
+            json_data.get("deviceMemory"),
+            json_data.get("cpuCores"),
+#            None,
+            json_data.get("gpuInfo"),
+            json_data.get("os"),
+          
+            
+            
         )
 
         # 3. Establecer cookie de sesión
@@ -217,8 +228,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
         
  
         
-        return response
-
+    
 
  
 
