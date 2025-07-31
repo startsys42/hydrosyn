@@ -64,6 +64,7 @@ async def validate_two_step_token(encrypted_token: str):
         
         # 4. Verificar tiempo
         if (time.time() - token_data["ts"]) > TOKEN_EXPIRATION:
+            remove_two_step_token(encrypted_token)  # Eliminar si ha expirado
             return None
         
         return token_data

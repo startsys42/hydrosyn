@@ -5,12 +5,12 @@ from services.notifications import create_user_notification
 import json
 from datetime import datetime, timezone
 import hashlib
-def hash_dict(data: dict) -> str:
+async def hash_dict(data: dict) -> str:
     json_str = json.dumps(data, sort_keys=True)
     return hashlib.sha256(json_str.encode()).hexdigest()
 
 async def sameDevice(stored_device_data: Dict[str, Any], summary: str, user_id, username, ip, language, email) -> bool:
-    if hash_dict(stored_device_data) != summary:
+    if await hash_dict(stored_device_data) != summary:
         logger.warning(
             f"Session detected from a different device for user '{username}', possible cookie theft detected."
         )

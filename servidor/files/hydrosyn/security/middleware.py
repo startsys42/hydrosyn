@@ -141,7 +141,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     # Fallback a la IP del cliente que conectó directamente (NGINX)
                     ip = request.client.host
                 request.state.ip=ip
-                if request.url.path not in ["/api/change-language-theme", "/api/check-access", "/api/recover-password","/api/login"]:
+                if request.url.path not in ["/api/change-language-theme", "/api/check-access", "/api/recover-password","/api/login","/api/code-2fa"]:
                     await insert_login_attempts_in_db(
                         session_id,
                         None,

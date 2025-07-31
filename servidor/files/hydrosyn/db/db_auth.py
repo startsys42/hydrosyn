@@ -123,6 +123,55 @@ async def update_password_in_db(user_id: int, hashed_password: str) -> bool:
         logger.error(f"Unexpected error updating password: {str(e)}")
         return False
 
+async def get_code_2fa_from_db(user_id: int, code: str) -> bool:
+    verify_sql = text("""
+        SELECT 1 FROM users WHERE id = :user_id AND code_2fa = :code
+    """)
+    
+    # Consulta para invalidar el código (setear a NULL)
+    invalidate_sql = text("""
+        UPDATE users SET code_2fa = NULL WHERE id = :user_id
+    """)
+    
+    params = {"user_id": user_id, "code": code}
+
+    try:
+        engine = DBEngine.get_engine()
+        async with engine.begin() as conn:
+            # 1. Verificar si el código es válido
+            result = await conn.execute(verify_sql, params)
+            is_valid = result.scalar() is not None
+            
+            # 2. Si es válido, invalidarlo (setear a NULL)
+            if is_valid:
+                await conn.execute(invalidate_sql, {"user_id": user_id})
+            
+            return is_valid
+            
+    except SQLAlchemyError as e:
+        logger.error(f"SQLAlchemy error in 2FA code verification: {str(e)}")
+        return False
+    except Exception as e:
+        logger.error(f"Unexpected error in 2FA code verification: {str(e)}")
+        return False
+    
+async def delete_old_session_in_db(user_id: int) -> bool:
+    sql = text("""
+        DELETE FROM sessions WHERE user_id = :user_id
+    """)
+    engine = DBEngine.get_engine()
+    try:
+        async with engine.connect() as conn:  # obtener conexión async
+            async with conn.begin():  # transacción explícita async
+                result = await conn.execute(sql, {"user_id": user_id})
+            if result.rowcount > 0:
+                return True
+            else:
+                logger.warning(f"No session found for User ID: {user_id}")
+                return False
+    except Exception as e:
+        logger.error(f"Error deleting session for User ID {user_id}: {e}")
+        return False
 
 async def get_user_by_username(username: str) -> Optional[dict]:
     """
@@ -266,36 +315,35 @@ def get_user_state(username: str) -> str:
         else:
             return "NO_2FA"
 
-def guardar_sesion_en_bd(user_id: int, session_id: str, clave: str, user_agent: str, ip: str):
-    segundos_validez = get_cookie_rotation_time_from_db()
-    expires_at = datetime.utcnow() + timedelta(seconds=segundos_validez)
-
+async def insert_new_session_in_db(
+    user_id: int,
+    session_id: str,
+    user_agent: str,
+    ram_gb: float,
+    cpu_cores: int,
+    gpu_info: str,
+    device_os: str,
+    summary: str
+) -> bool:
+    sql = text("""
+        INSERT INTO sessions (user_id, session_id, user_agent, ram_gb, cpu_cores, gpu_info, device_os, summary)
+        VALUES (:user_id, :session_id, :user_agent, :ram_gb, :cpu_cores, :gpu_info, :device_os, :summary)
+    """)
+    engine = DBEngine.get_engine()
     try:
-        with get_engine().connect() as conn:
-            conn.execute(
-            text("DELETE FROM sessions WHERE user_id = :user_id AND session_id != :session_id"),
-            {"user_id": user_id, "session_id": session_id}
-        )
-            conn.execute(
-                text("""
-                    INSERT INTO sessions (user_id, session_id, session_key , user_agent, ip, expires_at)
-                    VALUES (:user_id, :session_id, :clave, :user_agent, :ip, :expires_at)
-                """),
-                {
-                    "user_id": user_id,
-                    "session_id": session_id,
-                    "clave": clave,
-                    "user_agent": user_agent[:512],
-                    "ip": ip,
-                    "expires_at": expires_at
-                }
-            )
-            logger.info(f"Sesión guardada para el usuario {user_id}, IP {ip}")
-    except IntegrityError as e:
-        logger.error(f"Error de integridad al guardar sesión: {e}")
-        # Puedes lanzar un error controlado o notificar
-    except SQLAlchemyError as e:
-        logger.error(f"Error en la base de datos al guardar sesión: {e}")
-        # También puedes lanzar un error o retornar un código HTTP si es una API
+        async with engine.connect() as conn:
+            await conn.execute(sql, {
+                "user_id": user_id,
+                "session_id": session_id,
+                "user_agent": user_agent,
+                "ram_gb": ram_gb,
+                "cpu_cores": cpu_cores,
+                "gpu_info": gpu_info,
+                "device_os": device_os,
+                "summary": summary
+            })
+            return True
     except Exception as e:
-        logger.exception(f"Error inesperado al guardar sesión: {e}")
+        logger.error(f"Error inserting new session: {e}")
+        return False
+

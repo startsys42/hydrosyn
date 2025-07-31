@@ -15,11 +15,11 @@ from security.email import send_email
 from db.db_users import delete_session_in_db, is_in_blacklist_from_db, generate_unique_token_and_store_in_db
 from pydantic import BaseModel, EmailStr
 from security.two_steps import generate_two_step_token, validate_two_step_token , remove_two_step_token
-from db.db_auth import get_user_login_from_db, get_admin_from_db, get_user_recovery_password_from_db
+from db.db_auth import get_user_login_from_db, get_admin_from_db, get_user_recovery_password_from_db, get_code_2fa_from_db, insert_new_session_in_db, delete_old_session_in_db
 from security.email_messages import email_login_error, generate_2fa_email, email_recovery_error, generate_new_password_email
 from services.notifications import create_user_notification
 from datetime import datetime, timezone
-from security.same_device import sameDevice
+from security.same_device import hash_dict, sameDevice
 class UserInput(BaseModel):
     email: EmailStr
 
@@ -93,6 +93,7 @@ async def login(request: Request):
             ip=request.state.ip,
             date=request.state.date,
         )
+        validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
         return JSONResponse(
             status_code=202,
             content={
@@ -104,6 +105,7 @@ async def login(request: Request):
             }
         )
     if not validate_username((request.state.json_data.get("username"))):
+        validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
         return JSONResponse(
             status_code=202,
             content={
@@ -117,6 +119,7 @@ async def login(request: Request):
 
     data_login_db= await get_user_login_from_db(request.state.json_data.get("username"))
     if data_login_db is None:
+        validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
         return JSONResponse(
             status_code=202,
             content={
@@ -135,6 +138,7 @@ async def login(request: Request):
                 lang=data_login_db["language"],
                 ip_address=request.state.ip
             )
+            validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
             return JSONResponse(
                 status_code=202,
                 content={
@@ -152,6 +156,7 @@ async def login(request: Request):
                 ip=request.state.ip,
                 date=request.state.date,
             )
+            validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
             return JSONResponse(
                 status_code=202,
                 content={
@@ -206,6 +211,7 @@ async def login(request: Request):
                     }
                 )
         else:
+            validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
             email_login_error(
                 email=data_login_db["email"],
                 lang=data_login_db["language"],
@@ -239,6 +245,7 @@ async def recover_password(request: Request):
             ip=request.state.ip,
             date=request.state.date,
         )
+        validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
         return JSONResponse(
             status_code=202,
             content={
@@ -250,6 +257,7 @@ async def recover_password(request: Request):
             }
         )
     if not validate_username((request.state.json_data.get("username"))):
+        validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
         return JSONResponse(
             status_code=202,
             content={
@@ -263,6 +271,7 @@ async def recover_password(request: Request):
     data_login_db=await get_user_login_from_db(request.state.json_data.get("username")) 
    
     if data_login_db is None:
+        validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
         return JSONResponse(
             status_code=202,
             content={
@@ -282,6 +291,7 @@ async def recover_password(request: Request):
                 lang=data_login_db["language"],
                 ip_address=request.state.ip
             )
+            validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
             return JSONResponse(
                 status_code=202,
                 content={
@@ -299,6 +309,7 @@ async def recover_password(request: Request):
                     ip=request.state.ip,
                     date=request.state.date,
                 )
+            validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
             return JSONResponse(
                 status_code=202,
                 content={
@@ -318,6 +329,7 @@ async def recover_password(request: Request):
                     ip=request.state.ip,
                     date=request.state.date,
                 )
+                validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
                 return JSONResponse(
                     status_code=202,
                     content={
@@ -372,6 +384,90 @@ async def recover_password(request: Request):
                 )
             
         
+@router.post("/code-2fa")
+async def code_2fa(request: Request):
+    token_2fa=validate_two_step_token(request.state.json_data.get("token_2fa"))
+    if not token_2fa:
+        return JSONResponse(
+            status_code=202,
+            content={
+                "ok": False,
+                "status": 202,
+                "language": request.state.language,
+                "theme": request.state.theme,
+                "message": "not"
+            }
+        )
+    else:
+        request.state.user_id = token_2fa["user_id"]  
+        if token_2fa["session_id"] != request.state.session_id:
+         
+            remove_two_step_token(request.state.json_data.get("token_2fa"))
+            return JSONResponse(
+                status_code=202,
+                content={
+                    "ok": False,
+                    "status": 202,
+                    "language": request.state.language,
+                    "theme": request.state.theme,
+                    "message": "not"
+                }
+            )
+        else:
+            if await get_code_2fa_from_db(token_2fa["user_id"], request.state.json_data.get("code_2fa")):
+                await delete_old_session_in_db(request.state.user_id)
+                
+                request.state.success = True
+                remove_two_step_token(request.state.json_data.get("token_2fa"))
+                dict_summary = {
+                    "userAgent": request.state.json_data.get("userAgent"),
+                    "deviceMemory": request.state.json_data.get("deviceMemory"),
+                    "cpuCores": request.state.json_data.get("cpuCores"),
+                    "gpuInfo": request.state.json_data.get("gpuInfo"),
+                    "os": request.state.json_data.get("os")
+                }
+                hash_summary=await hash_dict(dict_summary)
+                await insert_new_session_in_db(request.state.user_id, request.state.session_id, request.state.json_data.get("userAgent"),
+                        request.state.json_data.get("deviceMemory"),
+                        request.state.json_data.get("cpuCores"),
+                        request.state.json_data.get("gpuInfo"),
+                        request.state.json_data.get("os"),
+                        hash_summary
+                    )
+                # cambiar idomastemas, 
+                #modificar cookie solo si cambia idioma
+                
+            else:
+                return JSONResponse(
+                    status_code=202,
+                    content={
+                        "ok": False,
+                        "status": 202,
+                        "language": request.state.language,
+                        "theme": request.state.theme,
+                        "message": "same"
+                    }
+                )
+                
+    #recieb token, comprueba,  y sie st bien borrar sesiones vieja regsitra login atemp exitoso y comp`ruebo verifys`
+
+
+@router.post("/logout" )
+async def logout(request: Request):
+    delete_session_in_db(request.state.session_id)
+    return JSONResponse(
+        status_code=200,
+        content={
+            "ok": True,
+            "status": 200,
+            "language": "en",
+            "theme": "light",
+            
+
+        }
+    )
+            
+
 
 '''
 
@@ -861,10 +957,4 @@ async def home_get(request: Request):
     })
 
 
-@router.post("/logout",  response_class=HTMLResponse)
-async def logout(request: Request):
-    delete_session_in_db(request.state.session_id)
-    response = RedirectResponse(url="/web/login", status_code=303)
-    response.delete_cookie("hydrosyn_session_id")
-    return response
     '''
