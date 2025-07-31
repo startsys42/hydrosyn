@@ -16,7 +16,8 @@ CREATE TABLE  IF NOT EXISTS  users(
     theme ENUM('dark', 'light') NOT NULL DEFAULT 'light',
     code_2fa VARCHAR(6) NULL,
  
-    
+     CONSTRAINT chk_code_2fa_format 
+        CHECK (code_2fa IS NULL OR code_2fa REGEXP '^[0-9a-zA-Z]{6}$'),
   
      CONSTRAINT chk_username_alphanumeric CHECK (username REGEXP '^[a-zA-Z0-9]+$'),
      CONSTRAINT chk_username_complex 

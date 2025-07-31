@@ -11,124 +11,117 @@ from argon2.exceptions import VerifyMismatchError
 
 
 from typing import Optional, Dict, Any
-ph = PasswordHasher()
 
-def check_password(plain_password, hashed_password):
+
+async def get_user_login_from_db(username: str) -> Optional[Dict[str, Any]]:
+    sql = text("""
+        SELECT id, username, email, is_active, password,language
+        FROM users 
+        WHERE username = :username
+        LIMIT 1
+    """)
+    params = {"username": username}
+    
     try:
-        ph.verify(hashed_password, plain_password)
-        return True
-    except VerifyMismatchError:
+        engine = DBEngine.get_engine()
+        async with engine.begin() as conn:  # begin() para transacciones
+            result = await conn.execute(sql, params)
+            if (user := result.mappings().first()):
+              
+                return dict(user)
+            return None
+            
+    except SQLAlchemyError as e:
+        logger.error(
+           
+            f"SQLAlchemy error: {str(e)}",
+            exc_info=True
+        )
+    except Exception as e:
+        logger.error(
+            f"Unexpected error fetching user {username}: {str(e)}",
+            exc_info=True
+        )
+    return None
+
+
+async def update_2fa_code_in_db(user_id: int, code: str) -> bool:
+    sql = text("""
+        UPDATE users SET code_2fa = :code
+        WHERE user_id = :user_id
+    """)
+    params = {
+        "user_id": user_id,
+        "code": code,
+    
+    }
+    
+    try:
+        engine = DBEngine.get_engine()
+        async with engine.begin() as conn:
+            await conn.execute(sql, params)
+            
+            return True
+            
+    except SQLAlchemyError as e:
+        logger.error(f"SQLAlchemy error inserting 2FA code: {str(e)}")
+        return False
+    except Exception as e:
+        logger.error(f"Unexpected error inserting 2FA code: {str(e)}")
         return False
 
-async def get_user_login_from_db(
-    username: str,  # Obligatorio siempre
-    password: str = None,  # Opcional (Caso 2)
-    email: str = None  # Opcional (Caso 1)
-) -> Optional[Dict[str, Any]]:
 
-    key = None
-    hash_value = None
-    dict_username = "not_exist_username"
-    dict_email = "not_exist_email"
-    # Validación de parámetros
-    if password is None and email is None:
-    
-        logger.error("You must send 'password' or 'email' along with 'username'")
-        return None
+async def get_user_recovery_password_from_db(username: str, email: str) -> Optional[Dict[str, Any]]:
+    sql = text("""
+        SELECT id, username, email, is_active, password,language
+        FROM users 
+        WHERE username = :username AND email = :email
+        LIMIT 1
+    """)
+    params = {"username": username, "email": email}
 
-    # Construye la consulta según el caso
-    if password is not None:
-        # Caso 1: username + password
-        sql = text("""
-            SELECT id, username, email, is_active, 
-                   use_2fa, language, theme, password,first_login, change_pass
-            FROM users 
-            WHERE username = :username
-            LIMIT 1
-        """)
-        params = {"username": username}
-    else:
-        # Caso 2: username + email
-        sql = text("""
-            SELECT id, username, email, is_active, 
-                   use_2fa, language, theme, password, first_login, change_pass
-            FROM users 
-            WHERE username = :username OR email = :email
-            LIMIT 1
-        """)
-        params = {"username": username, "email": email}
-
-    engine = DBEngine.get_engine()
-#debo comprobar si inactivo, si two si  priemra vez
     try:
-        async with engine.connect() as conn:
+        engine = DBEngine.get_engine()
+        async with engine.begin() as conn:
             result = await conn.execute(sql, params)
-            user = result.mappings().first()
+            if (user := result.mappings().first()):
+                return dict(user)
+            return None
 
-            
-
-            if user is None:
-                logger.warning(f"User not found or incorrect data: {username}")
-                return None
-            if user is not None and user["username"] == username:
-                dict_username="exist_username"
-                if password is not None:
-                    if check_password(password, user["password"]):
-                        hash_value="same"
-                        if validate_password(password,get_password_policy_from_db()):
-                            key="password_valid"
-                            if user["change_pass"] is not None:
-                                await reset_change_pass_to_null_in_db(username)
-                                user["change_pass"] = None  # Actualiza el campo en memoria
-                        else:
-                            key="password_not_valid"
-                            if user["change_pass"] is None:
-                                await set_change_pass_to_now_in_db(username)
-                                user["change_pass"] = datetime.now(datetime.utc) + timedelta(days=1) 
-
-                    else:
-                        hash_value="different"
-                  
-            else:
-                dict_username="not_exist_username"
-            if user is not None and email is not None and user["email"] == email:
-                    dict_email="exist_email"
-            else:
-                dict_email="not_exist_email"
-                    
-             # <- Aquí puedes añadir un campo al diccionario
-                    
-                    
-                    # <- Aquí llamas a la función de validación
-                # aquí quiero comprobar que cumple las reglas y que coincide con su hash
-                
-               
-
-            
-
-            # Aquí puedes añadir más lógica si es necesario
-
-            # Devuelve datos del usuario (sin contraseña)
-            return {
-                "id": user["id"],
-                "name": user["username"],
-                "username":dict_username,
-                "email": user["email"],
-                "is_active": user["is_active"],
-                "use_2fa": user["use_2fa"],
-                "language": user["language"],
-                "theme": user["theme"],
-                "first_login": user["first_login"],
-                "change_pass": user["change_pass"],
-                "key": key if password is not None else None,
-                "hash": hash_value if password is not None else None,  
-                "dict_email": dict_email if email is not None else None,  
-            }
-
+    except SQLAlchemyError as e:
+        logger.error(
+            f"SQLAlchemy error: {str(e)}",
+            exc_info=True
+        )
     except Exception as e:
-        logger.error(f"Error en la base de datos: {e}")
-        return None
+        logger.error(
+            f"Unexpected error fetching user {username}: {str(e)}",
+            exc_info=True
+        )
+    return None
 
+
+async def update_password_in_db(user_id: int, hashed_password: str) -> bool:
+    sql = text("""
+        UPDATE users SET password = :password
+        WHERE id = :user_id
+    """)
+    params = {
+        "user_id": user_id,
+        "password": hashed_password
+    }
+
+    try:
+        engine = DBEngine.get_engine()
+        async with engine.begin() as conn:
+            await conn.execute(sql, params)
+            return True
+    except SQLAlchemyError as e:
+        logger.error(f"SQLAlchemy error updating password: {str(e)}")
+        return False
+    except Exception as e:
+        logger.error(f"Unexpected error updating password: {str(e)}")
+        return False
 
 
 async def get_user_by_username(username: str) -> Optional[dict]:

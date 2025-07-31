@@ -12,7 +12,7 @@ from cryptography.fernet import Fernet  # E
 
 MAX_STORED_TOKENS = 1000
 
-TOKEN_EXPIRATION = 300  # 5 minutos
+TOKEN_EXPIRATION = 480  # 8 minutes
 
 # Cifrado
 ENCRYPTION_KEY = Fernet.generate_key()

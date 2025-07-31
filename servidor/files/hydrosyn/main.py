@@ -10,7 +10,7 @@ from db.db_engine import DBEngine
 from security.middleware import AdvancedSessionMiddleware
 from dotenv import load_dotenv
 from services.notifications import create_user_notification
-from events.startup import on_startup
+
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from datetime import datetime, timezone
@@ -26,7 +26,7 @@ from endpoints import (
     device as web_device,
     settings as web_settings
 )
-from services.notifications import create_user_notification
+
 
 #from app.api import auth as api_auth
 #from app.api import users as api_users
@@ -141,7 +141,10 @@ app.include_router(web_settings.router, prefix="/api", tags=["Web Settings"])
       
 
 
-
-
+       
+# If you want to call this at startup, use an event handler:
+@app.on_event("startup")
+async def startup_event():
+    await create_user_notification(notification_id=1)
 
 logger.info("Application configuration completed")

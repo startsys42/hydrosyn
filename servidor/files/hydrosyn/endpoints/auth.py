@@ -8,14 +8,15 @@ from fastapi.responses import RedirectResponse
 from logger import logger
 from security.csrf import generate_csrf_token, validate_and_remove_csrf_token
 import os
+from security.hash import hash_password, verify_password
 from fastapi import Query
-
+from security.password__name_validity import validate_username, validate_password
 from security.email import send_email
 from db.db_users import delete_session_in_db, is_in_blacklist_from_db, generate_unique_token_and_store_in_db
 from pydantic import BaseModel, EmailStr
 from security.two_steps import generate_two_step_token, validate_two_step_token , remove_two_step_token
-from db.db_auth import get_user_login_from_db, get_admin_from_db
-from security.email_messages import email_login_error
+from db.db_auth import get_user_login_from_db, get_admin_from_db, get_user_recovery_password_from_db
+from security.email_messages import email_login_error, generate_2fa_email, email_recovery_error, generate_new_password_email
 from services.notifications import create_user_notification
 from datetime import datetime, timezone
 from security.same_device import sameDevice
@@ -34,15 +35,7 @@ async def check_access(request: Request):
     logger.info("Checking access for user")
     
         # quiero leer el json que recibe
-    data = await request.json()
-    ip =  request.headers.get('x-forwarded-for').split(",")[0].strip()
-    user_agent = data.get("userAgent")
-    gpu_info = data.get("gpuInfo")
-    cpu_cores = data.get("cpuCores")
-    device_memory = data.get("deviceMemory")
-    os = data.get("os")
-    origin = data.get("origin")
-    logger.info(f"Received data: IP={ip}, User-Agent={user_agent}, GPU={gpu_info}, CPU Cores={cpu_cores}, Device Memory={device_memory}, OS={os}, Origin={origin}")
+   
     token= await generate_csrf_token()
     language = request.state.language or "en"
     theme = request.state.theme  or "light"
@@ -75,8 +68,6 @@ async def check_access(request: Request):
                 "ok": True,
                 "status": 200,
                 "loggedIn": False,
-                "changeName": False,
-                "changePassword": False,
                 "csrf": token,
                 "language": language,
                 "theme": theme,
@@ -84,6 +75,303 @@ async def check_access(request: Request):
             }
         )
     
+
+
+
+@router.post("/login")
+async def login(request: Request):
+    logger.info("Checking access for user")
+    
+        # quiero leer el json que recibe, #valdiar lgitud
+        #cmpruebo nombre , token csrfactibvo o no, blacklist , contraseña notificacion 2segudn avsio correo y dejo en el state   el nombre sie s correcto
+
+    if await is_in_blacklist_from_db(request.state.json_data.get("username")):
+
+        create_user_notification(
+            notification_id=5,  # ID de la notificación de bloqueo
+            username=request.state.json_data.get("username"),
+            ip=request.state.ip,
+            date=request.state.date,
+        )
+        return JSONResponse(
+            status_code=202,
+            content={
+                "ok": True,
+                "status": 202,
+                "language": request.state.language,
+                "theme": request.state.theme,
+                "message": "not"
+            }
+        )
+    if not validate_username((request.state.json_data.get("username"))):
+        return JSONResponse(
+            status_code=202,
+            content={
+                "ok": True,
+                "status": 202,
+                "language": request.state.language,
+                "theme": request.state.theme,
+                "message": "not"
+            }
+        )
+
+    data_login_db= await get_user_login_from_db(request.state.json_data.get("username"))
+    if data_login_db is None:
+        return JSONResponse(
+            status_code=202,
+            content={
+                "ok": True,
+                "status": 202,
+                "language": request.state.language,
+                "theme": request.state.theme,
+                "message": "not"
+            }
+        )
+    else:
+        request.state.user_id = data_login_db["id"]
+        if not validate_password(request.state.json_data.get("username"), request.state.json_data.get("password")):
+            email_login_error(
+                email=data_login_db["email"],
+                lang=data_login_db["language"],
+                ip_address=request.state.ip
+            )
+            return JSONResponse(
+                status_code=202,
+                content={
+                    "ok": True,
+                    "status": 202,
+                    "language": request.state.language,
+                    "theme": request.state.theme,
+                    "message": "not"
+                }
+            )
+        if data_login_db["is_active"]==False:
+            create_user_notification(
+                notification_id=7,  # ID de la notificación de cuenta inactiva
+                username=request.state.json_data.get("username"),
+                ip=request.state.ip,
+                date=request.state.date,
+            )
+            return JSONResponse(
+                status_code=202,
+                content={
+                    "ok": True,
+                    "status": 202,
+                    "language": request.state.language,
+                    "theme": request.state.theme,
+                    "message": "not"
+                }
+            )
+        elif verify_password(request.state.json_data.get("password"),data_login_db["hash"]):
+            if not await validate_and_remove_csrf_token(request.state.json_data.get("csrf_token")):
+                email_login_error(
+                    email=data_login_db["email"],
+                    lang=data_login_db["language"],
+                    ip_address=request.state.ip
+                )
+                return JSONResponse(
+                        status_code=202,
+                        content={
+                            "ok": False,
+                            "status": 202,
+                            "language": request.state.language,
+                            "theme": request.state.theme,
+                            "message": "not"
+                        }
+                    )
+            else:
+                request.state.success = True
+                #generar codigo envair email devolevrtoken...
+                if not await generate_2fa_email( request.state.user_id,data_login_db["email"], data_login_db["email"]) :
+                    return JSONResponse(
+                        status_code=202,
+                        content={
+                            "ok": False,
+                            "status": 202,
+                            "language": request.state.language,
+                            "theme": request.state.theme,
+                            "message": "not"
+                        }
+                    )
+                      
+                token_2fa=generate_two_step_token(request.state.user_id, request.state.session_id, False)
+                return JSONResponse(status_code=200,
+                    content={
+                        "ok": True,
+                        "status": 200,
+                        "2fa": token_2fa,
+                        "language": request.state.language,
+                        "theme": request.state.theme,
+                      
+                    }
+                )
+        else:
+            email_login_error(
+                email=data_login_db["email"],
+                lang=data_login_db["language"],
+                ip_address=request.state.ip
+            )
+            return JSONResponse(
+                status_code=202,
+                content={
+                    "ok": True,
+                    "status": 202,
+                    "language": request.state.language,
+                    "theme": request.state.theme,
+                    "message": "not"
+                }
+            )
+            
+        
+    
+    
+     
+
+
+
+@router.post("/recover-password")
+async def recover_password(request: Request):
+    if await is_in_blacklist_from_db(request.state.json_data.get("username")):
+
+        create_user_notification(
+            notification_id=6,  # ID de la notificación de bloqueo
+            username=request.state.json_data.get("username"),
+            ip=request.state.ip,
+            date=request.state.date,
+        )
+        return JSONResponse(
+            status_code=202,
+            content={
+                "ok": True,
+                "status": 202,
+                "language": request.state.language,
+                "theme": request.state.theme,
+                "message": "not"
+            }
+        )
+    if not validate_username((request.state.json_data.get("username"))):
+        return JSONResponse(
+            status_code=202,
+            content={
+                "ok": True,
+                "status": 202,
+                "language": request.state.language,
+                "theme": request.state.theme,
+                "message": "not"
+            }
+        )
+    data_login_db=await get_user_login_from_db(request.state.json_data.get("username")) 
+   
+    if data_login_db is None:
+        return JSONResponse(
+            status_code=202,
+            content={
+                "ok": True,
+                "status": 202,
+                "language": request.state.language,
+                "theme": request.state.theme,
+                "message": "not"
+            }
+        )
+    else:
+        data_recovery_db= await get_user_recovery_password_from_db(request.state.json_data.get("username"), request.state.json_data.get("email"))
+        request.state.user_id = data_login_db["id"]
+        if data_recovery_db is None and data_login_db["is_active"]==True:
+            email_recovery_error(
+                email=data_login_db["email"],
+                lang=data_login_db["language"],
+                ip_address=request.state.ip
+            )
+            return JSONResponse(
+                status_code=202,
+                content={
+                    "ok": True,
+                    "status": 202,
+                    "language": request.state.language,
+                    "theme": request.state.theme,
+                    "message": "not"
+                }
+            )
+        elif data_recovery_db is None and data_login_db["is_active"]==False:
+            create_user_notification(
+                    notification_id=8,  # ID de la notificación de cuenta inactiva
+                    username=request.state.data.get("username"),
+                    ip=request.state.ip,
+                    date=request.state.date,
+                )
+            return JSONResponse(
+                status_code=202,
+                content={
+                    "ok": True,
+                    "status": 202,
+                    "language": request.state.language,
+                    "theme": request.state.theme,
+                    "message": "not"
+                }
+            )
+        else:
+        
+            if data_login_db["is_active"]==False:
+                create_user_notification(
+                    notification_id=8,  # ID de la notificación de cuenta inactiva
+                    username=request.state.data.get("username"),
+                    ip=request.state.ip,
+                    date=request.state.date,
+                )
+                return JSONResponse(
+                    status_code=202,
+                    content={
+                        "ok": True,
+                        "status": 202,
+                        "language": request.state.language,
+                        "theme": request.state.theme,
+                        "message": "not"
+                    }
+                )
+
+            if not await validate_and_remove_csrf_token(request.state.json_data.get("csrf_token")):
+                email_recovery_error(
+                    email=data_login_db["email"],
+                    lang=data_login_db["language"],
+                    ip_address=request.state.ip
+                )
+                return JSONResponse(
+                        status_code=202,
+                        content={
+                            "ok": False,
+                            "status": 202,
+                            "language": request.state.language,
+                            "theme": request.state.theme,
+                            "message": "not"
+                        }
+                    )
+            else:
+                request.state.success = True
+                #generar codigo envair email devolevrtoken...
+                if not await generate_new_password_email( request.state.user_id,data_login_db["email"], data_login_db["username"], data_login_db["language"]) :
+                    return JSONResponse(
+                        status_code=202,
+                        content={
+                            "ok": False,
+                            "status": 202,
+                            "language": request.state.language,
+                            "theme": request.state.theme,
+                            "message": "not"
+                        }
+                    )
+                    
+                return JSONResponse(status_code=200,
+                    content={
+                        "ok": True,
+                        "status": 200,
+                        "language": request.state.language,
+                        "theme": request.state.theme,
+                        "message": "yes"
+
+                    }
+                )
+            
+        
 
 '''
 

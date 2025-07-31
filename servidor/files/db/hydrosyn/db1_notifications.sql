@@ -1,12 +1,53 @@
 USE hydrosyn_db;
 
+CREATE TABLE IF NOT EXISTS email_notifications (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) NULL,
+    language ENUM('es', 'en') NOT NULL DEFAULT 'en',
+     code_2fa VARCHAR(6) NULL,
+   
+    CONSTRAINT chk_code_2fa_format 
+        CHECK (code_2fa IS NULL OR code_2fa REGEXP '^[0-9a-zA-Z]{6}$')
+    CONSTRAINT single_row CHECK (id = 1) 
+    
+);
 
 CREATE TABLE IF NOT EXISTS notifications (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    should_send_email BOOLEAN NOT NULL DEFAULT FALSE,
-    email VARCHAR(100) NULL
-  
+    should_send_email BOOLEAN NOT NULL DEFAULT FALSE
+   
+    
 );
+
+DELIMITER //
+CREATE TRIGGER check_email_before_insert
+BEFORE INSERT ON notifications
+FOR EACH ROW
+BEGIN
+    IF NEW.should_send_email = TRUE THEN
+        IF NOT EXISTS (SELECT 1 FROM email_notifications WHERE email IS NOT NULL AND LENGTH(TRIM(email)) > 3) THEN
+            SIGNAL SQLSTATE '45000' 
+            SET MESSAGE_TEXT = 'Email must be configured in email_notifications table when should_send_email is set to TRUE';
+        END IF;
+    END IF;
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER check_email_before_update
+BEFORE UPDATE ON notifications
+FOR EACH ROW
+BEGIN
+    IF NEW.should_send_email = TRUE AND OLD.should_send_email = FALSE THEN
+        IF NOT EXISTS (SELECT 1 FROM email_notifications WHERE email IS NOT NULL AND LENGTH(TRIM(email)) > 3) THEN
+            SIGNAL SQLSTATE '45000' 
+            SET MESSAGE_TEXT = 'Email must be configured in email_notifications table when enabling should_send_email';
+        END IF;
+    END IF;
+END//
+DELIMITER ;
+
+
 
 CREATE TABLE notification_translations (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,

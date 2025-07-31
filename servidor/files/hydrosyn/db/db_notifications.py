@@ -15,7 +15,7 @@ async def get_should_send_email_for_notification_from_db(notification_id: int) -
     Consulta si se debe enviar email para la notificación dada.
     """
     sql = text("""
-        SELECT should_send_email 
+        SELECT should_send_email
         FROM notifications 
         WHERE id = :notification_id
     """)
@@ -45,10 +45,10 @@ async def get_notifications_email_from_db() -> Optional[Tuple[str, str]]:
     Obtiene el email y el código de idioma más reciente de la tabla notification_email_history.
     """
     sql = text("""
-        SELECT email, lang_code
-        FROM notification_email_history
-        ORDER BY changed_at DESC
-        LIMIT 1
+        SELECT email, language
+        FROM email_notifications
+        
+       
     """)
     
     try:
@@ -57,21 +57,21 @@ async def get_notifications_email_from_db() -> Optional[Tuple[str, str]]:
             row = result.fetchone()
             
             if not row:
-                logger.info("No hay registros de emails de notificación")
+                logger.info("No notification email records found in database")
                 return None
                 
-            email, lang_code = row.email, row.lang_code
+            email, lang_code = row.email, row.language
             
             # Validar formato del email
             if not EMAIL_REGEX.match(email):
-                logger.error(f"Email de notificación no válido: {email}")
+                logger.error(f"Invalid notification email format: {email}")
                 return None
                 
             return email, lang_code
             
     except Exception as e:
         logger.error(
-            f"Error al obtener email de notificación: {str(e)}",
+            f"Error while retrieving notification email: {str(e)}",
             exc_info=True
         )
         return None

@@ -16,8 +16,13 @@ async def change_lang_theme_post(
     cookie_value = request.cookies.get("hydrosyn_session_id")
     if not cookie_value:
           return JSONResponse(
-            {"error": "NO cookie found"}, 
-            status_code=400
+            status_code=401,
+                        content={
+                            "ok": False,
+                            "status": 401,
+                            "message": "Session expired or invalid, please login again",
+
+                        }
         )
 
     if type == "language":

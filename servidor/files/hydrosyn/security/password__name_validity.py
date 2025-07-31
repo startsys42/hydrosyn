@@ -1,9 +1,61 @@
 
 
 
-from db.db_password import get_special_chars_from_db
 
-def validate_username(username: str, policy: dict) -> bool:
+
+import re
+
+
+def validate_username(username: str) -> bool:
+    if len(username) < 6 or len(username) > 20:
+        return False
+     # Verificar caracteres alfanuméricos
+    if not re.fullmatch(r"^[a-zA-Z0-9]+$", username):
+        return False
+    if len(re.findall(r"[a-zA-Z]", username)) < 4:
+        return False
+    return True
+
+def validate_password(username: str, password: str) -> bool:
+    if len(password) < 10:
+        return False
+    
+    # Números
+    if len(re.findall(r"\d", password)) < 2:
+        return False
+
+    # Mayúsculas
+    if len(re.findall(r"[A-Z]", password)) < 1:
+        return False
+    
+    # Minúsculas
+    if len(re.findall(r"[a-z]", password)) < 1:
+        return False
+   
+   
+    # Caracteres especiales
+    list_special_chars= ["!", "@", "#", "$", "%", "?","="]
+    special_chars_pattern = f"[{re.escape(''.join(list_special_chars))}]"
+    pattern = f"^[a-zA-Z0-9{re.escape(''.join(list_special_chars))}]+$"
+
+    # Validar caracteres permitidos
+    if not re.fullmatch(pattern, password):
+        return False
+    matches = re.findall(special_chars_pattern, password)
+    if len(matches) < 1:
+        return False
+
+    # Caracteres distintos mínimos
+    letters = set(ch for ch in password if ch.isalpha())
+    if len(letters) < 4:
+        return False
+    if username.lower() in password.lower():
+        return False
+    
+    return True
+
+'''
+def validate_username_policy(username: str, policy: dict) -> bool:
     # Validación de longitud
     if len(username) < policy["min_length"] or len(username) > policy["max_length"]:
         return False
@@ -38,7 +90,7 @@ def validate_username(username: str, policy: dict) -> bool:
 
 
 
-def validate_password(username: str, password: str, policy: dict) -> bool:
+def validate_password_policy(username: str, password: str, policy: dict) -> bool:
 
     # Reglas básicas de la política:
     if len(password) < policy["min_length"]:
@@ -85,3 +137,4 @@ def validate_password(username: str, password: str, policy: dict) -> bool:
             return False
     
     return True
+'''

@@ -29,9 +29,11 @@ async def create_user_notification( notification_id: int, **kwargs):
     #envio
     #añado avisos a tabals de notificacioens para todos los usuarios necesarios
     # aviso al usuarioc orrespodneinte.
+    unique_langs = set()
     should_send = await get_should_send_email_for_notification_from_db(notification_id)
-    users_notified = await get_users_with_permission_notifications_from_db(19)
-    unique_langs = set(user["language"] for user in users_notified)
+    if should_send:
+        email_notification, lang_notification = await get_notifications_email_from_db()
+        unique_langs.add(lang_notification)
     if user_id:
         unique_langs.add(lang)
         '''
@@ -45,14 +47,6 @@ async def create_user_notification( notification_id: int, **kwargs):
       '''
        
             
-    if should_send:
-            notification_email = await get_notifications_email_from_db()
-            
-            if notification_email:
-                
-                notification_lang = notification_email["lang_code"]
-                if notification_lang not in unique_langs:
-                    unique_langs.add(notification_lang)
                     
                     
     templates= await get_templates_by_languages_from_db(notification_id, unique_langs)

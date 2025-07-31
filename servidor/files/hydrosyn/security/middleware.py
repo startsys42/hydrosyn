@@ -54,8 +54,6 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                    "ok": True,
                    "status": 200,
                    "loggedIn": False,
-                    "changeName": False,
-                    "changePassword": False,
                     "csrf": token,
                     "language": "en",
                     "theme": "light",
@@ -80,9 +78,11 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                 logger.warning(f"Session {session_data['username']} is inactive, redirecting to login")
                 await delete_session_in_db(session_id)
                 return JSONResponse(
-                    status_code=400,  # Bad Request
+                    status_code=401,  # Bad Request
                     content={
-                        "redirect": "/login"  # Opcional: para que React sepa a dónde redirigir
+                        "ok": False,
+                        "status": 401,  # Opcional: para que React sepa a dónde redirigir
+                        "message": "Session expired or invalid, please login again",
                     }
                 )
             elif session_data is not  None:
@@ -132,13 +132,36 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     )
                 return response
             else:
-                if request.url.path not in ["/api/change-language-theme", "/api/check-access"]:
-                    #login attemp
+                request.state.json_data = await request.json() if request.method == "POST" else {}
+                x_forwarded_for = request.headers.get("x-forwarded-for")
+                if x_forwarded_for:
+                    # Puede contener varias IPs separadas por coma, la primera es la real
+                    ip = x_forwarded_for.split(",")[0].strip()
+                else:
+                    # Fallback a la IP del cliente que conectó directamente (NGINX)
+                    ip = request.client.host
+                request.state.ip=ip
+                if request.url.path not in ["/api/change-language-theme", "/api/check-access", "/api/recover-password","/api/login"]:
+                    await insert_login_attempts_in_db(
+                        session_id,
+                        None,
+                        ip,
+                        False,
+                        request.state.json_data.get("origin"),
+                        request.method,
+                        datetime.now(),
+                        request.state.json_data.get("userAgent"),
+                        request.state.json_data.get("deviceMemory"),
+                        request.state.json_data.get("cpuCores"),
+                        request.state.json_data.get("gpuInfo"),
+                        request.state.json_data.get("os"),
+                        
+                    )
                     return JSONResponse(
-                        status_code=203,
+                        status_code=401,
                         content={
-                            "ok": True,
-                            "status": 203,
+                            "ok": False,
+                            "status": 401,
                             "message": "Session expired or invalid, please login again",
 
                         }
@@ -148,8 +171,16 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         
 
                     # Si es una ruta pública, no se requiere sesión
-               
+                request.state.date = datetime.now()
                 response = await call_next(request)
+                success = False
+                user_id = None
+                path=request.state.json_data.get("os"),
+                if hasattr(request.state, 'user_id'):
+                    user_id = request.state.user_id
+                if hasattr(request.state, 'success'):
+                    success = request.state.success
+               
                 if request.url.path == "/api/change-lang-theme":
                     await self.update_cookie_lang_theme(
                         request=request,
@@ -159,6 +190,25 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         new_lang=request.state.language,
                         new_theme=request.state.theme
                     )
+                    path = request.url.path
+
+                await insert_login_attempts_in_db(
+                        session_id,
+                        user_id,
+                        ip,
+                        success,
+                        request.state.json_data.get("origin"),
+                        request.method,
+                        request.state.time,
+                        request.state.json_data.get("userAgent"),
+                        request.state.json_data.get("deviceMemory"),
+                        request.state.json_data.get("cpuCores"),
+                        request.state.json_data.get("gpuInfo"),
+                        path,
+                        
+                        
+                    )
+                
                 return response
                 # regsitro y check y cambair idioma tema
             #insertar en login
@@ -173,8 +223,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
             if not exists:
                 break
         
-        days = await get_cookie_expired_time_from_db()
-         # 30 días de validez
+        
        
         
         data = {
@@ -191,7 +240,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
             ip = request.client.host
         logger.info(f"IP del cliente: {ip}, json_data: {json_data}")
 
-        recovery = False
+       
         await insert_login_attempts_in_db(
             session_id,
             None,
@@ -199,11 +248,11 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
             False,
             json_data.get("origin"),              
             request.method,
-            datetime.now(timezone.utc),
+            datetime.now(),
             json_data.get("userAgent"),
             json_data.get("deviceMemory"),
             json_data.get("cpuCores"),
-#            None,
+#         
             json_data.get("gpuInfo"),
             json_data.get("os"),
           
@@ -223,7 +272,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
             secure=False,
             path="/",  
             samesite="Lax",
-            max_age=days *86400  
+            max_age=30 *86400  
         )
         
  
@@ -302,7 +351,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
 
         # Vuelve a firmar y guardar en cookie
         new_signed = Signer(current_key).sign(json.dumps(data).encode()).decode()
-        days = await get_cookie_expired_time_from_db()
+       
 
         response.set_cookie(
             key="hydrosyn_session_id",
@@ -311,5 +360,5 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
             secure=False,
             path="/",
             samesite="Lax",
-            max_age=days * 86400
+            max_age=30 * 86400
         )
