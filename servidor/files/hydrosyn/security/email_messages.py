@@ -62,6 +62,29 @@ async def generate_2fa_email(user_id:int, email: str, lang: str) -> bool:
     return True
 
 
+async def generate_2fa_new_email(user_id:int, email: str, lang: str) -> str:
+    characters = string.ascii_letters + string.digits  # a-zA-Z0-9
+    code_2fa= ''.join(random.choices(characters, k=6))
+    
+    subject = {
+        "es": "Código de autenticación de dos factores",
+        "en": "Two-Factor Authentication Code",
+    }.get(lang, "Two-Factor Authentication Code")
+
+    body = {
+        "es": f"Por favor, utiliza el siguiente código para completar tu cambio de email {code_2fa}.",
+        "en": f"Please use the following code to complete your email change: {code_2fa}.",
+    }.get(lang)
+
+    if not send_email(
+        to=email,
+        subject=subject,
+        message_text=body
+    ):
+        raise Exception("Failed to send code change new email")
+    return code_2fa
+
+
 
 async def email_recovery_error(
     email: str, 
