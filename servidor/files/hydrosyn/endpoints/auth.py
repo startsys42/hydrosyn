@@ -78,7 +78,7 @@ async def check_access(request: Request):
 
 @router.post("/login")
 async def login(request: Request):
-    logger.info("Checking access for user")
+    logger.info("Checking login for user")
     
         # quiero leer el json que recibe, #valdiar lgitud
         #cmpruebo nombre , token csrfactibvo o no, blacklist , contraseña notificacion 2segudn avsio correo y dejo en el state   el nombre sie s correcto
@@ -167,7 +167,7 @@ async def login(request: Request):
             )
         elif verify_password(request.state.json_data.get("password"),data_login_db["password"]):
             if not await validate_and_remove_csrf_token(request.state.json_data.get("csrf_token")):
-                email_login_error(
+                await email_login_error(
                     email=data_login_db["email"],
                     lang=data_login_db["language"],
                     ip_address=request.state.ip
@@ -211,7 +211,7 @@ async def login(request: Request):
                 )
         else:
             validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
-            email_login_error(
+            await email_login_error(
                 email=data_login_db["email"],
                 lang=data_login_db["language"],
                 ip_address=request.state.ip
@@ -236,6 +236,7 @@ async def login(request: Request):
 
 @router.post("/recover-password")
 async def recover_password(request: Request):
+    logger.info("Recovering password for user")
     if await is_in_blacklist_from_db(request.state.json_data.get("username")):
 
         create_user_notification(
@@ -285,7 +286,7 @@ async def recover_password(request: Request):
         data_recovery_db= await get_user_recovery_password_from_db(request.state.json_data.get("username"), request.state.json_data.get("email"))
         request.state.user_id = data_login_db["id"]
         if data_recovery_db is None and data_login_db["is_active"]==True:
-            email_recovery_error(
+            await email_recovery_error(
                 email=data_login_db["email"],
                 lang=data_login_db["language"],
                 ip_address=request.state.ip
@@ -341,7 +342,7 @@ async def recover_password(request: Request):
                 )
 
             if not await validate_and_remove_csrf_token(request.state.json_data.get("csrf_token")):
-                email_recovery_error(
+                await email_recovery_error(
                     email=data_login_db["email"],
                     lang=data_login_db["language"],
                     ip_address=request.state.ip
