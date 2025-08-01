@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS email_notifications (
      code_2fa VARCHAR(6) NULL,
    
     CONSTRAINT chk_code_2fa_format 
-        CHECK (code_2fa IS NULL OR code_2fa REGEXP '^[0-9a-zA-Z]{6}$')
+        CHECK (code_2fa IS NULL OR code_2fa REGEXP '^[0-9a-zA-Z]{6}$'),
     CONSTRAINT single_row CHECK (id = 1) 
     
 );
