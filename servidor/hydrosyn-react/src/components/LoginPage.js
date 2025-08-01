@@ -127,7 +127,7 @@ export default function LoginPage() {
 
             const data = await res.json();
             if (data.message && data.message.trim() === "not") {
-                navigate('/login');
+                window.location.href = '/login';
                 return;
             } else if (data.message && data.message.trim() === "yes") {
                 navigate('/code-2fa', {
