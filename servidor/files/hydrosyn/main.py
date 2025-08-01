@@ -24,7 +24,8 @@ from endpoints import (
     profile as web_profile,
     users as web_users,
     device as web_device,
-    settings as web_settings
+    settings as web_settings,
+    profile as web_profile
 )
 
 

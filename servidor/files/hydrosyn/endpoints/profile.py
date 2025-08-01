@@ -3,7 +3,7 @@ from security.csrf import generate_csrf_token, validate_and_remove_csrf_token
 from db.db_users import  is_in_blacklist_from_db
 
 from fastapi.responses import JSONResponse
-from servidor.files.hydrosyn.security.email_messages import generate_2fa_email, generate_2fa_new_email
+from security.email_messages import generate_2fa_email, generate_2fa_new_email
 from security.password__name_validity import validate_password, validate_username 
 from security.two_steps import generate_two_step_token, validate_two_step_token , remove_two_step_token
 from servidor.files.hydrosyn.security.email_validation import is_valid_email
@@ -219,19 +219,19 @@ async def change_email(request: Request):
                     "message": "not"
                 }
             )
-            second_code= await generate_2fa_new_email(request.state.user_id, request.state.json_data.get("new_email"), request.state.language)
-            if not second_code:
-                return JSONResponse(
-                    status_code=202,
-                    content={
-                        "ok": True,
-                        "status": 202,
-                        "language": request.state.language,
-                        "theme": request.state.theme,
-                        "message": "not"
-                    }
-                )
-                
+        second_code= await generate_2fa_new_email(request.state.user_id, request.state.json_data.get("new_email"), request.state.language)
+        if not second_code:
+            return JSONResponse(
+                status_code=202,
+                content={
+                    "ok": True,
+                    "status": 202,
+                    "language": request.state.language,
+                    "theme": request.state.theme,
+                    "message": "not"
+                }
+            )
+            
         token_2fa=generate_two_step_token(request.state.user_id, request.state.session_id, False)
        
         return JSONResponse(status_code=200,
