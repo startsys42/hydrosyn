@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS username_blacklist (
     username VARCHAR(20) NOT NULL UNIQUE,
     added_by INT UNSIGNED,  -- Usuario que añadió el nombre
     added_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
+ CONSTRAINT chk_username_alphanumeric CHECK (username REGEXP '^[a-zA-Z0-9]+$'),
     FOREIGN KEY (added_by) REFERENCES users(id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE
