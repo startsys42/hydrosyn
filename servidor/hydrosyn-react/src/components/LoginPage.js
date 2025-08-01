@@ -47,7 +47,7 @@ function getOS() {
 export default function LoginPage() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { language = 'en', theme = 'light', csrfToken = null } = location.state || {}; // valores por defecto
+    const { language = 'en', theme = 'light', csrf_token = null } = location.state || {}; // valores por defecto
 
     // Aquí ya tienes idioma, tema y csrfToken pasados por navigate()
     const [username, setUsername] = useState('');
@@ -85,7 +85,7 @@ export default function LoginPage() {
                 body: JSON.stringify({
                     username,
                     password,
-                    csrf_token: csrfToken,
+                    csrf_token,
                     userAgent,
                     gpuInfo,
                     cpuCores,
@@ -165,7 +165,7 @@ export default function LoginPage() {
             <TopBar language={language} theme={theme} texts={texts} />
             <h1>{texts[language].login}</h1>
             <form onSubmit={handleSubmit} style={{ maxWidth: 300 }}>
-                <input type="hidden" name="csrf_token" value={csrfToken} />
+                <input type="hidden" name="csrf_token" value={csrf_token} />
                 <label>
                     {texts[language].username}:
                     <input
