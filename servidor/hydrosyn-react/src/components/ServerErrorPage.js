@@ -7,7 +7,10 @@ function ServerErrorPage() {
     const navigate = useNavigate();
 
     const errorInfo = location.state;
-
+    useEffect(() => {
+        // Sobrescribe el state actual con uno vacío
+        navigate('.', { state: {}, replace: true });
+    }, []);
     // Si no hay info (por ejemplo, si recargaron la página), redirige a "/"
     useEffect(() => {
         if (!errorInfo) {

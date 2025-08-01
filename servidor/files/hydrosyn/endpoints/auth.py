@@ -177,7 +177,7 @@ async def login(request: Request):
                 return JSONResponse(
                         status_code=202,
                         content={
-                            "ok": False,
+                            "ok": True,
                             "status": 202,
                             "language": request.state.language,
                             "theme": request.state.theme,
@@ -191,7 +191,7 @@ async def login(request: Request):
                     return JSONResponse(
                         status_code=202,
                         content={
-                            "ok": False,
+                            "ok": True,
                             "status": 202,
                             "language": request.state.language,
                             "theme": request.state.theme,
@@ -207,6 +207,7 @@ async def login(request: Request):
                         "2fa": token_2fa,
                         "language": request.state.language,
                         "theme": request.state.theme,
+                        "message": "yes"
                       
                     }
                 )
@@ -350,7 +351,7 @@ async def recover_password(request: Request):
                 return JSONResponse(
                         status_code=202,
                         content={
-                            "ok": False,
+                            "ok": True,
                             "status": 202,
                             "language": request.state.language,
                             "theme": request.state.theme,
@@ -364,7 +365,7 @@ async def recover_password(request: Request):
                     return JSONResponse(
                         status_code=202,
                         content={
-                            "ok": False,
+                            "ok": True,
                             "status": 202,
                             "language": request.state.language,
                             "theme": request.state.theme,
@@ -391,7 +392,7 @@ async def code_2fa(request: Request):
         return JSONResponse(
             status_code=202,
             content={
-                "ok": False,
+                "ok": True,
                 "status": 202,
                 "language": request.state.language,
                 "theme": request.state.theme,
@@ -406,7 +407,7 @@ async def code_2fa(request: Request):
             return JSONResponse(
                 status_code=202,
                 content={
-                    "ok": False,
+                    "ok": True,
                     "status": 202,
                     "language": request.state.language,
                     "theme": request.state.theme,
@@ -451,7 +452,7 @@ async def code_2fa(request: Request):
                     request.state.cookie = True
                 
 
-                admin = await get_admin_from_db(user_id)
+                admin = await get_admin_from_db(request.state.user_id)
                 # falta cerar historicod e cambair contraeña y ....
                 return JSONResponse(
                     status_code=200,
@@ -460,7 +461,7 @@ async def code_2fa(request: Request):
                         "status": 200,
                         "language": request.state.language,
                         "theme": request.state.theme,
-                        "message": "success",
+                        "message": "yes",
                         "admin": admin
                     }
                 )
@@ -469,7 +470,7 @@ async def code_2fa(request: Request):
                 return JSONResponse(
                     status_code=202,
                     content={
-                        "ok": False,
+                        "ok": True,
                         "status": 202,
                         "language": request.state.language,
                         "theme": request.state.theme,

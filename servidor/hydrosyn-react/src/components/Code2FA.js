@@ -1,12 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-import TopBar from './TopBar'
 import texts from '../i18n/locales';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-
-
 
 function getGpuInfo() {
     const canvas = document.createElement('canvas');
@@ -43,30 +37,40 @@ function getOS() {
     return "Unknown";
 }
 
-
-export default function LoginPage() {
-    const navigate = useNavigate();
+function Code2FA() {
     const location = useLocation();
-    const { language = 'en', theme = 'light', csrfToken = null } = location.state || {}; // valores por defecto
+    const navigate = useNavigate();
+    const [token2FA] = useState(location.state?.token_2fa || '');
+    const [code, setCode] = useState('');
+    const [language] = useState(location.state?.language || 'en');
+    const [theme] = useState(location.state?.theme || 'light');
+    const [error, setError] = useState('');
 
-    // Aquí ya tienes idioma, tema y csrfToken pasados por navigate()
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [errors, setErrors] = useState({});
-    const [showPassword, setShowPassword] = useState(false);
-
+    // Limpiar state de navegación
     useEffect(() => {
-        // Sobrescribe el state actual con uno vacío
-        navigate('.', { state: {}, replace: true });
+        if (location.state?.token_2fa) {
+            navigate('.', { state: {}, replace: true });
+        }
+    }, []);
+
+
+
+    // 2. Limpiar el state de navegación (sin recargar)
+    useEffect(() => {
+        if (location.state?.token_2fa) {
+            navigate('.', { state: {}, replace: true });
+        }
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Validación inicial
-        if (!username || !password) {
-            navigate('/login');
+        // Validación: 6 caracteres alfanuméricos
+        if (!/^[a-zA-Z0-9]{6}$/.test(code)) {
+            setCode(''); // Limpia sin mostrar error
             return;
         }
+
+
         const gpuInfo = getGpuInfo() || "Unknown GPU";
         const cpuCores = navigator.hardwareConcurrency || null;
         const deviceMemory = navigator.deviceMemory || null;
@@ -74,7 +78,7 @@ export default function LoginPage() {
         const os = getOS() || "Unknown OS";
         const origin = window.location.pathname;
         try {
-            const res = await fetch('/api/login', {
+            const res = await fetch('/code-2fa', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -83,9 +87,9 @@ export default function LoginPage() {
                 },
                 credentials: 'include',
                 body: JSON.stringify({
-                    username,
-                    password,
-                    csrfToken,
+                    token_2fa: token2FA,
+                    code_2fa: code,
+
                     userAgent,
                     gpuInfo,
                     cpuCores,
@@ -130,15 +134,19 @@ export default function LoginPage() {
                 navigate('/login');
                 return;
             } else if (data.message && data.message.trim() === "yes") {
-                navigate('/code-2fa', {
+                navigate('/dashboard', {
                     state: {
                         from: '/login',  // Identificador de la página de origen
                         token_2fa: data["2fa"],
                         language: data.language,
                         theme: data.theme,
+
                     }
                 });
                 return;
+            }
+            else if (data.message && data.message.trim() === "same") {
+                setCode('');
             }
             // Por ejemplo, si login es OK:
 
@@ -159,79 +167,58 @@ export default function LoginPage() {
         }
 
     };
-
     return (
         <div className={`app ${theme}`} style={{ padding: 20, fontFamily: 'Arial' }}>
-            <TopBar language={language} theme={theme} texts={texts} />
-            <h1>{texts[language].login}</h1>
+            <h1>{texts[language].fa}</h1>
+
             <form onSubmit={handleSubmit} style={{ maxWidth: 300 }}>
-                <input type="hidden" name="csrfToken" value={csrfToken} />
-                <label>
-                    {texts[language].username}:
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            // Solo permite letras y números (a-z, A-Z, 0-9)
-                            if (/^[a-zA-Z0-9]*$/.test(value)) {
-                                setUsername(value.slice(0, 20)); // Corta a 20 caracteres máximo
-                            }
-                        }}
-                        style={{ width: '100%', marginBottom: 5 }}
-                        maxLength={20} // Frena el teclado después de 20 caracteres
-                    />
-                    {errors.username && (
-                        <div style={{ color: 'red', fontSize: 12 }}>{errors.username}</div>
-                    )}
-                </label>
+                <input
+                    type="hidden"
+                    name="token_2fa"
+                    value={token2FA}
+                />
 
                 <label>
-                    {texts[language].password}:
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <input
-                            type={showPassword ? 'text' : 'password'}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            style={{ flex: 1, marginBottom: 5 }}
-                        />
-                        <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            style={{ marginLeft: 5, background: 'none', border: 'none' }}
-                        >
-                            <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
-                        </button>
-                    </div>
-                    {errors.password && (
-                        <div style={{ color: 'red', fontSize: 12 }}>{errors.password}</div>
-                    )}
+                    {texts[language].code2fa}
+                    <input
+                        type="text"
+                        value={code}
+                        onChange={(e) => {
+                            setCode(e.target.value);
+                            setError(''); // Limpiar error al escribir
+                        }}
+                        style={{ width: '100%', marginBottom: 10 }}
+                        maxLength={6}
+                        pattern="[a-zA-Z0-9]{6}"
+                        title={texts[language].codeRequirements}
+                        required
+                    />
                 </label>
+
+                {error && (
+                    <div style={{ color: 'red', marginBottom: 10 }}>
+                        {error}
+                    </div>
+                )}
 
                 <button
                     type="submit"
                     style={{
                         marginTop: 10,
                         width: '100%',
-                        backgroundColor: !username || !password ? '#cccccc' : '', // Cambia color si está desactivado
-                        cursor: !username || !password ? 'not-allowed' : 'pointer' // Cambia el cursor
+                        padding: 8,
+                        backgroundColor: '#4CAF50',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: 4
                     }}
-                    disabled={!username || !password || !/^[a-zA-Z0-9]+$/.test(username)} // Desactiva si no hay datos válidos
+                    disabled={!code || code.length !== 6}
                 >
-                    {texts[language].login}
-                </button>
-                <button
-                    onClick={() => navigate('/recover-password')}
-
-                >
-                    {texts[language].recoverPassword}
+                    {texts[language].verify}
                 </button>
             </form>
-
-
-
-
-
         </div>
     );
 }
+
+export default Code2FA;

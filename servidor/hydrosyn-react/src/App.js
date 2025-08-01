@@ -39,10 +39,17 @@ function App() {
                 <Route path="/" element={<Navigate to="/login" replace />} />
                 <Route path="/login" element={<PrivateRoute> <LoginPage /></PrivateRoute>} />
                 <Route path="/recover-password" element={<PrivateRoute> <RecoverPassword /> </PrivateRoute>} />
+                <Route
+                    path="/code-2fa"
+                    element={
+                        <ProtectedRoute requiredFrom="/login">
+                            <Code2FA />
+                        </ProtectedRoute>
+                    } />
                 <Route path="/dashboard" element={<RouteDashboard> <Dashboard /></RouteDashboard>} />
-                <Route path="/change-password" element={<PrivateRouteInfo><ChangePassword /> </PrivateRouteInfo>} />
-                <Route path="/change-username" element={<PrivateRouteInfo ><ChangeUsername /></PrivateRouteInfo>} />
-                <Route path="/change-email" element={<PrivateRouteInfo ><ChangeUsername /></PrivateRouteInfo>} />
+                <Route path="/change-password" element={<PrivateRoute><ChangePassword /> </PrivateRoute>} />
+                <Route path="/change-username" element={<PrivateRoute ><ChangeUsername /></PrivateRoute>} />
+                <Route path="/change-email" element={<PrivateRoute ><ChangeUsername /></PrivateRoute>} />
                 <Route path="/blacklist" element={<Blacklist />} />
                 <Route path="/add-blacklist" element={<AddBlacklist />} />
                 <Route path="/notifications" element={<Notifications />} />

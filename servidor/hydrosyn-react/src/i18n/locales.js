@@ -16,6 +16,8 @@ const texts = {
         security: 'Seguridad',
         notifications: 'Notificaciones',
         configuration: 'Configuración',
+        fa: 'Autenticación de dos factores',
+        code2fa: 'Ingresa tu código 2FA',
 
     },
     en: {
@@ -36,6 +38,8 @@ const texts = {
         security: 'Security',
         notifications: 'Notifications',
         configuration: 'Configuration',
+        fa: 'Two-Factor Authentication',
+        code2fa: 'Enter your 2FA code',
 
     },
 };
