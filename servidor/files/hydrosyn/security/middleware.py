@@ -175,7 +175,10 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     )
                 return response
             else:
-                request.state.json_data = await request.json() if request.method == "POST" else {}
+                if request.method == "POST":
+                    request.state.json_data = await request.json()
+                else:
+                    request.state.json_data = {}
                 x_forwarded_for = request.headers.get("x-forwarded-for")
                 if x_forwarded_for:
                     # Puede contener varias IPs separadas por coma, la primera es la real
