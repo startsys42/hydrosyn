@@ -156,28 +156,22 @@ async def get_session_from_db(session_id: str, extend_validity: bool = True) -> 
                     s.created_at,
                     u.username,
                     u.email,
+                    u.password,
                     u.is_active,
-                    u.first_login,
-                    u.change_pass,
-                    u.change_name,
-                    u.use_2fa,
                     u.language,
                     u.theme
                 FROM sessions s
                 JOIN users u ON s.user_id = u.id
-                JOIN login_attempts la ON s.session_id = la.session_id
-                WHERE s.session_id = :session_id 
+             
+                WHERE s.session_id = :session_id
                
             """)
             
             # Determinar el tiempo de validación
-            validation_time = datetime.now(timezone.utc)
-            if extend_validity:
-                validation_time = validation_time - timedelta(days=1)  # <- Cambio clave aquí
-            
+           
             result = await conn.execute(query, {
-                'session_id': session_id,
-                'validation_time': validation_time
+                'session_id': session_id
+              
             })
             row =  result.fetchone()
 

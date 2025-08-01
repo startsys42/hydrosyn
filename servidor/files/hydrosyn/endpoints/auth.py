@@ -2,9 +2,7 @@ from fastapi import APIRouter, Request
 
 from fastapi.responses import JSONResponse
 from endpoints.utils import  ERROR_MESSAGES
-from fastapi.responses import PlainTextResponse
-from fastapi import Form, status
-from fastapi.responses import RedirectResponse
+
 from logger import logger
 from security.csrf import generate_csrf_token, validate_and_remove_csrf_token
 import os
@@ -187,7 +185,7 @@ async def login(request: Request):
             else:
                 request.state.success = True
                 #generar codigo envair email devolevrtoken...
-                if not await generate_2fa_email( request.state.user_id,data_login_db["email"], data_login_db["email"]) :
+                if not await generate_2fa_email( request.state.user_id,data_login_db["email"], request.state.language):  
                     return JSONResponse(
                         status_code=202,
                         content={
@@ -453,6 +451,7 @@ async def code_2fa(request: Request):
                 
 
                 admin = await get_admin_from_db(request.state.user_id)
+                request.state.success = True
                 # falta cerar historicod e cambair contraeña y ....
                 return JSONResponse(
                     status_code=200,

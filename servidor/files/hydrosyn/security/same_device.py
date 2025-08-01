@@ -21,7 +21,7 @@ async def sameDevice(stored_device_data: Dict[str, Any], summary: str, user_id, 
             ip=ip,
             lang=language,
             email=email,
-            date=datetime.now(timezone.utc),
+            date=datetime.now(),
         )
         # insertar en login attempts
         return False

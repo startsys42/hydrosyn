@@ -90,10 +90,22 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                 request.state.username = session_data['username']
                 request.state.email = session_data['email']
                 request.state.summary = session_data['summary']
-                
-                request.state.change_pass = True if session_data.get('change_pass') is not None else False
-                request.state.change_name = True if session_data.get('change_name') is not None else False
+                request.state.password = session_data['password']
+                x_forwarded_for = request.headers.get("x-forwarded-for")
+                if x_forwarded_for:
+                    # Puede contener varias IPs separadas por coma, la primera es la real
+                    ip = x_forwarded_for.split(",")[0].strip()
+                else:
+                    # Fallback a la IP del cliente que conectó directamente (NGINX)
+                    ip = request.client.host
+                request.state.ip=ip
+             
                 body_bytes = await request.body()
+                try:
+                    body_dict = json.loads(body_bytes.decode()) if body_bytes else {}
+                except json.JSONDecodeError:
+                    body_dict = {}
+
     
     # 2. Crear una función de receive para reenviar el body intacto
                 async def receive():
@@ -107,8 +119,23 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     body_dict = {}
                 logger.info(f"body_dict: {body_dict}")
                 if sameDevice(body_dict,request.state.summary, request.state.user_id, request.state.username, request.client.host, request.state.language, request.state.email):
+                    await insert_login_attempts_in_db(
+                        session_id,
+                        request.state.user_id,
+                        ip,
+                        False,
+                        body_dict.get("origin"),
+                        request.method,
+                        datetime.now(),
+                        body_dict.get("userAgent"),
+                        body_dict.get("deviceMemory"),
+                        body_dict.get("cpuCores"),
+                        body_dict.get("gpuInfo"),
+                        body_dict.get("os"),
+
+                    )
                     await delete_session_in_db(session_id)
-                    #REGISTRO LOGGIN ATTEMP
+                  
                     return JSONResponse(
                         status_code=403,
                         content={
@@ -121,7 +148,23 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
     
                 response = await call_next(request)
                 # los registro login
-                if request.path == "/api/change-lang-theme":
+                if request.url.path  =="/api/check-access":
+                    await insert_login_attempts_in_db(
+                        session_id,
+                        request.state.user_id,
+                        request.state.ip,
+                        True,
+                        body_dict.get("origin"),
+                        request.method,
+                        datetime.now(),
+                        body_dict.get("userAgent"),
+                        body_dict.get("deviceMemory"),
+                        body_dict.get("cpuCores"),
+                        body_dict.get("gpuInfo"),
+                        body_dict.get("os"),
+                        
+                    )
+                if request.url.path == "/api/change-lang-theme":
                     await self.update_cookie_lang_theme(
                         request=request,
                         response=response,
