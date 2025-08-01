@@ -7,10 +7,24 @@ CREATE TABLE IF NOT EXISTS email_notifications (
      code_2fa VARCHAR(6) NULL,
    
     CONSTRAINT chk_code_2fa_format 
-        CHECK (code_2fa IS NULL OR code_2fa REGEXP '^[0-9a-zA-Z]{6}$'),
-    CONSTRAINT single_row CHECK (id = 1) 
+        CHECK (code_2fa IS NULL OR code_2fa REGEXP '^[0-9a-zA-Z]{6}$')
+   
     
 );
+DELIMITER //
+CREATE TRIGGER enforce_single_row
+BEFORE INSERT ON email_notifications
+FOR EACH ROW
+BEGIN
+    DECLARE row_count INT;
+    SELECT COUNT(*) INTO row_count FROM email_notifications;
+    IF row_count >= 1 THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Only one row allowed in this table';
+    END IF;
+END//
+DELIMITER ;
+
 
 CREATE TABLE IF NOT EXISTS notifications (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
