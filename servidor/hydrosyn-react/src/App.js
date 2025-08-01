@@ -21,6 +21,8 @@ import Users from './components/Users';
 import CreateUser from './components/CreateUser';
 import Configuration from './components/Configuration';
 import EliminateUser from './components/EliminateUser';
+import Code2FA from './components/Code2FA';
+import ProtectedRoute from './components/route/ProtectedRoute';
 
 
 

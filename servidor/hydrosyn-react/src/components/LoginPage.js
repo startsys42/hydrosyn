@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Añadido useEffect
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import TopBar from './TopBar'
@@ -181,9 +181,7 @@ export default function LoginPage() {
                         style={{ width: '100%', marginBottom: 5 }}
                         maxLength={20} // Frena el teclado después de 20 caracteres
                     />
-                    {errors.username && (
-                        <div style={{ color: 'red', fontSize: 12 }}>{errors.username}</div>
-                    )}
+
                 </label>
 
                 <label>
