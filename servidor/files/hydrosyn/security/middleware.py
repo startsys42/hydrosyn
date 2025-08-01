@@ -252,7 +252,7 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                         success,
                         request.state.json_data.get("origin"),
                         request.method,
-                        request.state.time,
+                        request.state.date,
                         request.state.json_data.get("userAgent"),
                         request.state.json_data.get("deviceMemory"),
                         request.state.json_data.get("cpuCores"),

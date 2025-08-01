@@ -6,8 +6,8 @@ from fastapi.responses import JSONResponse
 from security.email_messages import generate_2fa_email, generate_2fa_new_email
 from security.password__name_validity import validate_password, validate_username 
 from security.two_steps import generate_two_step_token, validate_two_step_token , remove_two_step_token
-from servidor.files.hydrosyn.security.email_validation import is_valid_email
-from servidor.files.hydrosyn.security.hash import verify_password
+from security.email_validation import is_valid_email
+from security.hash import verify_password
 router = APIRouter()
 #  cambair idioma, cambiar contarseña, activar twofa, desativar twofa, actiavr  , ver correo. o inidcarloe n lso emnsajes
 

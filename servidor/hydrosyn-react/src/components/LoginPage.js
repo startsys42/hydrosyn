@@ -85,7 +85,7 @@ export default function LoginPage() {
                 body: JSON.stringify({
                     username,
                     password,
-                    csrfToken,
+                    csrf_token: csrfToken,
                     userAgent,
                     gpuInfo,
                     cpuCores,
@@ -165,7 +165,7 @@ export default function LoginPage() {
             <TopBar language={language} theme={theme} texts={texts} />
             <h1>{texts[language].login}</h1>
             <form onSubmit={handleSubmit} style={{ maxWidth: 300 }}>
-                <input type="hidden" name="csrfToken" value={csrfToken} />
+                <input type="hidden" name="csrf_token" value={csrfToken} />
                 <label>
                     {texts[language].username}:
                     <input
