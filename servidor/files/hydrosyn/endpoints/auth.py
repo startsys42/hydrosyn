@@ -15,7 +15,7 @@ from security.email import send_email
 from db.db_users import delete_session_in_db, is_in_blacklist_from_db, generate_unique_token_and_store_in_db
 from pydantic import BaseModel, EmailStr
 from security.two_steps import generate_two_step_token, validate_two_step_token , remove_two_step_token
-from db.db_auth import get_user_login_from_db, get_admin_from_db, get_user_recovery_password_from_db, get_code_2fa_from_db, insert_new_session_in_db, delete_old_session_in_db
+from db.db_auth import get_user_login_from_db, get_admin_from_db, get_user_recovery_password_from_db, get_code_2fa_from_db, insert_new_session_in_db, delete_old_session_in_db, login_verify_language_theme_from_db, update_language_in_db, update_theme_in_db
 from security.email_messages import email_login_error, generate_2fa_email, email_recovery_error, generate_new_password_email
 from services.notifications import create_user_notification
 from datetime import datetime, timezone
@@ -434,9 +434,37 @@ async def code_2fa(request: Request):
                         request.state.json_data.get("os"),
                         hash_summary
                     )
-                # cambiar idomastemas, 
-                #modificar cookie solo si cambia idioma
+               
+
+                verify_language_theme = await  login_verify_language_theme_from_db(request.state.user_id)
+                if request.state.language != "en" and verify_language_theme["language"] != request.state.language:
+                    await update_language_in_db(request.state.user_id, request.state.language)
+                    
+                elif request.state.language == "en" and verify_language_theme["language"] != request.state.language:
+                    request.state.language = verify_language_theme["language"]
+                    request.state.cookie = True
+                    
+                if request.state.theme != "light" and verify_language_theme["theme"] != request.state.theme:
+                    await update_theme_in_db(request.state.user_id, request.state.theme)
+                elif request.state.theme == "light" and verify_language_theme["theme"] != request.state.theme:
+                    request.state.theme = verify_language_theme["theme"]
+                    request.state.cookie = True
                 
+
+                admin = await get_admin_from_db(user_id)
+                # falta cerar historicod e cambair contraeña y ....
+                return JSONResponse(
+                    status_code=200,
+                    content={
+                        "ok": True,
+                        "status": 200,
+                        "language": request.state.language,
+                        "theme": request.state.theme,
+                        "message": "success",
+                        "admin": admin
+                    }
+                )
+
             else:
                 return JSONResponse(
                     status_code=202,

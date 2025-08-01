@@ -347,3 +347,47 @@ async def insert_new_session_in_db(
         logger.error(f"Error inserting new session: {e}")
         return False
 
+async def login_verify_language_theme_from_db(user_id: int)-> Optional[Dict[str, str]]:
+    sql = text("""
+        SELECT language, theme FROM users WHERE id = :user_id
+    """)
+    engine = DBEngine.get_engine()
+    try:
+        async with engine.connect() as conn:
+            result = await conn.execute(sql, {"user_id": user_id})
+            row = result.fetchone()
+            if row:
+                return {
+                    "language": row.language,
+                    "theme": row.theme
+                }
+            return None
+    except Exception as e:
+        logger.error(f"Error fetching language and theme for user {user_id}: {e}")
+        return None
+    
+async def update_language_in_db(user_id: int, language: str) -> bool:
+    sql = text("""
+        UPDATE users SET language = :language WHERE id = :user_id
+    """)
+    engine = DBEngine.get_engine()
+    try:
+        async with engine.connect() as conn:
+            await conn.execute(sql, {"user_id": user_id, "language": language})
+            return True
+    except Exception as e:
+        logger.error(f"Error updating language for user {user_id}: {e}")
+        return False
+
+async def update_theme_in_db(user_id: int, theme: str) -> bool:
+    sql = text("""
+        UPDATE users SET theme = :theme WHERE id = :user_id
+    """)
+    engine = DBEngine.get_engine()
+    try:
+        async with engine.connect() as conn:
+            await conn.execute(sql, {"user_id": user_id, "theme": theme})
+            return True
+    except Exception as e:
+        logger.error(f"Error updating theme for user {user_id}: {e}")
+        return False

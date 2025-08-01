@@ -180,6 +180,16 @@ class AdvancedSessionMiddleware(BaseHTTPMiddleware):
                     user_id = request.state.user_id
                 if hasattr(request.state, 'success'):
                     success = request.state.success
+                if hasattr(request.state, 'cookie'):
+                     await self.update_cookie_lang_theme(
+                        request=request,
+                        response=response,
+                        current_key=current_key,
+                        old_key=old_key,
+                        new_lang=request.state.language,
+                        new_theme=request.state.theme
+                    )
+                    
                
                 if request.url.path == "/api/change-lang-theme":
                     await self.update_cookie_lang_theme(
