@@ -68,11 +68,6 @@ def get_server_ip():
     return f"http://{socket.gethostbyname(hostname)}"
 
 
-cookie_key_manager = CookieKeyManager(
-    rotation_time=30, # days rotation
-   grace_period=2, # hour limit
-    ttl=600
-)
 
 
 #cookie_key_manager = CookieKeyManager(get_rotation_time=get_cookie_rotation_time_from_db,get_grace_period = get_old_cookie_token_limit_hour_from_db,ttl=600  # 10 minutes )
@@ -113,10 +108,16 @@ async def set_secure_headers(request, call_next):
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin" 
     return response
 
+@app.on_event("startup")
+async def startup_event():
+    app.state.cookie_key_manager = CookieKeyManager()
+    await create_user_notification(notification_id=1)
+
+
 
 
 # Middleware personalizado con rotación de clave
-app.add_middleware(AdvancedSessionMiddleware, key_manager=cookie_key_manager)
+app.add_middleware(AdvancedSessionMiddleware, key_manager=app.state.cookie_key_manager)
 
 
 
@@ -144,8 +145,6 @@ app.include_router(web_settings.router, prefix="/api", tags=["Web Settings"])
 
        
 # If you want to call this at startup, use an event handler:
-@app.on_event("startup")
-async def startup_event():
-    await create_user_notification(notification_id=1)
+
 
 logger.info("Application configuration completed")
