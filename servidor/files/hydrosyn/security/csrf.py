@@ -4,6 +4,7 @@ import secrets
 import time
 import json
 from asyncio import Lock
+from logger import logger
 
 # Configuración
 MAX_STORED_TOKENS = 1000
@@ -49,13 +50,15 @@ async def validate_and_remove_csrf_token(encrypted_token: str) -> bool:
         async with csrf_tokens_lock:
             encrypted_data = csrf_tokens.pop(token_id, None)  # Elimina al obtener
             if not encrypted_data:
+                logger.info(f"Token CSRF {token_id} validado y eliminado correctamente.")
                 return False
         
         # 3. Descifrar y verificar expiración
         token_data = json.loads(cipher_suite.decrypt(encrypted_data).decode())
         if (time.time() - token_data["ts"]) > TOKEN_EXPIRATION:
+            logger.info(f"Token CSRF expirado")
             return False
-        
+        logger.info(f"Token CSRF {token_id} validado y eliminado correctamente.")
         return True  # Token válido y eliminado
     
     except Exception:

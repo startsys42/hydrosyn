@@ -7,13 +7,14 @@ from logger import logger
 router = APIRouter(tags=["Web Settings"])
 
 @router.post("/change-language-theme")
-async def change_lang_theme_post(
-    request: Request,  # "es", "en", "light", "dark"
-):
+async def change_lang_theme_post(request: Request):
+   
 
     cookie_value = request.cookies.get("hydrosyn_session_id")
     type = request.state.json_data.get("type")
     value = request.state.json_data.get("value")
+    logger.info("Changing language or theme")
+    logger.info(f"Type: {type}, Value: {value}")
     if not cookie_value:
           return JSONResponse(
             status_code=401,
@@ -32,6 +33,7 @@ async def change_lang_theme_post(
 
     user_id = get_user_id_from_db(request.state.session_id)
     if user_id:
+        logger.info(f"User ID found: {user_id}, updating preferences")
         await update_user_preferences_in_db(user_id, type, value)
     
 

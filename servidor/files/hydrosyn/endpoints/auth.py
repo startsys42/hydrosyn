@@ -31,10 +31,12 @@ router = APIRouter(tags=["Web Auth"])
 @router.post("/check-access")
 async def check_access(request: Request):
     logger.info("Checking access for user")
+   
     
         # quiero leer el json que recibe
    
     token= await generate_csrf_token()
+    
     language = request.state.language or "en"
     theme = request.state.theme  or "light"
     if hasattr(request.state, "user_id"):
@@ -84,6 +86,7 @@ async def login(request: Request):
         #cmpruebo nombre , token csrfactibvo o no, blacklist , contraseña notificacion 2segudn avsio correo y dejo en el state   el nombre sie s correcto
 
     if await is_in_blacklist_from_db(request.state.json_data.get("username")):
+        logger.info(f"User {request.state.json_data.get('username')} is in blacklist")
 
         await create_user_notification(
             notification_id=5,  # ID de la notificación de bloqueo
@@ -103,6 +106,7 @@ async def login(request: Request):
             }
         )
     if not validate_username((request.state.json_data.get("username"))):
+        logger.info(f"User {request.state.json_data.get('username')} is not valid")
         await validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
         return JSONResponse(
             status_code=202,
@@ -117,6 +121,7 @@ async def login(request: Request):
 
     data_login_db= await get_user_login_from_db(request.state.json_data.get("username"))
     if data_login_db is None:
+        logger.info(f"User {request.state.json_data.get('username')} not found in database")
         await validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
         return JSONResponse(
             status_code=202,
@@ -131,6 +136,7 @@ async def login(request: Request):
     else:
         request.state.user_id = data_login_db["id"]
         if not validate_password(request.state.json_data.get("username"), request.state.json_data.get("password")):
+            logger.info(f"Password for user {request.state.json_data.get('username')} is not valid")
             await email_login_error(
                 email=data_login_db["email"],
                 lang=data_login_db["language"],
@@ -148,6 +154,7 @@ async def login(request: Request):
                 }
             )
         if data_login_db["is_active"]==False:
+            logger.info(f"User {request.state.json_data.get('username')} is inactive")
             await create_user_notification(
                 notification_id=7,  # ID de la notificación de cuenta inactiva
                 username=request.state.json_data.get("username"),
@@ -166,6 +173,7 @@ async def login(request: Request):
                 }
             )
         elif verify_password(request.state.json_data.get("password"),data_login_db["password"]):
+            logger.info(f"User {request.state.json_data.get('username')} logged in successfully")
             if not await validate_and_remove_csrf_token(request.state.json_data.get("csrf_token")):
                 await email_login_error(
                     email=data_login_db["email"],
@@ -183,9 +191,10 @@ async def login(request: Request):
                         }
                     )
             else:
-                request.state.success = True
+               
                 #generar codigo envair email devolevrtoken...
                 if not await generate_2fa_email( request.state.user_id,data_login_db["email"], request.state.language):  
+                    logger.error(f"Failed to send 2FA email for user {request.state.json_data.get('username')}")
                     return JSONResponse(
                         status_code=202,
                         content={
@@ -197,7 +206,9 @@ async def login(request: Request):
                         }
                     )
                       
-                token_2fa=generate_two_step_token(request.state.user_id, request.state.session_id, False)
+                token_2fa=await generate_two_step_token(request.state.user_id, request.state.session_id, False)
+                logger.info(f"2FA token generated for user {request.state.json_data.get('username')}")
+                request.state.success = True
                 return JSONResponse(status_code=200,
                     content={
                         "ok": True,
@@ -210,6 +221,7 @@ async def login(request: Request):
                     }
                 )
         else:
+            logger.info(f"Password for user {request.state.json_data.get('username')} is incorrect")
             await validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
             await email_login_error(
                 email=data_login_db["email"],
