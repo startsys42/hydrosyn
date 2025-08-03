@@ -1,6 +1,6 @@
-import { getGpuInfo, getOS } from './ClientInfolientInfo';
+import { getGpuInfo, getOS } from './ClienttInfo';
 
-export async function CheckAccess() {
+export async function checkAccess() {
     try {
         const gpuInfo = getGpuInfo() || "Unknown GPU";
         const cpuCores = navigator.hardwareConcurrency || null;

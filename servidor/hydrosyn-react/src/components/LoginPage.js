@@ -5,7 +5,7 @@ import TopBar from './TopBar'
 import texts from '../i18n/locales';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { CheckAccess } from '../utils/ClientInfo';
+import { checkAccess } from '../utils/CheckAccess';
 import { getGpuInfo, getOS } from '../utils/ClientInfo'; // Asegúrate de que la ruta es correcta
 
 
