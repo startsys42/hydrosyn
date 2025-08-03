@@ -30,7 +30,8 @@ export default function LoginPage() {
     const [isCheckingAccess, setIsCheckingAccess] = useState(true);
 
     useEffect(() => {
-        async function verify() {
+        async function verifyAccess() {  // Cambiado de 'verify' a 'verifyAccess'
+            setIsCheckingAccess(true);
             const result = await checkAccess();
 
             if (result.error) {
@@ -70,7 +71,7 @@ export default function LoginPage() {
             } else if (status >= 400) {
                 navigate('/error', {
                     state: {
-                        code: res.status,
+                        code: status,
                         message: 'Request error. Please check your data.',
                     },
                 });
@@ -96,7 +97,7 @@ export default function LoginPage() {
         }
 
         verifyAccess();
-    }, [location.key]);
+    }, [location.key, navigate]);
 
 
 
@@ -125,7 +126,7 @@ export default function LoginPage() {
                 body: JSON.stringify({
                     username,
                     password,
-                    csrf_token,
+                    csrf_token: appData.csrfToken,
                     userAgent,
                     gpuInfo,
                     cpuCores,

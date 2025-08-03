@@ -41,13 +41,7 @@ function App() {
                 <Route path="/" element={<Navigate to="/login" replace />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/recover-password" element={<PrivateRoute> <RecoverPassword /> </PrivateRoute>} />
-                <Route
-                    path="/code-2fa"
-                    element={
-                        <ProtectedRoute requiredFrom="/login">
-                            <Code2FA />
-                        </ProtectedRoute>
-                    } />
+                <Route path="/code-2fa" element={<Code2FA allowedFrom={["/login", "/other-route"]} />} />
                 <Route path="/dashboard" element={<RouteDashboard> <Dashboard /></RouteDashboard>} />
                 <Route path="/change-password" element={<PrivateRoute><ChangePassword /> </PrivateRoute>} />
                 <Route path="/change-username" element={<PrivateRoute ><ChangeUsername /></PrivateRoute>} />
