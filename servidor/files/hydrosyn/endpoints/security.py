@@ -84,5 +84,3 @@ async def see_blacklist_get(request: Request):
 
     
     
-@router.post("/delete-blacklist")
-async def delete_blacklist(request: Request):
