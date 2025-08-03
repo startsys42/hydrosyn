@@ -10,7 +10,7 @@ import { getGpuInfo, getOS } from '../utils/ClientInfo'; // Asegúrate de que la
 
 
 
-export default function LoginPage() {
+export default function Dashboard() {
     const navigate = useNavigate();
     const location = useLocation();
     const [appData, setAppData] = useState({
@@ -204,6 +204,7 @@ export default function LoginPage() {
     return (
         <div className={`app ${appData.theme}`} style={{ padding: 20, fontFamily: 'Arial' }}>
             <TopBar language={appData.language} theme={appData.theme} texts={texts} />
+            <Sidebar userHasAdvancedAccess={appData.permissions} />
             <h1>{texts[appData.language].login}</h1>
             <form onSubmit={handleSubmit} style={{ maxWidth: 300 }}>
                 <input type="hidden" name="csrf_token" value={appData.csrfToken} />

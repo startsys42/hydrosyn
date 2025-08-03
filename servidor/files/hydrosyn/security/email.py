@@ -33,19 +33,19 @@ async def create_message( to: list, subject: str, message_text: str, cc: list = 
 
     # Validar destinatarios to
     for addr in to:
-        if not validate_email_address(addr):
+        if not await validate_email_address(addr):
             raise ValueError(f"Invalid 'to' email address: {addr}")
 
     # Validar cc si existe
     if cc:
         for addr in cc:
-            if not validate_email_address(addr):
+            if not await validate_email_address(addr):
                 raise ValueError(f"Invalid 'cc' email address: {addr}")
 
     # Validar bcc si existe
     if bcc:
         for addr in bcc:
-            if not validate_email_address(addr):
+            if not await validate_email_address(addr):
                 raise ValueError(f"Invalid 'bcc' email address: {addr}")
 
     if not subject.strip():
