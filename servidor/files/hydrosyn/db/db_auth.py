@@ -1,9 +1,10 @@
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncConnection
+from sqlalchemy.exc import SQLAlchemyError
 from db.db_engine import DBEngine  # Asegúrate que retorna AsyncEngine
 from logger import logger
 from datetime import datetime, timedelta
-
+from sqlalchemy.ext.asyncio import create_async_engine
 
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError

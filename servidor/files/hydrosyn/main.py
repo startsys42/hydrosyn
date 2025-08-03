@@ -109,9 +109,10 @@ async def set_secure_headers(request, call_next):
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin" 
     return response
 
+app.state.cookie_key_manager = CookieKeyManager()
+
 @app.on_event("startup")
 async def startup_event():
-    app.state.cookie_key_manager = CookieKeyManager()
     await create_user_notification(notification_id=1)
 
 

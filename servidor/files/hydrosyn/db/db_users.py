@@ -222,3 +222,21 @@ async def generate_unique_token_and_store_in_db(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to generate and store verification token"
         )
+        
+        
+
+async def get_blacklist_from_db() -> list:
+    sql = text("""
+        SELECT username FROM username_blacklist
+    """)
+    engine = DBEngine.get_engine()
+    
+    try:
+        async with engine.connect() as conn:  # obtener conexión async
+            result = await conn.execute(sql)
+            return [row.username for row in result]  # Devuelve una lista de usernames
+            
+    except Exception as e:
+        logger.error(f"Error fetching blacklist: {str(e)}", 
+                   exc_info=True)  # Registra el stack trace completo
+        return []  # Devuelve una lista vacía en caso de error

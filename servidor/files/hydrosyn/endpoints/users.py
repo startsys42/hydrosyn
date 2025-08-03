@@ -9,9 +9,7 @@ router = APIRouter()
 
 ## lsitar usuarios, buscar usuarios , activar desactivar
 
-@router.get("/create-user")
-async def create_user_get():
-    return {"action": "get create user form"}
+
 
 @router.post("/create-user")
 async def create_user_post():
