@@ -49,7 +49,7 @@ async def get_user_login_from_db(username: str) -> Optional[Dict[str, Any]]:
 async def update_2fa_code_in_db(user_id: int, code: str) -> bool:
     sql = text("""
         UPDATE users SET code_2fa = :code
-        WHERE user_id = :user_id
+        WHERE id = :user_id
     """)
     params = {
         "user_id": user_id,
