@@ -44,9 +44,10 @@ export default function LoginPage() {
             const { status, data } = result;
             setAppData(prev => ({
                 ...prev,
-                csrfToken: result.data?.csrf || csrf_token,
+
                 language: result.data?.language || prev.language,
                 theme: result.data?.theme || prev.theme,
+                csrfToken: result.data?.csrf || null,
                 loggedIn: result.data?.loggedIn || false,
                 permissions: result.data?.permission || false
             }));
@@ -200,13 +201,13 @@ export default function LoginPage() {
     };
 
     return (
-        <div className={`app ${theme}`} style={{ padding: 20, fontFamily: 'Arial' }}>
-            <TopBar language={data.language} theme={datatheme} texts={texts} />
-            <h1>{texts[language].login}</h1>
+        <div className={`app ${appData.theme}`} style={{ padding: 20, fontFamily: 'Arial' }}>
+            <TopBar language={appData.language} theme={appData.theme} texts={texts} />
+            <h1>{texts[appData.language].login}</h1>
             <form onSubmit={handleSubmit} style={{ maxWidth: 300 }}>
-                <input type="hidden" name="csrf_token" value={data.csrf} />
+                <input type="hidden" name="csrf_token" value={appData.csrfToken} />
                 <label>
-                    {texts[data.language].username}:
+                    {texts[appData.language].username}:
                     <input
                         type="text"
                         value={username}
@@ -224,7 +225,7 @@ export default function LoginPage() {
                 </label>
 
                 <label>
-                    {texts[data.language].password}:
+                    {texts[appData.language].password}:
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <input
                             type={showPassword ? 'text' : 'password'}
@@ -255,13 +256,13 @@ export default function LoginPage() {
                     }}
                     disabled={!username || !password || !/^[a-zA-Z0-9]+$/.test(username)} // Desactiva si no hay datos válidos
                 >
-                    {texts[data.language].login}
+                    {texts[appData.language].login}
                 </button>
                 <button
                     onClick={() => navigate('/recover-password')}
 
                 >
-                    {texts[data.language].recoverPassword}
+                    {texts[appData.language].recoverPassword}
                 </button>
             </form>
 
