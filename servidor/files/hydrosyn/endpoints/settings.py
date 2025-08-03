@@ -1,19 +1,19 @@
-from fastapi import APIRouter, Request, Form
-from fastapi.responses import RedirectResponse
-from urllib.parse import urlparse
+from fastapi import APIRouter, Request 
+from fastapi.responses import JSONResponse
 from db.db_users import update_user_preferences_in_db, get_user_id_from_db
 from logger import logger
+
 
 router = APIRouter(tags=["Web Settings"])
 
 @router.post("/change-language-theme")
 async def change_lang_theme_post(
-    request: Request,
-    type: str,  # "idioma" o "tema"
-    value: str  # "es", "en", "light", "dark"
+    request: Request,  # "es", "en", "light", "dark"
 ):
 
     cookie_value = request.cookies.get("hydrosyn_session_id")
+    type = request.state.json_data.get("type")
+    value = request.state.json_data.get("value")
     if not cookie_value:
           return JSONResponse(
             status_code=401,
