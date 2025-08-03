@@ -39,7 +39,7 @@ function App() {
         <Router>
             <Routes>
                 <Route path="/" element={<Navigate to="/login" replace />} />
-                <Route path="/login" element={<PrivateRoute> <LoginPage /></PrivateRoute>} />
+                <Route path="/login" element={<LoginPage />} />
                 <Route path="/recover-password" element={<PrivateRoute> <RecoverPassword /> </PrivateRoute>} />
                 <Route
                     path="/code-2fa"

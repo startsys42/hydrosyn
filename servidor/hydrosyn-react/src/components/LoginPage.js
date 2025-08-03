@@ -5,55 +5,90 @@ import TopBar from './TopBar'
 import texts from '../i18n/locales';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { CheckAccess } from '../utils/ClientInfo';
+import { getGpuInfo, getOS } from '../utils/ClientInfo'; // Asegúrate de que la ruta es correcta
 
-
-
-function getGpuInfo() {
-    const canvas = document.createElement('canvas');
-    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-    if (!gl) return "Unknown GPU";
-
-    try {
-        // Try new standard first
-        const renderer = gl.getParameter(gl.RENDERER);
-        if (renderer) return renderer;
-
-        // Fallback to deprecated extension if needed
-        const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-        if (debugInfo) {
-            const vendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
-            const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-            if (vendor && renderer) return `${vendor} - ${renderer}`;
-        }
-
-        return "Unknown GPU";
-    } catch (e) {
-        return "GPU Info Unavailable";
-    }
-}
-
-function getOS() {
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    if (/windows phone/i.test(userAgent)) return "Windows Phone";
-    if (/windows/i.test(userAgent)) return "Windows";
-    if (/android/i.test(userAgent)) return "Android";
-    if (/linux/i.test(userAgent)) return "Linux";
-    if (/iphone|ipad|ipod/i.test(userAgent)) return "iOS";
-    if (/mac os/i.test(userAgent)) return "Mac OS";
-    return "Unknown";
-}
 
 
 export default function LoginPage() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { language = 'en', theme = 'light', csrf_token = null } = location.state || {}; // valores por defecto
+    const [accessData, setAccessData] = useState(null);// valores por defecto
 
     // Aquí ya tienes idioma, tema y csrfToken pasados por navigate()
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({});
     const [showPassword, setShowPassword] = useState(false);
+
+    const [isCheckingAccess, setIsCheckingAccess] = useState(true);
+
+    useEffect(() => {
+        async function verify() {
+            const result = await CheckAccess();
+
+            if (result.error) {
+                // Error llamando al check
+                navigate('/error', {
+                    state: { code: 0, message: result.message },
+                    replace: true,
+                });
+                return;
+            }
+            const { status, data } = result;
+            setAccessData(data);
+            if (status === 401) {
+                navigate('/error', {
+                    state: {
+                        code: status,
+                        message: 'Unauthorized. Please log in.',
+                    },
+                });
+                return;
+            } else if (status >= 500) {
+                navigate('/error', {
+                    state: {
+                        code: status,
+                        message: 'Server error. Please try again later.',
+                    },
+                });
+                return;
+            } else if (status >= 400) {
+                navigate('/error', {
+                    state: {
+                        code: res.status,
+                        message: 'Request error. Please check your data.',
+                    },
+                });
+                return;
+            }
+            if (data.message && data.message.trim() !== "") {
+                navigate('/error', {
+                    state: {
+                        code: 401,
+                        message: data.message,
+                    },
+                });
+                return;
+            } else if (data.loggedIn) {
+
+                navigate('/dashboard', {
+                    state: {
+                        csrfToken: data.csrf,
+                        language: data.language,
+                        theme: data.theme,
+                        permission: data.permission,
+                    },
+                });
+                return;
+
+            }
+
+        }
+
+        verifyAccess();
+    }, [location.key]);
+
 
     useEffect(() => {
         // Sobrescribe el state actual con uno vacío
