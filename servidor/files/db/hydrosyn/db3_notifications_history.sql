@@ -16,10 +16,8 @@ CREATE TABLE notification_events (
 CHECK ((is_read = TRUE AND read_at IS NOT NULL) OR (is_read = FALSE AND read_at IS NULL)),
 CHECK (read_at IS NULL OR read_at >= created_at), -- read_at debe ser NULL o posterior a created_at
     FOREIGN KEY (notification_id) REFERENCES notifications(id)
-        ON DELETE RESTRICT ON UPDATE CASCADE,
-
-    FOREIGN KEY (user_id) REFERENCES users(id)
         ON DELETE RESTRICT ON UPDATE CASCADE
+
 
     
 );
