@@ -5,7 +5,7 @@ import TopBar from './TopBar'
 import texts from '../i18n/locales';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { checkAccess } from '../utils/CheckAccess';
+import { checkAccess } from '../utils/checkAccess'; // Asegúrate de que la ruta es correcta
 import { getGpuInfo, getOS } from '../utils/ClientInfo'; // Asegúrate de que la ruta es correcta
 
 
@@ -13,7 +13,13 @@ import { getGpuInfo, getOS } from '../utils/ClientInfo'; // Asegúrate de que la
 export default function LoginPage() {
     const navigate = useNavigate();
     const location = useLocation();
-    const [accessData, setAccessData] = useState(null);// valores por defecto
+    const [appData, setAppData] = useState({
+        language: 'en',       // Valor por defecto
+        theme: 'light',       // Valor por defecto
+        csrfToken: null,
+        loggedIn: false,
+        permissions: false
+    });
 
     // Aquí ya tienes idioma, tema y csrfToken pasados por navigate()
     const [username, setUsername] = useState('');
@@ -25,7 +31,7 @@ export default function LoginPage() {
 
     useEffect(() => {
         async function verify() {
-            const result = await CheckAccess();
+            const result = await checkAccess();
 
             if (result.error) {
                 // Error llamando al check
@@ -36,7 +42,14 @@ export default function LoginPage() {
                 return;
             }
             const { status, data } = result;
-            setAccessData(data);
+            setAppData(prev => ({
+                ...prev,
+                csrfToken: result.data?.csrf || csrf_token,
+                language: result.data?.language || prev.language,
+                theme: result.data?.theme || prev.theme,
+                loggedIn: result.data?.loggedIn || false,
+                permissions: result.data?.permission || false
+            }));
             if (status === 401) {
                 navigate('/error', {
                     state: {
@@ -62,23 +75,18 @@ export default function LoginPage() {
                 });
                 return;
             }
-            if (data.message && data.message.trim() !== "") {
+            if (result.data?.message && result.data.message.trim() !== "") {
                 navigate('/error', {
                     state: {
                         code: 401,
-                        message: data.message,
+                        message: result.data?.message,
                     },
                 });
                 return;
-            } else if (data.loggedIn) {
+            } else if (result.data?.loggedIn) {
 
                 navigate('/dashboard', {
-                    state: {
-                        csrfToken: data.csrf,
-                        language: data.language,
-                        theme: data.theme,
-                        permission: data.permission,
-                    },
+
                 });
                 return;
 
@@ -90,10 +98,6 @@ export default function LoginPage() {
     }, [location.key]);
 
 
-    useEffect(() => {
-        // Sobrescribe el state actual con uno vacío
-        navigate('.', { state: {}, replace: true });
-    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -197,12 +201,12 @@ export default function LoginPage() {
 
     return (
         <div className={`app ${theme}`} style={{ padding: 20, fontFamily: 'Arial' }}>
-            <TopBar language={language} theme={theme} texts={texts} />
+            <TopBar language={data.language} theme={datatheme} texts={texts} />
             <h1>{texts[language].login}</h1>
             <form onSubmit={handleSubmit} style={{ maxWidth: 300 }}>
-                <input type="hidden" name="csrf_token" value={csrf_token} />
+                <input type="hidden" name="csrf_token" value={data.csrf} />
                 <label>
-                    {texts[language].username}:
+                    {texts[data.language].username}:
                     <input
                         type="text"
                         value={username}
@@ -220,7 +224,7 @@ export default function LoginPage() {
                 </label>
 
                 <label>
-                    {texts[language].password}:
+                    {texts[data.language].password}:
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <input
                             type={showPassword ? 'text' : 'password'}
@@ -251,13 +255,13 @@ export default function LoginPage() {
                     }}
                     disabled={!username || !password || !/^[a-zA-Z0-9]+$/.test(username)} // Desactiva si no hay datos válidos
                 >
-                    {texts[language].login}
+                    {texts[data.language].login}
                 </button>
                 <button
                     onClick={() => navigate('/recover-password')}
 
                 >
-                    {texts[language].recoverPassword}
+                    {texts[data.language].recoverPassword}
                 </button>
             </form>
 

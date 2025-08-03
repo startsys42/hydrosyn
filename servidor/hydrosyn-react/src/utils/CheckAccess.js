@@ -1,4 +1,4 @@
-import { getGpuInfo, getOS } from './ClienttInfo';
+import { getGpuInfo, getOS } from './ClientInfo';
 
 export async function checkAccess() {
     try {
