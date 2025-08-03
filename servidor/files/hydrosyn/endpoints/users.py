@@ -12,8 +12,8 @@ router = APIRouter()
 
 
 @router.post("/create-user")
-async def create_user_post():
-    return {"action": "process create user"}
+async def create_user(requqest: Request):
+    return {"action": "create user"}
 
 @router.get("/delete-user")
 async def delete_user_get():

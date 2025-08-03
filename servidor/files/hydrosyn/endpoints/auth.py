@@ -85,13 +85,13 @@ async def login(request: Request):
 
     if await is_in_blacklist_from_db(request.state.json_data.get("username")):
 
-        create_user_notification(
+        await create_user_notification(
             notification_id=5,  # ID de la notificación de bloqueo
             username=request.state.json_data.get("username"),
             ip=request.state.ip,
             date=request.state.date,
         )
-        validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
+        await validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
         return JSONResponse(
             status_code=202,
             content={
@@ -103,7 +103,7 @@ async def login(request: Request):
             }
         )
     if not validate_username((request.state.json_data.get("username"))):
-        validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
+        await validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
         return JSONResponse(
             status_code=202,
             content={
@@ -117,7 +117,7 @@ async def login(request: Request):
 
     data_login_db= await get_user_login_from_db(request.state.json_data.get("username"))
     if data_login_db is None:
-        validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
+        await validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
         return JSONResponse(
             status_code=202,
             content={
@@ -131,12 +131,12 @@ async def login(request: Request):
     else:
         request.state.user_id = data_login_db["id"]
         if not validate_password(request.state.json_data.get("username"), request.state.json_data.get("password")):
-            email_login_error(
+            await email_login_error(
                 email=data_login_db["email"],
                 lang=data_login_db["language"],
                 ip_address=request.state.ip
             )
-            validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
+            await validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
             return JSONResponse(
                 status_code=202,
                 content={
@@ -148,13 +148,13 @@ async def login(request: Request):
                 }
             )
         if data_login_db["is_active"]==False:
-            create_user_notification(
+            await create_user_notification(
                 notification_id=7,  # ID de la notificación de cuenta inactiva
                 username=request.state.json_data.get("username"),
                 ip=request.state.ip,
                 date=request.state.date,
             )
-            validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
+            await validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
             return JSONResponse(
                 status_code=202,
                 content={
@@ -210,7 +210,7 @@ async def login(request: Request):
                     }
                 )
         else:
-            validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
+            await validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
             await email_login_error(
                 email=data_login_db["email"],
                 lang=data_login_db["language"],
@@ -239,13 +239,13 @@ async def recover_password(request: Request):
     logger.info("Recovering password for user")
     if await is_in_blacklist_from_db(request.state.json_data.get("username")):
 
-        create_user_notification(
+        await create_user_notification(
             notification_id=6,  # ID de la notificación de bloqueo
             username=request.state.json_data.get("username"),
             ip=request.state.ip,
             date=request.state.date,
         )
-        validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
+        await validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
         return JSONResponse(
             status_code=202,
             content={
@@ -257,7 +257,7 @@ async def recover_password(request: Request):
             }
         )
     if not validate_username((request.state.json_data.get("username"))):
-        validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
+        await validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
         return JSONResponse(
             status_code=202,
             content={
@@ -271,7 +271,7 @@ async def recover_password(request: Request):
     data_login_db=await get_user_login_from_db(request.state.json_data.get("username")) 
    
     if data_login_db is None:
-        validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
+        await validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
         return JSONResponse(
             status_code=202,
             content={
@@ -291,7 +291,7 @@ async def recover_password(request: Request):
                 lang=data_login_db["language"],
                 ip_address=request.state.ip
             )
-            validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
+            await validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
             return JSONResponse(
                 status_code=202,
                 content={
@@ -303,13 +303,13 @@ async def recover_password(request: Request):
                 }
             )
         elif data_recovery_db is None and data_login_db["is_active"]==False:
-            create_user_notification(
+            await create_user_notification(
                     notification_id=8,  # ID de la notificación de cuenta inactiva
                     username=request.state.data.get("username"),
                     ip=request.state.ip,
                     date=request.state.date,
                 )
-            validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
+            await validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
             return JSONResponse(
                 status_code=202,
                 content={
@@ -329,7 +329,7 @@ async def recover_password(request: Request):
                     ip=request.state.ip,
                     date=request.state.date,
                 )
-                validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
+                await validate_and_remove_csrf_token(request.state.json_data.get("csrf_token"))
                 return JSONResponse(
                     status_code=202,
                     content={
@@ -402,7 +402,7 @@ async def code_2fa(request: Request):
         request.state.user_id = token_2fa["user_id"]  
         if token_2fa["session_id"] != request.state.session_id:
          
-            remove_two_step_token(request.state.json_data.get("token_2fa"))
+            await remove_two_step_token(request.state.json_data.get("token_2fa"))
             return JSONResponse(
                 status_code=202,
                 content={
@@ -418,7 +418,7 @@ async def code_2fa(request: Request):
                 await delete_old_session_in_db(request.state.user_id)
                 
                 request.state.success = True
-                remove_two_step_token(request.state.json_data.get("token_2fa"))
+                await remove_two_step_token(request.state.json_data.get("token_2fa"))
                 dict_summary = {
                     "userAgent": request.state.json_data.get("userAgent"),
                     "deviceMemory": request.state.json_data.get("deviceMemory"),
