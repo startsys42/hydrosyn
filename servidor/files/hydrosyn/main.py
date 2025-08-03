@@ -25,7 +25,8 @@ from endpoints import (
     users as web_users,
     device as web_device,
     settings as web_settings,
-    profile as web_profile
+    profile as web_profile,
+    security as web_security
 )
 
 
@@ -133,6 +134,7 @@ app.include_router(web_profile.router, prefix="/api", tags=["Web Profile"])
 app.include_router(web_users.router, prefix="/api", tags=["Web Users"])
 app.include_router(web_device.router, prefix="/api", tags=["Web Device"])
 app.include_router(web_settings.router, prefix="/api", tags=["Web Settings"])
+app.include_router(web_security.router, prefix="/api", tags=["Web Security"])
 # 4) Rutas API (JSON + JWT)
 #    - api_auth.router: /api/token, validación de credenciales, emisión de JWT
 #    - api_users.router: /api/users, endpoints protegidos por token
