@@ -183,25 +183,24 @@ async def get_templates_by_languages_from_db(notification_id: int, languages: Li
     
 async def insert_notification_event_in_db(
     notification_id: int,
-    user_id: int,
+
     lang_code: str,
     formatted_message: str,
     created_at: datetime | None = None,
 ):
     sql = text("""
         INSERT INTO notification_events (
-            notification_id, user_id, lang_code, formatted_message,  created_at
+            notification_id, lang_code, formatted_message,  created_at
         ) VALUES (
-            :notification_id, :user_id, :lang_code, :formatted_message, :created_at
+            :notification_id,  :lang_code, :formatted_message, :created_at
         )
     """)
 
     params = {
         "notification_id": notification_id,
-        "user_id": user_id,
         "lang_code": lang_code,
         "formatted_message": formatted_message,
-        "created_at": created_at if created_at else datetime.now(timezone.utc),
+        "created_at": created_at if created_at else datetime.now(),
     }
 
     engine = DBEngine.get_engine()  # corregido indentación

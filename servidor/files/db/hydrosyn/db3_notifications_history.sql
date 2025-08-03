@@ -5,7 +5,7 @@ USE hydrosyn_db;
 CREATE TABLE notification_events (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     notification_id INT UNSIGNED NOT NULL,         -- Tipo de notificación
-    user_id INT UNSIGNED NOT NULL,                 -- A qué usuario le afecta (target)
+  
    
     lang_code ENUM('es', 'en') NOT NULL,
     formatted_message VARCHAR(255) NOT NULL,               -- Texto listo para mostrar

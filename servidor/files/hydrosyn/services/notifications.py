@@ -62,29 +62,28 @@ async def create_user_notification( notification_id: int, **kwargs):
         
         if user_id  and lang_code == lang:  
             send_email(
-                        to=os.getenv("EMAIL_SENDER"),
+                        to=email,
                         subject=subject,
                         body=formatted_msg
                     )
         
 
-        if should_send and notification_email and notification_lang== lang_code:
-            send_email(
-                        to=notification_email["email"],
-                        subject= subject,
-                        body=formatted_msg
-                    )
+        if lang_notification == lang_code:
+            if should_send and email_notification :
+                send_email(
+                            to=email_notification,
+                            subject= subject,
+                            body=formatted_msg
+                        )
         
 
         
-        for user in users_notified:
-            if user["language"] == lang_code:
-                await insert_notification_event_in_db(
-                    notification_id=notification_id,
-                    user_id=user["id"],
-                    lang_code=lang_code,
-                    formatted_message=formatted_msg,
-                    created_at=date,
-                )
-        
+      
+            await insert_notification_event_in_db(
+                notification_id=notification_id,
+                lang_code=lang_code,
+                formatted_message=formatted_msg,
+                created_at=date,
+            )
+    
          
