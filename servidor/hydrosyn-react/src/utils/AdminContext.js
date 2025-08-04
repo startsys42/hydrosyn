@@ -23,7 +23,7 @@ export function AdminProvider({ children }) {
             const { data, error } = await supabase
                 .from('roles')
                 .select('id')
-                .eq('user_id', user.id)
+                .eq('user', user.id)
                 .single();
 
             setIsAdmin(!error && data); // Si hay dato, es admin
