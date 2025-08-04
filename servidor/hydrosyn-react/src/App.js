@@ -1,65 +1,67 @@
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from './components/LoginPage';
+import Login from './components/Login';
 import Dashboard from './components/Dashboard';
-
-import ServerErrorPage from './components/ServerErrorPage';
-import Notifications from './components/Notifications';
-import Blacklist from './components/Blacklist';
-import IDs from './components/IDs';
-import PrivateRouteInfo from './components/route/PrivateRouteInfo';
-
-import ChangePassword from './components/ChangePassword';
-import ChangeUsername from './components/ChangeUsername';
-import PrivateRoute from './components/route/PrivateRoute';
-import RouteDashboard from './components/route/RouteDashboard';
-import RecoverPassword from './components/RecoverPassword';
-import AddBlacklist from './components/AddBlacklist';
-import ChangeEmail from './components/ChangeEmail';
-import Users from './components/Users';
-import CreateUser from './components/CreateUser';
-import Configuration from './components/Configuration';
-import EliminateUser from './components/EliminateUser';
-import Code2FA from './components/Code2FA';
-import ProtectedRoute from './components/route/ProtectedRoute';
-
-
-
-
-
+import { useEffect, useState } from 'react';
+import { supabase } from './utils/supabaseClient';
+import { useTheme } from './utils/ThemeContext';
+import { useLanguage } from './utils/LanguageContext';
 
 
 function App() {
+    const { theme, toggleTheme } = useTheme();
+    const { language, changeLanguage } = useLanguage();
+    const [user, setUser] = useState(null);
 
+    useEffect(() => {
+        // Revisa si hay sesión activa
+        const session = supabase.auth.getSession().then(({ data }) => setUser(data.session?.user ?? null));
 
+        // Listener para cambios de sesión
+        const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+        });
 
+        return () => {
+            listener.subscription.unsubscribe();
+        };
+    }, []);
 
     return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<Navigate to="/login" replace />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/recover-password" element={<RecoverPassword />} />
-                <Route path="/code-2fa" element={<Code2FA allowedFrom="/login" />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/change-password" element={<ChangePassword />} />
-                <Route path="/change-username" element={<ChangeUsername />} />
-                <Route path="/change-email" element={<ChangeEmail />} />
-                <Route path="/blacklist" element={<Blacklist />} />
-                <Route path="/add-blacklist" element={<AddBlacklist />} />
-                <Route path="/notifications" element={<Notifications />} />
-                <Route path="/ids" element={<IDs />} />
-                <Route path="/users" element={<Users />} />
-                <Route path="/create-user" element={<CreateUser />} />
-                <Route path="/eliminate-user" element={<EliminateUser />} />
-                <Route path="/config" element={<Configuration />} />
-                <Route path="/error" element={<ServerErrorPage />} />
-            </Routes>
-        </Router>
+        <div className={theme === 'light' ? 'light-theme' : 'dark-theme'}>
+            <Router>
+                {/* controles para cambiar tema e idioma */}
+                <div style={{ padding: 10 }}>
+                    <button onClick={toggleTheme}>
+                        Cambiar a {theme === 'light' ? 'modo oscuro' : 'modo claro'}
+                    </button>
+
+                    <select
+                        value={language}
+                        onChange={(e) => changeLanguage(e.target.value)}
+                        style={{ marginLeft: 10 }}
+                    >
+                        <option value="es">Español</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+
+                <Routes>
+                    <Route
+                        path="/"
+                        element={!user ? <Login /> : <Navigate to="/dashboard" replace />}
+                    />
+                    <Route
+                        path="/dashboard"
+                        element={user ? <Dashboard /> : <Navigate to="/" replace />}
+                    />
+                </Routes>
+            </Router>
+        </div>
     );
 }
-
-
-
 export default App;
+
+
+
