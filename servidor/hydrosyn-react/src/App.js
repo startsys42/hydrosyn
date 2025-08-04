@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from './utils/supabaseClient';
 import { useTheme } from './utils/ThemeContext';
 import { useLanguage } from './utils/LanguageContext';
-import Layout from './components/PublicLayout';
+import PublicLayout from './components/PublicLayout';
 import Profile from './components/Profile';
 import Users from './components/Users';
 import Notifications from './components/Notifications';
@@ -16,6 +16,7 @@ import ChangeEmail from './components/ChangeEmail';
 import { useAdminStatus } from './utils/AdminContext';
 import useTexts from './utils/UseTexts';
 import PrivateLayout from './components/PrivateLayout';
+import RecoverPassword from './components/RecoverPassword';
 
 
 
@@ -72,7 +73,7 @@ function App() {
                             element={
                                 !user ? (
                                     <Navigate to="/" replace />
-                                ) : <Dashboard />
+                                ) : <Profile />
 
                             }
                         />
