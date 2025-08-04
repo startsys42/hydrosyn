@@ -52,10 +52,24 @@ function App() {
                         path="/"
                         element={!user ? <Login /> : <Navigate to="/dashboard" replace />}
                     />
-                    <Route
-                        path="/dashboard"
-                        element={user ? <Dashboard /> : <Navigate to="/" replace />}
-                    />
+                    <Route element={<Layout />}>
+                        <Route
+                            path="/dashboard"
+                            element={user ? <Dashboard /> : <Navigate to="/" replace />}
+                        />
+                        <Route
+                            path="/profile"
+                            element={user ? <Profile /> : <Navigate to="/" replace />}
+                        />
+                        <Route
+                            path="/users"
+                            element={user ? <Users /> : <Navigate to="/" replace />}
+                        />
+                        <Route
+                            path="/notifications"
+                            element={user ? <Notifications /> : <Navigate to="/" replace />}
+                        />
+                    </Route>
                 </Routes>
             </Router>
         </div>
