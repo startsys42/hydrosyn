@@ -36,7 +36,7 @@ function App() {
         <div className={theme === 'light' ? 'light-theme' : 'dark-theme'}>
             <Router>
                 {/* controles para cambiar tema e idioma */}
-                <div style={{ padding: 10 }}>
+                <div className="topbar">
                     <button onClick={toggleTheme}>
                         Cambiar a {theme === 'light' ? 'modo oscuro' : 'modo claro'}
                     </button>

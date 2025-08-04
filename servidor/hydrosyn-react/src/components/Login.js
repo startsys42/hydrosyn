@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabaseClient';
+import useTexts from '../utils/UseTexts';
 
 export default function Login() {
+    const t = useTexts();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -91,7 +93,7 @@ export default function Login() {
 
     return (
         <div className="login-container">
-            <h2>Iniciar sesión</h2>
+            <h2>{t.login}</h2>
             {error && <div className="error-message">{error}</div>}
 
             {!showResetPassword ? (

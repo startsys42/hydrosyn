@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../utils/supabaseClient';
+import { useTexts } from '../utils/UseTexts';
 
 export default function Dashboard() {
+    const t = useTexts();
     const [userEmail, setUserEmail] = useState('');
 
     useEffect(() => {
@@ -23,7 +25,7 @@ export default function Dashboard() {
 
     return (
         <div>
-            <h1>Bienvenido al Dashboard</h1>
+            <h1>{t.welcome}</h1>
             {userEmail && <p>Sesión iniciada como: {userEmail}</p>}
         </div>
     );

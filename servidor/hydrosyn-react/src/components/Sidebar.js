@@ -8,15 +8,7 @@ export default function Sidebar() {
     if (loading) return <aside>Cargando menú...</aside>;
 
     return (
-        <aside
-            style={{
-                width: collapsed ? 60 : 200,
-                padding: 20,
-                background: '#f4f4f4',
-                transition: 'width 0.3s',
-                overflow: 'hidden',
-            }}
-        >
+        <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
             <button
                 onClick={() => setCollapsed(!collapsed)}
                 style={{

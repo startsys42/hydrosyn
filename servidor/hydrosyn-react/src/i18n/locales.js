@@ -18,6 +18,7 @@ const texts = {
         configuration: 'Configuración',
         fa: 'Autenticación de dos factores',
         code2fa: 'Ingresa tu código 2FA',
+        welcome: 'Bienvenido a Hydrosyn',
 
     },
     en: {
@@ -40,6 +41,7 @@ const texts = {
         configuration: 'Configuration',
         fa: 'Two-Factor Authentication',
         code2fa: 'Enter your 2FA code',
+        welcome: 'Welcome to Hydrosyn',
 
     },
 };
