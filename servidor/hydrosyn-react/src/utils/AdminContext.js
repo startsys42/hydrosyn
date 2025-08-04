@@ -26,7 +26,8 @@ export function AdminProvider({ children }) {
                 .eq('user', user.id)
                 .single();
 
-            setIsAdmin(!error && data); // Si hay dato, es admin
+            setIsAdmin(!error && data !== null);
+
             setLoading(false);
         };
 
