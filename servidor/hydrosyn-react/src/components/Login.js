@@ -79,7 +79,7 @@ export default function Login() {
 
             {error && <div className="error-message">{error}</div>}
 
-            <form onSubmit={handleLogin}>
+            <form onSubmit={handleLogin} className="form-container">
                 <label>{t.email}</label>
                 <input
                     type="email"
@@ -102,7 +102,7 @@ export default function Login() {
             </form>
 
             <button
-                className="forgot-password"
+                className="button-center"
                 onClick={() => navigate('/recover-password')}
             >
                 {t.recoverPassword}

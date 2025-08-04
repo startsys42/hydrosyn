@@ -73,6 +73,28 @@ body, html, #root {
 }
 
 
+
+.div-main {
+    margin-top: 40px;
+
+}
+
+.button-center {
+  display: block;
+  margin: 0 auto; /* Centrado horizontal */
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 300px;
+}
+
+.form-container label {
+  font-weight: bold;
+}
+
 button{
     background-color: var(--button-bg);
     color: var(--button-text);
