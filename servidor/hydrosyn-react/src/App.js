@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from './utils/supabaseClient';
 import { useTheme } from './utils/ThemeContext';
 import { useLanguage } from './utils/LanguageContext';
-import Layout from './components/Layout';
+import Layout from './components/PublicLayout';
 import Profile from './components/Profile';
 import Users from './components/Users';
 import Notifications from './components/Notifications';
@@ -15,6 +15,7 @@ import ChangePassword from './components/ChangePassword';
 import ChangeEmail from './components/ChangeEmail';
 import { useAdminStatus } from './utils/AdminContext';
 import useTexts from './utils/UseTexts';
+import PrivateLayout from './components/PrivateLayout';
 
 
 
@@ -44,34 +45,36 @@ function App() {
         <div className={theme === 'light' ? 'light-theme' : 'dark-theme'}>
             <Router>
                 {/* controles para cambiar tema e idioma */}
-                <div className="topbar">
-                    <button onClick={toggleTheme}>
-                        {theme === 'light' ? t.dark : t.light}
-                    </button>
-
-                    <select
-                        value={language}
-                        onChange={(e) => changeLanguage(e.target.value)}
-                        style={{ marginLeft: 10 }}
-                    >
-                        <option value="es">Español</option>
-                        <option value="en">English</option>
-                    </select>
-                </div>
 
                 <Routes>
-                    <Route
-                        path="/"
-                        element={!user ? <Login /> : <Navigate to="/dashboard" replace />}
-                    />
-                    <Route element={<Layout />}>
+                    <Route element={<PublicLayout />}>
+                        <Route
+                            path="/"
+                            element={!user ? <Login /> : <Navigate to="/dashboard" replace />}
+                        />
+                        <Route
+                            path="/recover-password"
+                            element={!user ? <RecoverPassword /> : <Navigate to="/dashboard" replace />}
+                        />
+                    </Route>
+                    <Route element={<PrivateLayout />}>
                         <Route
                             path="/dashboard"
-                            element={user ? <Dashboard /> : <Navigate to="/" replace />}
+                            element={
+                                !user ? (
+                                    <Navigate to="/" replace />
+                                ) : <Dashboard />
+
+                            }
                         />
                         <Route
                             path="/profile"
-                            element={user ? <Profile /> : <Navigate to="/" replace />}
+                            element={
+                                !user ? (
+                                    <Navigate to="/" replace />
+                                ) : <Dashboard />
+
+                            }
                         />
 
                         <Route
@@ -93,11 +96,21 @@ function App() {
                         />
                         <Route
                             path="/change-password"
-                            element={user ? <ChangePassword /> : <Navigate to="/" replace />}
+                            element={
+                                !user ? (
+                                    <Navigate to="/" replace />
+                                ) : <ChangePassword />
+
+                            }
                         />
                         <Route
                             path="/change-email"
-                            element={user ? <ChangeEmail /> : <Navigate to="/" replace />}
+                            element={
+                                !user ? (
+                                    <Navigate to="/" replace />
+                                ) : <ChangeEmail />
+
+                            }
                         />
                     </Route>
                 </Routes>

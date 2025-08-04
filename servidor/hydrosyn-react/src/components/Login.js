@@ -44,7 +44,7 @@ export default function Login() {
                 // Registrar intento de login con usuario desactivado
                 await recordFailedAttempt(user.id, 'Intento de login con usuario desactivado');
                 await supabase.auth.signOut();
-                throw new Error('Tu cuenta no está activa. Contacta al administrador.');
+                throw new Error('No activo.');
             }
 
             // 3. Redirigir al dashboard si está activo
@@ -93,25 +93,28 @@ export default function Login() {
     };
 
     return (
-        <div className="login-container">
+        <div className="div-main">
             <h2>{t.login}</h2>
+
             {error && <div className="error-message">{error}</div>}
 
             {!showResetPassword ? (
                 <>
                     <form onSubmit={handleLogin}>
+                        <label>{t.email}</label>
                         <input
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            placeholder="Correo electrónico"
+                            placeholder={t.email}
                             required
                         />
+                        <label>{t.password}</label>
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Contraseña"
+                            placeholder={t.password}
                             required
                         />
                         <button type="submit" disabled={loading}>
@@ -135,12 +138,12 @@ export default function Login() {
                                 setShowResetPassword(false);
                                 setResetSent(false);
                             }}>
-                                Volver al login
+                                {t.backToLogin}
                             </button>
                         </div>
                     ) : (
                         <>
-                            <h3>Recuperar contraseña</h3>
+                            <h3>{t.recoverPassword}</h3>
                             <p>Ingresa tu correo electrónico para recibir un enlace de recuperación</p>
                             <form onSubmit={handlePasswordReset}>
                                 <input

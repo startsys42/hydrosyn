@@ -25,9 +25,8 @@ export default function Dashboard() {
     }, []);
 
     return (
-        <div>
+        <div className='div-main-login'>
             <h1>{t.welcome}</h1>
-            {userEmail && <p>Sesión iniciada como: {userEmail}</p>}
         </div>
     );
 }

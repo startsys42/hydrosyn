@@ -2,14 +2,14 @@ const texts = {
     es: {
         language: 'Idioma',
         theme: 'Tema',
-        login: 'Iniciar sesión',
+
         username: 'Usuario',
-        password: 'Contraseña',
+
         changeLanguage: 'Cambiar idioma',
         changeTheme: 'Cambiar tema',
         recoverPassword: 'Recuperar contraseña',
-        email: 'Email',
-        backToLogin: 'Volver al inicio de sesión',
+
+
         recoverySent: 'Nueva contraseña enviada al correo',
         users: 'Usuarios',
         profile: 'Perfil',
@@ -23,20 +23,27 @@ const texts = {
         dark: 'Modo oscuro',
         light: 'Modo claro',
         users: 'Gestión de usuarios',
+        profile: 'Perfil de usuario',
+        changePassword: 'Cambiar contraseña',
+        changeEmail: 'Cambiar email',
+        password: 'Contraseña',
+        login: 'Iniciar sesión',
+        email: 'Email',
+        backToLogin: 'Volver al inicio de sesión',
 
     },
     en: {
         language: 'Language',
         theme: 'Theme',
-        login: 'Login',
+
         username: 'Username',
-        password: 'Password',
+
 
         changeLanguage: 'Change Language',
         changeTheme: 'Change Theme',
         recoverPassword: 'Recover Password',
-        email: 'Email',
-        backToLogin: 'Back to Login',
+
+
         recoverySent: 'New password sent to email',
         users: 'Users',
         profile: 'Profile',
@@ -50,6 +57,13 @@ const texts = {
         dark: 'Dark Mode',
         light: 'Light Mode',
         users: 'User Management',
+        profile: 'User Profile',
+        changePassword: 'Change Password',
+        changeEmail: 'Change Email',
+        password: 'Password',
+        login: 'Login',
+        email: 'Email',
+        backToLogin: 'Back to Login',
 
     },
 };
