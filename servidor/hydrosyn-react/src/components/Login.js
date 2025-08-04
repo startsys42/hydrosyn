@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
+import '../styles/theme.css';
 
 export default function Login() {
     const t = useTexts();

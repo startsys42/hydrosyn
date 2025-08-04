@@ -13,12 +13,17 @@ import Users from './components/Users';
 import Notifications from './components/Notifications';
 import ChangePassword from './components/ChangePassword';
 import ChangeEmail from './components/ChangeEmail';
+import { useAdminStatus } from './utils/AdminContext';
+import useTexts from './utils/UseTexts';
+
 
 
 function App() {
     const { theme, toggleTheme } = useTheme();
     const { language, changeLanguage } = useLanguage();
     const [user, setUser] = useState(null);
+    const { isAdmin, loading: loadingAdmin } = useAdminStatus();
+    const t = useTexts();
 
     useEffect(() => {
         // Revisa si hay sesión activa
@@ -40,7 +45,7 @@ function App() {
                 {/* controles para cambiar tema e idioma */}
                 <div className="topbar">
                     <button onClick={toggleTheme}>
-                        Cambiar a {theme === 'light' ? 'modo oscuro' : 'modo claro'}
+                        {theme === 'light' ? t.dark : t.light}
                     </button>
 
                     <select
@@ -67,10 +72,20 @@ function App() {
                             path="/profile"
                             element={user ? <Profile /> : <Navigate to="/" replace />}
                         />
+
                         <Route
                             path="/users"
-                            element={user ? <Users /> : <Navigate to="/" replace />}
+                            element={
+                                !user ? (
+                                    <Navigate to="/" replace />
+                                ) : user && isAdmin ? (
+                                    <Users />
+                                ) : user && !loadingAdmin ? (
+                                    <Navigate to="/dashboard" replace />
+                                ) : null
+                            }
                         />
+
                         <Route
                             path="/notifications"
                             element={user ? <Notifications /> : <Navigate to="/" replace />}

@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useAdminStatus } from '../utils/AdminContext';
+import useTexts from '../utils/UseTexts';
+import '../styles/theme.css';
 
 export default function Sidebar() {
     const { isAdmin, loading } = useAdminStatus();
     const [collapsed, setCollapsed] = useState(false);
 
-    if (loading) return <aside>Cargando menú...</aside>;
+    if (loading) return <aside></aside>;
 
     return (
         <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>

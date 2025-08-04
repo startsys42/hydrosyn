@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
+import '../styles/theme.css';
 
 export default function Dashboard() {
     const t = useTexts();

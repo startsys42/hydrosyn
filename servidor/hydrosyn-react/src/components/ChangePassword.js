@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../utils/supabaseClient';
+import '../styles/theme.css';
 
 export default function ChangePassword() {
     const [currentPassword, setCurrentPassword] = useState('');
