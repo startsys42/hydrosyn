@@ -11,6 +11,8 @@ import Layout from './components/Layout';
 import Profile from './components/Profile';
 import Users from './components/Users';
 import Notifications from './components/Notifications';
+import ChangePassword from './components/ChangePassword';
+import ChangeEmail from './components/ChangeEmail';
 
 
 function App() {
