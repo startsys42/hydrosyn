@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { supabase } from '../../../../.vscode/supabase/hydrosyn-sb-recat/src/utils/supabaseClient';
+import { supabase } from './supabaseClient';
 
 const AdminContext = createContext();
 

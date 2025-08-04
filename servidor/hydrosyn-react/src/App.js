@@ -7,6 +7,10 @@ import { useEffect, useState } from 'react';
 import { supabase } from './utils/supabaseClient';
 import { useTheme } from './utils/ThemeContext';
 import { useLanguage } from './utils/LanguageContext';
+import Layout from './components/Layout';
+import Profile from './components/Profile';
+import Users from './components/Users';
+import Notifications from './components/Notifications';
 
 
 function App() {

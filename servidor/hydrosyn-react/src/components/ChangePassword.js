@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { supabase } from '../supabaseClient';
+import { supabase } from '../utils/supabaseClient';
 
 export default function ChangePassword() {
     const [currentPassword, setCurrentPassword] = useState('');
@@ -121,8 +121,8 @@ export default function ChangePassword() {
                 {message.text && (
                     <div
                         className={`p-3 rounded-md ${message.type === 'success'
-                                ? 'bg-green-100 text-green-700'
-                                : 'bg-red-100 text-red-700'
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-red-100 text-red-700'
                             }`}
                     >
                         {message.text}
