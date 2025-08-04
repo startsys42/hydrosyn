@@ -33,7 +33,7 @@ export default function Login() {
             const { data: { user } } = await supabase.auth.getUser();
 
             const { data: profile, error: profileError } = await supabase
-                .from('profiles')
+                .from('profile')
                 .select('is_active')
                 .eq('id', user.id)
                 .single();
@@ -77,7 +77,7 @@ export default function Login() {
         <div className="div-main">
             <h1>{t.login}</h1>
 
-            {error && <div className="error-message">{error}</div>}
+
 
             <form onSubmit={handleLogin} className="form-container">
                 <label>{t.email}</label>
@@ -101,6 +101,7 @@ export default function Login() {
                 </button>
             </form>
 
+            {error && <div className="error-message">Error</div>}
             <button
                 className='button_width'
                 onClick={() => navigate('/recover-password')}

@@ -8,6 +8,14 @@ export default function Sidebar() {
     const { isAdmin, loading } = useAdminStatus();
     const [collapsed, setCollapsed] = useState(false);
     const t = useTexts();
+    const handleLogout = async () => {
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+            alert('Error al cerrar sesión: ' + error.message);
+            return;
+        }
+        navigate('/login'); // redirige a login tras cerrar sesión
+    };
 
     if (loading) return <aside></aside>;
 
@@ -43,7 +51,25 @@ export default function Sidebar() {
                         </li>
                     </>
                 )}
+                <li style={{ padding: '8px 0' }}>
+                    <button
+                        onClick={handleLogout}
+                        style={{
+                            background: 'none',
+                            border: 'none',
+                            color: 'inherit',
+                            cursor: 'pointer',
+                            padding: 0,
+                            font: 'inherit',
+                            textAlign: collapsed ? 'center' : 'left',
+                            width: '100%',
+                        }}
+                        aria-label="Cerrar sesión"
+                    >
+                        {collapsed ? '🚪' : t.logout}
+                    </button>
+                </li>
             </ul>
-        </aside>
+        </aside >
     );
 }

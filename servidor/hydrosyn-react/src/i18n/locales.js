@@ -31,6 +31,7 @@ const texts = {
         email: 'Email',
         backToLogin: 'Volver al inicio de sesión',
         recoverPassword: 'Recuperar contraseña',
+        logout: 'Cerrar sesión',
 
     },
     en: {
@@ -66,6 +67,7 @@ const texts = {
         email: 'Email',
         backToLogin: 'Back to Login',
         recoverPassword: 'Recover Password',
+        logout: 'Logout',
 
     },
 };
