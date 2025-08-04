@@ -61,7 +61,7 @@ export default function RecoverPassword() {
                 </button>
             </form>
 
-            <button onClick={() => navigate('/login')} className="back-button">
+            <button onClick={() => navigate('/')} className="back-button">
                 {t?.backToLogin || 'Volver al login'}
             </button>
         </div>
