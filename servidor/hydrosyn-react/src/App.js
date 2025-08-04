@@ -18,6 +18,7 @@ import useTexts from './utils/UseTexts';
 
 
 
+
 function App() {
     const { theme, toggleTheme } = useTheme();
     const { language, changeLanguage } = useLanguage();
