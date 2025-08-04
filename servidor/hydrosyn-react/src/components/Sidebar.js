@@ -3,18 +3,21 @@ import { useAdminStatus } from '../utils/AdminContext';
 import useTexts from '../utils/UseTexts';
 import '../styles/theme.css';
 import { Link } from 'react-router-dom';
+import { supabase } from '../utils/supabaseClient';
+import { useNavigate } from 'react-router-dom';
 
 export default function Sidebar() {
     const { isAdmin, loading } = useAdminStatus();
     const [collapsed, setCollapsed] = useState(false);
     const t = useTexts();
+    const navigate = useNavigate();
     const handleLogout = async () => {
         const { error } = await supabase.auth.signOut();
         if (error) {
             alert('Error al cerrar sesión: ' + error.message);
             return;
         }
-        navigate('/login'); // redirige a login tras cerrar sesión
+        navigate('/'); // redirige a login tras cerrar sesión
     };
 
     if (loading) return <aside></aside>;
