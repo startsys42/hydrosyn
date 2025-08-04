@@ -1,10 +1,13 @@
 import '../styles/theme.css';
+import React, { useEffect, useState } from 'react';
+import { supabase } from '../utils/supabaseClient';
+import useTexts from '../utils/UseTexts';
 
 function Notifications() {
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
     const texts = useTexts();
-    const { theme } = useTheme();
+
 
     useEffect(() => {
         const fetchNotifications = async () => {
@@ -26,7 +29,7 @@ function Notifications() {
     }, []);
 
     return (
-        <div className={`notifications-page ${theme}`}>
+        <div >
             <h2>{texts.notifications}</h2>
 
             {loading ? (
