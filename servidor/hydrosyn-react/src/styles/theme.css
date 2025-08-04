@@ -4,25 +4,29 @@
     --text-color: #000000;
     --topbar-bg: #f0f0f0;
     --aside-bg: #f4f4f4;
-    --link-color: #007bff;
+  
 
     --button-bg: #ffffff;
-    --button-text: '#000000';
-    --button-border: '#2196f3';
+    --button-text: #000000;
+    --button-border: #2196f3;
 
 }
 
 /* Tema oscuro */
+
+
+
+
 .dark-theme {
-    --bg-color: '#181b1e';
+    --bg-color: #181b1e;
     --text-color: #ffffff;
     --topbar-bg: #2c2c2c;
     --aside-bg: #333333;
-    --link-color: #66b2ff;
 
-    --button-bg: '#181b1e';
-    --button-text: '#ffffff';
-    --button-border: '#F0F0F0';
+
+    --button-bg: #181b1e;
+    --button-text: #ffffff;
+    --button-border: #F0F0F0;
 }
 
 body, html, #root {
@@ -35,14 +39,41 @@ body, html, #root {
 }
 
 
+
+/* Estructura general */
 .public-layout {
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
+    height: 100vh; /* Toda la pantalla */
 }
 
-button  {
+/* Topbar con altura fija */
+.public-layout .topbar {
+    height: 60px;
+    flex-shrink: 0;
+}
+
+/* Contenedor principal debajo del topbar */
+.public-main {
+    flex: 1;
+    display: flex;
+    justify-content: center;  /* Centrado horizontal */
+    align-items: flex-start;  /* Desde arriba */
+    padding-top: 40px;        /* Espacio debajo del topbar */
+}
+
+/* Contenido que va dentro */
+.public-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;  /* Alineado a la izquierda */
+    width: 100%;
+    max-width: 500px;
+    gap: 15px;
+}
+
+
+button{
     background-color: var(--button-bg);
     color: var(--button-text);
     border: 1px solid var(--button-border);
@@ -65,26 +96,10 @@ button  {
     z-index: 1000;
 }
 
-.public-main {
-    flex: 1;
-    margin-top: 60px; /* espacio para el topbar */
-    display: flex;
-    align-items: center;       /* centrado vertical */
-    justify-content: center;   /* centrado horizontal */
-    padding: 20px;
-}
 
-.public-content {
-    width: 100%;
-    max-width: 500px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* contenido alineado a la izquierda */
-}
 
 /* Título centrado dentro del public-content */
-.public-content h1,
-.public-content .title {
+.public-content h1{
     width: 100%;
     text-align: center;
 }
@@ -147,4 +162,10 @@ button  {
 /* Sidebar colapsado */
 .sidebar.collapsed {
   width: 60px;
+}
+
+
+a {
+    color: inherit;
+    text-decoration: none;
 }
