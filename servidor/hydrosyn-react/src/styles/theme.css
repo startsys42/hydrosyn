@@ -67,7 +67,7 @@ body, html, #root {
 .public-content {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    align-items: flex-start;  /* Alineado a la izquierda */
     width: 100%;
     max-width: 500px;
     gap: 15px;
@@ -81,7 +81,8 @@ body, html, #root {
 
 }
 
-.button-center {
+.button-width {
+    width: 100%;
   display: block;
   margin: 0 auto; /* Centrado horizontal */
 }
@@ -89,11 +90,9 @@ body, html, #root {
 .form-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;  /* Alineado a la izquierda */
   gap: 8px;
   max-width: 300px;
 }
-
 
 
 
@@ -105,10 +104,6 @@ button{
     border-radius: 4px;
     cursor: pointer;
     margin-top: 10px;
-}
-
-.button-width {
-    width: 100%;
 }
 
 .topbar {
@@ -163,11 +158,12 @@ label {
 
 
 .topbar select {
-  background-color: var(--primary-color, #1976d2);
-  border: none;
-  color: var(--text-color, white);
-  padding: 6px 12px;
-  cursor: pointer;
+  background-color: var(--button-bg);
+    color: var(--button-text);
+    border: 3px solid var(--button-border);
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
   border-radius: 4px;
   min-width: 100px; /* para evitar que se encojan demasiado */
   flex-shrink: 1;   /* permite que se reduzcan si hay poco espacio */
