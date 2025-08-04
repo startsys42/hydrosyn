@@ -102,7 +102,7 @@ export default function Login() {
             </form>
 
             <button
-
+                className='button_width'
                 onClick={() => navigate('/recover-password')}
             >
                 {t.recoverPassword}
