@@ -5,13 +5,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider } from './utils/ThemeContext';
 import { LanguageProvider } from './utils/LanguageContext';
+import { AdminProvider } from './utils/AdminContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
         <ThemeProvider>
             <LanguageProvider>
-                <App />
+                <AdminProvider>
+                    <App />
+                </AdminProvider>
             </LanguageProvider>
         </ThemeProvider>
     </React.StrictMode>
