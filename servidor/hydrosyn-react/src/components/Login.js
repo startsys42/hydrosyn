@@ -71,26 +71,7 @@ export default function Login() {
         }
     };
 
-    const handlePasswordReset = async (e) => {
-        e.preventDefault();
-        if (!resetEmail) {
-            setError('Por favor ingresa tu correo electrónico');
-            return;
-        }
 
-        try {
-            const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-                redirectTo: 'http://192.168.0.227/reset-password',
-            });
-
-            if (error) throw error;
-
-            setResetSent(true);
-            setError('');
-        } catch (err) {
-            setError(err.message);
-        }
-    };
 
     return (
         <div className="div-main">
@@ -98,75 +79,34 @@ export default function Login() {
 
             {error && <div className="error-message">{error}</div>}
 
-            {!showResetPassword ? (
-                <>
-                    <form onSubmit={handleLogin}>
-                        <label>{t.email}</label>
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder={t.email}
-                            required
-                        />
-                        <label>{t.password}</label>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder={t.password}
-                            required
-                        />
-                        <button type="submit" disabled={loading}>
-                            {loading ? 'Verificando...' : 'Iniciar sesión'}
-                        </button>
-                    </form>
+            <form onSubmit={handleLogin}>
+                <label>{t.email}</label>
+                <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder={t.email}
+                    required
+                />
+                <label>{t.password}</label>
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder={t.password}
+                    required
+                />
+                <button type="submit" disabled={loading}>
+                    {loading ? 'Verificando...' : t.login}
+                </button>
+            </form>
 
-                    <button
-                        className="forgot-password"
-                        onClick={() => setShowResetPassword(true)}
-                    >
-                        ¿Olvidaste tu contraseña?
-                    </button>
-                </>
-            ) : (
-                <div className="reset-password-form">
-                    {resetSent ? (
-                        <div className="success-message">
-                            <p>Hemos enviado un enlace para restablecer tu contraseña a {resetEmail}</p>
-                            <button onClick={() => {
-                                setShowResetPassword(false);
-                                setResetSent(false);
-                            }}>
-                                {t.backToLogin}
-                            </button>
-                        </div>
-                    ) : (
-                        <>
-                            <h3>{t.recoverPassword}</h3>
-                            <p>Ingresa tu correo electrónico para recibir un enlace de recuperación</p>
-                            <form onSubmit={handlePasswordReset}>
-                                <input
-                                    type="email"
-                                    value={resetEmail}
-                                    onChange={(e) => setResetEmail(e.target.value)}
-                                    placeholder="Correo electrónico"
-                                    required
-                                />
-                                <button type="submit">
-                                    Enviar enlace de recuperación
-                                </button>
-                            </form>
-                            <button
-                                className="back-to-login"
-                                onClick={() => setShowResetPassword(false)}
-                            >
-                                Volver al login
-                            </button>
-                        </>
-                    )}
-                </div>
-            )}
+            <button
+                className="forgot-password"
+                onClick={() => navigate('/recover-password')}
+            >
+                {t.recoverPassword}
+            </button>
         </div>
     );
 }

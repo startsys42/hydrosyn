@@ -7,7 +7,7 @@ const texts = {
 
         changeLanguage: 'Cambiar idioma',
         changeTheme: 'Cambiar tema',
-        recoverPassword: 'Recuperar contraseña',
+
 
 
         recoverySent: 'Nueva contraseña enviada al correo',
@@ -30,6 +30,7 @@ const texts = {
         login: 'Iniciar sesión',
         email: 'Email',
         backToLogin: 'Volver al inicio de sesión',
+        recoverPassword: 'Recuperar contraseña',
 
     },
     en: {
@@ -41,7 +42,7 @@ const texts = {
 
         changeLanguage: 'Change Language',
         changeTheme: 'Change Theme',
-        recoverPassword: 'Recover Password',
+
 
 
         recoverySent: 'New password sent to email',
@@ -64,6 +65,7 @@ const texts = {
         login: 'Login',
         email: 'Email',
         backToLogin: 'Back to Login',
+        recoverPassword: 'Recover Password',
 
     },
 };

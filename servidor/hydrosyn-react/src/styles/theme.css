@@ -5,6 +5,11 @@
     --topbar-bg: #f0f0f0;
     --aside-bg: #f4f4f4;
     --link-color: #007bff;
+
+    --button-bg: #ffffff;
+    --button-text: '#000000';
+    --button-border: '#2196f3';
+
 }
 
 /* Tema oscuro */
@@ -14,6 +19,10 @@
     --topbar-bg: #2c2c2c;
     --aside-bg: #333333;
     --link-color: #66b2ff;
+
+    --button-bg: '#181b1e';
+    --button-text: '#ffffff';
+    --button-border: '#F0F0F0';
 }
 
 body, html, #root {
@@ -31,6 +40,15 @@ body, html, #root {
     flex-direction: column;
     height: 100vh;
     overflow: hidden;
+}
+
+button  {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: 1px solid var(--button-border);
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 .topbar {
@@ -93,7 +111,7 @@ body, html, #root {
   flex-wrap: wrap; /* para que los elementos bajen de línea si hay poco espacio */
 }
 
-.topbar button,
+
 .topbar select {
   background-color: var(--primary-color, #1976d2);
   border: none;

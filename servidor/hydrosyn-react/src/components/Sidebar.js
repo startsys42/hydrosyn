@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { useAdminStatus } from '../utils/AdminContext';
 import useTexts from '../utils/UseTexts';
 import '../styles/theme.css';
+import { Link } from 'react-router-dom';
 
 export default function Sidebar() {
     const { isAdmin, loading } = useAdminStatus();
     const [collapsed, setCollapsed] = useState(false);
+    const t = useTexts();
 
     if (loading) return <aside></aside>;
 
@@ -23,29 +25,21 @@ export default function Sidebar() {
                 {collapsed ? '➡️' : '⬅️'}
             </button>
 
-            <h3 style={{ display: collapsed ? 'none' : 'block' }}>Menú</h3>
+
 
             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                <li title="Perfil" style={{ padding: '8px 0' }}>
-                    {collapsed ? '👤' : 'Perfil'}
+                <li style={{ padding: '8px 0' }}>
+                    <Link to="/profile">{collapsed ? '👤' : t.profile}</Link>
                 </li>
-                <li title="Usuarios" style={{ padding: '8px 0' }}>
-                    {collapsed ? '👥' : 'Usuarios'}
-                </li>
-                <li title="Notificaciones" style={{ padding: '8px 0' }}>
-                    {collapsed ? '🔔' : 'Notificaciones'}
-                </li>
+
 
                 {isAdmin && !collapsed && (
                     <>
-                        <li style={{ padding: '8px 0', fontWeight: 'bold' }}>
-                            Administración
+                        <li style={{ padding: '8px 0' }}>
+                            <Link to="/users">{collapsed ? '👥' : t.users}</Link>
                         </li>
-                        <li title="Administrar Usuarios" style={{ padding: '8px 0' }}>
-                            Administrar Usuarios
-                        </li>
-                        <li title="Configuración" style={{ padding: '8px 0' }}>
-                            Configuración
+                        <li style={{ padding: '8px 0' }}>
+                            <Link to="/notifications">{collapsed ? '🔔' : t.notifications}</Link>
                         </li>
                     </>
                 )}
