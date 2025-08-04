@@ -94,7 +94,7 @@ export default function Login() {
 
     return (
         <div className="div-main">
-            <h2>{t.login}</h2>
+            <h1>{t.login}</h1>
 
             {error && <div className="error-message">{error}</div>}
 

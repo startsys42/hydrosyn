@@ -1,12 +1,15 @@
 import { Outlet } from 'react-router-dom';
 import Topbar from '../components/Topbar';
+import '../styles/theme.css';
 
 export default function PublicLayout() {
     return (
-        <div className="layout">
+        <div className="public-layout">
             <Topbar />
-            <main className="main-content">
-                <Outlet />
+            <main className="public-main">
+                <div className="public-content">
+                    <Outlet />
+                </div>
             </main>
         </div>
     );
