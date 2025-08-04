@@ -73,6 +73,14 @@ function App() {
                             path="/notifications"
                             element={user ? <Notifications /> : <Navigate to="/" replace />}
                         />
+                        <Route
+                            path="/change-password"
+                            element={user ? <ChangePassword /> : <Navigate to="/" replace />}
+                        />
+                        <Route
+                            path="/change-email"
+                            element={user ? <ChangeEmail /> : <Navigate to="/" replace />}
+                        />
                     </Route>
                 </Routes>
             </Router>
