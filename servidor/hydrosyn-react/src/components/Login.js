@@ -31,7 +31,7 @@ export default function Login() {
 
             // 2. Verificar si el usuario está activo
             const { data: { user } } = await supabase.auth.getUser();
-
+            console.log('Usuario recibido:', user);
             const { data: profile, error: profileError } = await supabase
                 .from('profile')
                 .select('is_active')
@@ -39,7 +39,8 @@ export default function Login() {
                 .single();
 
             if (profileError) throw profileError;
-
+            console.log('Perfil recibido:', profile);
+            console.log('Error del perfil:', profileError);
             if (!profile?.is_active) {
                 // Registrar intento de login con usuario desactivado
                 await recordFailedAttempt(user.id, 'Intento de login con usuario desactivado');
@@ -61,10 +62,9 @@ export default function Login() {
             await supabase
                 .from('login_attempts')
                 .insert({
-                    user_id: userId,
+                    user: userId,
                     attempt_time: new Date().toISOString(),
                     reason: reason,
-                    status: 'failed'
                 });
         } catch (error) {
             console.error('Error registrando intento fallido:', error);
@@ -101,7 +101,7 @@ export default function Login() {
                 </button>
             </form>
 
-            {error && <div className="error-message">Error</div>}
+            {error && <div className="error-message" style={{ marginBottom: '10px' }}>Error</div>}
             <button
                 className='button_width'
                 onClick={() => navigate('/recover-password')}

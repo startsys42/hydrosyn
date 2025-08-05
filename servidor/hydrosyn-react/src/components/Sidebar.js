@@ -46,10 +46,10 @@ export default function Sidebar() {
 
                 {isAdmin && (
                     <>
-                        <li>
+                        <li style={{ padding: '8px 0' }}>
                             <Link to="/users">{collapsed ? '👥' : t.users}</Link>
                         </li>
-                        <li>
+                        <li style={{ padding: '8px 0' }}>
                             <Link to="/notifications">{collapsed ? '🔔' : t.notifications}</Link>
                         </li>
                     </>
