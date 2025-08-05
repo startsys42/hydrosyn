@@ -1,11 +1,13 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from './supabaseClient';
+import { useLocation } from 'react-router-dom';
 
 const AdminContext = createContext();
 
 export function AdminProvider({ children }) {
     const [isAdmin, setIsAdmin] = useState(false);
     const [loading, setLoading] = useState(true);
+    const location = useLocation();
 
     useEffect(() => {
         const checkAdmin = async () => {
@@ -32,7 +34,7 @@ export function AdminProvider({ children }) {
         };
 
         checkAdmin();
-    }, []);
+    }, [location.pathname]);
 
     return (
         <AdminContext.Provider value={{ isAdmin, loading }}>
