@@ -97,7 +97,7 @@ export default function Login() {
                     required
                 />
                 <button type="submit" disabled={loading}>
-                    {loading ? 'Verificando...' : t.login}
+                    {loading ? t.verify : t.login}
                 </button>
             </form>
 

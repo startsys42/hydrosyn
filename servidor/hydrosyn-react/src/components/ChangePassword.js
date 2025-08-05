@@ -24,7 +24,7 @@ export default function ChangePassword() {
             return;
         }
 
-        if (newPassword.length < 6) {
+        if (newPassword.length < 8) {
             setMessage({ text: 'La contraseña debe tener al menos 6 caracteres', type: 'error' });
             setLoading(false);
             return;
@@ -69,49 +69,47 @@ export default function ChangePassword() {
         <div className="div-main-login">
             <h1>{texts.changePassword}</h1>
             <form onSubmit={handleSubmit} className="form-container">
-                <div>
-                    <label htmlFor="currentPassword" className="block mb-1 font-medium">
-                        Contraseña actual:
-                    </label>
-                    <input
-                        id="currentPassword"
-                        type="password"
-                        value={currentPassword}
-                        onChange={(e) => setCurrentPassword(e.target.value)}
-                        className="w-full px-3 py-2 border rounded-md"
-                        required
-                    />
-                </div>
 
-                <div>
-                    <label htmlFor="newPassword" className="block mb-1 font-medium">
-                        Nueva contraseña:
-                    </label>
-                    <input
-                        id="newPassword"
-                        type="password"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        className="w-full px-3 py-2 border rounded-md"
-                        required
-                        minLength={6}
-                    />
-                </div>
+                <label htmlFor="currentPassword" >
+                    {texts.actualPassword}:
+                </label>
+                <input
 
-                <div>
-                    <label htmlFor="confirmPassword" className="block mb-1 font-medium">
-                        Confirmar nueva contraseña:
-                    </label>
-                    <input
-                        id="confirmPassword"
-                        type="password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="w-full px-3 py-2 border rounded-md"
-                        required
-                        minLength={6}
-                    />
-                </div>
+                    type="password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    placeholder={texts.actualPassword}
+                    required
+                />
+
+                <label htmlFor="newPassword" >
+                    {texts.newPassword}:
+                </label>
+                <input
+
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder={texts.newPassword}
+                    required
+                    minLength={8}
+                />
+
+
+
+                <label htmlFor="confirmPassword" >
+                    {texts.newPassword}:
+                </label>
+                <input
+
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder={texts.newPassword}
+                    required
+                    minLength={8}
+                />
+
 
                 <button
                     type="submit"

@@ -163,8 +163,19 @@ button{
 
 
 
+.sidebar ul {
+  list-style: none; /* quita los puntos */
+  padding: 8px;
+  margin: 0;
+}
 
+.sidebar li {
+  width: 100%;        /* ocupa todo el ancho del aside */
+  box-sizing: border-box;
+  padding: 10px;
+  text-align: center;
 
+}
 
 h1 {
   display: block;

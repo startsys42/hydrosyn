@@ -48,7 +48,7 @@ export default function RecoverPassword() {
             <form onSubmit={handleRecover} className="form-container">
                 <label htmlFor="email">{t?.email || 'Correo electrónico'}</label>
                 <input
-                    id="email"
+
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -56,10 +56,10 @@ export default function RecoverPassword() {
                     required
                 />
                 <button type="submit" disabled={loading}>
-                    {loading ? 'Enviando...' : t?.sendRecoveryLink || 'Enviar enlace de recuperación'}
+                    {loading ? t.sending : t?.sendRecoveryLink}
                 </button>
             </form>
-            {message && <div className="success-message" style={{ marginTop: '10px' }}>{t?.messageRecover || 'Hemos enviado un enlace de recuperación a tu correo electrónico'}</div>}
+            {message && <div className="success-message" style={{ marginTop: '10px' }}>{t?.messageRecover}</div>}
             {error && <div className="error-message" style={{ marginTop: '10px' }}>Error</div>}
             <button onClick={() => navigate('/')} className="button-width">
                 {t?.backToLogin || 'Volver al login'}

@@ -36,6 +36,10 @@ const texts = {
         activateUser: 'Activar usuario',
         messageRecover: 'Hemos enviado un enlace de recuperación a tu correo electrónico',
         sendRecoveryLink: 'Enviar enlace de recuperación',
+        actualPassword: 'Contraseña actual',
+        newPassword: 'Nueva contraseña',
+        verify: 'Verificando',
+        sending: 'Enviando',
 
     },
     en: {
@@ -76,6 +80,10 @@ const texts = {
         activateUser: 'Activate User',
         messageRecover: 'We have sent a recovery link to your email address',
         sendRecoveryLink: 'Send Recovery Link',
+        actualPassword: 'Current Password',
+        newPassword: 'New Password',
+        verify: 'Verifying...',
+        sending: 'Sending...',
 
     },
 };
