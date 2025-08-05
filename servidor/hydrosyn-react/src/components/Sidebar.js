@@ -40,17 +40,17 @@ export default function Sidebar() {
 
             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                 <li style={{ padding: '8px 0' }}>
-                    <Link to="/profile">{collapsed ? '👤' : t.profile}</Link>
+                    <Link className="custom-link" to="/profile">{collapsed ? '👤' : t.profile}</Link>
                 </li>
 
 
                 {isAdmin && (
                     <>
                         <li style={{ padding: '8px 0' }}>
-                            <Link to="/users">{collapsed ? '👥' : t.users}</Link>
+                            <Link className="custom-link" to="/users">{collapsed ? '👥' : t.users}</Link>
                         </li>
                         <li style={{ padding: '8px 0' }}>
-                            <Link to="/notifications">{collapsed ? '🔔' : t.notifications}</Link>
+                            <Link className="custom-link" to="/notifications">{collapsed ? '🔔' : t.notifications}</Link>
                         </li>
                     </>
                 )}
@@ -59,9 +59,7 @@ export default function Sidebar() {
                     <button
                         onClick={handleLogout}
                         style={{
-                            background: 'none',
-                            border: 'none',
-                            color: 'inherit',
+
                             cursor: 'pointer',
                             padding: 0,
                             font: 'inherit',
