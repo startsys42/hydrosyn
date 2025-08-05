@@ -44,78 +44,78 @@ function App() {
 
     return (
         <div className={theme === 'light' ? 'light-theme' : 'dark-theme'}>
-            <Router>
-                {/* controles para cambiar tema e idioma */}
 
-                <Routes>
-                    <Route element={<PublicLayout />}>
-                        <Route
-                            path="/"
-                            element={!user ? <Login /> : <Navigate to="/dashboard" replace />}
-                        />
-                        <Route
-                            path="/recover-password"
-                            element={!user ? <RecoverPassword /> : <Navigate to="/dashboard" replace />}
-                        />
-                    </Route>
-                    <Route element={<PrivateLayout />}>
-                        <Route
-                            path="/dashboard"
-                            element={
-                                !user ? (
-                                    <Navigate to="/" replace />
-                                ) : <Dashboard />
+            {/* controles para cambiar tema e idioma */}
 
-                            }
-                        />
-                        <Route
-                            path="/profile"
-                            element={
-                                !user ? (
-                                    <Navigate to="/" replace />
-                                ) : <Profile />
+            <Routes>
+                <Route element={<PublicLayout />}>
+                    <Route
+                        path="/"
+                        element={!user ? <Login /> : <Navigate to="/dashboard" replace />}
+                    />
+                    <Route
+                        path="/recover-password"
+                        element={!user ? <RecoverPassword /> : <Navigate to="/dashboard" replace />}
+                    />
+                </Route>
+                <Route element={<PrivateLayout />}>
+                    <Route
+                        path="/dashboard"
+                        element={
+                            !user ? (
+                                <Navigate to="/" replace />
+                            ) : <Dashboard />
 
-                            }
-                        />
+                        }
+                    />
+                    <Route
+                        path="/profile"
+                        element={
+                            !user ? (
+                                <Navigate to="/" replace />
+                            ) : <Profile />
 
-                        <Route
-                            path="/users"
-                            element={
-                                !user ? (
-                                    <Navigate to="/" replace />
-                                ) : user && isAdmin ? (
-                                    <Users />
-                                ) : user && !loadingAdmin ? (
-                                    <Navigate to="/dashboard" replace />
-                                ) : null
-                            }
-                        />
+                        }
+                    />
 
-                        <Route
-                            path="/notifications"
-                            element={user ? <Notifications /> : <Navigate to="/" replace />}
-                        />
-                        <Route
-                            path="/change-password"
-                            element={
-                                !user ? (
-                                    <Navigate to="/" replace />
-                                ) : <ChangePassword />
+                    <Route
+                        path="/users"
+                        element={
+                            !user ? (
+                                <Navigate to="/" replace />
+                            ) : user && isAdmin ? (
+                                <Users />
+                            ) : user && !loadingAdmin ? (
+                                <Navigate to="/dashboard" replace />
+                            ) : null
+                        }
+                    />
 
-                            }
-                        />
-                        <Route
-                            path="/change-email"
-                            element={
-                                !user ? (
-                                    <Navigate to="/" replace />
-                                ) : <ChangeEmail />
+                    <Route
+                        path="/notifications"
+                        element={user ? <Notifications /> : <Navigate to="/" replace />}
+                    />
+                    <Route
+                        path="/change-password"
+                        element={
+                            !user ? (
+                                <Navigate to="/" replace />
+                            ) : <ChangePassword />
 
-                            }
-                        />
-                    </Route>
-                </Routes>
-            </Router>
+                        }
+                    />
+                    <Route
+                        path="/change-email"
+                        element={
+                            !user ? (
+                                <Navigate to="/" replace />
+                            ) : <ChangeEmail />
+
+                        }
+                    />
+                </Route>
+            </Routes>
+
         </div>
     );
 }

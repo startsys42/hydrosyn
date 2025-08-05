@@ -7,14 +7,20 @@ import { ThemeProvider } from './utils/ThemeContext';
 import { LanguageProvider } from './utils/LanguageContext';
 import { AdminProvider } from './utils/AdminContext';
 
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
         <ThemeProvider>
             <LanguageProvider>
-                <AdminProvider>
-                    <App />
-                </AdminProvider>
+                <Router>
+                    <AdminProvider>
+
+                        <App />
+                    </AdminProvider>
+
+                </Router>
+
             </LanguageProvider>
         </ThemeProvider>
     </React.StrictMode>
