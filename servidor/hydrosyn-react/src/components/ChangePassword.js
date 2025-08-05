@@ -25,7 +25,7 @@ export default function ChangePassword() {
         }
 
         if (newPassword.length < 8) {
-            setMessage({ text: 'La contraseña debe tener al menos 6 caracteres', type: 'error' });
+            setMessage({ text: 'La contraseña debe tener al menos 8 caracteres', type: 'error' });
             setLoading(false);
             return;
         }

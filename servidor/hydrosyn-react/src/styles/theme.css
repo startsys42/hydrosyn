@@ -172,8 +172,7 @@ button{
 .sidebar li {
   width: 100%;        /* ocupa todo el ancho del aside */
   box-sizing: border-box;
-  padding: 10px;
-  text-align: center;
+  
 
 }
 
@@ -202,6 +201,10 @@ a {
 }
 
 .custom-link {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
     color: var(--text-color);
     text-decoration: none;
     background-color: var(--button-bg);
