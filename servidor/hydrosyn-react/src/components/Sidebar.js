@@ -59,9 +59,11 @@ export default function Sidebar() {
                     <button
                         onClick={handleLogout}
                         style={{
-
+                            textAlign: 'center',
+                            padding: '10px',
+                            boxSizing: 'border-box',
                             cursor: 'pointer',
-                            padding: 0,
+
                             font: 'inherit',
                             textAlign: collapsed ? 'center' : 'left',
                             width: '100%',
