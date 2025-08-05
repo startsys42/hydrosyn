@@ -55,7 +55,7 @@ button{
 .sidebar {
     position: fixed;
     top: 60px; 
-  width: 220px; /* ajusta al tamaño que uses */
+  width: 200px; /* ajusta al tamaño que uses */
   height: calc(100vh - 60px); /* altura de ventana menos topbar */
   padding: 20px;
   left: 0;
@@ -165,14 +165,16 @@ button{
 
 .sidebar ul {
   list-style: none; /* quita los puntos */
-  padding: 8px;
+  box-sizing: border-box;
   margin: 0;
+  
 }
 
 .sidebar li {
   width: 100%;        /* ocupa todo el ancho del aside */
   box-sizing: border-box;
-  
+   padding: 0;
+  margin: 0;
 
 }
 
@@ -195,11 +197,6 @@ label {
 
 
 
-a {
-    color: inherit;
-    text-decoration: none;
-}
-
 .custom-link {
     display: block;
     width: 100%;
@@ -209,4 +206,5 @@ a {
     text-decoration: none;
     background-color: var(--button-bg);
     border: 3px solid var(--button-border);
+    box-sizing: border-box;
 }
