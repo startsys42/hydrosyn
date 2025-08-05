@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { supabase } from '../utils/supabaseClient';
 import '../styles/theme.css';
+import useTexts from '../utils/UseTexts';
 
 export default function ChangePassword() {
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const texts = useTexts();
+
     const [message, setMessage] = useState({ text: '', type: '' });
     const [loading, setLoading] = useState(false);
 
@@ -64,8 +67,8 @@ export default function ChangePassword() {
 
     return (
         <div className="div-main-login">
-            <h2 className="text-2xl font-bold mb-6 text-center">Cambiar Contraseña</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <h1>{texts.changePassword}</h1>
+            <form onSubmit={handleSubmit} className="form-container">
                 <div>
                     <label htmlFor="currentPassword" className="block mb-1 font-medium">
                         Contraseña actual:

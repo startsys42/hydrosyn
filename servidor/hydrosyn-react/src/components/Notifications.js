@@ -30,7 +30,7 @@ function Notifications() {
 
     return (
         <div className='div-main-login'>
-            <h2>{texts.notifications}</h2>
+            <h1>{texts.notifications}</h1>
 
             {loading ? (
                 <p>Cargando...</p>
