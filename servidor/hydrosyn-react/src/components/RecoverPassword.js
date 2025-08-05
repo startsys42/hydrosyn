@@ -43,8 +43,7 @@ export default function RecoverPassword() {
         <div className="div-main">
             <h1>{t?.recoverPassword || 'Recuperar contraseña'}</h1>
 
-            {message && <div className="success-message">{message}</div>}
-            {error && <div className="error-message">{error}</div>}
+
 
             <form onSubmit={handleRecover} className="form-container">
                 <label htmlFor="email">{t?.email || 'Correo electrónico'}</label>
@@ -60,8 +59,9 @@ export default function RecoverPassword() {
                     {loading ? 'Enviando...' : t?.sendRecoveryLink || 'Enviar enlace de recuperación'}
                 </button>
             </form>
-
-            <button onClick={() => navigate('/')} className="back-button">
+            {message && <div className="success-message" style={{ marginTop: '10px' }}>{t?.messageRecover || 'Hemos enviado un enlace de recuperación a tu correo electrónico'}</div>}
+            {error && <div className="error-message" style={{ marginTop: '10px' }}>Error</div>}
+            <button onClick={() => navigate('/')} className="button-width">
                 {t?.backToLogin || 'Volver al login'}
             </button>
         </div>

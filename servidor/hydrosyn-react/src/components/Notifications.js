@@ -29,7 +29,7 @@ function Notifications() {
     }, []);
 
     return (
-        <div >
+        <div className='div-main-login'>
             <h2>{texts.notifications}</h2>
 
             {loading ? (

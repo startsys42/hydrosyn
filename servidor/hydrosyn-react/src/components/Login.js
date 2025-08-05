@@ -103,7 +103,7 @@ export default function Login() {
 
             {error && <div className="error-message" style={{ marginTop: '10px' }}>Error</div>}
             <button
-                className='button_width'
+                className='button-width'
                 onClick={() => navigate('/recover-password')}
             >
                 {t.recoverPassword}

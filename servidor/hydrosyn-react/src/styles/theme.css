@@ -9,6 +9,7 @@
     --button-bg: #ffffff;
     --button-text: #000000;
     --button-border: #2196f3;
+    --aside-bg: #f4f4f4;
 
 }
 
@@ -27,6 +28,7 @@
     --button-bg: #181b1e;
     --button-text: #ffffff;
     --button-border: #F0F0F0;
+    --aside-bg: #181b1e;
 }
 
 body, html, #root {
@@ -39,7 +41,15 @@ body, html, #root {
 }
 
 
-
+button{
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: 3px solid var(--button-border);
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
 
 /* Sidebar con ancho fijo */
 .sidebar {
@@ -50,7 +60,7 @@ body, html, #root {
   padding: 20px;
   left: 0;
   
-  background-color:  #f4f4f4;
+  background-color:  var(--aside-bg);
   overflow-y: auto;
    box-sizing: border-box;
 }
@@ -85,6 +95,12 @@ body, html, #root {
 }
 
 
+.topbar button {
+
+    margin-top: 0px;
+
+}
+
 .topbar select {
   background-color: var(--button-bg);
     color: var(--button-text);
@@ -92,7 +108,7 @@ body, html, #root {
     padding: 8px 16px;
     border-radius: 4px;
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 0px;
   border-radius: 4px;
   min-width: 100px; /* para evitar que se encojan demasiado */
  
@@ -131,7 +147,7 @@ body, html, #root {
 .button-width {
     width: 100%;
   display: block;
-  margin: 0 auto; /* Centrado horizontal */
+
 }
 
 .form-container {
@@ -143,15 +159,7 @@ body, html, #root {
 
 
 
-button{
-    background-color: var(--button-bg);
-    color: var(--button-text);
-    border: 3px solid var(--button-border);
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
-}
+
 
 
 h1 {

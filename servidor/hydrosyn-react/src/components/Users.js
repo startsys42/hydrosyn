@@ -8,15 +8,15 @@ export default function Users() {
     const t = useTexts();
 
     return (
-        <div>
-            <h2>{t.users}</h2>
+        <div className='div-main-login'>
+            <h1>{t.users}</h1>
 
             <button onClick={() => navigate('/create-user')}>
-                Cambiar contraseña
+                {t.createUser}
             </button>
 
-            <button onClick={() => navigate('/activate-user')} style={{ marginLeft: 10 }}>
-                Activar usuario
+            <button onClick={() => navigate('/activate-user')} >
+                {t.activateUser}
             </button>
         </div>
     );

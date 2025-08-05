@@ -7,14 +7,14 @@ export default function Profile() {
     const texts = useTexts();
 
     return (
-        <div>
-            <h2>{texts.profile}</h2>
+        <div className='div-main-login'>
+            <h1>{texts.profile}</h1>
 
             <button onClick={() => navigate('/change-password')}>
                 {texts.changePassword}
             </button>
 
-            <button onClick={() => navigate('/change-email')} style={{ marginLeft: 10 }}>
+            <button onClick={() => navigate('/change-email')} >
                 {texts.changeEmail}
             </button>
         </div>

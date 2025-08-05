@@ -32,6 +32,9 @@ const texts = {
         backToLogin: 'Volver al inicio de sesión',
         recoverPassword: 'Recuperar contraseña',
         logout: 'Cerrar sesión',
+        createUser: 'Crear usuario',
+        activateUser: 'Activar usuario',
+        messageRecover: 'Hemos enviado un enlace de recuperación a tu correo electrónico',
 
     },
     en: {
@@ -68,6 +71,9 @@ const texts = {
         backToLogin: 'Back to Login',
         recoverPassword: 'Recover Password',
         logout: 'Logout',
+        createUser: 'Create User',
+        activateUser: 'Activate User',
+        messageRecover: 'We have sent a recovery link to your email address',
 
     },
 };
