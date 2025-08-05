@@ -40,122 +40,27 @@ body, html, #root {
 
 
 
-/* Estructura general */
-.public-layout {
-    display: flex;
-    flex-direction: column;
-    height: 100vh; /* Toda la pantalla */
-    background-color: var(--bg-color);
-}
-
-/* Topbar con altura fija */
-.public-layout .topbar {
-    height: 60px;
-    flex-shrink: 0;
-}
-
-/* Contenedor principal debajo del topbar */
-.public-main {
-    flex: 1;
-    display: flex;
-    justify-content: center;  /* Centrado horizontal */
-    align-items: flex-start;  /* Desde arriba */
-    padding-top: 40px;        /* Espacio debajo del topbar */
-}
-
-/* Contenido que va dentro */
-.public-content {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;  /* Alineado a la izquierda */
-    width: 100%;
-    max-width: 500px;
-    gap: 15px;
-}
-
-.content-wrapper {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-}
 
 /* Sidebar con ancho fijo */
 .sidebar {
+    top: 60px; 
   width: 220px; /* ajusta al tamaño que uses */
-  flex-shrink: 0;
-  background-color: #f5f5f5;
-  overflow-y: auto;
-}
-
-/* Main se ajusta al espacio restante */
-.main-content {
-  flex: 1;
-  overflow-y: auto;
+  height: calc(100vh - 60px); /* altura de ventana menos topbar */
   padding: 20px;
-  background-color: #fff;
+  left: 0;
+  
+  background-color:  #f4f4f4;
+  overflow-y: auto;
+   box-sizing: border-box;
 }
 
 
-
-.div-main {
-    margin-top: 40px;
-    width: auto;
-
-}
-
-.button-width {
-    width: 100%;
-  display: block;
-  margin: 0 auto; /* Centrado horizontal */
-}
-
-.form-container {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-width: 300px;
+/* Sidebar colapsado */
+.sidebar.collapsed {
+  width: 60px;
 }
 
 
-
-button{
-    background-color: var(--button-bg);
-    color: var(--button-text);
-    border: 3px solid var(--button-border);
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-.topbar {
-    height: 60px;
-    background-color: var(--topbar-bg);
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 0 20px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-}
-
-
-
-/* Título centrado dentro del public-content */
-.public-content h1{
-    width: 100%;
-    text-align: center;
-    color: var(--text-color);
-
-}
-
-label {
-    font-weight: bold;
-    color: var(--text-color);
-}
 
 
 
@@ -189,34 +94,71 @@ label {
     margin-top: 10px;
   border-radius: 4px;
   min-width: 100px; /* para evitar que se encojan demasiado */
-  flex-shrink: 1;   /* permite que se reduzcan si hay poco espacio */
-}
-
-/* Opcional: ajusta select y button para que no crezcan demasiado */
-.topbar select {
-  color: var(--text-color, white);
+ 
 }
 
 
-
-
-.sidebar {
-
-  top: 60px; /* justo debajo del topbar (usar mismo valor que topbar height) */
-  left: 0;
-  height: calc(100vh - 60px); /* altura de ventana menos topbar */
-  padding: 20px;
-  background: #f4f4f4;
-  box-sizing: border-box;
-  overflow: hidden;
-  transition: width 0.3s;
-  width: 200px; /* ancho por defecto */
+.div-main {
+    margin-top: 40px;
+  display: block;
+  width: fit-content;     /* ajusta al contenido */
+  margin: 0 auto;         /* centrado horizontal */
+  padding: 20px;          /* opcional: espacio interno */
 }
 
-/* Sidebar colapsado */
-.sidebar.collapsed {
-  width: 60px;
+
+
+
+
+
+
+
+
+
+
+.button-width {
+    width: 100%;
+  display: block;
+  margin: 0 auto; /* Centrado horizontal */
 }
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 300px;
+}
+
+
+
+button{
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: 3px solid var(--button-border);
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+
+h1 {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
+  color: var(--text-color);
+}
+
+/* Título centrado dentro del public-content */
+
+
+label {
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+
 
 
 a {

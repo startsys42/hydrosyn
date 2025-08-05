@@ -12,11 +12,11 @@ export default function PrivateLayout() {
     }
 
     return (
-        <div className="layout">
+        <div>
             <Topbar />
-            <div className="content-wrapper">
+            <div >
                 <Sidebar />
-                <main className="main-content">
+                <main>
                     <Outlet />
                 </main>
             </div>

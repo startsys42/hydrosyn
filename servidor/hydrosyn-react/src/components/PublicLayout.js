@@ -4,12 +4,10 @@ import '../styles/theme.css';
 
 export default function PublicLayout() {
     return (
-        <div className="public-layout">
+        <div >
             <Topbar />
-            <main className="public-main">
-                <div className="public-content">
-                    <Outlet />
-                </div>
+            <main >
+                <Outlet />
             </main>
         </div>
     );
