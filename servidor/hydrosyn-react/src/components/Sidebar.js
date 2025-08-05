@@ -20,7 +20,7 @@ export default function Sidebar() {
         navigate('/'); // redirige a login tras cerrar sesión
     };
 
-    if (loading) return <aside></aside>;
+    if (loading) return null;
 
     return (
         <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
@@ -44,16 +44,17 @@ export default function Sidebar() {
                 </li>
 
 
-                {isAdmin && !collapsed && (
+                {isAdmin && (
                     <>
-                        <li style={{ padding: '8px 0' }}>
+                        <li>
                             <Link to="/users">{collapsed ? '👥' : t.users}</Link>
                         </li>
-                        <li style={{ padding: '8px 0' }}>
+                        <li>
                             <Link to="/notifications">{collapsed ? '🔔' : t.notifications}</Link>
                         </li>
                     </>
                 )}
+
                 <li style={{ padding: '8px 0' }}>
                     <button
                         onClick={handleLogout}

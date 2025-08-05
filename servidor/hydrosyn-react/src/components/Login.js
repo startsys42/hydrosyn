@@ -35,7 +35,7 @@ export default function Login() {
             const { data: profile, error: profileError } = await supabase
                 .from('profile')
                 .select('is_active')
-                .eq('id', user.id)
+                .eq('user', user.id)
                 .single();
 
             if (profileError) throw profileError;
