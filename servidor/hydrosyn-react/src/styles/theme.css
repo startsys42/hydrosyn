@@ -43,6 +43,7 @@ body, html, #root {
 
 /* Sidebar con ancho fijo */
 .sidebar {
+    position: fixed;
     top: 60px; 
   width: 220px; /* ajusta al tamaño que uses */
   height: calc(100vh - 60px); /* altura de ventana menos topbar */
@@ -57,7 +58,7 @@ body, html, #root {
 
 /* Sidebar colapsado */
 .sidebar.collapsed {
-  width: 60px;
+  width: 80px;
 }
 
 
@@ -99,15 +100,26 @@ body, html, #root {
 
 
 .div-main {
-    margin-top: 40px;
+    
+    margin: 100px auto 0; 
   display: block;
   width: fit-content;     /* ajusta al contenido */
-  margin: 0 auto;         /* centrado horizontal */
+
   padding: 20px;          /* opcional: espacio interno */
+   background-color: var(--bg-color);
+   text-align: left;
 }
 
 
-
+.div-main-login{
+    margin: 100px auto 0; 
+  display: block;
+  width: fit-content;     /* ajusta al contenido */
+ 
+  padding: 20px;          /* opcional: espacio interno */
+  background-color: var(--bg-color);
+  text-align: left;
+}
 
 
 

@@ -27,7 +27,13 @@ function App() {
     const [user, setUser] = useState(null);
     const { isAdmin, loading: loadingAdmin } = useAdminStatus();
     const t = useTexts();
+    useEffect(() => {
+        // Limpia todas las clases del body para evitar conflictos
+        document.body.className = '';
 
+        // Añade la clase correspondiente al tema actual
+        document.body.classList.add(theme === 'light' ? 'light-theme' : 'dark-theme');
+    }, [theme]); // Se ejecuta cuando cambia 'theme'
     useEffect(() => {
         // Revisa si hay sesión activa
         const session = supabase.auth.getSession().then(({ data }) => setUser(data.session?.user ?? null));
