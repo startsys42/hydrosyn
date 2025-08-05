@@ -11,11 +11,11 @@ export default function Users() {
         <div className='div-main-login'>
             <h1>{t.users}</h1>
 
-            <button onClick={() => navigate('/create-user')}>
+            <button className='button-full' onClick={() => navigate('/create-user')}>
                 {t.createUser}
             </button>
 
-            <button onClick={() => navigate('/activate-user')} >
+            <button className='button-full' onClick={() => navigate('/activate-user')} >
                 {t.activateUser}
             </button>
         </div>

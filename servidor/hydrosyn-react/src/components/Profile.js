@@ -10,11 +10,11 @@ export default function Profile() {
         <div className='div-main-login'>
             <h1>{texts.profile}</h1>
 
-            <button onClick={() => navigate('/change-password')}>
+            <button className='button-full' onClick={() => navigate('/change-password')}>
                 {texts.changePassword}
             </button>
 
-            <button onClick={() => navigate('/change-email')} >
+            <button className='button-full' onClick={() => navigate('/change-email')} >
                 {texts.changeEmail}
             </button>
         </div>
