@@ -20,7 +20,7 @@ export default function Sidebar() {
         navigate('/'); // redirige a login tras cerrar sesión
     };
 
-    if (loading) return null;
+    if (loading || isAdmin === null) return null;
 
     return (
         <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>

@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 const AdminContext = createContext();
 
 export function AdminProvider({ children }) {
-    const [isAdmin, setIsAdmin] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(null);
     const [loading, setLoading] = useState(true);
     const location = useLocation();
 
