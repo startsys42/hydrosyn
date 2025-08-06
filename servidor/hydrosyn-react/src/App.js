@@ -17,6 +17,7 @@ import { useAdminStatus } from './utils/AdminContext';
 import useTexts from './utils/UseTexts';
 import PrivateLayout from './components/PrivateLayout';
 import RecoverPassword from './components/RecoverPassword';
+import ChangePasswordRecovery from './components/ChangePasswordRecovery';
 
 
 
@@ -62,6 +63,10 @@ function App() {
                     <Route
                         path="/recover-password"
                         element={!user ? <RecoverPassword /> : <Navigate to="/dashboard" replace />}
+                    />
+                    <Route
+                        path="/change-password-recovery"
+                        element={!user ? <ChangePasswordRecovery /> : <Navigate to="/dashboard" replace />}
                     />
                 </Route>
                 <Route element={<PrivateLayout />}>
