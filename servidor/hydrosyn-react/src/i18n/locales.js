@@ -40,6 +40,7 @@ const texts = {
         newPassword: 'Nueva contraseña',
         verify: 'Verificando',
         sending: 'Enviando',
+        changing: 'Cambiando...'
 
     },
     en: {
@@ -84,6 +85,7 @@ const texts = {
         newPassword: 'New Password',
         verify: 'Verifying...',
         sending: 'Sending...',
+        changing: 'Changing...'
 
     },
 };

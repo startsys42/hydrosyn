@@ -3,10 +3,9 @@ import { supabase } from '../utils/supabaseClient';
 import '../styles/theme.css';
 import useTexts from '../utils/UseTexts';
 
-export default function ChangePassword() {
-    const [currentPassword, setCurrentPassword] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+export default function ChangeEmail() {
+    const [newEmail, setNewEmail] = useState('');
+    const [confirmEmail, setConfirmEmail] = useState('');
     const [message, setMessage] = useState({ text: '', type: '' });
     const [loading, setLoading] = useState(false);
     const texts = useTexts();
@@ -17,43 +16,40 @@ export default function ChangePassword() {
         setMessage({ text: '', type: '' });
 
         // Validaciones
-        if (newPassword !== confirmPassword) {
-            setMessage({ text: 'Las contraseñas no coinciden', type: 'error' });
-            setLoading(false);
-            return;
-        }
-
-        if (newPassword.length < 8) {
-            setMessage({ text: 'La contraseña debe tener al menos 8 caracteres', type: 'error' });
+        if (newEmail !== confirmEmail) {
+            setMessage({ text: 'Los correos electrónicos no coinciden', type: 'error' });
             setLoading(false);
             return;
         }
 
         try {
-            // Primero reautenticar al usuario
-            const { error: authError } = await supabase.auth.signInWithPassword({
-                email: supabase.auth.user()?.email || '',
-                password: currentPassword,
-            });
 
-            if (authError) throw authError;
+            // Obtenemos la sesión actual para verificar el email
+            const { data: { user } } = await supabase.auth.getSession();
+            const currentEmail = user.email;
 
-            // Luego actualizar la contraseña
+            // Validar que el nuevo email sea diferente al actual
+            if (newEmail === currentEmail) {
+                setMessage({ text: 'El nuevo correo electrónico es el mismo que el actual.', type: 'error' });
+                setLoading(false);
+                return;
+            }
+
+            // Actualizar el correo electrónico del usuario
             const { error: updateError } = await supabase.auth.updateUser({
-                password: newPassword,
+                email: newEmail,
             });
 
             if (updateError) throw updateError;
 
             setMessage({
-                text: '¡Contraseña cambiada con éxito!',
+                text: '¡Correo electrónico cambiado con éxito!',
                 type: 'success',
             });
 
             // Limpiar formulario
-            setCurrentPassword('');
-            setNewPassword('');
-            setConfirmPassword('');
+            setNewEmail('');
+            setConfirmEmail('');
         } catch (error) {
             setMessage({
                 text: `Error: ${error.message}`,
@@ -69,62 +65,47 @@ export default function ChangePassword() {
             <h1>{texts.changeEmail}</h1>
             <form onSubmit={handleSubmit} className="form-container">
 
-                <label htmlFor="currentPassword" >
-                    {texts.actualPassword}:
+                <label htmlFor="newEmail" >
+                    {texts.email}:
                 </label>
                 <input
 
-                    type="password"
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    placeholder={texts.actualPassword}
+                    type="email"
+                    value={newEmail}
+                    onChange={(e) => setNewEmail(e.target.value)}
+                    placeholder={texts.email}
                     required
                 />
 
-                <label htmlFor="newPassword" >
-                    {texts.newPassword}:
+                <label htmlFor="confirmEmail" >
+                    {texts.email}:
                 </label>
                 <input
 
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder={texts.newPassword}
-                    required
-                    minLength={8}
-                />
-
-
-
-                <label htmlFor="confirmPassword" >
-                    {texts.newPassword}:
-                </label>
-                <input
-
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder={texts.newPassword}
+                    type="email"
+                    value={confirmEmail}
+                    onChange={(e) => setConfirmEmail(e.target.value)}
+                    placeholder={texts.confirmEmail}
                     required
                     minLength={8}
                 />
+
+
+
+
 
 
                 <button
                     type="submit"
                     disabled={loading}
-                    className={`w-full py-2 px-4 rounded-md text-white font-medium ${loading ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'
-                        }`}
+
                 >
-                    {loading ? 'Cambiando contraseña...' : 'Cambiar Contraseña'}
+                    {loading ? texts.changing : texts.changeEmail}
                 </button>
 
                 {message.text && (
                     <div
-                        className={`p-3 rounded-md ${message.type === 'success'
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-red-100 text-red-700'
-                            }`}
+
                     >
                         {message.text}
                     </div>
