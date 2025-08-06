@@ -5,8 +5,10 @@ import useTexts from '../utils/UseTexts';
 import '../styles/theme.css';
 
 export default function ChangePasswordRecovery() {
-    const t = useTexts();
+    const texts = useTexts();
     const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -27,7 +29,11 @@ export default function ChangePasswordRecovery() {
             setLoading(false);
             return;
         }
-
+        if (newPassword !== confirmPassword) {
+            setError('Las contraseñas no coinciden.');
+            setLoading(false);
+            return;
+        }
         // Actualizar la contraseña con el token
         const { error } = await supabase.auth.updateUser({
             password: newPassword,
@@ -48,7 +54,7 @@ export default function ChangePasswordRecovery() {
 
     return (
         <div className='div-main'>
-            <h1>{t?.changePassword || 'Cambiar Contraseña'}</h1>
+            <h1>{texts?.changePassword || 'Cambiar Contraseña'}</h1>
             <form onSubmit={handleChangePassword} className='form-container '>
 
                 <label htmlFor="newPassword" >
