@@ -4,29 +4,37 @@ import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
 
 function Notifications() {
-    const [notifications, setNotifications] = useState([]);
-    const [loading, setLoading] = useState(true);
+
+
     const texts = useTexts();
 
 
+    const [attempts, setAttempts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
     useEffect(() => {
-        const fetchNotifications = async () => {
-            const { data, error } = await supabase
-                .from('notifications') // Asegúrate de tener esta tabla
-                .select('*')
-                .order('time', { ascending: false });
+        const fetchLoginAttempts = async () => {
+            try {
+                setLoading(true);
+                // Llama a la función de base de datos que creaste
+                const { data, error } = await supabase.rpc('get_login_attempts_with_user_email');
 
-            if (error) {
-                console.error('Error fetching notifications:', error.message);
-            } else {
-                setNotifications(data);
+                if (error) {
+                    throw error;
+                }
+
+                setAttempts(data);
+            } catch (e) {
+                setError(e.message);
+            } finally {
+                setLoading(false);
             }
-
-            setLoading(false);
         };
 
-        fetchNotifications();
+        fetchLoginAttempts();
     }, []);
+
 
     return (
         <div className='div-main-login'>
@@ -34,18 +42,30 @@ function Notifications() {
 
             {loading ? (
                 <p></p>
-            ) : notifications.length === 0 ? (
+            ) : attempts.length === 0 ? (
                 <p></p>
             ) : (
-                <ul className="notifications-list">
-                    {notifications.map((notif) => (
-                        <li key={notif.id} className="notification-item">
-                            <strong>{notif.reason}</strong>
-                            <p>{notif.read}</p>
-                            <small>{new Date(notif.time).toLocaleString()}</small>
-                        </li>
-                    ))}
-                </ul>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                        <tr style={{ backgroundColor: '#f2f2f2' }}>
+                            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Email</th>
+                            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Razón</th>
+                            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Fecha y Hora</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {attempts.map((attempt, index) => (
+                            <tr key={index}>
+                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{attempt.user_email}</td>
+                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{attempt.reason}</td>
+                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                                    {/* Aquí formateamos la fecha para que sea más legible */}
+                                    {new Date(attempt.created_at).toLocaleString()}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             )}
         </div>
     );

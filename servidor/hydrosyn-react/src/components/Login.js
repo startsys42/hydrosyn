@@ -45,6 +45,7 @@ export default function Login() {
                 // Registrar intento de login con usuario desactivado
                 await recordFailedAttempt(user.id, 'Intento de login con usuario desactivado');
                 await supabase.auth.signOut();
+                setLoading(false);
                 throw new Error('No activo.');
             } else {
                 navigate('/dashboard');

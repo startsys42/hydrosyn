@@ -55,7 +55,7 @@ export default function RecoverPassword() {
 
         try {
             const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: 'http://192.168.0.227/change-password-recovery', // o el dominio real
+                redirectTo: 'http://192.168.0.228/change-password-recovery', // o el dominio real
             });
 
             if (error) throw error;
