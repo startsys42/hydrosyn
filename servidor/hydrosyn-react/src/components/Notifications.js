@@ -14,7 +14,7 @@ function Notifications() {
             const { data, error } = await supabase
                 .from('notifications') // Asegúrate de tener esta tabla
                 .select('*')
-                .order('created_at', { ascending: false });
+                .order('time', { ascending: false });
 
             if (error) {
                 console.error('Error fetching notifications:', error.message);
@@ -33,16 +33,16 @@ function Notifications() {
             <h1>{texts.notifications}</h1>
 
             {loading ? (
-                <p>Cargando...</p>
+                <p></p>
             ) : notifications.length === 0 ? (
-                <p>No hay notificaciones.</p>
+                <p></p>
             ) : (
                 <ul className="notifications-list">
                     {notifications.map((notif) => (
                         <li key={notif.id} className="notification-item">
-                            <strong>{notif.title}</strong>
-                            <p>{notif.message}</p>
-                            <small>{new Date(notif.created_at).toLocaleString()}</small>
+                            <strong>{notif.reason}</strong>
+                            <p>{notif.read}</p>
+                            <small>{new Date(notif.time).toLocaleString()}</small>
                         </li>
                     ))}
                 </ul>
