@@ -65,10 +65,10 @@ export default function Sidebar() {
                             cursor: 'pointer',
 
                             font: 'inherit',
-                            textAlign: collapsed ? 'center' : 'left',
+
                             width: '100%',
                         }}
-                        aria-label="Cerrar sesión"
+
                     >
                         {collapsed ? '🚪' : t.logout}
                     </button>
