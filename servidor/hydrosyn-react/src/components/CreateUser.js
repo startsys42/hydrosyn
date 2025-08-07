@@ -18,7 +18,11 @@ export default function CrearUsuarioForm() {
 
 
         try {
-            // El token de autenticación se maneja automáticamente
+            const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+            if (sessionError || !session) {
+                throw new Error('No se encontró una sesión de administrador activa.');
+            }
+            const accessToken = session.access_token;
             const { data, error: functionError } = await supabase.functions.invoke('createUser', {
                 body: { email: email },
                 // Añadir el token de autenticación en los headers
