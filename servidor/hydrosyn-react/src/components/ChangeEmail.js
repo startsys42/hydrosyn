@@ -24,16 +24,6 @@ export default function ChangeEmail() {
 
         try {
 
-            // Obtenemos la sesión actual para verificar el email
-            const { data: { user } } = await supabase.auth.getSession();
-            const currentEmail = user.email;
-
-            // Validar que el nuevo email sea diferente al actual
-            if (newEmail === currentEmail) {
-                setMessage({ text: 'El nuevo correo electrónico es el mismo que el actual.', type: 'error' });
-                setLoading(false);
-                return;
-            }
 
             // Actualizar el correo electrónico del usuario
             const { error: updateError } = await supabase.auth.updateUser({
