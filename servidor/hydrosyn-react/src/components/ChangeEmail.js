@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { supabase } from '../utils/supabaseClient';
 import '../styles/theme.css';
 import useTexts from '../utils/UseTexts';
+import { useEffect } from 'react';
 
 export default function ChangeEmail() {
     const [newEmail, setNewEmail] = useState('');
@@ -9,7 +10,14 @@ export default function ChangeEmail() {
     const [message, setMessage] = useState({ text: '', type: '' });
     const [loading, setLoading] = useState(false);
     const texts = useTexts();
-
+    const [user, setUser] = useState(null);
+    useEffect(() => {
+        async function getUser() {
+            const { data: { user } } = await supabase.auth.getUser();
+            setUser(user);
+        }
+        getUser();
+    }, []);
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -17,7 +25,7 @@ export default function ChangeEmail() {
 
         // Validaciones
         if ((newEmail.trim() !== confirmEmail.trim())) {
-            setMessage({ text: 'Los correos electrónicos no coinciden', type: 'error' });
+            setMessage({ text: texts.messageEMail, type: 'error' });
             setLoading(false);
             return;
         }
@@ -93,13 +101,9 @@ export default function ChangeEmail() {
                     {loading ? texts.changing : texts.changeEmail}
                 </button>
 
-                {message.text === "Ok" ? (
-                    <div>
+                {message.text && (
+                    <div >
                         {message.text}
-                    </div>
-                ) : (
-                    <div>
-                        {texts.messageEMail}
                     </div>
                 )}
             </form>
