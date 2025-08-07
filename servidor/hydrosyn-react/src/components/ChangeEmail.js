@@ -85,9 +85,9 @@ export default function ChangeEmail() {
                     type="email"
                     value={confirmEmail}
                     onChange={(e) => setConfirmEmail(e.target.value)}
-                    placeholder={texts.confirmEmail}
+                    placeholder={texts.email}
                     required
-                    minLength={8}
+
                 />
 
 

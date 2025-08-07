@@ -16,30 +16,20 @@ export default function CrearUsuarioForm() {
         setMensaje('');
         setError('');
 
+
         try {
-            // Obtener token del admin logueado
-            const {
-                data: { session },
-            } = await supabase.auth.getSession();
-            const tokenDelUsuarioAdmin = session?.access_token;
-
-            if (!tokenDelUsuarioAdmin) {
-                throw new Error('No hay sesión activa, por favor inicia sesión.');
-            }
-
-            const response = await fetch('https://tu-dominio.com/tu-endpoint', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: 'Bearer ' + tokenDelUsuarioAdmin,
-                },
-                body: JSON.stringify({ email }),
+            // El token de autenticación se maneja automáticamente
+            const { data, error: functionError } = await supabase.functions.invoke('createUser', {
+                body: { email: email },
             });
 
-            const data = await response.json();
+            if (functionError) {
+                throw new Error(functionError.message);
+            }
 
-            if (!response.ok) {
-                throw new Error(data.error || 'Error desconocido');
+            // Manejamos errores desde el cuerpo de la respuesta, si los hay
+            if (data.error) {
+                throw new Error(data.error);
             }
 
             setMensaje('Usuario creado y correo enviado.');

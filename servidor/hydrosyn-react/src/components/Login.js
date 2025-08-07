@@ -66,7 +66,7 @@ export default function Login() {
                 .from('login_attempts')
                 .insert({
                     user: userId,
-                    attempt_time: new Date().toISOString(),
+                    created_at: new Date().toISOString(),
                     reason: reason,
                 });
         } catch (error) {

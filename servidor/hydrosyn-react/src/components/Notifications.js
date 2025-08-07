@@ -47,7 +47,7 @@ function Notifications() {
             ) : (
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
-                        <tr style={{ backgroundColor: '#f2f2f2' }}>
+                        <tr>
                             <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Email</th>
                             <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Razón</th>
                             <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Fecha y Hora</th>

@@ -44,7 +44,7 @@ export default function RecoverPassword() {
                     .from('login_attempts')
                     .insert({
                         user: userId,
-                        time: new Date().toISOString(),
+                        created_at: new Date().toISOString(),
                         reason: 'Intento de recuperar contraseña con usuario desactivado ',
                     });
             }
