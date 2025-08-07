@@ -62,7 +62,7 @@ export default function CrearUsuarioForm() {
                 />
 
                 <button type="submit" disabled={loading}>
-                    {loading ? 'Creando...' : 'Crear usuario'}
+                    {loading ? texts.creating : texts.createUser}
                 </button>
             </form>
             {mensaje && <p style={{ color: 'green' }}>{mensaje}</p>}

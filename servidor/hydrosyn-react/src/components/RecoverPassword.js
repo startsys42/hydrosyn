@@ -24,13 +24,13 @@ export default function RecoverPassword() {
             return;
         }
         const { data: users, error: userError } = await supabase
-            .from('users') // <- Debes tener una **vista pública** de auth.users
-            .select('id')
+            .from('user_profiles_info') // <- Debes tener una **vista pública** de auth.users
+            .select('user_id')
             .eq('email', email)
             .single();
 
         if (users) {
-            const userId = users.id;
+            const userId = users.user_id;
 
             // 2. Buscar perfil asociado y verificar is_active
             const { data: profile, error: profileError } = await supabase

@@ -38,9 +38,11 @@ const texts = {
         sendRecoveryLink: 'Enviar enlace de recuperación',
         actualPassword: 'Contraseña actual',
         newPassword: 'Nueva contraseña',
-        verify: 'Verificando',
-        sending: 'Enviando',
-        changing: 'Cambiando...'
+        verify: 'Verificando...',
+        sending: 'Enviando...',
+        changing: 'Cambiando...',
+        creating: 'Creando...',
+        active: 'Activo',
 
     },
     en: {
@@ -64,6 +66,7 @@ const texts = {
         fa: 'Two-Factor Authentication',
         code2fa: 'Enter your 2FA code',
 
+
         welcome: 'Welcome to Hydrosyn',
         dark: 'Dark Mode',
         light: 'Light Mode',
@@ -85,7 +88,9 @@ const texts = {
         newPassword: 'New Password',
         verify: 'Verifying...',
         sending: 'Sending...',
-        changing: 'Changing...'
+        changing: 'Changing...',
+        creating: 'Creating...',
+        active: 'Active',
 
     },
 };

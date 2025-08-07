@@ -48,12 +48,12 @@ const ActivateUser = () => {
 
     return (
         <div className='div-main-login'>
-            <h1>Usuarios</h1>
+            <h1>{t.users}</h1>
             <table>
                 <thead>
                     <tr>
                         <th>Email</th>
-                        <th>Activo</th>
+                        <th>{t.active}</th>
                     </tr>
                 </thead>
                 <tbody>
