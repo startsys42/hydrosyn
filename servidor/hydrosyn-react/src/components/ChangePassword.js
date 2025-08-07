@@ -47,7 +47,7 @@ export default function ChangePassword() {
             if (updateError) throw updateError;
 
             setMessage({
-                text: '¡Contraseña cambiada con éxito!',
+                text: 'Ok',
                 type: 'success',
             });
 
@@ -120,14 +120,13 @@ export default function ChangePassword() {
                     {loading ? 'Cambiando contraseña...' : 'Cambiar Contraseña'}
                 </button>
 
-                {message.text && (
-                    <div
-                        className={`p-3 rounded-md ${message.type === 'success'
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-red-100 text-red-700'
-                            }`}
-                    >
+                {message.text === "Ok" ? (
+                    <div>
                         {message.text}
+                    </div>
+                ) : (
+                    <div>
+                        {texts.messagePassword}
                     </div>
                 )}
             </form>

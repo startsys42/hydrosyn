@@ -43,6 +43,8 @@ const texts = {
         changing: 'Cambiando...',
         creating: 'Creando...',
         active: 'Activo',
+        messageEMail: '¡Los correos electrónicos no coinciden',
+        messagePassword: '¡Contraseña cambiada con éxito!',
 
     },
     en: {
@@ -91,7 +93,8 @@ const texts = {
         changing: 'Changing...',
         creating: 'Creating...',
         active: 'Active',
-
+        messageEMail: 'Emails changed successfully',
+        messagePassword: 'Password changed successfully',
     },
 };
 

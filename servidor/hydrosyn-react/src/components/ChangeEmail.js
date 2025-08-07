@@ -43,7 +43,7 @@ export default function ChangeEmail() {
             if (updateError) throw updateError;
 
             setMessage({
-                text: '¡Correo electrónico cambiado con éxito!',
+                text: 'Ok',
                 type: 'success',
             });
 
@@ -103,11 +103,13 @@ export default function ChangeEmail() {
                     {loading ? texts.changing : texts.changeEmail}
                 </button>
 
-                {message.text && (
-                    <div
-
-                    >
+                {message.text === "Ok" ? (
+                    <div>
                         {message.text}
+                    </div>
+                ) : (
+                    <div>
+                        {texts.messageEMail}
                     </div>
                 )}
             </form>
