@@ -54,7 +54,7 @@ export default function Login() {
                 .single();
 
             if (profileError) throw profileError;
-            console.log('Perfil recibido:', profile);
+            console.log('Perfil recibido:', profile.is_active, is_active);
             console.log('Error del perfil:', profileError);
             if (!profile?.is_active) {
                 // Registrar intento de login con usuario desactivado
