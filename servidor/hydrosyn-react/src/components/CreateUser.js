@@ -21,6 +21,10 @@ export default function CrearUsuarioForm() {
             // El token de autenticación se maneja automáticamente
             const { data, error: functionError } = await supabase.functions.invoke('createUser', {
                 body: { email: email },
+                // Añadir el token de autenticación en los headers
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                },
             });
 
             if (functionError) {

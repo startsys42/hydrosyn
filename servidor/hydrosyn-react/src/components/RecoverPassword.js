@@ -23,45 +23,47 @@ export default function RecoverPassword() {
             setLoading(false);
             return;
         }
-        const { data: users, error: userError } = await supabase
-            .from('user_profiles_info') // <- Debes tener una **vista pública** de auth.users
-            .select('user_id')
-            .eq('email', email)
-            .single();
-
-        if (users) {
-            const userId = users.user_id;
-
-            // 2. Buscar perfil asociado y verificar is_active
-            const { data: profile, error: profileError } = await supabase
-                .from('profile')
-                .select('is_active')
-                .eq('user', userId)
-                .single();
-            if (!profile.is_active) {
-                // 3. Si no está activo, registrar intento fallido
-                await supabase
-                    .from('login_attempts')
-                    .insert({
-                        user: userId,
-                        created_at: new Date().toISOString(),
-                        reason: 'Intento de recuperar contraseña con usuario desactivado ',
-                    });
-            }
-        }
-
-
-
 
         try {
-            const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: 'http://192.168.0.228/change-password-recovery', // o el dominio real
+            // 1. Verificar si el usuario existe y si está activo en la tabla 'profile'
+            // Es más eficiente consultar solo 'profile' si contiene el email
+            // y el estado 'is_active'.
+            const { data: profile, error: profileError } = await supabase
+                .from('profile')
+                .select('user, is_active')
+                .eq('email', email) // Asumiendo que tu tabla 'profile' tiene la columna 'email'
+                .single();
+
+            // 2. Manejar los casos de error o usuario inactivo
+            if (profileError || !profile || !profile.is_active) {
+                // Si el perfil no existe, o si existe pero no está activo,
+                // registramos el intento y mostramos un mensaje genérico.
+                if (profile && !profile.is_active) {
+                    await supabase
+                        .from('login_attempts')
+                        .insert({
+                            user: profile.user,
+                            reason: 'Intento de recuperar contraseña con usuario inactivo'
+                        });
+                }
+
+                // Mostrar un mensaje genérico para no dar pistas sobre la existencia del usuario
+                setMessage('Si tu cuenta existe, recibirás un enlace de recuperación en tu correo.');
+                setLoading(false);
+                return; // Salir de la función aquí
+            }
+
+            // 3. Si el usuario existe Y está activo, procedemos a enviar el correo de recuperación
+            const { error: recoveryError } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: 'http://192.168.0.228/change-password-recovery',
             });
 
-            if (error) throw error;
+            if (recoveryError) throw recoveryError;
 
-            setMessage('Hemos enviado un enlace de recuperación a tu correo.');
+            setMessage('Si tu cuenta existe, recibirás un enlace de recuperación en tu correo.');
+
         } catch (err) {
+            console.error('Error durante la recuperación:', err);
             setError(err.message);
         } finally {
             setLoading(false);
@@ -85,7 +87,7 @@ export default function RecoverPassword() {
                     required
                 />
                 <button type="submit" disabled={loading}>
-                    {loading ? t.sending : t?.sendRecoveryLink}
+                    {loading ? t.sending : t?.recoverPassword}
                 </button>
             </form>
             {message && <div className="success-message" style={{ marginTop: '10px' }}>{t?.messageRecover}</div>}
