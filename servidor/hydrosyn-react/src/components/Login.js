@@ -18,12 +18,10 @@ export default function Login() {
 
     const recordFailedAttempt = async (userId, reason) => {
         try {
-            await supabase
-                .from('login_attempts')
-                .insert({
-                    user: userId,
-                    reason: reason,
-                });
+            await supabase.rpc('insert_attempts', {
+                user_id: userId,
+                reason: reason,
+            });
         } catch (error) {
             console.error('Error registrando intento fallido:', error);
         }

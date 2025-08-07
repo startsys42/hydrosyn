@@ -25,7 +25,7 @@ export default function ChangeEmail() {
 
         // Validaciones
         if ((newEmail.trim() !== confirmEmail.trim())) {
-            setMessage({ text: texts.messageEMail, type: 'error' });
+            setMessage({ text: texts.noEquals, type: 'error' });
             setLoading(false);
             return;
         }

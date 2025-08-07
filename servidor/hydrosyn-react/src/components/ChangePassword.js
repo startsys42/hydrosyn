@@ -41,7 +41,7 @@ export default function ChangePassword() {
             if (updateError) throw updateError;
 
             setMessage({
-                text: 'Ok',
+                text: texts.messagePassword,
                 type: 'success',
             });
 

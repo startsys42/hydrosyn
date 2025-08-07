@@ -45,6 +45,7 @@ const texts = {
         active: 'Activo',
         messageEMail: '¡Los correos electrónicos no coinciden',
         messagePassword: '¡Contraseña cambiada con éxito!',
+        noEquals: 'No coinciden',
 
     },
     en: {
@@ -95,6 +96,7 @@ const texts = {
         active: 'Active',
         messageEMail: 'Emails changed successfully',
         messagePassword: 'Password changed successfully',
+        noEquals: 'Do not match',
     },
 };
 
