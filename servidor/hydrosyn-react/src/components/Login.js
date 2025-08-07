@@ -15,6 +15,21 @@ export default function Login() {
     const [resetSent, setResetSent] = useState(false);
     const navigate = useNavigate();
 
+
+    const recordFailedAttempt = async (userId, reason) => {
+        try {
+            await supabase
+                .from('login_attempts')
+                .insert({
+                    user: userId,
+                    created_at: new Date().toISOString(),
+                    reason: reason,
+                });
+        } catch (error) {
+            console.error('Error registrando intento fallido:', error);
+        }
+    };
+
     const handleLogin = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -45,7 +60,7 @@ export default function Login() {
                 // Registrar intento de login con usuario desactivado
                 await recordFailedAttempt(user.id, 'Intento de login con usuario desactivado');
                 await supabase.auth.signOut();
-                setLoading(false);
+
                 throw new Error('No activo.');
             } else {
                 navigate('/dashboard');
@@ -57,20 +72,6 @@ export default function Login() {
             setError(err.message);
         } finally {
             setLoading(false);
-        }
-    };
-
-    const recordFailedAttempt = async (userId, reason) => {
-        try {
-            await supabase
-                .from('login_attempts')
-                .insert({
-                    user: userId,
-                    created_at: new Date().toISOString(),
-                    reason: reason,
-                });
-        } catch (error) {
-            console.error('Error registrando intento fallido:', error);
         }
     };
 

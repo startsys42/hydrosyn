@@ -18,6 +18,8 @@ import useTexts from './utils/UseTexts';
 import PrivateLayout from './components/PrivateLayout';
 import RecoverPassword from './components/RecoverPassword';
 import ChangePasswordRecovery from './components/ChangePasswordRecovery';
+import CreateUser from './components/CreateUser';
+import ActivateUser from './components/ActivateUser';
 
 
 
@@ -28,6 +30,8 @@ function App() {
     const [user, setUser] = useState(null);
     const { isAdmin, loading: loadingAdmin } = useAdminStatus();
     const t = useTexts();
+    const [loadingAuth, setLoadingAuth] = useState(true);
+
     useEffect(() => {
         // Limpia todas las clases del body para evitar conflictos
         document.body.className = '';
@@ -35,6 +39,7 @@ function App() {
         // Añade la clase correspondiente al tema actual
         document.body.classList.add(theme === 'light' ? 'light-theme' : 'dark-theme');
     }, [theme]); // Se ejecuta cuando cambia 'theme'
+    {/*
     useEffect(() => {
         // Revisa si hay sesión activa
         const session = supabase.auth.getSession().then(({ data }) => setUser(data.session?.user ?? null));
@@ -42,6 +47,51 @@ function App() {
         // Listener para cambios de sesión
         const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
             setUser(session?.user ?? null);
+        });
+
+        return () => {
+            listener.subscription.unsubscribe();
+        };
+    }, []);
+    */}
+
+    useEffect(() => {
+        const checkUser = async () => {
+            setLoadingAuth(true); // Empezar la carga
+            const { data: { session }, error } = await supabase.auth.getSession();
+
+            if (session) {
+                // Si hay una sesión, verificar el perfil del usuario
+                const { data: profile, error: profileError } = await supabase
+                    .from('profile')
+                    .select('is_active')
+                    .eq('user', session.user.id)
+                    .single();
+
+                // Si hay un error con el perfil o el usuario está inactivo, desloguearlo
+                if (profileError || !profile?.is_active) {
+                    await supabase.auth.signOut();
+                    setUser(null);
+                } else {
+                    // Si todo está bien, establecer el usuario
+                    setUser(session.user);
+                }
+            } else {
+                // Si no hay sesión, el usuario es nulo
+                setUser(null);
+            }
+            setLoadingAuth(false); // Terminar la carga
+        };
+
+        checkUser();
+
+        // Listener para cambios de sesión
+        const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+            if (_event === 'SIGNED_OUT') {
+                setUser(null);
+            } else if (session) {
+                checkUser();
+            }
         });
 
         return () => {
@@ -101,7 +151,30 @@ function App() {
                             ) : null
                         }
                     />
-
+                    <Route
+                        path="/create-user"
+                        element={
+                            !user ? (
+                                <Navigate to="/" replace />
+                            ) : user && isAdmin ? (
+                                <CreateUser />
+                            ) : user && !loadingAdmin ? (
+                                <Navigate to="/dashboard" replace />
+                            ) : null
+                        }
+                    />
+                    <Route
+                        path="/activate-user"
+                        element={
+                            !user ? (
+                                <Navigate to="/" replace />
+                            ) : user && isAdmin ? (
+                                <ActivateUser />
+                            ) : user && !loadingAdmin ? (
+                                <Navigate to="/dashboard" replace />
+                            ) : null
+                        }
+                    />
                     <Route
                         path="/notifications"
                         element={user ? <Notifications /> : <Navigate to="/" replace />}
