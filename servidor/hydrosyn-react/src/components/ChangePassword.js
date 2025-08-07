@@ -2,44 +2,38 @@ import { useState } from 'react';
 import { supabase } from '../utils/supabaseClient';
 import '../styles/theme.css';
 import useTexts from '../utils/UseTexts';
+import { useEffect } from 'react';
 
 export default function ChangePassword() {
-    const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const texts = useTexts();
-
     const [message, setMessage] = useState({ text: '', type: '' });
     const [loading, setLoading] = useState(false);
-
+    const texts = useTexts();
+    const [user, setUser] = useState(null);
+    useEffect(() => {
+        async function getUser() {
+            const { data: { user } } = await supabase.auth.getUser();
+            setUser(user);
+        }
+        getUser();
+    }, []);
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setMessage({ text: '', type: '' });
 
         // Validaciones
-        if (newPassword !== confirmPassword) {
-            setMessage({ text: 'Las contraseñas no coinciden', type: 'error' });
-            setLoading(false);
-            return;
-        }
-
-        if (newPassword.length < 8) {
-            setMessage({ text: 'La contraseña debe tener al menos 8 caracteres', type: 'error' });
+        if ((newPassword.trim() !== confirmPassword.trim())) {
+            setMessage({ text: texts.messagePassword, type: 'error' });
             setLoading(false);
             return;
         }
 
         try {
-            // Primero reautenticar al usuario
-            const { error: authError } = await supabase.auth.signInWithPassword({
-                email: supabase.auth.user()?.email || '',
-                password: currentPassword,
-            });
 
-            if (authError) throw authError;
 
-            // Luego actualizar la contraseña
+            // Actualizar la contraseña del usuario
             const { error: updateError } = await supabase.auth.updateUser({
                 password: newPassword,
             });
@@ -52,7 +46,6 @@ export default function ChangePassword() {
             });
 
             // Limpiar formulario
-            setCurrentPassword('');
             setNewPassword('');
             setConfirmPassword('');
         } catch (error) {
@@ -70,17 +63,7 @@ export default function ChangePassword() {
             <h1>{texts.changePassword}</h1>
             <form onSubmit={handleSubmit} className="form-container">
 
-                <label htmlFor="currentPassword" >
-                    {texts.actualPassword}:
-                </label>
-                <input
 
-                    type="password"
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    placeholder={texts.actualPassword}
-                    required
-                />
 
                 <label htmlFor="newPassword" >
                     {texts.newPassword}:
@@ -114,19 +97,15 @@ export default function ChangePassword() {
                 <button
                     type="submit"
                     disabled={loading}
-                    className={`w-full py-2 px-4 rounded-md text-white font-medium ${loading ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'
-                        }`}
+
                 >
-                    {loading ? 'Cambiando contraseña...' : 'Cambiar Contraseña'}
+                    {loading ? texts.changing : texts.changePassword}
                 </button>
 
-                {message.text === "Ok" ? (
-                    <div>
+
+                {message.text && (
+                    <div >
                         {message.text}
-                    </div>
-                ) : (
-                    <div>
-                        {texts.messagePassword}
                     </div>
                 )}
             </form>
