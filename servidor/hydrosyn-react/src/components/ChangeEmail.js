@@ -16,7 +16,7 @@ export default function ChangeEmail() {
         setMessage({ text: '', type: '' });
 
         // Validaciones
-        if (newEmail !== confirmEmail) {
+        if ((newEmail.trim() !== confirmEmail.trim())) {
             setMessage({ text: 'Los correos electrónicos no coinciden', type: 'error' });
             setLoading(false);
             return;
