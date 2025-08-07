@@ -39,6 +39,7 @@ export default function RecoverPassword() {
                 // Si el perfil no existe, o si existe pero no está activo,
                 // registramos el intento y mostramos un mensaje genérico.
                 if (profile.is_active === false) {
+                    console.log('Usuario recibido:', profile.user_id);
                     await supabase
                         .from('login_attempts')
                         .insert({
