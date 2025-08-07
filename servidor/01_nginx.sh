@@ -42,7 +42,22 @@ server {
     }
 
     # Proxy para FastAPI
-   
+    location /api/ {
+        proxy_pass http://127.0.0.1:5617;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+
+        if (\$http_user_agent ~* (curl|wget|python-requests)) {
+            return 403 "Acceso no permitido";
+        }
+        limit_req zone=api_limit burst=20 nodelay;
+        proxy_cookie_path / /api/;
+        proxy_pass_header Set-Cookie; 
+
+        # Para que no recorte el path original /api/
+ 
+    }
 }
 EOF
 
