@@ -22,6 +22,7 @@ export default function Login() {
                 user_id: userId,
                 reason: reason,
             });
+            console.log('Intento fallido registrado:', userId, reason);
         } catch (error) {
             console.error('Error registrando intento fallido:', error);
         }

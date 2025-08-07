@@ -17,45 +17,60 @@ export default function ChangePasswordRecovery() {
 
     // Aquí capturamos el token que manda supabase en la URL
     const access_token = searchParams.get('access_token');
-
-    const handleChangePassword = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setError('');
-        setMessage('');
-
+        setMessage({ text: '', type: '' });
         if (!access_token) {
             setError('Token inválido o expirado.');
             setLoading(false);
             return;
         }
-        if (newPassword !== confirmPassword) {
-            setError('Las contraseñas no coinciden.');
+        // Validaciones
+        if ((newPassword.trim() !== confirmPassword.trim())) {
+            setMessage({ text: texts.messagePassword, type: 'error' });
             setLoading(false);
             return;
         }
-        // Actualizar la contraseña con el token
-        const { error } = await supabase.auth.updateUser({
-            password: newPassword,
-        }, {
-            accessToken: access_token,
-        });
 
-        if (error) {
-            setError(error.message);
-        } else {
-            setMessage('Contraseña actualizada correctamente.');
-            setTimeout(() => {
-                navigate('/'); // redirige a login después de éxito
-            }, 2000);
+        try {
+
+
+            // Actualizar la contraseña del usuario
+            const { error: updateError } = await supabase.auth.updateUser(
+                { password: newPassword },
+                { accessToken: access_token }
+            );
+
+            if (updateError) throw updateError;
+
+            setMessage({
+                text: texts.messagePassword,
+                type: 'success',
+            });
+
+            // Limpiar formulario
+            setNewPassword('');
+            setConfirmPassword('');
+
+
+        } catch (error) {
+            setMessage({
+                text: `Error: ${error.message}`,
+                type: 'error',
+            });
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
+
     return (
-        <div className='div-main'>
-            <h1>{texts?.changePassword || 'Cambiar Contraseña'}</h1>
-            <form onSubmit={handleChangePassword} className='form-container '>
+        <div className="div-main-login">
+            <h1>{texts.changePassword}</h1>
+            <form onSubmit={handleSubmit} className="form-container">
+
+
 
                 <label htmlFor="newPassword" >
                     {texts.newPassword}:
@@ -84,11 +99,22 @@ export default function ChangePasswordRecovery() {
                     required
                     minLength={8}
                 />
-                <button type="submit" disabled={loading}>
-                    {loading ? 'Cambiando...' : 'Cambiar contraseña'}
+
+
+                <button
+                    type="submit"
+                    disabled={loading}
+
+                >
+                    {loading ? texts.changing : texts.changePassword}
                 </button>
-                {message && <p style={{ color: 'green' }}>{message}</p>}
-                {error && <p style={{ color: 'red' }}>{error}</p>}
+
+
+                {message.text && (
+                    <div >
+                        {message.text}
+                    </div>
+                )}
             </form>
         </div>
     );

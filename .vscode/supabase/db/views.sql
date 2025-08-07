@@ -9,20 +9,25 @@ LEFT JOIN roles r ON p.user = r.user
 WHERE r.user IS NULL;
 
 
-create or replace function insert_attempts(
+GRANT EXECUTE ON FUNCTION public.insert_attempts TO authenticated;
+
+-- Para usuarios no logueados
+GRANT EXECUTE ON FUNCTION public.insert_attempts TO anon;
+
+create or replace function public.insert_attempts(
   reason text,
   user_id uuid
 )
-returns uuid
+returns void
 language plpgsql
+security definer 
+set search_path = public;
 as $$
-declare
-  new_attempt_id int8;
 begin
-  insert into login_attempts (reason, user)
-  values (reason, user_id)
-  returning id into new_attempt_id;
+  insert into public.login_attempts (reason, "user")
+  values (reason, user_id);
+ 
 
-  return new_attempt_id;
+
 end;
 $$;
