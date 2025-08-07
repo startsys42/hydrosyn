@@ -58,6 +58,7 @@ export default function Login() {
             console.log('Error del perfil:', profileError);
             if (!profile?.is_active) {
                 // Registrar intento de login con usuario desactivado
+                console.log('Perfil recibido no activo:', profile);
                 await recordFailedAttempt(user.id, 'Intento de login con usuario desactivado');
                 await supabase.auth.signOut();
 

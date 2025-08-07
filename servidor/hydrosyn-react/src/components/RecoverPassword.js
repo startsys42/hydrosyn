@@ -29,8 +29,8 @@ export default function RecoverPassword() {
             // Es más eficiente consultar solo 'profile' si contiene el email
             // y el estado 'is_active'.
             const { data: profile, error: profileError } = await supabase
-                .from('profile')
-                .select('user, is_active')
+                .from('user_profiles_info')
+                .select('user_id, is_active')
                 .eq('email', email) // Asumiendo que tu tabla 'profile' tiene la columna 'email'
                 .single();
 
@@ -42,7 +42,7 @@ export default function RecoverPassword() {
                     await supabase
                         .from('login_attempts')
                         .insert({
-                            user: profile.user,
+                            user: profile.user_id,
                             reason: 'Intento de recuperar contraseña con usuario inactivo'
                         });
                 }
