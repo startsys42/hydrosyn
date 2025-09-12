@@ -47,6 +47,7 @@ const texts = {
         noEquals: 'No coinciden',
         systems: 'Sistemas',
         newSystem: 'Nuevo sistema',
+        deleteUser: 'Eliminar usuario',
 
     },
     en: {
@@ -98,6 +99,7 @@ const texts = {
         noEquals: 'Do not match',
         systems: 'Systems',
         newSystem: 'New System',
+        deleteUser: 'Delete User',
     }
 }
 export default texts;

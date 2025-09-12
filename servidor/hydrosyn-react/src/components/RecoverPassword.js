@@ -56,7 +56,7 @@ export default function RecoverPassword() {
 
             // 3. Si el usuario existe Y está activo, procedemos a enviar el correo de recuperación
             const { error: recoveryError } = await supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: 'http://192.168.0.228/change-password-recovery',
+                redirectTo: 'https://unnamed-boss.github.io/change-password-recovery',
             });
 
             if (recoveryError) throw recoveryError;

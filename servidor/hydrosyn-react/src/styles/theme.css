@@ -22,7 +22,7 @@
     --bg-color: #181b1e;
     --text-color: #ffffff;
     --topbar-bg: #2c2c2c;
-    --aside-bg: #333333;
+    --aside-bg: #282828;
 
 
     --button-bg: #181b1e;
@@ -35,6 +35,10 @@ body, html, #root {
     height: 100%;
     margin: 0;
     padding: 0;
+    background-image: url('../assets/hydrosyn.png');
+     background-repeat: no-repeat;      
+  background-size: cover;           
+  background-position: center;     
     background-color: var(--bg-color);
     color: var(--text-color);
     font-family: sans-serif;
