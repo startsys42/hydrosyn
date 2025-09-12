@@ -3,6 +3,7 @@ import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
 import '../styles/theme.css';
 import { useAdminStatus } from '../utils/AdminContext';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Dashboard() {

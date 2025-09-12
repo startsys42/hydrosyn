@@ -11,8 +11,7 @@ const texts = {
 
 
         recoverySent: 'Nueva contraseña enviada al correo',
-        users: 'Usuarios',
-        profile: 'Perfil',
+
         security: 'Seguridad',
         notifications: 'Notificaciones',
         configuration: 'Configuración',
@@ -63,8 +62,6 @@ const texts = {
 
 
         recoverySent: 'New password sent to email',
-        users: 'Users',
-        profile: 'Profile',
         security: 'Security',
         notifications: 'Notifications',
         configuration: 'Configuration',
@@ -101,7 +98,7 @@ const texts = {
         noEquals: 'Do not match',
         systems: 'Systems',
         newSystem: 'New System',
-    };
+    }
 }
 export default texts;
 

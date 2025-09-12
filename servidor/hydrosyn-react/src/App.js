@@ -20,6 +20,7 @@ import RecoverPassword from './components/RecoverPassword';
 import ChangePasswordRecovery from './components/ChangePasswordRecovery';
 import CreateUser from './components/CreateUser';
 import ActivateUser from './components/ActivateUser';
+import DeleteUser from './components/DeleteUser';
 
 
 
