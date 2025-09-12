@@ -16,10 +16,10 @@
 - [ ] homes
 
 
-- [ ] acls
+
 - [ ] selinux
-- [ ] app armor
-- [ ] dnssec
+
+
 - [ ] fireail
 
 - [ ] sempcom
@@ -46,8 +46,8 @@
 - [ ] usar ids e ips
 - [ ] waf
 - [ ] antivuirus
-- [ ] rootkit clamav tripewire..
-- [ ] chkrootkit
+- [ ] rootkit clamav ..
+
 - [ ] rkhunter
 - [ ] cron
 - [ ] actulizaciones..
@@ -56,7 +56,7 @@
 - [ ] cookies
 - [ ] 2fa
 - [ ] cuotas
-- [ ] fail to ban
+
 - [ ] skel
 - [ ] ram
 - [ ] swamp
@@ -103,8 +103,7 @@
 - [ ] suexec
 - [ ] proteccion abse d edtaos y transacciuones concurrentes
 
-- [ ] garafna
-- [ ] prometeus
+
 
 
 - [ ] linuxgms
@@ -115,19 +114,19 @@
 - [ ] logstash
 
 
-- [ ] shorewall
+
 - [ ] correo autenticacion sesion
-- [ ] sqlmap
+
 - [ ] rbot.txt
 - [ ] lynis
 - [ ] suricata
 - [ ] monit
-- [ ] aide
+
 - [ ] cron
 
 - [ ] csfrçxss
 - [ ] politica contraseñas
-- [ ] systemd
+
 
 - [ ] proxie
 goacces
@@ -157,48 +156,46 @@ nucleo optimizado
 - copia seguridad
 - aviso root
 - permisos
-- acls
+
 - secomp
 - cgroups espacios de nombres
-- apparmor
+
 - firewall
 - modificacion ficheros hash
 - certificados
 - sudo su
 - auditd
 - suexec
-- failtoban
-- shorewall
+
+
 - f2a
 - lsof
-- steam
 
 - clam
 - linys
-- acid
+
 - puertos
 - camuuflar servidor
 - en apache nor evela info o nginx del sistema opertaivo
 
-- tripwire
+
 - login
 - rootki
 
 - quitar telnet quitar comandos remotos
 - firejail
 - caches
-- ids
-- ips
+
 - tcp wrappers
 - suriucata
 - antivirus
-- snort
-- grafana prometheus monit  lostats    munin mrtg
+- 
+-   monit  lostats    munin mrtg
 - vnstat
-- nessus openvas nikto 
-- aide
+
+
 - rkhunter
-- chkrootkit
+
 - monitoreo top, redes usuarios peticiones
 - htacces
 - discord telegram cortreo avisos

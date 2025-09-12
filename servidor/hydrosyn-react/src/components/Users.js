@@ -18,6 +18,9 @@ export default function Users() {
             <button className='button-full' onClick={() => navigate('/activate-user')} >
                 {t.activateUser}
             </button>
+            <button className='button-full' onClick={() => navigate('/delete-user')} >
+                {t.deleteUser}
+            </button>
         </div>
     );
 }

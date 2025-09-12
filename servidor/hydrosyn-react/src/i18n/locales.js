@@ -46,6 +46,8 @@ const texts = {
         messageEMail: '¡Los correos electrónicos no coinciden',
         messagePassword: '¡Contraseña cambiada con éxito!',
         noEquals: 'No coinciden',
+        systems: 'Sistemas',
+        newSystem: 'Nuevo sistema',
 
     },
     en: {
@@ -97,9 +99,9 @@ const texts = {
         messageEMail: 'Emails changed successfully',
         messagePassword: 'Password changed successfully',
         noEquals: 'Do not match',
-    },
-};
-
+        systems: 'Systems',
+        newSystem: 'New System',
+    };
+}
 export default texts;
-
 

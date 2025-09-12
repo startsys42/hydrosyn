@@ -42,3 +42,28 @@ WITH CHECK (true);
 CREATE POLICY "Permitir lectura a administradores"
 ON public.login_attempts FOR SELECT
 USING (auth.uid() IN (SELECT user_id FROM admin_users));
+
+
+create or replace function get_login_attempts_with_user_email()
+returns table(
+  user_email varchar,
+  reason text,
+  created_at timestamp
+)
+language plpgsql
+security definer
+as $$
+begin
+  return query
+  select
+    auth.users.email,
+    public.login_attempts.reason,
+    public.login_attempts.created_at
+  from
+    public.login_attempts
+  join
+    auth.users on public.login_attempts.user = auth.users.id
+  order by
+    public.login_attempts.created_at desc;
+end;
+$$;

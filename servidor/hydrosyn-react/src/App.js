@@ -164,6 +164,18 @@ function App() {
                         }
                     />
                     <Route
+                        path="/delete-user"
+                        element={
+                            !user ? (
+                                <Navigate to="/" replace />
+                            ) : user && isAdmin ? (
+                                <DeleteUser />
+                            ) : user && !loadingAdmin ? (
+                                <Navigate to="/dashboard" replace />
+                            ) : null
+                        }
+                    />
+                    <Route
                         path="/activate-user"
                         element={
                             !user ? (
