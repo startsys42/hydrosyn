@@ -32,37 +32,32 @@ export default function RecoverPassword() {
                 .from('user_profiles_info')
                 .select('user_id, is_active')
                 .eq('email', email) // Asumiendo que tu tabla 'profile' tiene la columna 'email'
-                .single();
+                .maybeSingle();
 
-            // 2. Manejar los casos de error o usuario inactivo
-            if (profileError || !profile || !profile.is_active) {
-                // Si el perfil no existe, o si existe pero no está activo,
-                // registramos el intento y mostramos un mensaje genérico.
-                if (profile.is_active === false) {
-                    console.log('Usuario recibido:', profile.user_id);
-                    await supabase
-                        .from('login_attempts')
-                        .insert({
-                            user: profile.user_id,
-                            reason: 'Intento de recuperar contraseña con usuario inactivo'
-                        });
-                }
-
-                // Mostrar un mensaje genérico para no dar pistas sobre la existencia del usuario
-                setMessage('Si tu cuenta existe, recibirás un enlace de recuperación en tu correo.');
-                setLoading(false);
-                return; // Salir de la función aquí
+            if (profileError) {
+                console.error('Error consultando user_profiles_info:', profileError);
+                throw profileError;
             }
 
-            // 3. Si el usuario existe Y está activo, procedemos a enviar el correo de recuperación
-            const { error: recoveryError } = await supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: 'https://unnamed-boss.github.io/change-password-recovery',
-            });
+            // 3️⃣ Registrar intento si existe el usuario pero está inactivo
+            if (profile && !profile.is_active) {
+                await supabase.from('login_attempts').insert({
+                    user: profile.user_id,
+                    reason: 'Intento de recuperar contraseña con usuario inactivo'
+                });
+            }
 
-            if (recoveryError) throw recoveryError;
+            // 4️⃣ Enviar correo de recuperación solo si el usuario está activo
+            if (profile?.is_active) {
+                const { error: recoveryError } = await supabase.auth.resetPasswordForEmail(email, {
+                    redirectTo: 'https://hydrosyn.github.io/change-password-recovery',
+                });
 
+                if (recoveryError) throw recoveryError;
+            }
+
+            // 5️⃣ Mensaje genérico (si existe o no el usuario)
             setMessage('Si tu cuenta existe, recibirás un enlace de recuperación en tu correo.');
-
         } catch (err) {
             console.error('Error durante la recuperación:', err);
             setError(err.message);

@@ -4,6 +4,9 @@ import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
 import '../styles/theme.css';
 
+
+
+
 export default function Login() {
     const t = useTexts();
     const [email, setEmail] = useState('');
@@ -14,6 +17,7 @@ export default function Login() {
     const [resetEmail, setResetEmail] = useState('');
     const [resetSent, setResetSent] = useState(false);
     const navigate = useNavigate();
+
 
 
     const recordFailedAttempt = async (userId, reason) => {
@@ -45,22 +49,31 @@ export default function Login() {
             // 2. Verificar si el usuario está activo
             const { data: { user } } = await supabase.auth.getUser();
             console.log('Usuario recibido:', user);
-            const { data: profile, error: profileError } = await supabase
-                .from('profile')
+            const { data: adminActive, error: adminActiveError } = await supabase
+                .from('admin_users')
                 .select('is_active')
                 .eq('user', user.id)
-                .single();
+                .maybeSingle();
 
-            if (profileError) throw profileError;
-            console.log('Perfil recibido:', profile.is_active);
-            console.log('Error del perfil:', profileError);
-            if (profile.is_active === false) {
-                // Registrar intento de login con usuario desactivado
-                console.log('Perfil recibido no activo:', profile);
+
+            const { data: profile, error: profileError } = await supabase
+                .from('systems_users')
+                .select('is_active')
+                .eq('user_id', user.id)
+                .eq('is_active', true)
+                .maybeSingle();
+
+
+            const { data: roles, error: rolesError } = await supabase
+                .from('roles')
+                .select('user')
+                .eq('user', user.id)
+                .maybeSingle();
+
+            if (!(adminActive?.is_active) && !(profile?.is_active) && !(roles?.user)) {
                 await recordFailedAttempt(user.id, 'Intento de login con usuario desactivado');
                 await supabase.auth.signOut();
-
-                throw new Error('No activo.');
+                throw new Error("User is inactive.");
             } else {
                 navigate('/dashboard');
             }
@@ -92,6 +105,7 @@ export default function Login() {
                     required
                 />
                 <label>{t.password}</label>
+
                 <input
                     type="password"
                     value={password}

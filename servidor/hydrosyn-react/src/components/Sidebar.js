@@ -5,6 +5,13 @@ import '../styles/theme.css';
 import { Link } from 'react-router-dom';
 import { supabase } from '../utils/supabaseClient';
 import { useNavigate } from 'react-router-dom';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import LogoutIcon from '@mui/icons-material/Logout';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import GroupIcon from '@mui/icons-material/Group';
+import PersonIcon from '@mui/icons-material/Person';
+import ScienceIcon from '@mui/icons-material/Science';
 
 export default function Sidebar() {
     const { isAdmin, loading } = useAdminStatus();
@@ -33,24 +40,26 @@ export default function Sidebar() {
                 }}
                 aria-label={collapsed ? 'Expandir menú' : 'Colapsar menú'}
             >
-                {collapsed ? '➡️' : '⬅️'}
+                {collapsed ? <ArrowForwardIcon /> : <ArrowBackIcon />}
             </button>
 
 
 
             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                 <li style={{ padding: '8px 0' }}>
-                    <Link className="custom-link" to="/profile">{collapsed ? '👤' : t.profile}</Link>
+                    <Link className="custom-link" to="/profile">{collapsed ? <PersonIcon /> : t.profile}</Link>
                 </li>
 
-
+                <li style={{ padding: '8px 0' }}>
+                    <Link className="custom-link" to="/dashboard">{collapsed ? <ScienceIcon /> : t.systems}</Link>
+                </li>
                 {isAdmin && (
                     <>
                         <li style={{ padding: '8px 0' }}>
-                            <Link className="custom-link" to="/users">{collapsed ? '👥' : t.users}</Link>
+                            <Link className="custom-link" to="/users">{collapsed ? <GroupIcon /> : t.users}</Link>
                         </li>
                         <li style={{ padding: '8px 0' }}>
-                            <Link className="custom-link" to="/notifications">{collapsed ? '🔔' : t.notifications}</Link>
+                            <Link className="custom-link" to="/notifications">{collapsed ? <NotificationsIcon /> : t.notifications}</Link>
                         </li>
                     </>
                 )}
@@ -70,7 +79,7 @@ export default function Sidebar() {
                         }}
 
                     >
-                        {collapsed ? '🚪' : t.logout}
+                        {collapsed ? <LogoutIcon /> : t.logout}
                     </button>
                 </li>
             </ul>

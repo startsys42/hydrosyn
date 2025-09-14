@@ -3,6 +3,7 @@ import { supabase } from '../utils/supabaseClient';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import useTexts from '../utils/UseTexts';
 import '../styles/theme.css';
+import { useLocation } from 'react-router-dom';
 
 export default function ChangePasswordRecovery() {
     const texts = useTexts();
@@ -15,12 +16,12 @@ export default function ChangePasswordRecovery() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
+
     // Aquí capturamos el token que manda supabase en la URL
     const access_token = searchParams.get('access_token');
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setMessage({ text: '', type: '' });
         if (!access_token) {
             setError('Token inválido o expirado.');
             setLoading(false);
@@ -28,15 +29,13 @@ export default function ChangePasswordRecovery() {
         }
         // Validaciones
         if ((newPassword.trim() !== confirmPassword.trim())) {
-            setMessage({ text: texts.messagePassword, type: 'error' });
+            setMessage({ text: texts.noEquals, type: 'error' });
             setLoading(false);
             return;
         }
 
         try {
 
-
-            // Actualizar la contraseña del usuario
             const { error: updateError } = await supabase.auth.updateUser(
                 { password: newPassword },
                 { accessToken: access_token }

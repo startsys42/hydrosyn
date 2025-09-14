@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import { useEffect, useState } from 'react';
@@ -59,18 +60,34 @@ function App() {
     useEffect(() => {
         const checkUser = async () => {
             setLoadingAuth(true); // Empezar la carga
-            const { data: { session }, error } = await supabase.auth.getSession();
-
+            const { data, error } = await supabase.auth.getSession();
+            const session = data?.session;
             if (session) {
                 // Si hay una sesión, verificar el perfil del usuario
-                const { data: profile, error: profileError } = await supabase
-                    .from('profile')
-                    .select('is_active')
+                const { data: roleData, error: roleErr } = await supabase
+                    .from('roles')
+                    .select('user')
                     .eq('user', session.user.id)
-                    .single();
+                    .maybeSingle();
+
+
+                const { data: adminData, error: adminErr } = await supabase
+                    .from('admin_users')
+                    .select('user, is_active')
+                    .eq('user', session.user.id)
+                    .eq('is_active', true)
+                    .maybeSingle();
+
+
+                const { data: systemData, error: systemErr } = await supabase
+                    .from('systems_users')
+                    .select('user_id, is_active')
+                    .eq('user_id', session.user.id)
+                    .eq('is_active', true)
+                    .maybeSingle();
 
                 // Si hay un error con el perfil o el usuario está inactivo, desloguearlo
-                if (profileError || !profile?.is_active) {
+                if (!roleData && !adminData?.is_active && !systemData) {
                     await supabase.auth.signOut();
                     setUser(null);
                 } else {

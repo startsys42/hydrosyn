@@ -25,7 +25,7 @@ export default function ChangePassword() {
 
         // Validaciones
         if ((newPassword.trim() !== confirmPassword.trim())) {
-            setMessage({ text: texts.messagePassword, type: 'error' });
+            setMessage({ text: texts.noEquals, type: 'error' });
             setLoading(false);
             return;
         }
