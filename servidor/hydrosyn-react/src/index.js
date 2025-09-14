@@ -9,6 +9,7 @@ import { AdminProvider } from './utils/AdminContext';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
@@ -17,7 +18,9 @@ root.render(
                 <Router>
                     <AdminProvider>
 
+
                         <App />
+
                     </AdminProvider>
 
                 </Router>

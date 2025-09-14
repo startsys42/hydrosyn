@@ -10,8 +10,8 @@ import { useTheme } from './utils/ThemeContext';
 import { useLanguage } from './utils/LanguageContext';
 import PublicLayout from './components/PublicLayout';
 import Profile from './components/Profile';
-import Users from './components/Users';
-import Notifications from './components/Notifications';
+import UsersAdmin from './components/UsersAdmin';
+import NotificationsAdmin from './components/NotificationsAdmin';
 import ChangePassword from './components/ChangePassword';
 import ChangeEmail from './components/ChangeEmail';
 import { useAdminStatus } from './utils/AdminContext';
@@ -19,11 +19,28 @@ import useTexts from './utils/UseTexts';
 import PrivateLayout from './components/PrivateLayout';
 import RecoverPassword from './components/RecoverPassword';
 import ChangePasswordRecovery from './components/ChangePasswordRecovery';
-import CreateUser from './components/CreateUser';
-import ActivateUser from './components/ActivateUser';
-import DeleteUser from './components/DeleteUser';
+import CreateUserAdmin from './components/CreateUserAdmin';
+import ActivateUserAdmin from './components/ActivateUserAdmin';
+import DeleteUserAdmin from './components/DeleteUserAdmin';
+import CreateUserSystems from './components/CreateUserSystems';
+import ActivateUserSystems from './components/ActivateUserSystems';
+import DeleteUserSystems from './components/DeleteUserSystems';
+import UsersSystems from './components/UsersSystems';
+import NotificationsSystem from './components/NotificationsSystem';
+import { useParams } from 'react-router-dom';
+import { OwnerProvider } from './utils/OwnerContext';
+import System from './components/System';
 
 
+
+function SystemRouteWrapper() {
+    const { systemId } = useParams();
+    return (
+        <OwnerProvider systemId={systemId}>
+            <System />
+        </OwnerProvider>
+    );
+}
 
 
 function App() {
@@ -158,56 +175,56 @@ function App() {
                     />
 
                     <Route
-                        path="/users"
+                        path="/users-admin"
                         element={
                             !user ? (
                                 <Navigate to="/" replace />
                             ) : user && isAdmin ? (
-                                <Users />
+                                <UsersAdmin />
                             ) : user && !loadingAdmin ? (
                                 <Navigate to="/dashboard" replace />
                             ) : null
                         }
                     />
                     <Route
-                        path="/create-user"
+                        path="/create-user-admin"
                         element={
                             !user ? (
                                 <Navigate to="/" replace />
                             ) : user && isAdmin ? (
-                                <CreateUser />
+                                <CreateUserAdmin />
                             ) : user && !loadingAdmin ? (
                                 <Navigate to="/dashboard" replace />
                             ) : null
                         }
                     />
                     <Route
-                        path="/delete-user"
+                        path="/delete-user-admin"
                         element={
                             !user ? (
                                 <Navigate to="/" replace />
                             ) : user && isAdmin ? (
-                                <DeleteUser />
+                                <DeleteUserAdmin />
                             ) : user && !loadingAdmin ? (
                                 <Navigate to="/dashboard" replace />
                             ) : null
                         }
                     />
                     <Route
-                        path="/activate-user"
+                        path="/activate-user-admin"
                         element={
                             !user ? (
                                 <Navigate to="/" replace />
                             ) : user && isAdmin ? (
-                                <ActivateUser />
+                                <ActivateUserAdmin />
                             ) : user && !loadingAdmin ? (
                                 <Navigate to="/dashboard" replace />
                             ) : null
                         }
                     />
                     <Route
-                        path="/notifications"
-                        element={user ? <Notifications /> : <Navigate to="/" replace />}
+                        path="/notifications-admin"
+                        element={user ? <NotificationsAdmin /> : <Navigate to="/" replace />}
                     />
                     <Route
                         path="/change-password"
@@ -227,6 +244,8 @@ function App() {
 
                         }
                     />
+
+                    <Route path="/system/:systemId" element={<SystemRouteWrapper />} />
                 </Route>
             </Routes>
 

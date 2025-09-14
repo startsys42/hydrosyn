@@ -56,10 +56,10 @@ export default function Sidebar() {
                 {isAdmin && (
                     <>
                         <li style={{ padding: '8px 0' }}>
-                            <Link className="custom-link" to="/users">{collapsed ? <GroupIcon /> : t.users}</Link>
+                            <Link className="custom-link" to="/users-admin">{collapsed ? <GroupIcon /> : t.users}</Link>
                         </li>
                         <li style={{ padding: '8px 0' }}>
-                            <Link className="custom-link" to="/notifications">{collapsed ? <NotificationsIcon /> : t.notifications}</Link>
+                            <Link className="custom-link" to="/notifications-admin">{collapsed ? <NotificationsIcon /> : t.notifications}</Link>
                         </li>
                     </>
                 )}

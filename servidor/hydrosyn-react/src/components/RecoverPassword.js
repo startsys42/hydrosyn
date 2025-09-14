@@ -50,7 +50,7 @@ export default function RecoverPassword() {
             // 4️⃣ Enviar correo de recuperación solo si el usuario está activo
             if (profile?.is_active) {
                 const { error: recoveryError } = await supabase.auth.resetPasswordForEmail(email, {
-                    redirectTo: 'https://hydrosyn.github.io/change-password-recovery',
+                    redirectTo: 'https://192.168.1.136/change-password-recovery',
                 });
 
                 if (recoveryError) throw recoveryError;

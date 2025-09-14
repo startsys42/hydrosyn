@@ -48,6 +48,10 @@ const texts = {
         systems: 'Sistemas',
         newSystem: 'Nuevo sistema',
         deleteUser: 'Eliminar usuario',
+        nameSystem: 'Nombre del sistema',
+        limitSystems: 'No puedes crear más de 2 sistemas.',
+        repeatNameSystem: 'Ya existe un sistema con ese nombre.',
+        regexNameSystem: 'Nombre inválido. Solo letras, números, guiones bajos y espacios permitidos, máximo 30 caracteres.'
 
     },
     en: {
@@ -100,6 +104,14 @@ const texts = {
         systems: 'Systems',
         newSystem: 'New System',
         deleteUser: 'Delete User',
+        nameSystem: 'System Name',
+        limitSystems: 'You cannot create more than 2 systems.',
+        repeatNameSystem: 'A system with that name already exists.',
+        regexNameSystem: 'Invalid name. Only letters, numbers, underscores, and spaces allowed, maximum 30 characters.'
+
+
+
+
     }
 }
 export default texts;
