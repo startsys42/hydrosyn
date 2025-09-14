@@ -4,9 +4,10 @@ import { useLocation } from 'react-router-dom';
 
 const OwnerContext = createContext();
 
-export function OwnerProvider({ children, systemId }) {
+export function OwnerProvider({ children }) {
     const [isOwner, setIsOwner] = useState(null);
     const [loading, setLoading] = useState(true);
+    const location = useLocation();
 
     useEffect(() => {
         const checkOwner = async () => {
@@ -22,20 +23,20 @@ export function OwnerProvider({ children, systemId }) {
             }
 
             const { data, error } = await supabase
-                .from('systems')
+                .from('admin_users')
                 .select('id')
-                .eq('id', systemId)
-                .eq('admin', user.id)
+
+                .eq('user', user.id)
                 .eq('is_active', true)
                 .maybeSingle();
 
-            setIsOwner(!!data);
+            setIsOwner(!error && !!data);
             setLoading(false);
         };
 
-        if (systemId) checkOwner();
-        else setLoading(false);
-    }, [systemId]);
+        checkOwner();
+
+    }, [location.pathname]);
 
     return (
         <OwnerContext.Provider value={{ isOwner, loading }}>

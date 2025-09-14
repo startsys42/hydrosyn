@@ -15,6 +15,7 @@ import NotificationsAdmin from './components/NotificationsAdmin';
 import ChangePassword from './components/ChangePassword';
 import ChangeEmail from './components/ChangeEmail';
 import { useAdminStatus } from './utils/AdminContext';
+import { useOwnerStatus } from './utils/OwnerContext';
 import useTexts from './utils/UseTexts';
 import PrivateLayout from './components/PrivateLayout';
 import RecoverPassword from './components/RecoverPassword';
@@ -28,7 +29,7 @@ import DeleteUserSystems from './components/DeleteUserSystems';
 import UsersSystems from './components/UsersSystems';
 import NotificationsSystem from './components/NotificationsSystem';
 import { useParams } from 'react-router-dom';
-import { OwnerProvider } from './utils/OwnerContext';
+import { OwnerSystemProvider } from './utils/OwnerSystemContext';
 import System from './components/System';
 
 
@@ -36,9 +37,9 @@ import System from './components/System';
 function SystemRouteWrapper() {
     const { systemId } = useParams();
     return (
-        <OwnerProvider systemId={systemId}>
+        <OwnerSystemProvider systemId={systemId}>
             <System />
-        </OwnerProvider>
+        </OwnerSystemProvider>
     );
 }
 
@@ -48,6 +49,7 @@ function App() {
     const { language, changeLanguage } = useLanguage();
     const [user, setUser] = useState(null);
     const { isAdmin, loading: loadingAdmin } = useAdminStatus();
+    const { isOwner, loading: loadingOwner } = useOwnerStatus();
     const t = useTexts();
     const [loadingAuth, setLoadingAuth] = useState(true);
 

@@ -7,6 +7,7 @@ import { ThemeProvider } from './utils/ThemeContext';
 import { LanguageProvider } from './utils/LanguageContext';
 import { AdminProvider } from './utils/AdminContext';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { OwnerProvider } from './utils/OwnerContext';
 
 
 
@@ -17,10 +18,9 @@ root.render(
             <LanguageProvider>
                 <Router>
                     <AdminProvider>
-
-
-                        <App />
-
+                        <OwnerProvider>
+                            <App />
+                        </OwnerProvider>
                     </AdminProvider>
 
                 </Router>

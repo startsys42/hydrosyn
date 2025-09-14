@@ -3,6 +3,7 @@ import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
 import '../styles/theme.css';
 import { useAdminStatus } from '../utils/AdminContext';
+import { useOwnerStatus } from '../utils/OwnerContext';
 import { useNavigate } from 'react-router-dom';
 import { TextField, CircularProgress } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
@@ -13,6 +14,7 @@ export default function Dashboard() {
     const navigate = useNavigate();
 
     const { isAdmin, loading: loadingAdmin } = useAdminStatus();
+    const { isOwner, loading: loadingOwner } = useOwnerStatus();
     const [userEmail, setUserEmail] = useState('');
     const [rows, setRows] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -23,8 +25,8 @@ export default function Dashboard() {
     const [filters, setFilters] = useState({
         name: '',
         email: '',
-        dateFrom: '',  // fecha inicio del rango
-        dateTo: ''     // fecha fin del rango
+        dateFrom: '',
+        dateTo: ''
     });
 
     const fetchSystems = async () => {
@@ -35,79 +37,87 @@ export default function Dashboard() {
             if (!user) throw userError;
             setUserEmail(user.email);
 
-            let query;
+            // Obtener sistemas donde el usuario es admin/owner
+            const { data: adminSystems, error: adminError } = await supabase
+                .from('admin_users')
+                .select('system(id, name, created_at, systems_users:user_systems!inner(user_id, users:user_id(email)))')
+                .eq('user', user.id)
+                .eq('is_active', true);
 
-            if (isAdmin) {
-                query = supabase
-                    .from('systems')
-                    .select(`
-            id,
-            name,
-            created_at,
-            systems_users (
-              user_id,
-              users: user_id (
-                email
-              )
-            )
-          `, { count: 'exact' });
-            } else {
-                query = supabase
-                    .from('user_systems')
-                    .select(`
-            systems(
-              id,
-              name,
-              created_at,
-              systems_users:user_systems!inner(
-                user_id,
-                users:user_id(
-                  email
-                )
-              )
-            )
-          `, { count: 'exact' })
-                    .eq('user_id', user.id);
-            }
+            if (adminError) throw adminError;
 
-            // FILTROS
-            if (filters.name) query = query.ilike('name', `%${filters.name}%`);
-            if (filters.dateFrom) query = query.gte('created_at', filters.dateFrom);
-            if (filters.dateTo) query = query.lte('created_at', filters.dateTo);
-            if (!isAdmin && filters.email) {
-                query = query.ilike('systems_users.users.email', `%${filters.email}%`);
-            }
+            // Obtener sistemas donde el usuario es miembro (pero no owner)
+            const { data: userSystems, error: userErrorSys } = await supabase
+                .from('systems_users')
+                .select('system(id, name, created_at)')
+                .eq('user_id', user.id)
+                .eq('is_active', true);
 
-            // ORDEN
-            if (sortModel.length > 0) {
-                query = query.order(sortModel[0].field, { ascending: sortModel[0].sort === 'asc' });
-            }
+            if (userErrorSys) throw userErrorSys;
 
-            // PAGINACIÓN
-            const from = page * pageSize;
-            const to = from + pageSize - 1;
-            query = query.range(from, to);
-
-            const { data, count, error } = await query;
-            if (error) throw error;
-
-            let systemsData = isAdmin ? data : data.map(row => row.systems);
-
-            const preparedRows = systemsData.map(sys => ({
-                id: sys.id,
-                name: sys.name,
-                created_at: new Date(sys.created_at).toLocaleDateString(),
-                emails: sys.systems_users && sys.systems_users.length > 0
-                    ? sys.systems_users.map(su => su.users?.email).join(', ')
-                    : '—', // o '' si quieres dejar vacío
+            // Preparar sistemas donde es owner
+            const ownerSystems = adminSystems.map(s => ({
+                id: s.system.id,
+                name: s.system.name,
+                created_at: new Date(s.system.created_at).toLocaleDateString(),
+                owner: true,
+                // Lista de emails asociados a ese sistema
+                emails: s.system.systems_users.map(u => u.users.email).join(', ')
             }));
-            if (filters.email && isAdmin) {
-                preparedRows = preparedRows.filter(row =>
-                    row.emails.toLowerCase().includes(filters.email.toLowerCase())
+
+            // Sistemas donde eres solo usuario (no owner)
+            const userOnlySystems = userSystems
+                .filter(s => !ownerSystems.some(os => os.id === s.system.id))
+                .map(s => ({
+                    id: s.system.id,
+                    name: s.system.name,
+                    created_at: new Date(s.system.created_at).toLocaleDateString(),
+                    owner: false,
+                    emails: '' // vacío porque no eres owner
+                }));
+
+            // Combinar ambos tipos de sistemas
+            const combinedSystems = [...ownerSystems, ...userOnlySystems];
+
+            // Aplicar filtros localmente (ya que no estamos usando query de servidor)
+            let filteredSystems = combinedSystems;
+
+            // Filtro por nombre
+            if (filters.name) {
+                filteredSystems = filteredSystems.filter(sys =>
+                    sys.name.toLowerCase().includes(filters.name.toLowerCase())
                 );
             }
-            setRows(preparedRows);
-            setRowCount(count || 0);
+
+            // Filtro por email - SOLO si el usuario es owner de al menos un sistema
+            const hasOwnedSystems = ownerSystems.length > 0;
+            if (filters.email && hasOwnedSystems) {
+                filteredSystems = filteredSystems.filter(sys =>
+                    sys.emails.toLowerCase().includes(filters.email.toLowerCase())
+                );
+            }
+
+            // Filtro por fecha desde
+            if (filters.dateFrom) {
+                const fromDate = new Date(filters.dateFrom);
+                filteredSystems = filteredSystems.filter(sys =>
+                    new Date(sys.created_at) >= fromDate
+                );
+            }
+
+            // Filtro por fecha hasta
+            if (filters.dateTo) {
+                const toDate = new Date(filters.dateTo + 'T23:59:59'); // Hasta el final del día
+                filteredSystems = filteredSystems.filter(sys =>
+                    new Date(sys.created_at) <= toDate
+                );
+            }
+
+            // ESTO SE ELIMINÓ: La lógica de query de servidor que estaba mezclada
+            // y no era compatible con el enfoque de fetch de adminSystems/userSystems
+
+            setRows(filteredSystems);
+            setRowCount(filteredSystems.length);
 
         } catch (err) {
             console.error(err);
@@ -117,8 +127,10 @@ export default function Dashboard() {
     };
 
     useEffect(() => {
-        if (!loadingAdmin) fetchSystems();
-    }, [loadingAdmin, page, pageSize, sortModel, filters]);
+        if (!loadingAdmin && !loadingOwner) {
+            fetchSystems();
+        }
+    }, [loadingAdmin, loadingOwner, page, pageSize, sortModel, filters]); // Añadido loadingOwner como dependencia
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 90 },
@@ -127,6 +139,8 @@ export default function Dashboard() {
         { field: 'emails', headerName: 'Usuarios (emails)', flex: 1 },
     ];
 
+    // Verificar si el usuario tiene sistemas como owner para habilitar filtro de email
+    const hasOwnedSystems = rows.some(row => row.owner === true);
     return (
         <div className='div-main-login'>
             {loading ? (
@@ -136,12 +150,15 @@ export default function Dashboard() {
 
                     <h1>{t.welcome}</h1>
                     <h2>{t.systems}</h2>
-                    {isAdmin && (
+                    {(isAdmin || isOwner) && (
                         <>
-                            <button className='button-right' onClick={() => navigate('/new-system')}>
+                            <button
+                                className='button-right'
+                                onClick={() => navigate('/create-system')}
+                            >
                                 {t.newSystem}
                             </button>
-                            <div style={{ clear: 'both' }}></div> {/* ✅ Aquí el estilo es un objeto */}
+                            <div style={{ clear: 'both', marginBottom: '10px' }}></div>
                         </>
                     )}
                     <div className='filter-container'>
@@ -154,18 +171,22 @@ export default function Dashboard() {
                             label="Email"
                             value={filters.email}
                             onChange={e => setFilters({ ...filters, email: e.target.value })}
+                            disabled={!hasOwnedSystems} // DESHABILITADO si no es owner de ningún sistema
+                            placeholder={hasOwnedSystems ? "" : "Solo disponible para owners"}
                         />
                         <TextField
                             label="Fecha desde"
                             type="date"
                             value={filters.dateFrom}
                             onChange={e => setFilters({ ...filters, dateFrom: e.target.value })}
+                            InputLabelProps={{ shrink: true }} // AÑADIDO para mejor visualización
                         />
                         <TextField
                             label="Fecha hasta"
                             type="date"
                             value={filters.dateTo}
                             onChange={e => setFilters({ ...filters, dateTo: e.target.value })}
+                            InputLabelProps={{ shrink: true }} // AÑADIDO para mejor visualización
                         />
                     </div>
                     <div style={{ height: 500, width: '100%' }}>
@@ -176,10 +197,10 @@ export default function Dashboard() {
                             page={page}
                             pageSize={pageSize}
                             rowCount={rowCount}
-                            paginationMode="server"
+                            paginationMode="client" // CAMBIADO de "server" a "client"
                             onPageChange={(newPage) => setPage(newPage)}
                             onPageSizeChange={(newSize) => { setPageSize(newSize); setPage(0); }}
-                            sortingMode="server"
+                            sortingMode="client" // CAMBIADO de "server" a "client"
                             sortModel={sortModel}
                             onSortModelChange={setSortModel}
                             disableSelectionOnClick
@@ -196,12 +217,6 @@ export default function Dashboard() {
                         />
                     </div>
                 </>
-            )}
-
-            
-
-            
-              
             )}
         </div>
     );
