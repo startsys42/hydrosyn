@@ -98,10 +98,31 @@ export default function Dashboard() {
     }, [loadingAdmin, loadingOwner, page, pageSize, sortModel]); // Añadido loadingOwner como dependencia
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 90 },
+        { field: 'id', headerName: 'ID', hide: true }, // 👈 ocultar el ID
         { field: 'name', headerName: 'Nombre', flex: 1 },
         { field: 'created_at', headerName: 'Fecha creación', width: 180 },
         { field: 'emails', headerName: 'Usuarios (emails)', flex: 1 },
+        {
+            field: 'action',
+            headerName: 'Acción',
+            width: 150,
+            sortable: false,
+            renderCell: (params) => (
+                <button
+                    style={{
+                        padding: '4px 8px',
+                        backgroundColor: 'var(--color-primary)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer'
+                    }}
+                    onClick={() => navigate(`/system/${params.row.id}`)} // 👈 usa el ID oculto para navegar
+                >
+                    Ir al sistema
+                </button>
+            ),
+        },
     ];
 
     // Verificar si el usuario tiene sistemas como owner para habilitar filtro de email
