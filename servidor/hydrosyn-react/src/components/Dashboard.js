@@ -79,7 +79,7 @@ export default function Dashboard() {
     }, [loadingAdmin, loadingOwner]);
 
     const columns = [
-        { field: 'id', headerName: 'ID', hide: true },
+        // { field: 'id', headerName: 'ID', hide: true },
         { field: 'name', headerName: 'Nombre', flex: 1, headerClassName: 'data-grid-header' },
         { field: 'created_at', headerName: 'Fecha creación', width: 180, headerClassName: 'data-grid-header' },
         {
