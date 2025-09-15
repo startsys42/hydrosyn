@@ -25,13 +25,20 @@ export default function NotificationsAdmin() {
             try {
                 setLoading(true);
                 // Llama a la función de base de datos que creaste
-                const { data, error } = await supabase.rpc('get_admin_login_attempts_with_user_email');
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session || !session.user) throw new Error('Usuario no autenticado');
+                const userId = session.user.id;
 
+                // Llamar a la RPC pasando el userId
+                const { data, error } = await supabase.rpc(
+                    'get_admin_login_attempts_with_user_email',
+                    { p_user_id: userId }
+                );
                 if (error) {
                     throw error;
                 }
 
-                setAttempts(data);
+                setAttempts(data || []);
             } catch (e) {
                 setError(e.message);
             } finally {
@@ -48,7 +55,7 @@ export default function NotificationsAdmin() {
         { field: 'user_email', headerName: 'Email', flex: 1 },
         { field: 'reason', headerName: 'Razón', flex: 1 },
         {
-            field: 'created_at',
+            field: 'attempt_created_at',
             headerName: 'Fecha y Hora',
             flex: 1,
             valueFormatter: (params) => new Date(params.value).toLocaleString()
