@@ -31,6 +31,7 @@ import NotificationsSystem from './components/NotificationsSystem';
 import { useParams } from 'react-router-dom';
 import { OwnerSystemProvider } from './utils/OwnerSystemContext';
 import System from './components/System';
+import CreateSystem from './components/CreateSystem';
 
 
 
@@ -220,6 +221,18 @@ function App() {
                             ) : user && isAdmin ? (
                                 <ActivateUserAdmin />
                             ) : user && !loadingAdmin ? (
+                                <Navigate to="/dashboard" replace />
+                            ) : null
+                        }
+                    />
+                    <Route
+                        path="/create-system"
+                        element={
+                            !user ? (
+                                <Navigate to="/" replace />
+                            ) : user && (isAdmin || isOwner) ? (
+                                <CreateSystem />
+                            ) : user && !loadingAdmin && !loadingOwner ? (
                                 <Navigate to="/dashboard" replace />
                             ) : null
                         }

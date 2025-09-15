@@ -22,12 +22,7 @@ export default function Dashboard() {
     const [pageSize, setPageSize] = useState(20);
     const [rowCount, setRowCount] = useState(0);
     const [sortModel, setSortModel] = useState([]);
-    const [filters, setFilters] = useState({
-        name: '',
-        email: '',
-        dateFrom: '',
-        dateTo: ''
-    });
+
 
     const fetchSystems = async () => {
         setLoading(true);
@@ -80,44 +75,14 @@ export default function Dashboard() {
             const combinedSystems = [...ownerSystems, ...userOnlySystems];
 
             // Aplicar filtros localmente (ya que no estamos usando query de servidor)
-            let filteredSystems = combinedSystems;
 
-            // Filtro por nombre
-            if (filters.name) {
-                filteredSystems = filteredSystems.filter(sys =>
-                    sys.name.toLowerCase().includes(filters.name.toLowerCase())
-                );
-            }
 
-            // Filtro por email - SOLO si el usuario es owner de al menos un sistema
-            const hasOwnedSystems = ownerSystems.length > 0;
-            if (filters.email && hasOwnedSystems) {
-                filteredSystems = filteredSystems.filter(sys =>
-                    sys.emails.toLowerCase().includes(filters.email.toLowerCase())
-                );
-            }
-
-            // Filtro por fecha desde
-            if (filters.dateFrom) {
-                const fromDate = new Date(filters.dateFrom);
-                filteredSystems = filteredSystems.filter(sys =>
-                    new Date(sys.created_at) >= fromDate
-                );
-            }
-
-            // Filtro por fecha hasta
-            if (filters.dateTo) {
-                const toDate = new Date(filters.dateTo + 'T23:59:59'); // Hasta el final del día
-                filteredSystems = filteredSystems.filter(sys =>
-                    new Date(sys.created_at) <= toDate
-                );
-            }
 
             // ESTO SE ELIMINÓ: La lógica de query de servidor que estaba mezclada
             // y no era compatible con el enfoque de fetch de adminSystems/userSystems
 
-            setRows(filteredSystems);
-            setRowCount(filteredSystems.length);
+            setRows(combinedSystems); // ✅ pasa directo
+            setRowCount(combinedSystems.length);
 
         } catch (err) {
             console.error(err);
@@ -130,7 +95,7 @@ export default function Dashboard() {
         if (!loadingAdmin && !loadingOwner) {
             fetchSystems();
         }
-    }, [loadingAdmin, loadingOwner, page, pageSize, sortModel, filters]); // Añadido loadingOwner como dependencia
+    }, [loadingAdmin, loadingOwner, page, pageSize, sortModel]); // Añadido loadingOwner como dependencia
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 90 },
@@ -161,34 +126,7 @@ export default function Dashboard() {
                             <div style={{ clear: 'both', marginBottom: '10px' }}></div>
                         </>
                     )}
-                    <div className='filter-container'>
-                        <TextField
-                            label="Nombre"
-                            value={filters.name}
-                            onChange={e => setFilters({ ...filters, name: e.target.value })}
-                        />
-                        <TextField
-                            label="Email"
-                            value={filters.email}
-                            onChange={e => setFilters({ ...filters, email: e.target.value })}
-                            disabled={!hasOwnedSystems} // DESHABILITADO si no es owner de ningún sistema
-                            placeholder={hasOwnedSystems ? "" : "Solo disponible para owners"}
-                        />
-                        <TextField
-                            label="Fecha desde"
-                            type="date"
-                            value={filters.dateFrom}
-                            onChange={e => setFilters({ ...filters, dateFrom: e.target.value })}
-                            InputLabelProps={{ shrink: true }} // AÑADIDO para mejor visualización
-                        />
-                        <TextField
-                            label="Fecha hasta"
-                            type="date"
-                            value={filters.dateTo}
-                            onChange={e => setFilters({ ...filters, dateTo: e.target.value })}
-                            InputLabelProps={{ shrink: true }} // AÑADIDO para mejor visualización
-                        />
-                    </div>
+
                     <div style={{ height: 500, width: '100%' }}>
                         <DataGrid
                             rows={rows}

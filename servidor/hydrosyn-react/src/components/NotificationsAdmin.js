@@ -17,12 +17,7 @@ export default function NotificationsAdmin() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const [filterEmail, setFilterEmail] = useState('');
-    const [filterReason, setFilterReason] = useState('');
 
-
-    const [filterStartDate, setFilterStartDate] = useState(null);
-    const [filterEndDate, setFilterEndDate] = useState(null);
 
 
     useEffect(() => {
@@ -47,17 +42,7 @@ export default function NotificationsAdmin() {
         fetchLoginAttempts();
     }, []);
 
-    const filteredAttempts = attempts.filter((attempt) => {
-        const attemptDate = new Date(attempt.created_at);
 
-        return (
-            (!filterEmail || attempt.user_email.includes(filterEmail)) &&
-            (!filterStartDate || attemptDate >= filterStartDate) &&
-            (!filterEndDate || attemptDate <= filterEndDate)
-        );
-    });
-
-    const reasons = [...new Set(attempts.map((a) => a.reason))]; // Lista única de razones
 
     const columns = [
         { field: 'user_email', headerName: 'Email', flex: 1 },
@@ -74,45 +59,11 @@ export default function NotificationsAdmin() {
         <div className='div-main-login'>
             <h1>{texts.notifications}</h1>
 
-            <div>
-                <TextField
-                    label="Filtrar por correo"
-                    value={filterEmail}
-                    onChange={(e) => setFilterEmail(e.target.value)}
-                />
 
-                <TextField
-                    select
-                    label="Filtrar por tipo"
-                    value={filterReason}
-                    onChange={(e) => setFilterReason(e.target.value)}
-                    style={{ minWidth: 150 }}
-                >
-                    <MenuItem value="">Todos</MenuItem>
-                    {reasons.map((r) => (
-                        <MenuItem key={r} value={r}>{r}</MenuItem>
-                    ))}
-                </TextField>
-
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DatePicker
-                        label="Desde"
-                        value={filterStartDate}
-                        onChange={(newValue) => setFilterStartDate(newValue)}
-                        renderInput={(params) => <TextField {...params} />}
-                    />
-                    <DatePicker
-                        label="Hasta"
-                        value={filterEndDate}
-                        onChange={(newValue) => setFilterEndDate(newValue)}
-                        renderInput={(params) => <TextField {...params} />}
-                    />
-                </LocalizationProvider>
-            </div>
 
             <div style={{ height: 500, width: '100%' }}>
                 <DataGrid
-                    rows={filteredAttempts.map((a, index) => ({ id: index, ...a }))}
+                    rows={attempts.map((a, index) => ({ id: index, ...a }))}
                     columns={columns}
                     loading={loading}
                     pageSize={10}
