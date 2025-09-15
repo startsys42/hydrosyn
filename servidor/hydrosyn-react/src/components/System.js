@@ -18,7 +18,7 @@ export default function System() {
         <div className='div-main-login'>
             <h1>{texts.systems}</h1>
 
-            {/* Accordion para Diseño */}
+
             <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography>{texts.usersOptions}</Typography>
@@ -35,7 +35,7 @@ export default function System() {
                 </AccordionDetails>
             </Accordion>
 
-            {/* Accordion para Email / Configuración */}
+
             <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography>{texts.notifications}</Typography>

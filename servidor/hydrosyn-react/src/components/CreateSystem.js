@@ -27,11 +27,14 @@ export default function CreateSystem() {
 
         try {
             // 1️⃣ Obtener usuario logueado
-            const { data: { user }, error: userErr } = await supabase.auth.getUser();
-            if (userErr || !user) throw new Error('Usuario no autenticado');
+            //const { data: { user }, error: userErr } = await supabase.auth.getUser();
+            //  if (userErr || !user) throw new Error('Usuario no autenticado');
 
-            const userId = user.id;
+            //  const userId = user.id;
+            const { data: { session }, error: sessionErr } = await supabase.auth.getSession();
+            if (sessionErr || !session || !session.user) throw new Error('Usuario no autenticado');
 
+            const userId = session.user.id;
             // 2️⃣ Verificar roles
             const { data: roles } = await supabase
                 .from('roles')
