@@ -61,7 +61,7 @@ export default function Dashboard() {
                     created_at: new Date(s.system.created_at).toLocaleDateString(),
                     owner: false
                 }));
-
+            console.log(ownerData, memberData);
             setRows([...ownerSystems, ...memberSystems]);
             setRowCount(ownerSystems.length + memberSystems.length);
 
@@ -79,13 +79,20 @@ export default function Dashboard() {
     }, [loadingAdmin, loadingOwner]);
 
     const columns = [
-        { field: 'id', headerName: 'ID', hide: true },
-        { field: 'name', headerName: 'Nombre', flex: 1 },
-        { field: 'created_at', headerName: 'Fecha creación', width: 180 },
+        { field: 'id', headerName: 'ID', hide: true, valueGetter: (params) => params.row.id },
+        { field: 'name', headerName: 'Nombre', flex: 1, headerClassName: 'data-grid-header' },
+        { field: 'created_at', headerName: 'Fecha creación', width: 180, headerClassName: 'data-grid-header' },
+        {
+            field: 'owner',
+            headerName: 'Es Owner',
+            width: 120,
+            headerClassName: 'data-grid-header'
+        },
         {
             field: 'action',
             headerName: 'Acción',
             width: 150,
+            headerClassName: 'data-grid-header',
             sortable: false,
             renderCell: (params) => (
                 <button

@@ -58,7 +58,7 @@ export default function NotificationsAdmin() {
             field: 'attempt_created_at',
             headerName: 'Fecha y Hora',
             flex: 1,
-            valueFormatter: (params) => new Date(params.value).toLocaleString()
+            valueFormatter: (params) => new Date(params.value).toLocaleDateString()
         },
     ];
 
