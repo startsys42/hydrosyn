@@ -9,6 +9,9 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import UserAccordion from './accordions/UserAccordion';
+import NotificationsAccordion from './accordions/NotificationsAccordion';
+import SettingsAccordion from './accordions/SettingsAccordion';
 
 export default function System() {
     const navigate = useNavigate();
@@ -19,66 +22,14 @@ export default function System() {
             <h1>{texts.systems}</h1>
 
 
-            <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography>{texts.usersOptions}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        fullWidth
-                        onClick={() => navigate('/design')}
-                    >
-                        {texts.changePassword} {/* Puedes cambiar el texto */}
-                    </Button>
-                </AccordionDetails>
-            </Accordion>
+            <UserAccordion />
+            <NotificationsAccordion />
 
 
-            <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography>{texts.notifications}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        fullWidth
-                        onClick={() => navigate('/change-email')}
-                    >
-                        {texts.changeEmail}
-                    </Button>
-                </AccordionDetails>
-            </Accordion>
 
-
-            {/* Diseño */}
-            <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography>{texts.design}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Button variant="contained" fullWidth onClick={() => navigate('/design')}>
-                        {texts.changeDesign}
-                    </Button>
-                </AccordionDetails>
-            </Accordion>
 
             {/* ESP32 */}
-            <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography>{texts.esp32}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Button variant="outlined" fullWidth style={{ marginBottom: 10 }}>
-                        {texts.addESP32}
-                    </Button>
-                    <Button variant="outlined" fullWidth>
-                        {texts.removeESP32}
-                    </Button>
-                </AccordionDetails>
-            </Accordion>
+
 
             {/* Tanques */}
             <Accordion>
@@ -165,19 +116,7 @@ export default function System() {
             </Accordion>
 
             {/* Sistema */}
-            <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography>{texts.systemSettings}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Button variant="outlined" fullWidth style={{ marginBottom: 10 }}>
-                        {texts.renameSystem}
-                    </Button>
-                    <Button variant="outlined" fullWidth color="error">
-                        {texts.deleteSystem}
-                    </Button>
-                </AccordionDetails>
-            </Accordion>
+            <SettingsAccordion />
         </div>
     );
 }

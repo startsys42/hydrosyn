@@ -86,7 +86,21 @@ export default function Dashboard() {
             field: 'owner',
             headerName: 'Es Owner',
             width: 120,
-            headerClassName: 'data-grid-header'
+            headerClassName: 'data-grid-header',
+            renderCell: (params) => (
+                <Checkbox
+                    checked={params.value}
+                    disabled
+                    icon={<CheckBoxOutlineBlank />}
+                    checkedIcon={<CheckBox />}
+                    sx={{
+                        color: 'var(--color-primary)',
+                        '&.Mui-checked': {
+                            color: 'var(--color-primary)',
+                        },
+                    }}
+                />
+            )
         },
         {
             field: 'action',

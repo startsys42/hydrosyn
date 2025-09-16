@@ -55,7 +55,7 @@ const texts = {
         usersOptions: 'Opciones de usuario',
 
 
-        design: 'Diseño',
+
         changeDesign: 'Cambiar diseño',
         esp32: 'ESP32',
         addESP32: 'Añadir ESP32',
@@ -137,7 +137,7 @@ const texts = {
         regexNameSystem: 'Invalid name. Only letters, numbers, underscores, and spaces allowed, maximum 30 characters.',
         usersOptions: 'User Options',
 
-        design: 'Design',
+
         changeDesign: 'Change Design',
         esp32: 'ESP32',
         addESP32: 'Add ESP32',
