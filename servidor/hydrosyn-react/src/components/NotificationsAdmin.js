@@ -53,10 +53,10 @@ export default function NotificationsAdmin() {
 
     const columns = [
         { field: 'user_email', headerName: 'Email', flex: 1 },
-        { field: 'reason', headerName: 'Razón', flex: 1 },
+        { field: 'reason', headerName: texts.reason, flex: 1 },
         {
             field: 'attempt_created_at',
-            headerName: 'Fecha y Hora',
+            headerName: texts.date,
             flex: 1,
             valueFormatter: (params) => new Date(params.value).toLocaleDateString()
         },

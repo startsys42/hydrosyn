@@ -23,7 +23,7 @@ export default function Login() {
     const recordFailedAttempt = async (userId, reason) => {
         try {
             await supabase.from('login_attempts').insert({
-                user_id: userId,
+                user: userId,
                 reason: reason,
             });
             console.log('Intento fallido registrado:', userId, reason);

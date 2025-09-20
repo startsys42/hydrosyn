@@ -1,3 +1,4 @@
+import { ownerDocument } from "@mui/material";
 import { use } from "react";
 
 const texts = {
@@ -68,6 +69,10 @@ const texts = {
         hide: 'Ocultar',
         newSecret: 'Nuevo Secreto',
         messageChangeSecret: '¿Está seguro que desea cambiar el secreto?',
+        date: "Fecha y hora",
+        reason: "Razón",
+        owner: "Propietario",
+        enter: "Entrar al sistema",
 
 
 
@@ -163,6 +168,11 @@ const texts = {
         hide: 'Hide',
         newSecret: 'New Secret',
         messageChangeSecret: 'Are you sure you want to change the secret?',
+        date: "Date and Time",
+        reason: "Reason",
+        owner: "Owner",
+        enter: "Go to system",
+
 
 
 

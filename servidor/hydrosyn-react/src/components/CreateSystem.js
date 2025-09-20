@@ -20,14 +20,14 @@ export default function CreateSystem() {
         // Regex: solo letras, números, guiones bajos, espacios intermedios, max 30 chars
         const nameRegex = /^[A-Za-z0-9_](?:[A-Za-z0-9_ ]{1,28}[A-Za-z0-9])?$/;
         if (!nameRegex.test(systemName)) {
-            setError(texts.regexNameSystem);
+            setError("texts.regexNameSystem");
 
             setLoading(false);
             return;
         }
         const codeRegex = /^[A-Za-z0-9]{10,30}$/;
         if (!codeRegex.test(systemCode)) {
-            setError(texts.regexCodeESP);
+            setError("texts.regexCodeESP");
 
             setLoading(false);
             return;
@@ -40,7 +40,7 @@ export default function CreateSystem() {
 
             //  const userId = user.id;
             const { data: { session }, error: sessionErr } = await supabase.auth.getSession();
-            if (sessionErr || !session || !session.user) throw new Error('Usuario no autenticado');
+            if (sessionErr || !session || !session.user) throw new Error('User not authenticated');
 
             const userId = session.user.id;
             // 2️⃣ Verificar roles
@@ -59,7 +59,7 @@ export default function CreateSystem() {
                 .eq('admin', userId);
 
             if (!isInRoles && existingSystems.length >= 2) {
-                throw new Error(texts.limitSystems);
+                throw new Error("texts.limitSystems");
             }
 
 
@@ -71,7 +71,7 @@ export default function CreateSystem() {
                 .maybeSingle();
 
             if (nameConflict) {
-                throw new Error(texts.repeatNameSystem);
+                throw new Error("texts.repeatNameSystem");
             }
 
             const { data: systemsOfAdmin, error: systemsErr } = await supabase
@@ -88,13 +88,13 @@ export default function CreateSystem() {
                     .from('system_secrets')
                     .select('id')
                     .in('system', systemIds)
-                    .eq('secret', systemCode) // <-- aquí comparas con el code que pasaste en el form
+                    .eq('code', systemCode) // <-- aquí comparas con el code que pasaste en el form
                     .maybeSingle();
 
                 if (secretErr) throw secretErr;
 
                 if (secretConflict) {
-                    throw new Error(texts.repeatSecretSystem); // define este texto en tu UseTexts
+                    throw new Error("texts.repeatSecretSystem"); // define este texto en tu UseTexts
                 }
             }
 

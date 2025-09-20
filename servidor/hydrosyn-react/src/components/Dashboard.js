@@ -9,6 +9,7 @@ import { TextField, CircularProgress } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { CheckBox, CheckBoxOutlineBlank } from '@mui/icons-material';
 import Checkbox from '@mui/material/Checkbox';
+import texts from '../i18n/locales';
 
 
 export default function Dashboard() {
@@ -29,7 +30,7 @@ export default function Dashboard() {
         setLoading(true);
         try {
             const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-            if (sessionError || !session || !session.user) throw new Error('Usuario no autenticado');
+            if (sessionError || !session || !session.user) throw new Error('User not authenticated');
 
             const userId = session.user.id;
 
@@ -82,11 +83,11 @@ export default function Dashboard() {
 
     const columns = [
         // { field: 'id', headerName: 'ID', hide: true },
-        { field: 'name', headerName: 'Nombre', flex: 1, headerClassName: 'data-grid-header' },
-        { field: 'created_at', headerName: 'Fecha creación', width: 180, headerClassName: 'data-grid-header' },
+        { field: 'name', headerName: texts.systems, flex: 1, headerClassName: 'data-grid-header' },
+        { field: 'created_at', headerName: texts.date, width: 180, headerClassName: 'data-grid-header' },
         {
             field: 'owner',
-            headerName: 'Es Owner',
+            headerName: texts.owner,
             width: 120,
             headerClassName: 'data-grid-header',
             renderCell: (params) => (
@@ -95,34 +96,24 @@ export default function Dashboard() {
                     disabled
                     icon={<CheckBoxOutlineBlank />}
                     checkedIcon={<CheckBox />}
-                    sx={{
-                        color: 'var(--color-primary)',
-                        '&.Mui-checked': {
-                            color: 'var(--color-primary)',
-                        },
-                    }}
+
+
                 />
             )
         },
         {
             field: 'action',
-            headerName: 'Acción',
+            headerName: () => null,
             width: 150,
             headerClassName: 'data-grid-header',
             sortable: false,
             renderCell: (params) => (
                 <button
-                    style={{
-                        padding: '4px 8px',
-                        backgroundColor: 'var(--color-primary)',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer'
-                    }}
+
+
                     onClick={() => navigate(`/system/${params.row.id}`)}
                 >
-                    Ir al sistema
+                    {texts.enter}
                 </button>
             ),
         },
@@ -164,16 +155,7 @@ export default function Dashboard() {
                             sortModel={sortModel}
                             onSortModelChange={setSortModel}
                             disableSelectionOnClick
-                            sx={{
-                                fontFamily: 'inherit',
-                                '& .MuiDataGrid-columnHeaders': {
-                                    backgroundColor: 'var(--color-primary)',
-                                    color: 'white',
-                                },
-                                '& .MuiDataGrid-row:hover': {
-                                    backgroundColor: 'var(--color-hover)',
-                                },
-                            }}
+
                         />
                     </div>
                 </>
