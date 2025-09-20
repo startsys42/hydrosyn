@@ -41,7 +41,7 @@ export default function ChangeEmail() {
             if (updateError) throw updateError;
 
             setMessage({
-                text: 'Ok',
+                text: texts.messageEmail,
                 type: 'success',
             });
 

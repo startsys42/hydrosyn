@@ -1,5 +1,4 @@
 
-
 import { useNavigate } from 'react-router-dom';
 import useTexts from '../utils/UseTexts';
 import '../styles/theme.css';
@@ -12,24 +11,54 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import UserAccordion from './accordions/UserAccordion';
 import NotificationsAccordion from './accordions/NotificationsAccordion';
 import SettingsAccordion from './accordions/SettingsAccordion';
+import ESP32Accordion from './accordions/ESP32Accordion';
+import { useParams } from 'react-router-dom';
+import { useOwnerStatus } from '../utils/OwnerContext';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../utils/supabaseClient';
+
 
 export default function System() {
     const navigate = useNavigate();
     const texts = useTexts();
+    const { id } = useParams();
+    const [system, setSystem] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const { isOwner, loading: ownerLoading } = useOwnerStatus();
 
+    useEffect(() => {
+        const fetchSystem = async () => {
+            setLoading(true);
+            const { data, error } = await supabase
+                .from('systems')      // nombre de tu tabla
+                .select('name')       // columna que quieres
+                .eq('id', id)         // filtrar por id
+                .single();            // devuelve un solo objeto
+
+            if (error) {
+                setError(error.message);
+            } else {
+                setSystem(data);
+            }
+            setLoading(false);
+        };
+
+        fetchSystem();
+    }, [id]);
     return (
         <div className='div-main-login'>
-            <h1>{texts.systems}</h1>
+            <h1>{texts.systems}: {system.name}</h1>
 
 
-            <UserAccordion />
-            <NotificationsAccordion />
+            {isOwner ? (<UserAccordion />) : null}
+            {isOwner ? (<NotificationsAccordion />) : null}
 
 
 
 
             {/* ESP32 */}
-
+            <ESP32Accordion />
 
             {/* Tanques */}
             <Accordion>
@@ -116,7 +145,7 @@ export default function System() {
             </Accordion>
 
             {/* Sistema */}
-            <SettingsAccordion />
+            {isOwner ? (<SettingsAccordion systemId={id} />) : null}
         </div>
     );
 }

@@ -19,47 +19,23 @@ export default function RecoverPassword() {
         setMessage('');
 
         if (!email) {
-            setError(t?.emailRequired || 'Por favor ingresa tu correo electrónico');
+            setError(t?.emailRequired);
             setLoading(false);
             return;
         }
 
         try {
-            // 1. Verificar si el usuario existe y si está activo en la tabla 'profile'
-            // Es más eficiente consultar solo 'profile' si contiene el email
-            // y el estado 'is_active'.
-            const { data: profile, error: profileError } = await supabase
-                .from('user_profiles_info')
-                .select('user_id, is_active')
-                .eq('email', email) // Asumiendo que tu tabla 'profile' tiene la columna 'email'
-                .maybeSingle();
+            const { data, error: edgeError } = await supabase.functions.invoke('insertAttempts', {
+                method: 'POST',
+                body: JSON.stringify({ email }),
+            });
 
-            if (profileError) {
-                console.error('Error consultando user_profiles_info:', profileError);
-                throw profileError;
-            }
-
-            // 3️⃣ Registrar intento si existe el usuario pero está inactivo
-            if (profile && !profile.is_active) {
-                await supabase.from('login_attempts').insert({
-                    user: profile.user_id,
-                    reason: 'Intento de recuperar contraseña con usuario inactivo'
-                });
-            }
-
-            // 4️⃣ Enviar correo de recuperación solo si el usuario está activo
-            if (profile?.is_active) {
-                const { error: recoveryError } = await supabase.auth.resetPasswordForEmail(email, {
-                    redirectTo: 'https://192.168.1.136/change-password-recovery',
-                });
-
-                if (recoveryError) throw recoveryError;
-            }
+            if (edgeError) throw edgeError;
 
             // 5️⃣ Mensaje genérico (si existe o no el usuario)
-            setMessage('Si tu cuenta existe, recibirás un enlace de recuperación en tu correo.');
+            setMessage('If your account exists, you will receive a recovery link in your email.');
         } catch (err) {
-            console.error('Error durante la recuperación:', err);
+
             setError(err.message);
         } finally {
             setLoading(false);
@@ -68,18 +44,18 @@ export default function RecoverPassword() {
 
     return (
         <div className="div-main">
-            <h1>{t?.recoverPassword || 'Recuperar contraseña'}</h1>
+            <h1>{t?.recoverPassword}</h1>
 
 
 
             <form onSubmit={handleRecover} className="form-container">
-                <label htmlFor="email">{t?.email || 'Correo electrónico'}</label>
+                <label htmlFor="email">{t?.email}</label>
                 <input
 
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder={t?.email || 'Correo electrónico'}
+                    placeholder={t?.email}
                     required
                 />
                 <button type="submit" disabled={loading}>
@@ -89,7 +65,7 @@ export default function RecoverPassword() {
             {message && <div className="success-message" style={{ marginTop: '10px' }}>{t?.messageRecover}</div>}
             {error && <div className="error-message" style={{ marginTop: '10px' }}>Error</div>}
             <button onClick={() => navigate('/')} className="button-width">
-                {t?.backToLogin || 'Volver al login'}
+                {t?.backToLogin}
             </button>
         </div>
     );

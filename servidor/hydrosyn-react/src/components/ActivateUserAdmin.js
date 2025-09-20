@@ -2,75 +2,144 @@ import '../styles/theme.css';
 import React, { useEffect, useState } from 'react'
 import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
+import { DataGrid } from '@mui/x-data-grid';
+import { Checkbox, Button, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material';
 
 const ActivateUserAdmin = () => {
-    const [users, setUsers] = useState([])
-    const [loading, setLoading] = useState(true)
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
     const t = useTexts();
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [deleteOpen, setDeleteOpen] = useState(false);
+    const [currentUser, setCurrentUser] = useState(null);
+    const [toggleValue, setToggleValue] = useState(false);
 
-    useEffect(() => {
-        fetchUsers()
-    }, [])
+    useEffect(() => { fetchUsers() }, []);
 
     const fetchUsers = async () => {
-        const { data, error } = await supabase
-            .from('user_profiles_info') // la VISTA
-            .select('*')
+        const { data, error } = await supabase.rpc('get_admin_users_with_emails');
+        if (error) console.error(error);
+        else setUsers(data || []);
+        setLoading(false);
+    };
 
-        if (error) console.error('Error al cargar usuarios:', error)
-        else setUsers(data)
+    const handleToggleClick = (user) => {
+        setCurrentUser(user);
+        setToggleValue(user.is_active);
+        setConfirmOpen(true);
+    };
 
-        setLoading(false)
-    }
-
-    // ✅ Actualizar is_active directamente en la tabla `profile`
-    const toggleActive = async (userId, currentValue) => {
+    const handleToggleConfirm = async () => {
+        if (!currentUser) return;
         const { error } = await supabase
-            .from('profile') // tabla real
-            .update({ is_active: !currentValue })
-            .eq('user', userId)
+            .from('admin_users')
+            .update({ is_active: !toggleValue })
+            .eq('id', currentUser.id);
 
-        if (error) {
-            console.error('Error al actualizar is_active:', error)
-        } else {
-            // Actualiza localmente el estado para reflejar el cambio sin recargar
+        if (error) console.error(error);
+        else {
             setUsers((prev) =>
-                prev.map((user) =>
-                    user.user_id === userId
-                        ? { ...user, is_active: !currentValue }
-                        : user
-                )
+                prev.map((u) => u.id === currentUser.id ? { ...u, is_active: !toggleValue } : u)
+            );
+        }
+
+        setConfirmOpen(false);
+        setCurrentUser(null);
+    };
+
+    const handleDeleteClick = (user) => {
+        setCurrentUser(user);
+        setDeleteOpen(true);
+    };
+
+    const handleDeleteConfirm = async () => {
+        if (!currentUser) return;
+        const { error } = await supabase
+            .from('admin_users')
+            .delete()
+            .eq('id', currentUser.id);
+
+        if (error) console.error(error);
+        else setUsers((prev) => prev.filter((u) => u.id !== currentUser.id));
+
+        setDeleteOpen(false);
+        setCurrentUser(null);
+    };
+
+    const columns = [
+        { field: 'email', headerName: t.email, width: 250 },
+        {
+            field: 'is_active',
+            headerName: t.active,
+            width: 150,
+            renderCell: (params) => (
+                <Checkbox
+                    checked={params.value}
+                    onChange={() => handleToggleClick(params.row)}
+                />
+            )
+        },
+        {
+            field: 'actions',
+            headerName: t.actions,
+            width: 150,
+            renderCell: (params) => (
+                <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => handleDeleteClick(params.row)}
+                >
+                    {t.delete}
+                </Button>
             )
         }
-    }
+    ];
 
-    if (loading) return <p>Cargando usuarios...</p>
+    if (loading) return <Typography>Cargando usuarios...</Typography>;
 
     return (
         <div className='div-main-login'>
             <h1>{t.users}</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Email</th>
-                        <th>{t.active}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map((user) => (
-                        <tr key={user.user_id}>
-                            <td>{user.email}</td>
-                            <td>
-                                <input
-                                    type="checkbox"
-                                    checked={user.is_active}
-                                    onChange={() => toggleActive(user.user_id, user.is_active)}
-                                />
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+
+
+            <DataGrid
+                rows={users}
+                columns={columns}
+                autoHeight
+                pageSize={5}
+                rowsPerPageOptions={[5, 10]}
+                disableSelectionOnClick
+                getRowId={(row) => row.id}
+            />
+
+
+            {/* Confirmación para toggle */}
+            <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+                <DialogTitle>Confirmar acción</DialogTitle>
+                <DialogContent>
+                    <Typography>
+                        ¿Está seguro que desea {toggleValue ? 'desactivar' : 'activar'} al usuario {currentUser?.email}?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setConfirmOpen(false)}>No</Button>
+                    <Button onClick={handleToggleConfirm} variant="contained">Sí</Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Confirmación para borrar */}
+            <Dialog open={deleteOpen} onClose={() => setDeleteOpen(false)}>
+                <DialogTitle>Confirmar eliminación</DialogTitle>
+                <DialogContent>
+                    <Typography>
+                        ¿Está seguro que desea eliminar al usuario {currentUser?.email}?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setDeleteOpen(false)}>No</Button>
+                    <Button onClick={handleDeleteConfirm} variant="contained" color="error">Sí</Button>
+                </DialogActions>
+            </Dialog>
         </div>
     )
 }

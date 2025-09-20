@@ -26,7 +26,7 @@ export default function NotificationsAdmin() {
                 setLoading(true);
                 // Llama a la función de base de datos que creaste
                 const { data: { session } } = await supabase.auth.getSession();
-                if (!session || !session.user) throw new Error('Usuario no autenticado');
+                if (!session || !session.user) throw new Error('User not authenticated');
                 const userId = session.user.id;
 
                 // Llamar a la RPC pasando el userId

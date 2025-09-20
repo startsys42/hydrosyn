@@ -19,14 +19,9 @@ export default function UserAccordion() {
                 <Typography>{texts.usersOptions}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    onClick={() => navigate('/design')}
-                >
-                    {texts.changePassword}
-                </Button>
+                <h2>{texts.userManagement}</h2>
+                <h2>{texts.createUser}</h2>
+                <h2>{texts.deleteUser}</h2>
             </AccordionDetails>
         </Accordion>
     );

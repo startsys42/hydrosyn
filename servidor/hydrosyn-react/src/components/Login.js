@@ -22,7 +22,7 @@ export default function Login() {
 
     const recordFailedAttempt = async (userId, reason) => {
         try {
-            await supabase.rpc('insert_attempts', {
+            await supabase.from('login_attempts').insert({
                 user_id: userId,
                 reason: reason,
             });
@@ -71,9 +71,9 @@ export default function Login() {
                 .maybeSingle();
 
             if (!(adminActive?.is_active) && !(profile?.is_active) && !(roles?.user)) {
-                await recordFailedAttempt(user.id, 'Intento de login con usuario desactivado');
+                await recordFailedAttempt(user.id, 'Login attempt with a deactivated user');
                 await supabase.auth.signOut();
-                throw new Error("User is inactive.");
+                throw new Error(t.userInactive);
             } else {
                 navigate('/dashboard');
             }

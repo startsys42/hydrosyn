@@ -23,11 +23,7 @@ import ChangePasswordRecovery from './components/ChangePasswordRecovery';
 import CreateUserAdmin from './components/CreateUserAdmin';
 import ActivateUserAdmin from './components/ActivateUserAdmin';
 import DeleteUserAdmin from './components/DeleteUserAdmin';
-import CreateUserSystems from './components/CreateUserSystems';
-import ActivateUserSystems from './components/ActivateUserSystems';
-import DeleteUserSystems from './components/DeleteUserSystems';
-import UsersSystems from './components/UsersSystems';
-import NotificationsSystem from './components/NotificationsSystem';
+
 import { useParams } from 'react-router-dom';
 import { OwnerSystemProvider } from './utils/OwnerSystemContext';
 import System from './components/System';

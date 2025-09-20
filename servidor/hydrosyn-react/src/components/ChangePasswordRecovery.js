@@ -22,11 +22,13 @@ export default function ChangePasswordRecovery() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        /*
         if (!access_token) {
-            setError('Token inválido o expirado.');
+            setError('Invalid token.');
             setLoading(false);
             return;
         }
+        */
         // Validaciones
         if ((newPassword.trim() !== confirmPassword.trim())) {
             setMessage({ text: texts.noEquals, type: 'error' });

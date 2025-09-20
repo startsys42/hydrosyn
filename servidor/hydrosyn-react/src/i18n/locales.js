@@ -1,3 +1,5 @@
+import { use } from "react";
+
 const texts = {
     es: {
         language: 'Idioma',
@@ -33,6 +35,7 @@ const texts = {
         logout: 'Cerrar sesión',
         createUser: 'Crear usuario',
         activateUser: 'Activar usuario',
+        messageCreateUser: 'Usuario creado y correo enviado',
         messageRecover: 'Hemos enviado un enlace de recuperación a tu correo electrónico',
         sendRecoveryLink: 'Enviar enlace de recuperación',
         actualPassword: 'Contraseña actual',
@@ -42,10 +45,10 @@ const texts = {
         changing: 'Cambiando...',
         creating: 'Creando...',
         active: 'Activo',
-        messageEMail: '¡Los correos electrónicos no coinciden',
+        messageEmail: '¡Los correos electrónicos no coinciden',
         messagePassword: '¡Contraseña cambiada con éxito!',
         noEquals: 'No coinciden',
-        systems: 'Sistemas',
+        systems: 'Sistema',
         newSystem: 'Nuevo sistema',
         deleteUser: 'Eliminar usuario',
         nameSystem: 'Nombre del sistema',
@@ -53,10 +56,21 @@ const texts = {
         repeatNameSystem: 'Ya existe un sistema con ese nombre.',
         regexNameSystem: 'Nombre inválido. Solo letras, números, guiones bajos y espacios permitidos, máximo 30 caracteres.',
         usersOptions: 'Opciones de usuario',
+        codeESP: 'Código ESP32',
+        regexCodeESP: 'Código inválido. Solo letras y números permitidos, entre 10 y 30 caracteres.',
+        repeatSecretSystem: 'Ya existe un sistema con ese código.',
+        userInactive: "Usuario inactivo.",
+        deleteSystem: 'Eliminar Sistema',
+        messageDeleteSystem: '¿Está seguro que desea borrar este sistema? Esta acción no se puede deshacer.',
+        renameSystem: 'Renombrar Sistema',
+        currentSecret: 'Secreto actual',
+        show: 'Mostrar',
+        hide: 'Ocultar',
+        newSecret: 'Nuevo Secreto',
+        messageChangeSecret: '¿Está seguro que desea cambiar el secreto?',
 
 
 
-        changeDesign: 'Cambiar diseño',
         esp32: 'ESP32',
         addESP32: 'Añadir ESP32',
         removeESP32: 'Eliminar ESP32',
@@ -77,8 +91,8 @@ const texts = {
         manualRecords: 'Registros manuales',
         viewManualRecords: 'Ver Registros Manuales',
         systemSettings: 'Configuración del sistema',
-        renameSystem: 'Renombrar Sistema',
-        deleteSystem: 'Eliminar Sistema',
+
+
 
     },
     en: {
@@ -116,6 +130,7 @@ const texts = {
         logout: 'Logout',
         createUser: 'Create User',
         activateUser: 'Activate User',
+        messageCreateUser: 'User created and email sent',
         messageRecover: 'We have sent a recovery link to your email address',
         sendRecoveryLink: 'Send Recovery Link',
         actualPassword: 'Current Password',
@@ -125,10 +140,10 @@ const texts = {
         changing: 'Changing...',
         creating: 'Creating...',
         active: 'Active',
-        messageEMail: 'Emails changed successfully',
+        messageEmail: 'Emails changed successfully',
         messagePassword: 'Password changed successfully',
         noEquals: 'Do not match',
-        systems: 'Systems',
+        systems: 'System',
         newSystem: 'New System',
         deleteUser: 'Delete User',
         nameSystem: 'System Name',
@@ -136,9 +151,21 @@ const texts = {
         repeatNameSystem: 'A system with that name already exists.',
         regexNameSystem: 'Invalid name. Only letters, numbers, underscores, and spaces allowed, maximum 30 characters.',
         usersOptions: 'User Options',
+        codeESP: 'ESP32 Code',
+        regexCodeESP: 'Invalid code. Only letters and numbers allowed, between 10 and 30 characters.',
+        repeatSecretSystem: 'A system with that code already exists.',
+        userInactive: "User is inactive.",
+        deleteSystem: 'Delete System',
+        messageDeleteSystem: 'Are you sure you want to delete this system? This action cannot be undone.',
+        renameSystem: 'Rename System',
+        currentSecret: 'Current Secret',
+        show: 'Show',
+        hide: 'Hide',
+        newSecret: 'New Secret',
+        messageChangeSecret: 'Are you sure you want to change the secret?',
 
 
-        changeDesign: 'Change Design',
+
         esp32: 'ESP32',
         addESP32: 'Add ESP32',
         removeESP32: 'Remove ESP32',
@@ -159,8 +186,8 @@ const texts = {
         manualRecords: 'Manual Records',
         viewManualRecords: 'View Manual Records',
         systemSettings: 'System Settings',
-        renameSystem: 'Rename System',
-        deleteSystem: 'Delete System',
+
+
 
 
 

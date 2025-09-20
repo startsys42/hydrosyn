@@ -8,6 +8,7 @@ export default function CreateSystem() {
     const navigate = useNavigate();
     const texts = useTexts();
     const [systemName, setSystemName] = useState('');
+    const [systemCode, setSystemCode] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -20,6 +21,13 @@ export default function CreateSystem() {
         const nameRegex = /^[A-Za-z0-9_](?:[A-Za-z0-9_ ]{1,28}[A-Za-z0-9])?$/;
         if (!nameRegex.test(systemName)) {
             setError(texts.regexNameSystem);
+
+            setLoading(false);
+            return;
+        }
+        const codeRegex = /^[A-Za-z0-9]{10,30}$/;
+        if (!codeRegex.test(systemCode)) {
+            setError(texts.regexCodeESP);
 
             setLoading(false);
             return;
@@ -54,7 +62,7 @@ export default function CreateSystem() {
                 throw new Error(texts.limitSystems);
             }
 
-            // 4️⃣ Verificar duplicados
+
             const { data: nameConflict } = await supabase
                 .from('systems')
                 .select('id')
@@ -66,22 +74,46 @@ export default function CreateSystem() {
                 throw new Error(texts.repeatNameSystem);
             }
 
-            // 5️⃣ Insertar nuevo sistema
-            const { data: insertedSystem, error: insertErr } = await supabase
+            const { data: systemsOfAdmin, error: systemsErr } = await supabase
                 .from('systems')
-                .insert({ name: systemName, admin: userId })
-                .select('id') // importante para obtener el id insertado
-                .single();
+                .select('id')
+                .eq('admin', userId);
 
-            if (insertErr) throw insertErr;
+            if (systemsErr) throw systemsErr;
 
+            const systemIds = systemsOfAdmin.map(s => s.id);
+
+            if (systemIds.length > 0) {
+                const { data: secretConflict, error: secretErr } = await supabase
+                    .from('system_secrets')
+                    .select('id')
+                    .in('system', systemIds)
+                    .eq('secret', systemCode) // <-- aquí comparas con el code que pasaste en el form
+                    .maybeSingle();
+
+                if (secretErr) throw secretErr;
+
+                if (secretConflict) {
+                    throw new Error(texts.repeatSecretSystem); // define este texto en tu UseTexts
+                }
+            }
+
+            // 5️⃣ Insertar nuevo sistema
+            const { data, error } = await supabase
+                .rpc('insert_system_with_secret', {
+                    system_name: systemName,
+                    admin_id: userId,
+                    secret_value: systemCode
+                });
+
+            if (error) throw error;
             // ✅ Éxito: limpiar campo y redirigir
             setSystemName('');
+            setSystemCode('');
             setError('');
             // ✅ Redirigir si existe ID
-            if (insertedSystem?.id) {
-                navigate(`/system/${insertedSystem.id}`);
-            }
+            const insertedSystemId = data[0]?.id;
+            if (insertedSystemId) navigate(`/system/${insertedSystemId}`);
 
         } catch (err) {
             setError(err.message || 'Error');
@@ -103,6 +135,16 @@ export default function CreateSystem() {
                     placeholder={texts.nameSystem}
                     required
                     minLength={3}
+                    maxLength={30}
+                />
+                <label>{texts.codeESP}</label>
+                <input
+                    type="text"
+                    value={systemCode}
+                    onChange={(e) => setSystemCode(e.target.value)}
+                    placeholder={texts.codeESP}
+                    required
+                    minLength={10}
                     maxLength={30}
                 />
 

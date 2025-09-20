@@ -40,7 +40,7 @@ export default function CreateUserAdmin() {
                 throw new Error(data.error);
             }
 
-            setMensaje('Usuario creado y correo enviado.');
+            setMensaje(texts.messageCreateUser);
             setEmail(''); // Limpiar input
         } catch (error) {
             setError(error.message);
