@@ -83,12 +83,12 @@ export default function Dashboard() {
 
     const columns = [
         // { field: 'id', headerName: 'ID', hide: true },
-        { field: 'name', headerName: texts.systems, flex: 1, headerClassName: 'data-grid-header' },
-        { field: 'created_at', headerName: texts.date, width: 180, headerClassName: 'data-grid-header' },
+        { field: 'name', headerName: texts.systems, flex: 1, minWidth: 150, headerClassName: 'data-grid-header' },
+        { field: 'created_at', headerName: texts.date, flex: 1, minWidth: 120, headerClassName: 'data-grid-header' },
         {
             field: 'owner',
             headerName: texts.owner,
-            width: 120,
+            flex: 1, minWidth: 80,
             headerClassName: 'data-grid-header',
             renderCell: (params) => (
                 <Checkbox
@@ -104,7 +104,7 @@ export default function Dashboard() {
         {
             field: 'action',
             headerName: () => null,
-            width: 150,
+            flex: 1, minWidth: 100,
             headerClassName: 'data-grid-header',
             sortable: false,
             renderCell: (params) => (
@@ -128,7 +128,7 @@ export default function Dashboard() {
 
                     <h1>{t.welcome}</h1>
                     <h2>{t.systems}</h2>
-                    {(isAdmin || isOwner) && (
+                    {(isOwner) && (
                         <>
                             <button
                                 className='button-right'

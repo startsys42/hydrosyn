@@ -3,7 +3,7 @@ create or replace function insert_system_with_secret(
   admin_id uuid,
   secret_value text
 )
-returns table(id uuid) as $$
+returns table(system_id uuid) as $$
 declare
   new_system_id uuid;
 begin
@@ -21,7 +21,7 @@ IF EXISTS (
     from systems s
     join system_secrets ss on ss.system = s.id
     where s.admin = admin_id
-      and ss.secret = secret_value
+      and ss.code= secret_value
   ) then
     raise exception 'The secret already exists for another system of this admin';
   end if;
@@ -32,10 +32,10 @@ IF EXISTS (
   returning id into new_system_id;
 
   -- Insertar el secret asociado
-  insert into system_secrets(system, secret)
+  insert into system_secrets(system, code)
   values (new_system_id, secret_value);
 
   -- Devolver el id del system
-  return query select new_system_id as id;
+  return query select new_system_id::uuid;
 end;
 $$ language plpgsql;

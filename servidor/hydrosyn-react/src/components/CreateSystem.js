@@ -20,14 +20,14 @@ export default function CreateSystem() {
         // Regex: solo letras, números, guiones bajos, espacios intermedios, max 30 chars
         const nameRegex = /^[A-Za-z0-9_](?:[A-Za-z0-9_ ]{1,28}[A-Za-z0-9])?$/;
         if (!nameRegex.test(systemName)) {
-            setError("texts.regexNameSystem");
+            setError("regexNameSystem");
 
             setLoading(false);
             return;
         }
         const codeRegex = /^[A-Za-z0-9]{10,30}$/;
         if (!codeRegex.test(systemCode)) {
-            setError("texts.regexCodeESP");
+            setError("regexCodeESP");
 
             setLoading(false);
             return;
@@ -59,7 +59,7 @@ export default function CreateSystem() {
                 .eq('admin', userId);
 
             if (!isInRoles && existingSystems.length >= 2) {
-                throw new Error("texts.limitSystems");
+                throw new Error("limitSystems");
             }
 
 
@@ -71,7 +71,7 @@ export default function CreateSystem() {
                 .maybeSingle();
 
             if (nameConflict) {
-                throw new Error("texts.repeatNameSystem");
+                throw new Error("repeatNameSystem");
             }
 
             const { data: systemsOfAdmin, error: systemsErr } = await supabase
@@ -94,7 +94,7 @@ export default function CreateSystem() {
                 if (secretErr) throw secretErr;
 
                 if (secretConflict) {
-                    throw new Error("texts.repeatSecretSystem"); // define este texto en tu UseTexts
+                    throw new Error("repeatSecretSystem"); // define este texto en tu UseTexts
                 }
             }
 
@@ -153,7 +153,7 @@ export default function CreateSystem() {
                 </button>
             </form>
 
-            {error && <div className="error-message" style={{ marginTop: '10px' }}>{error}</div>}
+            {error && <div className="error-message" style={{ marginTop: '10px' }}>{texts[error]}</div>}
         </div>
     );
 }
