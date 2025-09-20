@@ -7,20 +7,20 @@ import useTexts from '../utils/UseTexts';
 export default function CreateUserAdmin() {
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
-    const [mensaje, setMensaje] = useState('');
+    const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const texts = useTexts();
 
     async function crearUsuario(email) {
         setLoading(true);
-        setMensaje('');
+        setMessage('');
         setError('');
 
 
         try {
             const { data: { session }, error: sessionError } = await supabase.auth.getSession();
             if (sessionError || !session) {
-                throw new Error('No se encontró una sesión de administrador activa.');
+                throw new Error('Not authenticated.');
             }
             const accessToken = session.access_token;
             const { data, error: functionError } = await supabase.functions.invoke('createUserAdmin', {
@@ -40,7 +40,7 @@ export default function CreateUserAdmin() {
                 throw new Error(data.error);
             }
 
-            setMensaje(texts.messageCreateUser);
+            setMessage("messageCreateUser");
             setEmail(''); // Limpiar input
         } catch (error) {
             setError(error.message);
@@ -73,8 +73,8 @@ export default function CreateUserAdmin() {
                     {loading ? texts.creating : texts.createUser}
                 </button>
             </form>
-            {mensaje && <p style={{ color: 'green' }}>{mensaje}</p>}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {message && <p style={{ color: 'green' }}>{texts[message]}</p>}
+            {error && <p style={{ color: 'red' }}>{texts[error]}</p>}
         </div>
     );
 }

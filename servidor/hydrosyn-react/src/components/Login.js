@@ -118,7 +118,7 @@ export default function Login() {
                 </button>
             </form>
 
-            {error && <div className="error-message" style={{ marginTop: '10px' }}>Error</div>}
+            {error && <p style={{ color: 'red' }}>Error</p>}
             <button
                 className='button-width'
                 onClick={() => navigate('/recover-password')}

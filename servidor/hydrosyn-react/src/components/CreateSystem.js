@@ -153,7 +153,7 @@ export default function CreateSystem() {
                 </button>
             </form>
 
-            {error && <div className="error-message" style={{ marginTop: '10px' }}>{texts[error]}</div>}
+            {error && <p style={{ color: 'red' }}>{texts[error]}</p>}
         </div>
     );
 }

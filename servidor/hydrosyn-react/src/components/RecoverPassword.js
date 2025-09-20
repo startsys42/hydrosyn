@@ -63,7 +63,7 @@ export default function RecoverPassword() {
                 </button>
             </form>
             {message && <div className="success-message" style={{ marginTop: '10px' }}>{t?.messageRecover}</div>}
-            {error && <div className="error-message" style={{ marginTop: '10px' }}>Error</div>}
+            {error && <p style={{ color: 'red' }}>Error</p>}
             <button onClick={() => navigate('/')} className="button-width">
                 {t?.backToLogin}
             </button>
