@@ -203,7 +203,7 @@ BEGIN
   FROM public.systems s
   WHERE s.id = NEW.system;
 
-  -- Verificar si el admin está en roles
+
   SELECT EXISTS (
     SELECT 1 FROM public.roles r WHERE r.user = admin_user
   ) INTO has_role;
@@ -216,7 +216,7 @@ BEGIN
     WHERE e.system = NEW.system
     INTO existing_count;
 
-    -- Si ya tiene 2 o más, bloquear
+
     IF existing_count >= 2 THEN
       RAISE EXCEPTION 'This system cannot have more than 2 ESP32 ';
     END IF;
@@ -287,12 +287,12 @@ RETURNS TRIGGER AS $$
 DECLARE
     admin_id uuid;
 BEGIN
-    -- Obtener el admin del sistema que se está insertando
+ 
     SELECT s.admin INTO admin_id
     FROM public.systems s
     WHERE s.id = NEW.system;
 
-    -- Verificar si existe otro secret con el mismo code para este admin
+
     IF EXISTS (
         SELECT 1
         FROM public.system_secrets ss
@@ -321,7 +321,7 @@ RETURNS TABLE(id uuid) AS $$
 DECLARE
   new_system_id uuid;
 BEGIN
-  -- 1️⃣ Validar que no exista un system con el mismo nombre para este admin
+
   IF EXISTS (
     SELECT 1
     FROM systems
@@ -331,7 +331,7 @@ BEGIN
     RAISE EXCEPTION 'A system with this name already exists for this admin';
   END IF;
 
-  -- 2️⃣ Validar que no exista secret duplicado para sistemas de este admin
+
   IF EXISTS (
     SELECT 1
     FROM systems s
@@ -342,16 +342,16 @@ BEGIN
     RAISE EXCEPTION 'The secret already exists for another system of this admin';
   END IF;
 
-  -- 3️⃣ Insertar el system
+
   INSERT INTO systems(name, admin)
   VALUES (system_name, admin_id)
   RETURNING id INTO new_system_id;
 
-  -- 4️⃣ Insertar el secret asociado
+ 
   INSERT INTO system_secrets(system, secret)
   VALUES (new_system_id, secret_value);
 
-  -- 5️⃣ Devolver el id del system
+
   RETURN QUERY SELECT new_system_id AS id;
 END;
 $$ LANGUAGE plpgsql;
@@ -365,17 +365,17 @@ DECLARE
   has_role BOOLEAN;
   existing_count INT;
 BEGIN
-  -- Obtener el admin del sistema
+
   SELECT s.admin INTO admin_user
   FROM public.systems s
   WHERE s.id = NEW.system;
 
-  -- Verificar si está en roles
+ 
   SELECT EXISTS (
     SELECT 1 FROM public.roles r WHERE r.user = admin_user
   ) INTO has_role;
 
-  -- Si no está en roles, aplicar límite
+
   IF NOT has_role THEN
     SELECT COUNT(*) INTO existing_count
     FROM public.tanks t
@@ -421,7 +421,7 @@ EXECUTE FUNCTION prevent_duplicate_tank_name_insert();
 CREATE OR REPLACE FUNCTION prevent_duplicate_tank_name_update()
 RETURNS TRIGGER AS $$
 BEGIN
-  -- Solo si cambia el nombre
+
   IF NEW.name IS DISTINCT FROM OLD.name THEN
     IF EXISTS (
       SELECT 1

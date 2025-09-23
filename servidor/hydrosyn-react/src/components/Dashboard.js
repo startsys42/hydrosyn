@@ -153,7 +153,7 @@ export default function Dashboard() {
                     )}
 
                     <div style={{ height: 500, width: '100%' }}>
-                        <DataGrid
+                        <DataGrid className='datagrid'
                             rows={rows}
                             columns={columns}
                             pagination

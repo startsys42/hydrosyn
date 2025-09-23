@@ -58,7 +58,12 @@ export default function NotificationsAdmin() {
             field: 'attempt_created_at',
             headerName: texts.date,
             flex: 1,
-            valueFormatter: (params) => new Date(params.value).toLocaleDateString()
+            /* valueFormatter: (params) => new Date(params.value).toLocaleDateString() */
+            valueFormatter: (params) => {
+                if (!params?.row?.attempt_created_at) return '';
+                const date = new Date(params.row.attempt_created_at);
+                return isNaN(date) ? '' : date.toLocaleDateString();
+            }
         },
     ];
 
@@ -69,7 +74,7 @@ export default function NotificationsAdmin() {
 
 
             <div style={{ height: 500, width: '100%' }}>
-                <DataGrid
+                <DataGrid className="datagrid"
                     rows={attempts.map((a, index) => ({ id: index, ...a }))}
                     columns={columns}
                     loading={loading}

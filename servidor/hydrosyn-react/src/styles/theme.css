@@ -228,3 +228,7 @@ label {
     border: 3px solid var(--button-border);
     box-sizing: border-box;
 }
+
+.datagrid {
+  color: black !important;
+}
