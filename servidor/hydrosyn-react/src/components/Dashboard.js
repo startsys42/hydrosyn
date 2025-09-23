@@ -37,8 +37,18 @@ export default function Dashboard() {
             // Sistemas donde es owner/admin
             const { data: ownerData, error: ownerErr } = await supabase
                 .from('systems')
-                .select('id, name, created_at')
-                .eq('admin', userId);
+                .select(`
+    id,
+    name,
+    created_at,
+    admin_users!inner (
+      user,
+      is_active
+    )
+  `)
+                .eq('admin', userId)
+                .eq('admin_users.is_active', true);
+
             if (ownerErr) throw ownerErr;
 
             const ownerSystems = (ownerData || []).map(s => ({
@@ -89,6 +99,7 @@ export default function Dashboard() {
             field: 'owner',
             headerName: t.owner,
             flex: 1, minWidth: 80,
+            filterable: false,
             headerClassName: 'data-grid-header',
             renderCell: (params) => (
                 <Checkbox
@@ -105,6 +116,7 @@ export default function Dashboard() {
             field: 'action',
             headerName: () => null,
             flex: 1, minWidth: 100,
+            filterable: false,
             headerClassName: 'data-grid-header',
             sortable: false,
             renderCell: (params) => (

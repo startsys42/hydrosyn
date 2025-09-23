@@ -36,7 +36,8 @@ CREATE TABLE public.systems_users (
   system bigint NOT NULL,
   user_id uuid NOT NULL,
   is_active boolean NOT NULL DEFAULT true,
-  associated_at timestamp with time zone NOT NULL,
+  reason text NOT NULL,
+  associated_at timestamp with time zone NOT NULL DEFAULT now(),
   CONSTRAINT systems_users_pkey PRIMARY KEY (id),
   CONSTRAINT systems_users_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
   ON UPDATE CASCADE,
