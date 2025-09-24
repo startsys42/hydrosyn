@@ -53,7 +53,10 @@ export default function NotificationsAdmin() {
         if (!supabaseTimestamp) return '';
 
         try {
-            const date = new Date(supabaseTimestamp);
+            const formattedTimestamp = supabaseTimestamp.replace(' ', 'T').replace('+00', '+00:00');
+
+            const date = new Date(formattedTimestamp);
+
 
             if (isNaN(date.getTime())) {
                 return 'Date invalid';

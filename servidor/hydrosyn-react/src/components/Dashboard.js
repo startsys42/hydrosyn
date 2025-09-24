@@ -119,6 +119,7 @@ export default function Dashboard() {
             filterable: false,
             headerClassName: 'data-grid-header',
             sortable: false,
+            disableColumnMenu: true,
             renderCell: (params) => (
                 <button
 

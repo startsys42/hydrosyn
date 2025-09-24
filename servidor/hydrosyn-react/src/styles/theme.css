@@ -47,12 +47,21 @@
   --datagrid-footer-bg: #2d2d2d;
 }
 
-body, html, #root {
+html {
+    height: 100%;
+    margin: 0;
+    padding: 0;    
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: sans-serif;
+}
+
+body, #root {
     height: 100%;
     margin: 0;
     padding: 0;
     background-image: url('../assets/hydrosyn.png');
-     background-repeat: no-repeat;      
+      background-repeat: repeat-y;   
   background-size: cover;           
   background-position: center;     
     background-color: var(--bg-color);
@@ -263,6 +272,10 @@ label {
   color: var(--datagrid-text) !important;
 }
 
+.datagrid .MuiDataGrid-columnHeaderTitle {
+    color: var(--datagrid-text) !important;
+    font-weight: bold !important;
+}
 /* Celdas */
 .datagrid .MuiDataGrid-cell {
   color: var(--datagrid-text) !important;
