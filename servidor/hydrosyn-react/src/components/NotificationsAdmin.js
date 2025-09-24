@@ -3,9 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
 import { DataGrid } from '@mui/x-data-grid';
-import { TextField, MenuItem, Box } from '@mui/material';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+
 
 export default function NotificationsAdmin() {
 
@@ -49,30 +47,7 @@ export default function NotificationsAdmin() {
         fetchLoginAttempts();
     }, []);
 
-    const formatToLocalTime = (supabaseTimestamp) => {
-        if (!supabaseTimestamp) return '--';
 
-        try {
-            const date = new Date(supabaseTimestamp);
-
-
-            if (isNaN(date.getTime())) {
-                return 'Date invalid';
-            }
-
-            // Usar la configuración regional del navegador (sin forzar es-ES)
-            return date.toLocaleString(undefined, {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        } catch (error) {
-            console.error('Error formateando fecha:', error);
-            return 'Error date';
-        }
-    };
 
     const columns = [
         { field: 'user_email', headerName: 'Email', flex: 1, minWidth: 150 },
@@ -81,7 +56,28 @@ export default function NotificationsAdmin() {
             field: 'attempt_created_at',
             headerName: texts.date,
             flex: 1,
-            valueFormatter: (params) => formatToLocalTime(params.value)
+            renderCell: (params) => {
+                if (!params.value) {
+                    return '--';
+                }
+                try {
+                    const date = new Date(params.value);
+                    if (isNaN(date.getTime())) {
+                        return 'Date invalid';
+                    }
+                    return date.toLocaleString(undefined, {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit' // Añadimos segundos para más precisión
+                    });
+                } catch (error) {
+                    console.error('Error formateando fecha:', error);
+                    return 'Error date';
+                }
+            }
         },
     ];
 

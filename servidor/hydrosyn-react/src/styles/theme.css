@@ -19,8 +19,7 @@
   --datagrid-row-hover: #f5f5f5;
   --datagrid-footer-bg: #f5f5f5;
 
-  
-   --DataGrid-t-header-background-base: var(--datagrid-header-bg);
+    --DataGrid-t-header-background-base: var(--datagrid-header-bg);
     --DataGrid-t-color-foreground-base: var(--datagrid-text);
     --DataGrid-t-color-border-base: var(--datagrid-border);
     --DataGrid-t-color-background-base: var(--datagrid-bg);
