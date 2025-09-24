@@ -19,6 +19,12 @@
   --datagrid-row-hover: #f5f5f5;
   --datagrid-footer-bg: #f5f5f5;
 
+  
+   --DataGrid-t-header-background-base: var(--datagrid-header-bg);
+    --DataGrid-t-color-foreground-base: var(--datagrid-text);
+    --DataGrid-t-color-border-base: var(--datagrid-border);
+    --DataGrid-t-color-background-base: var(--datagrid-bg);
+
 }
 
 /* Tema oscuro */
@@ -45,6 +51,11 @@
   --datagrid-row-border: #ffffff;
   --datagrid-row-hover: #2d2d2d;
   --datagrid-footer-bg: #2d2d2d;
+
+   --DataGrid-t-header-background-base: var(--datagrid-header-bg);
+    --DataGrid-t-color-foreground-base: var(--datagrid-text);
+    --DataGrid-t-color-border-base: var(--datagrid-border);
+    --DataGrid-t-color-background-base: var(--datagrid-bg);
 }
 
 html {

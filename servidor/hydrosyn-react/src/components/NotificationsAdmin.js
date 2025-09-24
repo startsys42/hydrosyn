@@ -50,12 +50,10 @@ export default function NotificationsAdmin() {
     }, []);
 
     const formatToLocalTime = (supabaseTimestamp) => {
-        if (!supabaseTimestamp) return '';
+        if (!supabaseTimestamp) return '--';
 
         try {
-            const formattedTimestamp = supabaseTimestamp.replace(' ', 'T').replace('+00', '+00:00');
-
-            const date = new Date(formattedTimestamp);
+            const date = new Date(supabaseTimestamp);
 
 
             if (isNaN(date.getTime())) {
