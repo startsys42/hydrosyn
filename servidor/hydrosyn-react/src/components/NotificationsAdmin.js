@@ -50,11 +50,12 @@ export default function NotificationsAdmin() {
 
 
     const columns = [
-        { field: 'user_email', headerName: 'Email', flex: 1, minWidth: 150 },
-        { field: 'reason', headerName: texts.reason, flex: 1, minWidth: 150 },
+        { field: 'user_email', headerName: 'Email', flex: 1, minWidth: 200 },
+        { field: 'reason', headerName: texts.reason, flex: 1, minWidth: 200 },
         {
             field: 'attempt_created_at',
             headerName: texts.dateTime,
+            minWidth: 150,
             flex: 1,
             renderCell: (params) => {
                 if (!params.value) {

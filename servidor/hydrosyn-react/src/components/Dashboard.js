@@ -93,12 +93,12 @@ export default function Dashboard() {
 
     const columns = [
         // { field: 'id', headerName: 'ID', hide: true },
-        { field: 'name', headerName: t.systems, flex: 1, minWidth: 150, headerClassName: 'data-grid-header' },
+        { field: 'name', headerName: t.systems, flex: 1, minWidth: 200, headerClassName: 'data-grid-header' },
         { field: 'created_at', headerName: t.date, flex: 1, minWidth: 120, headerClassName: 'data-grid-header' },
         {
             field: 'owner',
             headerName: t.owner,
-            flex: 1, minWidth: 80,
+            flex: 1, minWidth: 100,
             filterable: false,
             headerClassName: 'data-grid-header',
             renderCell: (params) => (
@@ -115,17 +115,13 @@ export default function Dashboard() {
         {
             field: 'action',
             headerName: () => null,
-            flex: 1, minWidth: 120,
+            flex: 1, minWidth: 150,
             filterable: false,
             headerClassName: 'data-grid-header',
             sortable: false,
             disableColumnMenu: true,
             renderCell: (params) => (
                 <button style={{ padding: '4px 16px' }} onClick={() => navigate(`/system/${params.row.id}`)}>
-
-
-                    onClick={() => navigate(`/system/${params.row.id}`)}
-                >
                     {t.enter}
                 </button>
             ),
