@@ -54,7 +54,7 @@ export default function NotificationsAdmin() {
         { field: 'reason', headerName: texts.reason, flex: 1, minWidth: 150 },
         {
             field: 'attempt_created_at',
-            headerName: texts.date,
+            headerName: texts.dateTime,
             flex: 1,
             renderCell: (params) => {
                 if (!params.value) {
@@ -62,10 +62,14 @@ export default function NotificationsAdmin() {
                 }
                 try {
                     const date = new Date(params.value);
+                    console.log('JS Date object:', date);
+                    console.log('ISO String:', date.toISOString());
+                    console.log('UTC Hours:', date.getUTCHours(), 'UTC Minutes:', date.getUTCMinutes());
                     if (isNaN(date.getTime())) {
                         return 'Date invalid';
                     }
                     return date.toLocaleString(undefined, {
+                        timeZone: 'UTC',
                         year: 'numeric',
                         month: '2-digit',
                         day: '2-digit',

@@ -7,7 +7,7 @@ import { useOwnerStatus } from '../utils/OwnerContext';
 import { useNavigate } from 'react-router-dom';
 import { TextField, CircularProgress } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { CheckBox, CheckBoxOutlineBlank } from '@mui/icons-material';
+import { CheckBox, CheckBoxOutlineBlank, Padding } from '@mui/icons-material';
 import Checkbox from '@mui/material/Checkbox';
 import texts from '../i18n/locales';
 
@@ -121,7 +121,7 @@ export default function Dashboard() {
             sortable: false,
             disableColumnMenu: true,
             renderCell: (params) => (
-                <button
+                <button style={{ padding: '4px 16px' }} onClick={() => navigate(`/system/${params.row.id}`)}>
 
 
                     onClick={() => navigate(`/system/${params.row.id}`)}
