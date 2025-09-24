@@ -23,13 +23,18 @@ export function RoleSystemProvider({ children, systemId }) {
                 return;
             }
 
-
             const { data: ownerData, error: ownerErr } = await supabase
-                .from("admin_users")
-                .select("id")
-                .eq("user", user.id)
-                .eq("system", systemId)
-                .eq("is_active", true)
+                .from("systems")
+                .select(`
+        admin_users!inner(
+            id,
+            user,
+            is_active
+        )
+    `)
+                .eq("id", systemId)
+                .eq("admin_users.user", user.id)
+                .eq("admin_users.is_active", true)
                 .maybeSingle();
 
             if (ownerData && !ownerErr) {

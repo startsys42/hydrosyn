@@ -115,7 +115,7 @@ export default function Dashboard() {
         {
             field: 'action',
             headerName: () => null,
-            flex: 1, minWidth: 100,
+            flex: 1, minWidth: 120,
             filterable: false,
             headerClassName: 'data-grid-header',
             sortable: false,

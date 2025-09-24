@@ -74,13 +74,13 @@ export default function NotificationsAdmin() {
     };
 
     const columns = [
-        { field: 'user_email', headerName: 'Email', flex: 1 },
-        { field: 'reason', headerName: texts.reason, flex: 1 },
+        { field: 'user_email', headerName: 'Email', flex: 1, minWidth: 150 },
+        { field: 'reason', headerName: texts.reason, flex: 1, minWidth: 150 },
         {
             field: 'attempt_created_at',
             headerName: texts.date,
             flex: 1,
-            valueFormatter: (params) => formatToLocalTime(params?.value)
+            valueFormatter: (params) => formatToLocalTime(params.value)
         },
     ];
 
