@@ -125,7 +125,7 @@ export default function Dashboard() {
 
                     onClick={() => navigate(`/system/${params.row.id}`)}
                 >
-                    {texts.enter}
+                    {t.enter}
                 </button>
             ),
         },

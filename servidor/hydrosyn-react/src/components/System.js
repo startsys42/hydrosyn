@@ -16,49 +16,57 @@ import { useParams } from 'react-router-dom';
 import { useOwnerStatus } from '../utils/OwnerContext';
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../utils/supabaseClient';
-
+import { useRoleSystem } from "../utils/RoleSystemContext";
 
 export default function System() {
     const navigate = useNavigate();
     const texts = useTexts();
-    const { id } = useParams();
+    const { systemId } = useParams();
+    const { role, loading: roleLoading } = useRoleSystem();
+
+
     const [system, setSystem] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const { isOwner, loading: ownerLoading } = useOwnerStatus();
+    const [loadingSystem, setLoadingSystem] = useState(true);
 
     useEffect(() => {
         const fetchSystem = async () => {
-            setLoading(true);
+            setLoadingSystem(true);
             const { data, error } = await supabase
-                .from('systems')      // nombre de tu tabla
-                .select('name')       // columna que quieres
-                .eq('id', id)         // filtrar por id
-                .single();            // devuelve un solo objeto
+                .from('systems')
+                .select('name')
+                .eq('id', systemId)
+                .single();
 
-            if (error) {
-                setError(error.message);
-            } else {
-                setSystem(data);
-            }
-            setLoading(false);
+            if (!error && data) setSystem(data);
+            setLoadingSystem(false);
         };
-
         fetchSystem();
-    }, [id]);
+    }, [systemId]);
+
+    // Redirigir si no hay acceso
+    useEffect(() => {
+        if (!loadingSystem && !roleLoading) {
+            if (!system || role === "none") {
+                navigate('/dashboard', { replace: true });
+            }
+        }
+    }, [system, role, loadingSystem, roleLoading, navigate]);
+
+    // Esperar a que cargue el sistema y rol
+    if (loadingSystem || roleLoading || !system || role === "none") return null;
+
     return (
         <div className='div-main-login'>
             <h1>{texts.systems}: {system.name}</h1>
 
+            {role === "owner" && <UserAccordion systemId={systemId} />}
+            {role === "owner" && <NotificationsAccordion systemId={systemId} />}
+            {role === "owner" && <ESP32Accordion systemId={systemId} />}
+            {role === "owner" && <SettingsAccordion systemId={systemId} />}
 
-            {isOwner ? (<UserAccordion />) : null}
-            {isOwner ? (<NotificationsAccordion />) : null}
 
 
 
-
-            {/* ESP32 */}
-            <ESP32Accordion />
 
             {/* Tanques */}
             <Accordion>
@@ -144,8 +152,7 @@ export default function System() {
                 </AccordionDetails>
             </Accordion>
 
-            {/* Sistema */}
-            {isOwner ? (<SettingsAccordion systemId={id} />) : null}
+
         </div>
     );
 }

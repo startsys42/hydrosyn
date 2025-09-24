@@ -49,7 +49,29 @@ export default function NotificationsAdmin() {
         fetchLoginAttempts();
     }, []);
 
+    const formatToLocalTime = (supabaseTimestamp) => {
+        if (!supabaseTimestamp) return '';
 
+        try {
+            const date = new Date(supabaseTimestamp);
+
+            if (isNaN(date.getTime())) {
+                return 'Date invalid';
+            }
+
+            // Usar la configuración regional del navegador (sin forzar es-ES)
+            return date.toLocaleString(undefined, {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } catch (error) {
+            console.error('Error formateando fecha:', error);
+            return 'Error date';
+        }
+    };
 
     const columns = [
         { field: 'user_email', headerName: 'Email', flex: 1 },
@@ -58,12 +80,7 @@ export default function NotificationsAdmin() {
             field: 'attempt_created_at',
             headerName: texts.date,
             flex: 1,
-            /* valueFormatter: (params) => new Date(params.value).toLocaleDateString() */
-            valueFormatter: (params) => {
-                if (!params?.row?.attempt_created_at) return '';
-                const date = new Date(params.row.attempt_created_at);
-                return isNaN(date) ? '' : date.toLocaleDateString();
-            }
+            valueFormatter: (params) => formatToLocalTime(params?.value)
         },
     ];
 

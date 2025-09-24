@@ -28,17 +28,10 @@ import { useParams } from 'react-router-dom';
 import { OwnerSystemProvider } from './utils/OwnerSystemContext';
 import System from './components/System';
 import CreateSystem from './components/CreateSystem';
+import { RoleSystemProvider } from './utils/RoleSystemContext';
+import { SystemRouteWrapper } from "./utils/SystemRouteWrapper";
 
 
-
-function SystemRouteWrapper() {
-    const { systemId } = useParams();
-    return (
-        <OwnerSystemProvider systemId={systemId}>
-            <System />
-        </OwnerSystemProvider>
-    );
-}
 
 
 function App() {
@@ -256,7 +249,14 @@ function App() {
                         }
                     />
 
-                    <Route path="/system/:systemId" element={<SystemRouteWrapper />} />
+                    <Route
+                        path="/system/:systemId"
+                        element={
+                            <SystemRouteWrapper>
+                                <System />
+                            </SystemRouteWrapper>
+                        }
+                    />
                 </Route>
             </Routes>
 

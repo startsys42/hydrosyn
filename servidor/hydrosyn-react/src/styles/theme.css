@@ -11,6 +11,14 @@
     --button-border: #2196f3;
     --aside-bg: #f4f4f4;
 
+     --datagrid-bg: #ffffff;
+  --datagrid-text: #000000;
+  --datagrid-border: #e0e0e0;
+  --datagrid-header-bg: #f5f5f5;
+  --datagrid-row-border: #f0f0f0;
+  --datagrid-row-hover: #f5f5f5;
+  --datagrid-footer-bg: #f5f5f5;
+
 }
 
 /* Tema oscuro */
@@ -29,6 +37,14 @@
     --button-text: #ffffff;
     --button-border: #F0F0F0;
     --aside-bg: #353535;
+
+    --datagrid-bg: #181b1e;
+  --datagrid-text: #ffffff;
+  --datagrid-border: #424242;
+  --datagrid-header-bg: #2d2d2d;
+  --datagrid-row-border: #424242;
+  --datagrid-row-hover: #2d2d2d;
+  --datagrid-footer-bg: #2d2d2d;
 }
 
 body, html, #root {
@@ -230,5 +246,58 @@ label {
 }
 
 .datagrid {
-  color: black !important;
+  background-color: var(--datagrid-bg) !important;
+  color: var(--datagrid-text) !important;
+  border: 1px solid var(--datagrid-border) !important;
+}
+
+/* Fondo y texto general */
+.datagrid .MuiDataGrid-root {
+  background-color: var(--datagrid-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+/* Cabeceras de columnas */
+.datagrid .MuiDataGrid-columnHeaders {
+  background-color: var(--datagrid-header-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+/* Celdas */
+.datagrid .MuiDataGrid-cell {
+  color: var(--datagrid-text) !important;
+  border-bottom: 1px solid var(--datagrid-row-border) !important;
+}
+
+/* Filas */
+.datagrid .MuiDataGrid-row {
+  background-color: var(--datagrid-bg) !important;
+}
+
+/* Filas al pasar el mouse */
+.datagrid .MuiDataGrid-row:hover {
+  background-color: var(--datagrid-row-hover) !important;
+}
+
+/* Footer (paginación) */
+.datagrid .MuiDataGrid-footerContainer {
+  background-color: var(--datagrid-footer-bg) !important;
+  border-top: 1px solid var(--datagrid-border) !important;
+  color: var(--datagrid-text) !important;
+}
+
+/* Texto de la paginación */
+.datagrid .MuiTablePagination-root {
+  color: var(--datagrid-text) !important;
+}
+
+/* Iconos */
+.datagrid .MuiSvgIcon-root {
+  color: var(--datagrid-text) !important;
+}
+
+/* Toolbar (si la usas) */
+.datagrid .MuiDataGrid-toolbarContainer {
+  background-color: var(--datagrid-header-bg) !important;
+  color: var(--datagrid-text) !important;
 }
