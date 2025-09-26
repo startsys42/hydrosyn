@@ -36,6 +36,7 @@ const texts = {
         logout: 'Cerrar sesión',
         createUser: 'Crear usuario',
         activateUser: 'Activar usuario',
+        activateDeleteUser: 'Activar/Eliminar usuario',
         messageCreateUser: 'Usuario creado y correo enviado',
         messageRecover: 'Hemos enviado un enlace de recuperación a tu correo electrónico',
         sendRecoveryLink: 'Enviar enlace de recuperación',
@@ -80,6 +81,7 @@ const texts = {
         enter: "Entrar al sistema",
         newName: "Nuevo nombre",
         newEmail: "Nuevo email",
+        users: "Usuarios",
 
 
 
@@ -148,6 +150,7 @@ const texts = {
         logout: 'Logout',
         createUser: 'Create user',
         activateUser: 'Activate user',
+        activateDeleteUser: 'Activate/Delete user',
         messageCreateUser: 'User created and email sent',
         messageRecover: 'We have sent a recovery link to your email address',
         sendRecoveryLink: 'Send recovery link',
@@ -192,6 +195,7 @@ const texts = {
         enter: "Go to system",
         newName: "New name",
         newEmail: "New email",
+        users: "Users",
 
 
 

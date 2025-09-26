@@ -182,7 +182,7 @@ export default function UserAccordion({ systemId }) {
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <h2>{texts.usersOptions}</h2>
+                <h2>{texts.users}</h2>
             </AccordionSummary>
             <AccordionDetails>
 

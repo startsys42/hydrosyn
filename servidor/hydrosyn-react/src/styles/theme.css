@@ -271,56 +271,63 @@ label {
 }
 
 /* Fondo y texto general */
-.datagrid .MuiDataGrid-root {
+.MuiDataGrid-root {
   background-color: var(--datagrid-bg) !important;
   color: var(--datagrid-text) !important;
 }
 
 /* Cabeceras de columnas */
-.datagrid .MuiDataGrid-columnHeaders {
+.MuiDataGrid-columnHeaders {
   background-color: var(--datagrid-header-bg) !important;
   color: var(--datagrid-text) !important;
 }
 
-.datagrid .MuiDataGrid-columnHeaderTitle {
+
+.MuiDataGrid-columnHeader {
+   background-color: var(--datagrid-header-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+
+ .MuiDataGrid-columnHeaderTitle {
     color: var(--datagrid-text) !important;
     font-weight: bold !important;
 }
 /* Celdas */
-.datagrid .MuiDataGrid-cell {
+.MuiDataGrid-cell {
   color: var(--datagrid-text) !important;
   border-bottom: 2px solid var(--datagrid-row-border) !important;
 }
 
 /* Filas */
-.datagrid .MuiDataGrid-row {
+.MuiDataGrid-row {
   background-color: var(--datagrid-bg) !important;
 }
 
 /* Filas al pasar el mouse */
-.datagrid .MuiDataGrid-row:hover {
+.MuiDataGrid-row:hover {
   background-color: var(--datagrid-row-hover) !important;
 }
 
 /* Footer (paginación) */
-.datagrid .MuiDataGrid-footerContainer {
+.MuiDataGrid-footerContainer {
   background-color: var(--datagrid-footer-bg) !important;
   border-top: 2px solid var(--datagrid-border) !important;
   color: var(--datagrid-text) !important;
 }
 
 /* Texto de la paginación */
-.datagrid .MuiTablePagination-root {
+.MuiTablePagination-root {
   color: var(--datagrid-text) !important;
 }
 
 /* Iconos */
-.datagrid .MuiSvgIcon-root {
+.MuiSvgIcon-root {
   color: var(--datagrid-text) !important;
 }
 
 /* Toolbar (si la usas) */
-.datagrid .MuiDataGrid-toolbarContainer {
+.MuiDataGrid-toolbarContainer {
   background-color: var(--datagrid-header-bg) !important;
   color: var(--datagrid-text) !important;
 }
@@ -339,4 +346,88 @@ label {
 .MuiAccordionSummary-content {
    background-color: var(--datagrid-bg) !important;
   color: var(--datagrid-text) !important;
+}
+
+.MuiAccordionSummary-root {
+  background-color: var(--datagrid-header-bg) !important; /* fondo cabecera */
+  color: var(--datagrid-text) !important;
+  border-bottom: 2px solid var(--datagrid-border) !important;
+}
+
+.MuiAccordionSummary-expandIconWrapper {
+  color: var(--datagrid-text) !important; /* color del icono de abrir/cerrar */
+}
+
+.MuiAccordionDetails-root {
+  background-color: var(--datagrid-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+div[class*="MuiDataGrid-columnHeaders"] {
+  background-color: var(--datagrid-header-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+div[class*="MuiDataGrid-columnHeader"] {
+  background-color: var(--datagrid-header-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+.MuiDataGrid-columnHeaders,
+[class*="MuiDataGrid-columnHeaders"] {
+  background-color: var(--datagrid-header-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+/* COLUMNAS HEADER - Especificidad máxima */
+.MuiDataGrid-columnHeader,
+[class*="MuiDataGrid-columnHeader"] {
+  background-color: var(--datagrid-header-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+/* TÍTULOS DE COLUMNA - Especificidad máxima */
+.MuiDataGrid-columnHeaderTitle,
+[class*="MuiDataGrid-columnHeaderTitle"] {
+  color: var(--datagrid-text) !important;
+  font-weight: bold !important;
+}
+
+/* CONTENEDOR SUPERIOR */
+.MuiDataGrid-topContainer,
+[class*="MuiDataGrid-topContainer"] {
+  background-color: var(--datagrid-header-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+/* BOTONES DE CABECERA */
+.MuiDataGrid-sortButton,
+.MuiDataGrid-menuIconButton {
+  color: var(--datagrid-text) !important;
+}
+
+/* ICONOS DE CABECERA */
+.MuiDataGrid-sortIcon,
+.MuiDataGrid-iconSeparator {
+  color: var(--datagrid-text) !important;
+}
+
+.MuiAccordion-root,
+[class*="MuiAccordion-root"] {
+    background-color: var(--datagrid-bg) !important;
+    color: var(--datagrid-text) !important;
+    border-color: var(--datagrid-border) !important;
+}
+
+.MuiAccordionSummary-root,
+[class*="MuiAccordionSummary-root"] {
+    background-color: var(--datagrid-header-bg) !important;
+    color: var(--datagrid-text) !important;
+    border-bottom-color: var(--datagrid-border) !important;
+}
+
+.MuiAccordionDetails-root,
+[class*="MuiAccordionDetails-root"] {
+    background-color: var(--datagrid-bg) !important;
+    color: var(--datagrid-text) !important;
 }

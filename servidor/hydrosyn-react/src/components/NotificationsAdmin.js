@@ -15,7 +15,8 @@ export default function NotificationsAdmin() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-
+    const [pageSize, setPageSize] = useState(10);
+    const [page, setPage] = useState(0);
 
 
     useEffect(() => {
@@ -79,7 +80,7 @@ export default function NotificationsAdmin() {
                         second: '2-digit' // Añadimos segundos para más precisión
                     });
                 } catch (error) {
-                    console.error('Error formateando fecha:', error);
+
                     return 'Error date';
                 }
             }
@@ -97,9 +98,13 @@ export default function NotificationsAdmin() {
                     rows={attempts.map((a, index) => ({ id: index, ...a }))}
                     columns={columns}
                     loading={loading}
-                    pageSize={10}
-                    rowsPerPageOptions={[5, 10, 20]}
                     pagination
+                    pageSize={pageSize}
+                    onPageSizeChange={setPageSize}
+                    sortingMode="client"
+
+
+                    disableSelectionOnClick
                 />
             </div>
 

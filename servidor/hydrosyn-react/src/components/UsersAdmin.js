@@ -16,7 +16,7 @@ export default function UsersAdmin() {
             </button>
 
             <button className='button-full' onClick={() => navigate('/activate-delete-user-admin')} >
-                {t.activateUser}
+                {t.activateDeleteUser}
             </button>
 
         </div>

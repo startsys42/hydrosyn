@@ -154,15 +154,15 @@ export default function Dashboard() {
                             rows={rows}
                             columns={columns}
                             pagination
-                            page={page}
+                            //page={page}
                             pageSize={pageSize}
-                            rowCount={rowCount}
-                            paginationMode="client" // CAMBIADO de "server" a "client"
-                            onPageChange={(newPage) => setPage(newPage)}
+                            // rowCount={rowCount}
+                            // paginationMode="client" // CAMBIADO de "server" a "client"
+                            // onPageChange={(newPage) => setPage(newPage)}
                             onPageSizeChange={(newSize) => { setPageSize(newSize); setPage(0); }}
                             sortingMode="client" // CAMBIADO de "server" a "client"
-                            sortModel={sortModel}
-                            onSortModelChange={setSortModel}
+                            //sortModel={sortModel}
+                            //onSortModelChange={setSortModel}
                             disableSelectionOnClick
 
                         />
