@@ -18,7 +18,7 @@ export default function CreateSystem() {
         setError('');
 
         // Regex: solo letras, números, guiones bajos, espacios intermedios, max 30 chars
-        const nameRegex = /^[A-Za-z0-9_](?:[A-Za-z0-9_ ]{1,28}[A-Za-z0-9])?$/;
+        const nameRegex = /^[A-Za-z0-9_][A-Za-z0-9_ ]{1,28}[A-Za-z0-9]$/;
         if (!nameRegex.test(systemName)) {
             setError("regexNameSystem");
 

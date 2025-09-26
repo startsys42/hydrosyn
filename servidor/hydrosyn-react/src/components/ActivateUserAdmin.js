@@ -81,7 +81,7 @@ const ActivateUserAdmin = () => {
         },
         {
             field: 'actions',
-            headerName: t.actions,
+            headerName: t.delete,
             width: 150,
             renderCell: (params) => (
                 <Button

@@ -15,7 +15,7 @@ CREATE TABLE public.admin_users (
 CREATE TABLE public.systems (
   id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
-  name text NOT NULL CHECK (name ~ '^[A-Za-z0-9](?:[A-Za-z0-9_ ]{1,28}[A-Za-z0-9])?$'::text),
+  name text NOT NULL CHECK (name ~ '^[A-Za-z0-9][A-Za-z0-9_ ]{1,28}[A-Za-z0-9]$'::text),
   admin uuid NOT NULL DEFAULT auth.uid(),
   CONSTRAINT systems_pkey PRIMARY KEY (id),
   CONSTRAINT systems_admin_fkey1 FOREIGN KEY (admin) REFERENCES public.admin_users("user") ON DELETE CASCADE
@@ -62,7 +62,7 @@ CREATE TABLE public.esp32 (
   id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   system bigint NOT NULL,
-  name text NOT NULL   CHECK (name ~ '^[A-Za-z0-9](?:[A-Za-z0-9_]{1,28}[A-Za-z0-9])?$'::text),
+  name text NOT NULL   CHECK (name ~ '^[A-Za-z0-9][A-Za-z0-9_]{1,28}[A-Za-z0-9]$'::text),
   CONSTRAINT esp32_pkey PRIMARY KEY (id),
   CONSTRAINT esp32_system_fkey FOREIGN KEY (system) REFERENCES public.systems(id)  ON DELETE CASCADE
   ON UPDATE CASCADE
@@ -85,7 +85,7 @@ CREATE TABLE public.tanks (
   id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   type public.tank_type NOT NULL,
-  name text NOT NULL CHECK (name ~ '^[A-Za-z0-9](?:[A-Za-z0-9_]{1,28}[A-Za-z0-9])?$'::text),
+  name text NOT NULL CHECK (name ~ '^[A-Za-z0-9][A-Za-z0-9_]{1,28}[A-Za-z0-9]$'::text),
   system bigint NOT NULL,
   CONSTRAINT tanks_pkey PRIMARY KEY (id),
   CONSTRAINT tanks_system_fkey FOREIGN KEY (system) REFERENCES public.systems(id) ON DELETE CASCADE

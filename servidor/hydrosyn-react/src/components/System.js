@@ -17,6 +17,7 @@ import { useOwnerStatus } from '../utils/OwnerContext';
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../utils/supabaseClient';
 import { useRoleSystem } from "../utils/RoleSystemContext";
+import TanksAccordion from './accordions/TanksAccordion';
 
 export default function System() {
     const navigate = useNavigate();
@@ -37,7 +38,12 @@ export default function System() {
                 .eq('id', systemId)
                 .single();
 
-            if (!error && data) setSystem(data);
+            if (error) {
+
+                setSystem(null); // Indica que no hay sistema
+            } else if (data) {
+                setSystem(data);
+            }
             setLoadingSystem(false);
         };
         fetchSystem();
@@ -59,8 +65,9 @@ export default function System() {
         <div className='div-main-login'>
             <h1>{texts.systems}: {system.name}</h1>
 
-            {role === "owner" && <UserAccordion systemId={systemId} />}
+            {role === "owner" && <TanksAccordion systemId={systemId} />}
             {role === "owner" && <NotificationsAccordion systemId={systemId} />}
+            {role === "owner" && <UserAccordion systemId={systemId} />}
             {role === "owner" && <ESP32Accordion systemId={systemId} />}
             {role === "owner" && <SettingsAccordion systemId={systemId} />}
 

@@ -11,19 +11,19 @@ import Button from '@mui/material/Button';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import '../../styles/theme.css';
 
-export default function TanksAccordion() {
+export default function TanksAccordion({ systemId }) {
     const navigate = useNavigate();
-    const texts = useTexts(); // ✅ ya no lo pasamos como prop
+    const texts = useTexts();
 
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>{texts.tankOptions}</Typography>
+                <h2>{texts.tankOptions}</h2>
             </AccordionSummary>
             <AccordionDetails>
-                <h2>{texts.userManagement}</h2>
-                <h2>{texts.createUser}</h2>
-                <h2>{texts.deleteUser}</h2>
+                <h3>{texts.addTank}</h3>
+                <h3>{texts.renameTank}</h3>
+                <h3>{texts.removeTank}</h3>
             </AccordionDetails>
         </Accordion>
     );

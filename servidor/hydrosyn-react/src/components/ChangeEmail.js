@@ -64,26 +64,26 @@ export default function ChangeEmail() {
             <form onSubmit={handleSubmit} className="form-container">
 
                 <label htmlFor="newEmail" >
-                    {texts.email}:
+                    {texts.newEmail}:
                 </label>
                 <input
 
                     type="email"
                     value={newEmail}
                     onChange={(e) => setNewEmail(e.target.value)}
-                    placeholder={texts.email}
+                    placeholder={texts.newEmail}
                     required
                 />
 
                 <label htmlFor="confirmEmail" >
-                    {texts.email}:
+                    {texts.newEmail}:
                 </label>
                 <input
 
                     type="email"
                     value={confirmEmail}
                     onChange={(e) => setConfirmEmail(e.target.value)}
-                    placeholder={texts.email}
+                    placeholder={texts.newEmail}
                     required
 
                 />

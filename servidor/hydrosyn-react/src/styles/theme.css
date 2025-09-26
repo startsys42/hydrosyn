@@ -324,3 +324,19 @@ label {
   background-color: var(--datagrid-header-bg) !important;
   color: var(--datagrid-text) !important;
 }
+
+.MuiDataGrid-topContainer {
+  background-color: var(--datagrid-header-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+.MuiAccordion-root {
+  background-color: var(--datagrid-bg) !important;
+  color: var(--datagrid-text) !important;
+  border-top: 2px solid var(--datagrid-border) !important;
+}
+
+.MuiAccordionSummary-content {
+   background-color: var(--datagrid-bg) !important;
+  color: var(--datagrid-text) !important;
+}

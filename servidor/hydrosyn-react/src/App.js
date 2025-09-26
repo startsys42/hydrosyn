@@ -21,8 +21,8 @@ import PrivateLayout from './components/PrivateLayout';
 import RecoverPassword from './components/RecoverPassword';
 import ChangePasswordRecovery from './components/ChangePasswordRecovery';
 import CreateUserAdmin from './components/CreateUserAdmin';
-import ActivateUserAdmin from './components/ActivateUserAdmin';
-import DeleteUserAdmin from './components/DeleteUserAdmin';
+import ActivateDeleteUserAdmin from './components/ActivateDeleteUserAdmin';
+
 
 import { useParams } from 'react-router-dom';
 import { OwnerSystemProvider } from './utils/OwnerSystemContext';
@@ -190,25 +190,14 @@ function App() {
                             ) : null
                         }
                     />
+
                     <Route
-                        path="/delete-user-admin"
+                        path="/activate-delete-user-admin"
                         element={
                             !user ? (
                                 <Navigate to="/" replace />
                             ) : user && isAdmin ? (
-                                <DeleteUserAdmin />
-                            ) : user && !loadingAdmin ? (
-                                <Navigate to="/dashboard" replace />
-                            ) : null
-                        }
-                    />
-                    <Route
-                        path="/activate-user-admin"
-                        element={
-                            !user ? (
-                                <Navigate to="/" replace />
-                            ) : user && isAdmin ? (
-                                <ActivateUserAdmin />
+                                <ActivateDeleteUserAdmin />
                             ) : user && !loadingAdmin ? (
                                 <Navigate to="/dashboard" replace />
                             ) : null

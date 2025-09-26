@@ -92,7 +92,7 @@ export default function SettingsAccordion({ systemId }) {
             const userId = session.user.id;
 
             // 2️⃣ Validar regex
-            const nameRegex = /^[A-Za-z0-9_](?:[A-Za-z0-9_ ]{1,28}[A-Za-z0-9])?$/;
+            const nameRegex = /^[A-Za-z0-9_][A-Za-z0-9_ ]{1,28}[A-Za-z0-9]$/;
             if (!nameRegex.test(systemName)) {
                 setError(texts.regexNameSystem);
                 setLoading(false);
@@ -194,27 +194,33 @@ export default function SettingsAccordion({ systemId }) {
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>{texts.systemSettings}</Typography>
+                <h2>{texts.systemSettings}</h2>
             </AccordionSummary>
             <AccordionDetails>
+                <h3>{texts.renameSystem}</h3>
 
-                <button onClick={handleDelete}>
-                    {texts.deleteSystem}
-                </button>
                 <form onSubmit={handleRename} className='form-container'>
                     <label>
-                        {texts.renameSystem}
+                        {texts.newName}
                     </label>
                     <input
                         type="text"
                         value={systemName}
                         onChange={(e) => setSystemName(e.target.value)}
                         required
-                        placeholder={texts.renameSystem} // placeholder más coherente
+                        placeholder={texts.newName} // placeholder más coherente
                     />
                     <button type="submit">{texts.renameSystem}</button>
                 </form>
                 {error && <div className="error-message" style={{ marginTop: '10px' }}>Error</div>}
+                <h3>{texts.changeSecret}</h3>
+                <h3>{texts.deleteSystem}</h3>
+
+                <button onClick={handleDelete}>
+                    {texts.deleteSystem}
+                </button>
+
+
                 <form onSubmit={handleSecretChange} className='form-container'>
                     <label>{texts.currentSecret}</label>
                     <input
@@ -236,6 +242,7 @@ export default function SettingsAccordion({ systemId }) {
                     />
                     <button type="submit">{texts.newSecret}</button>
                 </form>
+
                 {error && <div className="error-message" style={{ marginTop: '10px' }}>Error</div>}
             </AccordionDetails>
         </Accordion>

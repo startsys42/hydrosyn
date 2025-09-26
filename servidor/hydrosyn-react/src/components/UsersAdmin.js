@@ -15,12 +15,10 @@ export default function UsersAdmin() {
                 {t.createUser}
             </button>
 
-            <button className='button-full' onClick={() => navigate('/activate-user-admin')} >
+            <button className='button-full' onClick={() => navigate('/activate-delete-user-admin')} >
                 {t.activateUser}
             </button>
-            <button className='button-full' onClick={() => navigate('/delete-user-admin')} >
-                {t.deleteUser}
-            </button>
+
         </div>
     );
 }

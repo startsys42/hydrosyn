@@ -23,12 +23,14 @@ export function OwnerSystemProvider({ children, systemId }) {
 
             const { data, error } = await supabase
                 .from('systems')
-                .select('id')
+                .select(`
+    id,
+    admin_users!inner(is_active)
+  `)
                 .eq('id', systemId)
-                .eq('admin', user.id)
-                .eq('is_active', true)
+                .eq('admin_users.user', user.id)
+                .eq('admin_users.is_active', true)
                 .maybeSingle();
-
             setIsOwnerSystem(!!data);
             setLoading(false);
         };
