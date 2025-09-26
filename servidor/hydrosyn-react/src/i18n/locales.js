@@ -82,6 +82,8 @@ const texts = {
         newName: "Nuevo nombre",
         newEmail: "Nuevo email",
         users: "Usuarios",
+        loginDisabled: "Inicio de sesión deshabilitado",
+        recoveryDisabled: "Recuperación deshabilitada",
 
 
 
@@ -196,6 +198,8 @@ const texts = {
         newName: "New name",
         newEmail: "New email",
         users: "Users",
+        loginDisabled: "Login disabled",
+        recoveryDisabled: "Recovery disabled",
 
 
 

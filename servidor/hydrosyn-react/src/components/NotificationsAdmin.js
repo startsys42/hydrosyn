@@ -48,11 +48,29 @@ export default function NotificationsAdmin() {
         fetchLoginAttempts();
     }, []);
 
+    const translateReason = (reason) => {
+        // Primero normalizamos a una clave constante
+        let translationKey;
 
+        if (reason === 'Login attempt with a deactivated user') {
+            translationKey = 'loginDisabled';
+        } else if (reason === 'Password recovery attempt for an inactive user') {
+            translationKey = 'recoveryDisabled';
+        } else {
+            return reason; // Si no está en el mapeo, devuelve original
+        }
+
+        // Esto SÍ cambiará con el idioma porque usa texts
+        return texts[translationKey];
+    };
 
     const columns = [
-        { field: 'user_email', headerName: 'Email', flex: 1, minWidth: 200 },
-        { field: 'reason', headerName: texts.reason, flex: 1, minWidth: 200 },
+        { field: 'user_email', headerName: 'Email', flex: 1, minWidth: 220 },
+        {
+            field: 'reason', headerName: texts.reason, flex: 1, minWidth: 220, renderCell: (params) => {
+                return translateReason(params.value);
+            }
+        },
         {
             field: 'attempt_created_at',
             headerName: texts.dateTime,

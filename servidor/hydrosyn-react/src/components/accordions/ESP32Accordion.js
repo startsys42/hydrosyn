@@ -222,69 +222,83 @@ export default function ESP32Accordion({ systemId }) {
             </AccordionSummary>
             <AccordionDetails>
                 {/* CREATE esp32 */}
-                <h3>{texts.addESP32}</h3>
-                <form onSubmit={handleCreateESP32} className='form-container'>
-                    <label>
-                        {texts.nameESP32}
-                    </label>
-                    <input
-                        type="text"
-                        value={systemName}
-                        onChange={(e) => setSystemName(e.target.value)}
-                        required
-                        placeholder={texts.nameESP32} // placeholder más coherente
-                    />
-                    <button type="submit">{texts.addESP32}</button>
-                </form>
-                {error && <div className="error-message" style={{ marginTop: '10px' }}>Error</div>}
-
+                <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                        <h3>{texts.addESP32}</h3>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <form onSubmit={handleCreateESP32} className='form-container'>
+                            <label>
+                                {texts.nameESP32}
+                            </label>
+                            <input
+                                type="text"
+                                value={systemName}
+                                onChange={(e) => setSystemName(e.target.value)}
+                                required
+                                placeholder={texts.nameESP32} // placeholder más coherente
+                            />
+                            <button type="submit">{texts.addESP32}</button>
+                        </form>
+                        {error && <div className="error-message" style={{ marginTop: '10px' }}>Error</div>}
+                    </AccordionDetails>
+                </Accordion>
                 {/* RENAME esp32 */}
-                <h3>{texts.renameESP32}</h3>
+                <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                        <h3>{texts.renameESP32}</h3>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <form onSubmit={handleRename} className='form-container'>
+                            <label htmlFor="select-esp32">{texts.selectESP32}</label>
+                            <select
+                                value={selectedEsp || ''}
+                                onChange={(e) => setSelectedEsp(Number(e.target.value))}
+                            >
+                                <option value='' disabled>{texts.selectESP32}</option>
+                                {espList.map(esp => (
+                                    <option key={esp.id} value={esp.id}>{esp.name}</option>
+                                ))}
+                            </select>
+                            <label>{texts.newName}</label>
+                            <input
+                                type="text"
+                                value={newName}
+                                onChange={(e) => setNewName(e.target.value)}
+                                required
+                                placeholder={texts.newName}
+                            />
 
-                <form onSubmit={handleRename} className='form-container'>
-                    <label htmlFor="select-esp32">{texts.selectESP32}</label>
-                    <select
-                        value={selectedEsp || ''}
-                        onChange={(e) => setSelectedEsp(Number(e.target.value))}
-                    >
-                        <option value='' disabled>{texts.selectESP32}</option>
-                        {espList.map(esp => (
-                            <option key={esp.id} value={esp.id}>{esp.name}</option>
-                        ))}
-                    </select>
-                    <label>{texts.newName}</label>
-                    <input
-                        type="text"
-                        value={newName}
-                        onChange={(e) => setNewName(e.target.value)}
-                        required
-                        placeholder={texts.newName}
-                    />
-
-                    <button type="submit" disabled={loading || !selectedEsp || !newName}>
-                        {loading ? texts.renaming : texts.rename}
-                    </button>
+                            <button type="submit" disabled={loading || !selectedEsp || !newName}>
+                                {loading ? texts.renaming : texts.rename}
+                            </button>
 
 
-                </form>
-                {message && <p style={{ color: 'green' }}>{texts[message]}</p>}
-                {error && <p style={{ color: 'red' }}>{texts[error]}</p>}
-
+                        </form>
+                        {message && <p style={{ color: 'green' }}>{texts[message]}</p>}
+                        {error && <p style={{ color: 'red' }}>{texts[error]}</p>}
+                    </AccordionDetails>
+                </Accordion>
                 {/* DELETE esp32 */}
-                <h3>{texts.removeESP32}</h3>
-                <div style={{ height: 500, width: '100%' }}>
-                    <DataGrid className="datagrid"
-                        rows={attempts.map((a, index) => ({ id: index, ...a }))}
-                        columns={columns}
-                        loading={loading}
-                        pageSize={10}
-                        rowsPerPageOptions={[5, 10, 20]}
-                        pagination
-                    />
-                </div>
+                <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                        <h3>{texts.removeESP32}</h3>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <div style={{ height: 500, width: '100%' }}>
+                            <DataGrid className="datagrid"
+                                rows={attempts.map((a, index) => ({ id: index, ...a }))}
+                                columns={columns}
+                                loading={loading}
+                                pageSize={10}
+                                rowsPerPageOptions={[5, 10, 20]}
+                                pagination
+                            />
+                        </div>
 
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-
+                        {error && <p style={{ color: 'red' }}>{error}</p>}
+                    </AccordionDetails>
+                </Accordion>
             </AccordionDetails>
         </Accordion>
     );
