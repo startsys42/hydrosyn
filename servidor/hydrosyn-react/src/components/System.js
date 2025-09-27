@@ -24,10 +24,27 @@ export default function System() {
     const texts = useTexts();
     const { systemId } = useParams();
     const { role, loading: roleLoading } = useRoleSystem();
+    const [selected, setSelected] = useState("");
 
 
     const [system, setSystem] = useState(null);
     const [loadingSystem, setLoadingSystem] = useState(true);
+
+    const roleOptions = {
+        owner: [
+            { value: "tanks", label: texts.tanks },
+            { value: "notifications", label: texts.notifications },
+            { value: "users", label: texts.users },
+            { value: "esp32", label: texts.esp32 },
+            { value: "settings", label: texts.systemSettings }
+        ],
+        member: [
+            { value: "notifications", label: texts.notifications },
+            { value: "users", label: texts.users }
+        ]
+    };
+
+    const options = roleOptions[role] || [];
 
     useEffect(() => {
         const fetchSystem = async () => {
@@ -48,7 +65,9 @@ export default function System() {
         };
         fetchSystem();
     }, [systemId]);
-
+    const handleChange = (e) => {
+        setSelected(e.target.value);
+    }
     // Redirigir si no hay acceso
     useEffect(() => {
         if (!loadingSystem && !roleLoading) {
@@ -64,100 +83,25 @@ export default function System() {
     return (
         <div className='div-main-login'>
             <h1>{texts.systems}: {system.name}</h1>
+            <label htmlFor="options">{texts.options}</label>
+            <select id="options" value={selected} onChange={handleChange}>
+                <option value="">--  --</option>
+                {options.map(opt => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+            </select>
 
-            {role === "owner" && <TanksAccordion systemId={systemId} />}
-            {role === "owner" && <NotificationsAccordion systemId={systemId} />}
-            {role === "owner" && <UserAccordion systemId={systemId} />}
-            {role === "owner" && <ESP32Accordion systemId={systemId} />}
-            {role === "owner" && <SettingsAccordion systemId={systemId} />}
+            {selected === "tanks" && role === "owner" && <TanksAccordion systemId={systemId} />}
+            {selected === "notifications" && role === "owner" && <NotificationsAccordion systemId={systemId} />}
+            {selected === "users" && role === "owner" && <UserAccordion systemId={systemId} />}
+            {selected === "esp32" && role === "owner" && <ESP32Accordion systemId={systemId} />}
+            {selected === "settings" && role === "owner" && <SettingsAccordion systemId={systemId} />}
 
 
 
 
 
-            {/* Tanques */}
-            <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography>{texts.tanks}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Button variant="outlined" fullWidth style={{ marginBottom: 10 }}>
-                        {texts.addTank}
-                    </Button>
-                    <Button variant="outlined" fullWidth>
-                        {texts.removeTank}
-                    </Button>
-                </AccordionDetails>
-            </Accordion>
 
-            {/* Bombas peristálticas */}
-            <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography>{texts.pumps}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Button variant="outlined" fullWidth style={{ marginBottom: 10 }}>
-                        {texts.addPump}
-                    </Button>
-                    <Button variant="outlined" fullWidth>
-                        {texts.removePump}
-                    </Button>
-                </AccordionDetails>
-            </Accordion>
-
-            {/* Luces */}
-            <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography>{texts.lights}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Button variant="outlined" fullWidth style={{ marginBottom: 10 }}>
-                        {texts.addLight}
-                    </Button>
-                    <Button variant="outlined" fullWidth>
-                        {texts.removeLight}
-                    </Button>
-                </AccordionDetails>
-            </Accordion>
-
-            {/* Cámaras */}
-            <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography>{texts.cameras}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Button variant="outlined" fullWidth style={{ marginBottom: 10 }}>
-                        {texts.addCamera}
-                    </Button>
-                    <Button variant="outlined" fullWidth>
-                        {texts.removeCamera}
-                    </Button>
-                </AccordionDetails>
-            </Accordion>
-
-            {/* Calendario */}
-            <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography>{texts.calendar}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Button variant="contained" fullWidth onClick={() => navigate('/calendar')}>
-                        {texts.viewCalendar}
-                    </Button>
-                </AccordionDetails>
-            </Accordion>
-
-            {/* Registros manuales */}
-            <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography>{texts.manualRecords}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Button variant="contained" fullWidth onClick={() => navigate('/manual-records')}>
-                        {texts.viewManualRecords}
-                    </Button>
-                </AccordionDetails>
-            </Accordion>
 
 
         </div>

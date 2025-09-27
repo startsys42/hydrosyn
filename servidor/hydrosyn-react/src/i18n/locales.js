@@ -84,6 +84,14 @@ const texts = {
         users: "Usuarios",
         loginDisabled: "Inicio de sesión deshabilitado",
         recoveryDisabled: "Recuperación deshabilitada",
+        options: "Elige una opción:",
+        confirmation: "Confirmación",
+        no: "No",
+        yes: "Sí",
+        activateUser: "¿Está seguro que desea activar al usuario",
+        deactivateUser: "¿Está seguro que desea desactivar al usuario",
+        deleteUser: "¿Está seguro que desea eliminar al usuario? Esta acción no se puede deshacer y se borrarán los datos asociados.",
+
 
 
 
@@ -93,6 +101,9 @@ const texts = {
         renameESP32: 'Renombrar ESP32',
         nameESP32: 'Nombre del ESP32',
         selectESP32: 'Selecciona ESP32 a renombrar',
+        limitESP32: 'No puedes crear más de 2 ESP32 por sistema.',
+        regexNameESP32: 'Nombre inválido. Solo letras, números, guiones bajos, mínimo 3 caracteres y máximo 30.',
+        repeatNameESP32: 'Ya existe un ESP32 con ese nombre.',
 
         tanks: 'Tanques',
         addTank: 'Añadir tanque',
@@ -170,7 +181,7 @@ const texts = {
         newSystem: 'New system',
         deleteUser: 'Delete user',
         nameSystem: 'System name',
-        limitSystems: 'You cannot create more than 2 systems.',
+        limitSystems: 'You can not create more than 2 systems.',
         repeatNameSystem: 'A system with that name already exists.',
         regexNameSystem: 'Invalid name. Only letters, numbers, underscores, and spaces allowed, maximum 30 characters.',
         usersOptions: 'User options',
@@ -190,7 +201,7 @@ const texts = {
         delete: 'Delete',
         newSecret: 'New secret',
         messageChangeSecret: 'Are you sure you want to change the secret?',
-        dateTime: "Date and Time",
+        dateTime: "Date and time",
         date: "Date",
         reason: "Reason",
         owner: "Owner",
@@ -200,6 +211,14 @@ const texts = {
         users: "Users",
         loginDisabled: "Login disabled",
         recoveryDisabled: "Recovery disabled",
+        options: "Choose an option:",
+        confirmation: "Confirmation",
+        no: "No",
+        yes: "Yes",
+        activateUser: "Are you sure you want to activate the user",
+        deactivateUser: "Are you sure you want to deactivate the user",
+        deleteUser: "Are you sure you want to delete the user? This action cannot be undone and associated data will be removed.",
+
 
 
 
@@ -210,6 +229,9 @@ const texts = {
         renameESP32: 'Rename ESP32',
         nameESP32: 'ESP32 name',
         selectESP32: 'Select ESP32 to rename',
+        limitESP32: 'You can not create more than 2 ESP32 per system.',
+        regexNameESP32: 'Invalid name. Only letters, numbers, underscores, minimum 3 characters and maximum 30.',
+        repeatNameESP32: 'An ESP32 with that name already exists.',
 
 
         tanks: 'Tanks',

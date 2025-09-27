@@ -12,6 +12,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../../utils/supabaseClient';
 
 export default function NotificationsAccordion({ systemId }) {
+
     const texts = useTexts();
 
 
@@ -19,21 +20,22 @@ export default function NotificationsAccordion({ systemId }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-
+    const [pageSize, setPageSize] = useState(10);
+    const [page, setPage] = useState(0);
 
 
     useEffect(() => {
         const fetchLoginAttempts = async () => {
             try {
                 setLoading(true);
-                // Llama a la función de base de datos que creaste
+
                 const { data: { session } } = await supabase.auth.getSession();
                 if (!session || !session.user) throw new Error('User not authenticated');
                 const userId = session.user.id;
 
-                // Llamar a la RPC pasando el userId
+
                 const { data, error } = await supabase.rpc(
-                    'get_admin_login_attempts_with_user_email',
+                    'get_login_attempts_with_user_email',
                     { p_user_id: userId }
                 );
                 if (error) {
@@ -51,11 +53,29 @@ export default function NotificationsAccordion({ systemId }) {
         fetchLoginAttempts();
     }, []);
 
+    const translateReason = (reason) => {
 
+        let translationKey;
+
+        if (reason === 'Login attempt with a deactivated user') {
+            translationKey = 'loginDisabled';
+        } else if (reason === 'Password recovery attempt for an inactive user') {
+            translationKey = 'recoveryDisabled';
+        } else {
+            return reason;
+        }
+
+
+        return texts[translationKey];
+    };
 
     const columns = [
-        { field: 'user_email', headerName: 'Email', flex: 1, minWidth: 200 },
-        { field: 'reason', headerName: texts.reason, flex: 1, minWidth: 200 },
+        { field: 'user_email', headerName: 'Email', flex: 1, minWidth: 220 },
+        {
+            field: 'reason', headerName: texts.reason, flex: 1, minWidth: 220, renderCell: (params) => {
+                return translateReason(params.value);
+            }
+        },
         {
             field: 'attempt_created_at',
             headerName: texts.dateTime,
@@ -80,10 +100,10 @@ export default function NotificationsAccordion({ systemId }) {
                         day: '2-digit',
                         hour: '2-digit',
                         minute: '2-digit',
-                        second: '2-digit' // Añadimos segundos para más precisión
+                        second: '2-digit'
                     });
                 } catch (error) {
-                    console.error('Error formateando fecha:', error);
+
                     return 'Error date';
                 }
             }
@@ -91,25 +111,24 @@ export default function NotificationsAccordion({ systemId }) {
     ];
 
     return (
-        <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <h2>{texts.notifications}</h2>
-            </AccordionSummary>
-            <AccordionDetails>
-                <div style={{ height: 500, width: '100%' }}>
-                    <DataGrid className="datagrid"
-                        rows={attempts.map((a, index) => ({ id: index, ...a }))}
-                        columns={columns}
-                        loading={loading}
-                        pageSize={10}
-                        rowsPerPageOptions={[5, 10, 20]}
-                        pagination
-                    />
-                </div>
+        <>
+            <h2>{texts.notifications}</h2>
 
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-            </AccordionDetails>
-        </Accordion>
+
+            {/* <div style={{ height: 500, width: '100%' }}> */}
+            <DataGrid className="datagrid"
+                rows={attempts.map((a, index) => ({ id: index, ...a }))}
+                columns={columns}
+                loading={loading}
+                pageSize={10}
+                rowsPerPageOptions={[5, 10, 20]}
+                pagination
+            />
+            {/*   </div>*/}
+
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+
+        </>
 
     );
 }

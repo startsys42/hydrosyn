@@ -11,7 +11,7 @@ export default function CreateUserAdmin() {
     const [error, setError] = useState('');
     const texts = useTexts();
 
-    async function crearUsuario(email) {
+    async function createUser(email) {
         setLoading(true);
         setMessage('');
         setError('');
@@ -25,7 +25,7 @@ export default function CreateUserAdmin() {
             const accessToken = session.access_token;
             const { data, error: functionError } = await supabase.functions.invoke('createUserAdmin', {
                 body: { email: email },
-                // Añadir el token de autenticación en los headers
+
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
                 },
@@ -35,7 +35,7 @@ export default function CreateUserAdmin() {
                 throw new Error(functionError.message);
             }
 
-            // Manejamos errores desde el cuerpo de la respuesta, si los hay
+
             if (data.error) {
                 throw new Error(data.error);
             }
@@ -51,7 +51,7 @@ export default function CreateUserAdmin() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        crearUsuario(email);
+        createUser(email);
     };
 
     return (

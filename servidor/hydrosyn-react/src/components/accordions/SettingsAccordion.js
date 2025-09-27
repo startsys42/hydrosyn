@@ -192,59 +192,82 @@ export default function SettingsAccordion({ systemId }) {
 
     const toggleShowSecret = () => setShowSecret(!showSecret);
     return (
-        <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <h2>{texts.systemSettings}</h2>
-            </AccordionSummary>
-            <AccordionDetails>
-                <h3>{texts.renameSystem}</h3>
-
-                <form onSubmit={handleRename} className='form-container'>
-                    <label>
-                        {texts.newName}
-                    </label>
-                    <input
-                        type="text"
-                        value={systemName}
-                        onChange={(e) => setSystemName(e.target.value)}
-                        required
-                        placeholder={texts.newName} // placeholder más coherente
-                    />
-                    <button type="submit">{texts.renameSystem}</button>
-                </form>
-                {error && <div className="error-message" style={{ marginTop: '10px' }}>Error</div>}
-                <h3>{texts.changeSecret}</h3>
-                <h3>{texts.deleteSystem}</h3>
-
-                <button onClick={handleDelete}>
-                    {texts.deleteSystem}
-                </button>
+        <>
+            <h2>{texts.systemSettings}</h2>
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <h3>{texts.renameSystem}</h3>
+                </AccordionSummary>
+                <AccordionDetails>
 
 
-                <form onSubmit={handleSecretChange} className='form-container'>
-                    <label>{texts.currentSecret}</label>
-                    <input
-                        type={showSecret ? "text" : "password"}  // cambia dinámicamente
-                        value={secret}
-                        readOnly
-                    />
-                    <button type="button" onClick={toggleShowSecret}>
-                        {showSecret ? texts.hide : texts.show}
+                    <form onSubmit={handleRename} className='form-container'>
+                        <label>
+                            {texts.newName}
+                        </label>
+                        <input
+                            type="text"
+                            value={systemName}
+                            onChange={(e) => setSystemName(e.target.value)}
+                            required
+                            minLength={3}
+                            maxLength={30}
+                            placeholder={texts.newName} // placeholder más coherente
+                        />
+                        <button type="submit">{texts.renameSystem}</button>
+                    </form>
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
+
+                </AccordionDetails>
+            </Accordion>
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <h3>{texts.changeSecret}</h3>
+                </AccordionSummary>
+                <AccordionDetails>
+
+
+
+                    <form onSubmit={handleSecretChange} className='form-container'>
+                        <label>{texts.currentSecret}</label>
+                        <input
+                            type={showSecret ? "text" : "password"}  // cambia dinámicamente
+                            value={secret}
+                            readOnly
+                        />
+                        <button type="button" onClick={toggleShowSecret}>
+                            {showSecret ? texts.hide : texts.show}
+                        </button>
+
+                        <label>{texts.newSecret}</label>
+                        <input
+                            type="text"
+                            value={newSecret}
+                            onChange={(e) => setNewSecret(e.target.value)}
+                            required
+                            minLength={10}
+                            maxLength={30}
+                            placeholder={texts.newSecret}
+                        />
+                        <button type="submit">{texts.newSecret}</button>
+                    </form>
+
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                </AccordionDetails>
+            </Accordion>
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <h3>{texts.deleteSystem}</h3>
+                </AccordionSummary>
+                <AccordionDetails>
+
+
+                    <button onClick={handleDelete}>
+                        {texts.deleteSystem}
                     </button>
 
-                    <label>{texts.newSecret}</label>
-                    <input
-                        type="text"
-                        value={newSecret}
-                        onChange={(e) => setNewSecret(e.target.value)}
-                        required
-                        placeholder={texts.newSecret}
-                    />
-                    <button type="submit">{texts.newSecret}</button>
-                </form>
-
-                {error && <div className="error-message" style={{ marginTop: '10px' }}>Error</div>}
-            </AccordionDetails>
-        </Accordion>
+                </AccordionDetails>
+            </Accordion>
+        </>
     );
 }

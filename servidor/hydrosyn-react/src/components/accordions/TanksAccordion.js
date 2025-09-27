@@ -16,15 +16,32 @@ export default function TanksAccordion({ systemId }) {
     const texts = useTexts();
 
     return (
-        <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <h2>{texts.tankOptions}</h2>
-            </AccordionSummary>
-            <AccordionDetails>
-                <h3>{texts.addTank}</h3>
-                <h3>{texts.renameTank}</h3>
-                <h3>{texts.removeTank}</h3>
-            </AccordionDetails>
-        </Accordion>
+        <>
+            <h2>{texts.tanks}</h2>
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <h3>{texts.addTank}</h3>
+                </AccordionSummary>
+                <AccordionDetails>
+
+
+                </AccordionDetails>
+            </Accordion>
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <h3>{texts.renameTank}</h3>
+                </AccordionSummary>
+                <AccordionDetails>
+                </AccordionDetails>
+            </Accordion>
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+
+                    <h3>{texts.removeTank}</h3>
+                </AccordionSummary>
+                <AccordionDetails>
+                </AccordionDetails>
+            </Accordion>
+        </>
     );
 }

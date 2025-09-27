@@ -18,7 +18,7 @@ export default function CreateSystem() {
         setError('');
 
         // Regex: solo letras, números, guiones bajos, espacios intermedios, max 30 chars
-        const nameRegex = /^[A-Za-z0-9_][A-Za-z0-9_ ]{1,28}[A-Za-z0-9]$/;
+        const nameRegex = /^[A-Za-z0-9][A-Za-z0-9_ ]{1,28}[A-Za-z0-9]$/;
         if (!nameRegex.test(systemName)) {
             setError("regexNameSystem");
 
@@ -51,6 +51,23 @@ export default function CreateSystem() {
                 .maybeSingle();
 
             const isInRoles = !!roles?.user;
+
+            const { data: adminUser, error: adminError } = await supabase
+                .from('admin_users')
+                .select('is_active')
+                .eq('user', userId)
+                .maybeSingle();
+
+            if (adminError) {
+                console.error(adminError);
+                navigate('/dashboard');
+                return;
+            }
+
+            if (!adminUser || !adminUser.is_active) {
+                navigate('/dashboard');
+                return;
+            }
 
             // 3️⃣ Contar sistemas existentes de este usuario
             const { data: existingSystems } = await supabase

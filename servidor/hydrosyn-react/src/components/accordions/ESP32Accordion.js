@@ -30,26 +30,25 @@ export default function ESP32Accordion({ systemId }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
+    const [pageSize, setPageSize] = useState(10);
 
     const [espList, setEspList] = useState([]); // añadido
     const [selectedEsp, setSelectedEsp] = useState(null); // añadido
     const [newName, setNewName] = useState(''); // añadido
     const [attempts, setAttempts] = useState([]); // añadido: para DataGrid
     const [columns] = useState([ // añadido: columnas DataGrid
-        { field: 'name', headerName: 'Nombre', width: 200 },
+        { field: 'name', headerName: texts.esp32, width: 200 },
         {
-            field: 'actions',
-            headerName: 'Acciones',
-            width: 150,
+            headerName: texts.delete,
             sortable: false,
+            disableColumnMenu: true,
+            filterable: false,
+            width: 150,
             renderCell: (params) => (
-                <button
-                    onClick={() => handleDeleteESP32(params.row.id, params.row.name)}
-                    style={{ color: 'red' }}
-                >
-                    Borrar
+                <button style={{ padding: '4px 16px' }} onClick={() => navigate(`/system/${params.row.id}`)}>
+                    {texts.delete}
                 </button>
-            ),
+            )
         },
     ]);
 
@@ -62,7 +61,7 @@ export default function ESP32Accordion({ systemId }) {
                 .eq('system', systemId);
             if (error) {
                 console.error(error);
-                setError('Error al cargar ESP32');
+                setError('Error');
             } else {
                 setEspList(data);
                 setAttempts(data); // DataGrid
@@ -72,6 +71,22 @@ export default function ESP32Accordion({ systemId }) {
         fetchESP32();
     }, [systemId]);
     const handleDeleteESP32 = async (id, name) => {
+
+        const user = supabase.auth.user();
+        const { data: adminData, error: adminError } = await supabase
+            .from('admin_users')
+            .select('user, is_active')
+            .eq('user', user.id)
+            .maybeSingle();
+
+        if (adminError) throw adminError;
+
+        if (!adminData || !adminData.is_active) {
+            // Redirigir a dashboard si no está activo
+            navigate('/dashboard');
+            setLoading(false);
+            return;
+        }
         if (!window.confirm(`¿Seguro que quieres borrar el ESP32 "${name}"?`)) return;
 
         setLoading(true);
@@ -121,14 +136,25 @@ export default function ESP32Accordion({ systemId }) {
 
 
             const { data: adminData, error: adminError } = await supabase
-                .from('admin_users')
-                .select('user, is_active')
-                .eq('user', user.id)
+                .from('systems')
+                .select(`
+        id,
+        admin,
+        admin_users (
+            user,
+            is_active
+        )
+    `)
+                .eq('id', systemId)
+                .eq('admin_users.user', user.id)  // ← CORRECCIÓN: filtrar por admin_users.user
                 .maybeSingle();
 
             if (adminError) throw adminError;
+            const adminUser = Array.isArray(adminData?.admin_users)
+                ? adminData.admin_users[0]
+                : adminData?.admin_users;
 
-            if (!adminData.is_active) {
+            if (!adminData || !adminData?.is_active) {
                 // Redirigir a dashboard si no está activo
                 navigate('/dashboard');
                 setLoading(false);
@@ -145,15 +171,15 @@ export default function ESP32Accordion({ systemId }) {
                 if (countError) throw countError;
 
                 if (espCount.length >= 2) {
-                    setError('Ya hay 2 ESP32 en este sistema');
+                    setError(texts.limitESP32);
                     setLoading(false);
                     return;
                 }
             }
 
-            const nameRegex = /^[A-Za-z0-9_][A-Za-z0-9_ ]{1,28}[A-Za-z0-9]$/;
+            const nameRegex = /^[A-Za-z0-9][A-Za-z0-9_]{1,28}[A-Za-z0-9]$/;
             if (!nameRegex.test(systemName)) {
-                setError("regexNameSystem");
+                setError(texts.regexNameESP32);
 
                 setLoading(false);
                 return;
@@ -167,9 +193,13 @@ export default function ESP32Accordion({ systemId }) {
 
             if (nameError) throw nameError;
 
+            if (nameExists && nameExists.length > 0) {
+                setError(texts.repeatNameESP32);
+                setLoading(false);
+                return;
+            }
 
 
-            // 4️⃣ Insertar el nuevo ESP32
             const { data, error: insertError } = await supabase
                 .from('esp32')
                 .insert({ name: systemName, system: systemId })
@@ -180,15 +210,12 @@ export default function ESP32Accordion({ systemId }) {
             // Actualizar lista local y DataGrid
             setEspList(prev => [...prev, data[0]]);
             setAttempts(prev => [...prev, data[0]]);
-            setMessage('ESP32 creado correctamente');
+
             setSystemName('');
 
-
-            setMessage('ESP32 creado correctamente');
-            setSystemName('');
         } catch (err) {
             console.error(err);
-            setError(err.message || 'Error al crear ESP32');
+            setError(err.message || 'Error');
         } finally {
             setLoading(false);
         }
@@ -198,6 +225,21 @@ export default function ESP32Accordion({ systemId }) {
         if (!selectedEsp || !newName) return;
 
         setLoading(true);
+        const user = supabase.auth.user();
+        const { data: adminData, error: adminError } = await supabase
+            .from('admin_users')
+            .select('user, is_active')
+            .eq('user', user.id)
+            .maybeSingle();
+
+        if (adminError) throw adminError;
+
+        if (!adminData || !adminData.is_active) {
+            // Redirigir a dashboard si no está activo
+            navigate('/dashboard');
+            setLoading(false);
+            return;
+        }
         try {
             // Llamada a Supabase para renombrar
             // await supabase.from('esp32').update({ name: newName }).eq('id', selectedEsp);
@@ -216,90 +258,97 @@ export default function ESP32Accordion({ systemId }) {
     };
 
     return (
-        <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <h2>{texts.esp32}</h2>
-            </AccordionSummary>
-            <AccordionDetails>
-                {/* CREATE esp32 */}
-                <Accordion>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <h3>{texts.addESP32}</h3>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <form onSubmit={handleCreateESP32} className='form-container'>
-                            <label>
-                                {texts.nameESP32}
-                            </label>
-                            <input
-                                type="text"
-                                value={systemName}
-                                onChange={(e) => setSystemName(e.target.value)}
-                                required
-                                placeholder={texts.nameESP32} // placeholder más coherente
-                            />
-                            <button type="submit">{texts.addESP32}</button>
-                        </form>
-                        {error && <div className="error-message" style={{ marginTop: '10px' }}>Error</div>}
-                    </AccordionDetails>
-                </Accordion>
-                {/* RENAME esp32 */}
-                <Accordion>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <h3>{texts.renameESP32}</h3>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <form onSubmit={handleRename} className='form-container'>
-                            <label htmlFor="select-esp32">{texts.selectESP32}</label>
-                            <select
-                                value={selectedEsp || ''}
-                                onChange={(e) => setSelectedEsp(Number(e.target.value))}
-                            >
-                                <option value='' disabled>{texts.selectESP32}</option>
-                                {espList.map(esp => (
-                                    <option key={esp.id} value={esp.id}>{esp.name}</option>
-                                ))}
-                            </select>
-                            <label>{texts.newName}</label>
-                            <input
-                                type="text"
-                                value={newName}
-                                onChange={(e) => setNewName(e.target.value)}
-                                required
-                                placeholder={texts.newName}
-                            />
+        <>
+            <h2>{texts.esp32}</h2>
 
-                            <button type="submit" disabled={loading || !selectedEsp || !newName}>
-                                {loading ? texts.renaming : texts.rename}
-                            </button>
+            {/* CREATE esp32 */}
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <h3>{texts.addESP32}</h3>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <form onSubmit={handleCreateESP32} className='form-container'>
+                        <label>
+                            {texts.nameESP32}
+                        </label>
+                        <input
+                            type="text"
+                            value={systemName}
+                            onChange={(e) => setSystemName(e.target.value)}
+                            required
+                            minLength={3} maxLength={30}
+
+                            placeholder={texts.nameESP32} // placeholder más coherente
+                        />
+                        <button type="submit">{texts.addESP32}</button>
+                    </form>
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                </AccordionDetails>
+            </Accordion>
+            {/* RENAME esp32 */}
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <h3>{texts.renameESP32}</h3>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <form onSubmit={handleRename} className='form-container'>
+                        <label htmlFor="select-esp32">{texts.selectESP32}</label>
+                        <select
+                            value={selectedEsp || ''}
+                            onChange={(e) => setSelectedEsp(Number(e.target.value))}
+                        >
+                            <option value='' disabled>{texts.selectESP32}</option>
+                            {espList.map(esp => (
+                                <option key={esp.id} value={esp.id}>{esp.name}</option>
+                            ))}
+                        </select>
+                        <label>{texts.newName}</label>
+                        <input
+                            type="text"
+                            value={newName}
+                            onChange={(e) => setNewName(e.target.value)}
+                            required
+                            placeholder={texts.newName}
+                            minLength={3} maxLength={30}
+                        />
+
+                        <button type="submit" disabled={loading || !selectedEsp || !newName}>
+                            {loading ? texts.renaming : texts.rename}
+                        </button>
 
 
-                        </form>
-                        {message && <p style={{ color: 'green' }}>{texts[message]}</p>}
-                        {error && <p style={{ color: 'red' }}>{texts[error]}</p>}
-                    </AccordionDetails>
-                </Accordion>
-                {/* DELETE esp32 */}
-                <Accordion>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <h3>{texts.removeESP32}</h3>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <div style={{ height: 500, width: '100%' }}>
-                            <DataGrid className="datagrid"
-                                rows={attempts.map((a, index) => ({ id: index, ...a }))}
-                                columns={columns}
-                                loading={loading}
-                                pageSize={10}
-                                rowsPerPageOptions={[5, 10, 20]}
-                                pagination
-                            />
-                        </div>
+                    </form>
+                    {message && <p style={{ color: 'green' }}>{texts[message]}</p>}
+                    {error && <p style={{ color: 'red' }}>{texts[error]}</p>}
+                </AccordionDetails>
+            </Accordion>
+            {/* DELETE esp32 */}
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <h3>{texts.removeESP32}</h3>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <div style={{ height: 500, width: '100%' }}>
+                        <DataGrid className="datagrid"
 
-                        {error && <p style={{ color: 'red' }}>{error}</p>}
-                    </AccordionDetails>
-                </Accordion>
-            </AccordionDetails>
-        </Accordion>
+                            rows={attempts.map((a, index) => ({ id: index, ...a }))}
+                            columns={columns}
+                            loading={loading}
+                            pagination
+                            pageSize={pageSize}
+                            onPageSizeChange={setPageSize}
+                            sortingMode="client"
+
+
+                            disableSelectionOnClick
+                        />
+
+                    </div>
+
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                </AccordionDetails>
+            </Accordion>
+        </>
+
     );
 }

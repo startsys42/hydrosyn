@@ -9,9 +9,10 @@ import { useNavigate } from 'react-router-dom';
 const ActivateDeleteUserAdmin = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
-    const t = useTexts();
+    const texts = useTexts();
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
+    const [pageSize, setPageSize] = useState(10);
     const [currentUser, setCurrentUser] = useState(null);
     const [toggleValue, setToggleValue] = useState(false);
     const navigate = useNavigate();
@@ -25,7 +26,26 @@ const ActivateDeleteUserAdmin = () => {
         setLoading(false);
     };
 
-    const handleToggleClick = (user) => {
+    const handleToggleClick = async (user) => {
+        const { data, error } = await supabase.auth.getSession();
+        const session = data?.session;
+        const currentUserId = session?.user?.id;
+        const { data: roleData, error: roleError } = await supabase
+            .from('roles')
+            .select('user')
+            .eq('user', currentUserId)
+            .maybeSingle();
+
+        if (roleError) {
+
+            return;
+        }
+
+
+        if (!roleData) {
+            navigate('/dashboard', { replace: true });
+            return;
+        }
         setCurrentUser(user);
         setToggleValue(user.is_active);
         setConfirmOpen(true);
@@ -33,113 +53,176 @@ const ActivateDeleteUserAdmin = () => {
 
     const handleToggleConfirm = async () => {
         if (!currentUser) return;
-        const { error } = await supabase
-            .from('admin_users')
-            .update({ is_active: !toggleValue })
-            .eq('id', currentUser.id);
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+            const accessToken = session?.access_token;
 
-        if (error) console.error(error);
-        else {
-            setUsers((prev) =>
-                prev.map((u) => u.id === currentUser.id ? { ...u, is_active: !toggleValue } : u)
+            // Llamada a la Edge Function
+            const { data, error } = await supabase.functions.invoke('activateUserAdmin', {
+                body: JSON.stringify({
+                    userId: currentUser.id, // aquí el UID real
+                    isActive: !toggleValue,   // true=activar, false=desactivar
+                }),
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (error) throw new Error(error.message);
+            if (data.error) throw new Error(data.error);
+
+            // Actualiza la tabla local
+            setUsers(prev =>
+                prev.map(u => u.id === currentUser.id ? { ...u, is_active: !toggleValue } : u)
             );
+        } catch (err) {
+            console.error(err);
+
+            setConfirmOpen(false);
+            setCurrentUser(null);
+        }
+    };
+    const handleDeleteClick = async (user) => {
+        const { data, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError || !data?.session) {
+
+            navigate('/dashboard', { replace: true });
+            return;
+        }
+        const currentUserId = data.session.user.id;
+        const { data: roleData, error: roleError } = await supabase
+            .from('roles')
+            .select('user')
+            .eq('user', currentUserId)
+            .maybeSingle();
+
+        if (roleError) {
+
+            return;
         }
 
-        setConfirmOpen(false);
-        setCurrentUser(null);
-    };
 
-    const handleDeleteClick = (user) => {
-        setCurrentUser(user);
+        if (!roleData) {
+            navigate('/dashboard', { replace: true });
+            return;
+        }
+        setCurrentUser({ ...user });
         setDeleteOpen(true);
     };
-
     const handleDeleteConfirm = async () => {
         if (!currentUser) return;
-        const { error } = await supabase
-            .from('admin_users')
-            .delete()
-            .eq('id', currentUser.id);
 
-        if (error) console.error(error);
-        else setUsers((prev) => prev.filter((u) => u.id !== currentUser.id));
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+            const accessToken = session?.access_token;
+
+            // Llamada a la Edge Function de borrado
+            const { data, error } = await supabase.functions.invoke('deleteAdminUser', {
+                body: JSON.stringify({ userId: currentUser.id }),
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (error) throw new Error(error.message);
+            if (data.error) throw new Error(data.error);
+
+            // Actualiza la tabla local
+            setUsers(prev => prev.filter(u => u.id !== currentUser.id));
+        } catch (err) {
+            console.error(err);
+        }
 
         setDeleteOpen(false);
         setCurrentUser(null);
     };
 
+
+
     const columns = [
-        { field: 'email', headerName: t.email, width: 250 },
+        { field: 'email', headerName: texts.email, width: 250 },
         {
             field: 'is_active',
-            headerName: t.active,
+            headerName: texts.active,
             width: 150,
             renderCell: (params) => (
                 <Checkbox
                     checked={params.value}
-                    onChange={() => handleToggleClick(params.row)}
+                    onChange={async () => await handleToggleClick(params.row)}
                 />
             )
         },
         {
             field: 'actions',
-            headerName: t.delete,
+            headerName: texts.delete,
             sortable: false,
             disableColumnMenu: true,
             filterable: false,
             width: 150,
             renderCell: (params) => (
-                <button style={{ padding: '4px 16px' }} onClick={() => navigate(`/system/${params.row.id}`)}>
-                    {t.delete}
+                <button style={{ padding: '4px 16px' }} onClick={async () => await handleDeleteClick(params.row)}>
+                    {texts.delete}
                 </button>
             )
         }
     ];
 
-    if (loading) return <Typography>Cargando usuarios...</Typography>;
+
+
+
+
+    if (loading) return <p> </p>;
 
     return (
         <div className='div-main-login'>
-            <h1>{t.users}</h1>
+            <h1>{texts.users}</h1>
 
 
-            <DataGrid
-                rows={users}
-                columns={columns}
-                autoHeight
-                pagination
-                pageSize={5}
-                rowsPerPageOptions={[5, 10]}
-                disableSelectionOnClick
-                getRowId={(row) => row.id}
-            />
+            <div style={{ height: 500, width: '100%' }}>
+                <DataGrid className="datagrid"
+                    rows={users.map(u => ({ id: u.user, email: u.email, is_active: u.is_active }))}
+                    columns={columns}
+                    loading={loading}
+                    pagination
+                    pageSize={pageSize}
+                    onPageSizeChange={setPageSize}
+                    sortingMode="client"
+
+
+                    disableSelectionOnClick
+                />
+            </div>
 
 
             {/* Confirmación para toggle */}
             <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
-                <DialogTitle>Confirmar acción</DialogTitle>
+                <DialogTitle>{texts.confirmation}</DialogTitle>
                 <DialogContent>
                     <Typography>
-                        ¿Está seguro que desea {toggleValue ? 'desactivar' : 'activar'} al usuario {currentUser?.email}?
+                        {toggleValue
+                            ? `${texts.deactivateUser} ${currentUser?.email}?`
+                            : `${texts.activateUser} ${currentUser?.email}?`}
                     </Typography>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setConfirmOpen(false)}>No</Button>
-                    <Button onClick={handleToggleConfirm} variant="contained">Sí</Button>
+                    <Button onClick={() => setConfirmOpen(false)}>{texts.no}</Button>
+                    <Button onClick={handleToggleConfirm} variant="contained">{texts.yes}</Button>
                 </DialogActions>
             </Dialog>
 
             {/* Confirmación para borrar */}
             <Dialog open={deleteOpen} onClose={() => setDeleteOpen(false)}>
-                <DialogTitle>Confirmar eliminación</DialogTitle>
+                <DialogTitle>{texts.confirmation}</DialogTitle>
                 <DialogContent>
                     <Typography>
-                        ¿Está seguro que desea eliminar al usuario {currentUser?.email}?
+                        {`${texts.deleteUser} ${currentUser?.email}?`}
                     </Typography>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setDeleteOpen(false)}>No</Button>
-                    <Button onClick={handleDeleteConfirm} variant="contained" color="error">Sí</Button>
+                    <Button onClick={() => setDeleteOpen(false)}>{texts.no}</Button>
+                    <Button onClick={handleDeleteConfirm} variant="contained" color="error">{texts.yes}</Button>
                 </DialogActions>
             </Dialog>
         </div>

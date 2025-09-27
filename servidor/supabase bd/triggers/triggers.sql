@@ -442,3 +442,44 @@ CREATE TRIGGER trg_prevent_duplicate_tank_name_update
 BEFORE UPDATE ON public.tanks
 FOR EACH ROW
 EXECUTE FUNCTION prevent_duplicate_tank_name_update();
+
+
+CREATE OR REPLACE FUNCTION prevent_manual_secret_delete()
+RETURNS trigger AS $$
+BEGIN
+    -- Si el sistema asociado sigue existiendo, no permitir borrar
+    IF EXISTS (SELECT 1 FROM systems WHERE id = OLD.system) THEN
+        RAISE EXCEPTION 'Cannot delete a secret manually while its system exists';
+    END IF;
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER prevent_manual_secret_delete_trigger
+BEFORE DELETE ON system_secrets
+FOR EACH ROW
+EXECUTE FUNCTION prevent_manual_secret_delete();
+
+
+CREATE OR REPLACE FUNCTION deactivate_system_users()
+RETURNS trigger AS $$
+BEGIN
+    -- Verifica si se desactivó el admin
+    IF OLD.is_active = TRUE AND NEW.is_active = FALSE THEN
+        -- Desactiva todos los users de los sistemas de este admin
+        UPDATE systems_users su
+        SET is_active = FALSE
+        FROM systems s
+        WHERE s.admin = NEW.user
+          AND su.system = s.id;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger sobre admin_users
+CREATE TRIGGER trigger_deactivate_system_users
+AFTER UPDATE ON admin_users
+FOR EACH ROW
+WHEN (OLD.is_active IS DISTINCT FROM NEW.is_active)
+EXECUTE FUNCTION deactivate_system_users();

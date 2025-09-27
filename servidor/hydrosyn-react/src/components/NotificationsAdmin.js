@@ -23,12 +23,12 @@ export default function NotificationsAdmin() {
         const fetchLoginAttempts = async () => {
             try {
                 setLoading(true);
-                // Llama a la función de base de datos que creaste
+
                 const { data: { session } } = await supabase.auth.getSession();
                 if (!session || !session.user) throw new Error('User not authenticated');
                 const userId = session.user.id;
 
-                // Llamar a la RPC pasando el userId
+
                 const { data, error } = await supabase.rpc(
                     'get_admin_login_attempts_with_user_email',
                     { p_user_id: userId }
@@ -49,7 +49,7 @@ export default function NotificationsAdmin() {
     }, []);
 
     const translateReason = (reason) => {
-        // Primero normalizamos a una clave constante
+
         let translationKey;
 
         if (reason === 'Login attempt with a deactivated user') {
@@ -57,10 +57,10 @@ export default function NotificationsAdmin() {
         } else if (reason === 'Password recovery attempt for an inactive user') {
             translationKey = 'recoveryDisabled';
         } else {
-            return reason; // Si no está en el mapeo, devuelve original
+            return reason;
         }
 
-        // Esto SÍ cambiará con el idioma porque usa texts
+
         return texts[translationKey];
     };
 
@@ -95,7 +95,7 @@ export default function NotificationsAdmin() {
                         day: '2-digit',
                         hour: '2-digit',
                         minute: '2-digit',
-                        second: '2-digit' // Añadimos segundos para más precisión
+                        second: '2-digit'
                     });
                 } catch (error) {
 

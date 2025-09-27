@@ -180,59 +180,78 @@ export default function UserAccordion({ systemId }) {
 
 
     return (
-        <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <h2>{texts.users}</h2>
-            </AccordionSummary>
-            <AccordionDetails>
+        <>
+            <h2>{texts.users}</h2>
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <h3>{texts.createUser}</h3>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <form onSubmit={handleSubmit} className='form-container'>
+                        <label>
+                            {texts.email}
+                        </label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            placeholder={texts.email}
+                        />
 
-                <h3>{texts.createUser}</h3>
-                <form onSubmit={handleSubmit} className='form-container'>
-                    <label>
-                        {texts.email}
-                    </label>
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        placeholder={texts.email}
+                        <button type="submit" disabled={loading}>
+                            {loading ? texts.creating : texts.createUser}
+                        </button>
+                    </form>
+                    {message && <p style={{ color: 'green' }}>{texts[message]}</p>}
+                    {error && <p style={{ color: 'red' }}>{texts[error]}</p>}
+                </AccordionDetails>
+            </Accordion>
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <h3>{texts.deleteUser}</h3>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <DataGrid
+                        rows={users}
+                        columns={deleteColumns}
+                        pageSize={5}
+                        rowsPerPageOptions={[5, 10]}
+                        checkboxSelection={false}
                     />
+                </AccordionDetails>
+            </Accordion>
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
 
-                    <button type="submit" disabled={loading}>
-                        {loading ? texts.creating : texts.createUser}
-                    </button>
-                </form>
-                {message && <p style={{ color: 'green' }}>{texts[message]}</p>}
-                {error && <p style={{ color: 'red' }}>{texts[error]}</p>}
 
-                <h3>{texts.deleteUser}</h3>
 
-                <DataGrid
-                    rows={users}
-                    columns={deleteColumns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5, 10]}
-                    checkboxSelection={false}
-                />
-                <h3>{texts.activateUser}</h3>
+                    <h3>{texts.activateUser}</h3>
+                </AccordionSummary>
+                <AccordionDetails>
 
-                <DataGrid
-                    rows={users}
-                    columns={activateColumns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5, 10]}
-                />
-                <h3>{texts.associateUser}</h3>
-
-                <DataGrid
-                    rows={users}
-                    columns={associateColumns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5, 10]}
-                />
-            </AccordionDetails>
-        </Accordion>
+                    <DataGrid
+                        rows={users}
+                        columns={activateColumns}
+                        pageSize={5}
+                        rowsPerPageOptions={[5, 10]}
+                    />
+                </AccordionDetails>
+            </Accordion>
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <h3>{texts.associateUser}</h3>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <DataGrid
+                        rows={users}
+                        columns={associateColumns}
+                        pageSize={5}
+                        rowsPerPageOptions={[5, 10]}
+                    />
+                </AccordionDetails>
+            </Accordion>
+        </>
     );
 }
 

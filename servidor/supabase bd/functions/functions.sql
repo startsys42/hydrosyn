@@ -6,7 +6,19 @@ create or replace function insert_system_with_secret(
 returns table(system_id uuid) as $$
 declare
   new_system_id uuid;
+  is_admin_active boolean;
 begin
+ SELECT is_active INTO is_admin_active
+  FROM admin_users
+  WHERE user = admin_id;
+  
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'Admin user not found';
+  END IF;
+  
+  IF NOT is_admin_active THEN
+    RAISE EXCEPTION 'Admin user is not active';
+  END IF;
 IF EXISTS (
     SELECT 1
     FROM systems
