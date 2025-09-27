@@ -54,6 +54,10 @@ const ActivateDeleteUserAdmin = () => {
     const handleToggleConfirm = async () => {
         if (!currentUser) return;
         try {
+            console.log('📝 Datos:', {
+                currentUserId: currentUser.id,
+                currentUserEmail: currentUser.email
+            });
             const { error } = await supabase.rpc('change_admin_user_status', {
                 target_user_id: currentUser.id
             })
