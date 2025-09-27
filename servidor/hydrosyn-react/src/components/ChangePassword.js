@@ -101,7 +101,7 @@ export default function ChangePassword() {
                 </button>
 
 
-                {message.text && (
+                {messageKey && (
                     <div >
                         {texts[messageKey]}
                     </div>

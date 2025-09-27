@@ -54,19 +54,12 @@ const ActivateDeleteUserAdmin = () => {
     const handleToggleConfirm = async () => {
         if (!currentUser) return;
         try {
-            const { data: { session } } = await supabase.auth.getSession();
-            const accessToken = session?.access_token;
-
-            // Llamada a la Edge Function
-            const { data, error } = await supabase.functions.invoke('activateUserAdmin', {
-                body: {
-                    userId: currentUser.id,
-                    isActive: !toggleValue,
-                }
-            });
+            const { error } = await supabase.rpc('change_admin_user_status', {
+                target_user_id: currentUser.id
+            })
 
             if (error) throw new Error(error.message);
-            if (data.error) throw new Error(data.error);
+
 
             // Actualiza la tabla local
             setUsers(prev =>
@@ -114,14 +107,13 @@ const ActivateDeleteUserAdmin = () => {
             const accessToken = session?.access_token;
 
             // Llamada a la Edge Function de borrado
-            const { data, error } = await supabase.functions.invoke('deleteAdminUser', {
-                body: {
-                    userId: currentUser.id
-                }
+            const { error } = await supabase.rpc('delete_admin_user', {
+                target_user_id: currentUser.id
             });
 
             if (error) throw new Error(error.message);
-            if (data.error) throw new Error(data.error);
+
+
 
             // Actualiza la tabla local
             setUsers(prev => prev.filter(u => u.id !== currentUser.id));

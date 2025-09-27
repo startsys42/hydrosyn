@@ -100,7 +100,7 @@ export default function ChangeEmail() {
                     {loading ? texts.changing : texts.changeEmail}
                 </button>
 
-                {message.text && (
+                {messageKey && (
                     <div >
                         {texts[messageKey]}
                     </div>

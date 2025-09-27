@@ -28,6 +28,10 @@ export default function RecoverPassword() {
             setMessage('If your account exists, you will receive a recovery link in your email.');
             const { data, error: edgeError } = await supabase.functions.invoke('insertAttempts', {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+
+                },
                 body: JSON.stringify({ email }),
             });
 

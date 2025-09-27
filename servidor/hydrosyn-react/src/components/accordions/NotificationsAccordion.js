@@ -36,7 +36,10 @@ export default function NotificationsAccordion({ systemId }) {
 
                 const { data, error } = await supabase.rpc(
                     'get_login_attempts_with_user_email',
-                    { p_user_id: userId }
+                    {
+                        p_user_id: userId,
+                        p_system_id: systemId
+                    }
                 );
                 if (error) {
                     throw error;
@@ -51,7 +54,7 @@ export default function NotificationsAccordion({ systemId }) {
         };
 
         fetchLoginAttempts();
-    }, []);
+    }, [systemId]);
 
     const translateReason = (reason) => {
 
@@ -120,9 +123,13 @@ export default function NotificationsAccordion({ systemId }) {
                 rows={attempts.map((a, index) => ({ id: index, ...a }))}
                 columns={columns}
                 loading={loading}
-                pageSize={10}
-                rowsPerPageOptions={[5, 10, 20]}
                 pagination
+                pageSize={pageSize}
+                onPageSizeChange={setPageSize}
+                sortingMode="client"
+
+
+                disableSelectionOnClick
             />
             {/*   </div>*/}
 
