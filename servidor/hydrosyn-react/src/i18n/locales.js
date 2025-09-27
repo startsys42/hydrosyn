@@ -47,7 +47,7 @@ const texts = {
         changing: 'Cambiando...',
         creating: 'Creando...',
         active: 'Activo',
-        messageEmail: '¡Los correos electrónicos no coinciden',
+        messageEmail: 'Revisa el email para confirmar el cambio',
         messagePassword: '¡Contraseña cambiada con éxito!',
         noEquals: 'No coinciden',
         systems: 'Sistema',
@@ -90,7 +90,8 @@ const texts = {
         yes: "Sí",
         activateUser: "¿Está seguro que desea activar al usuario",
         deactivateUser: "¿Está seguro que desea desactivar al usuario",
-        deleteUser: "¿Está seguro que desea eliminar al usuario? Esta acción no se puede deshacer y se borrarán los datos asociados.",
+        deleteUser: "¿Está seguro que desea eliminar al usuario",
+        actionIrreversible: "Esta acción no se puede deshacer y se borrarán los datos asociados.",
 
 
 
@@ -174,7 +175,7 @@ const texts = {
         changing: 'Changing...',
         creating: 'Creating...',
         active: 'Active',
-        messageEmail: 'Emails changed successfully',
+        messageEmail: 'Check your email to confirm the change',
         messagePassword: 'Password changed successfully',
         noEquals: 'Do not match',
         systems: 'System',
@@ -217,7 +218,8 @@ const texts = {
         yes: "Yes",
         activateUser: "Are you sure you want to activate the user",
         deactivateUser: "Are you sure you want to deactivate the user",
-        deleteUser: "Are you sure you want to delete the user? This action cannot be undone and associated data will be removed.",
+        deleteUser: "Are you sure you want to delete the user",
+        actionIrreversible: "This action can not be undone and associated data will be removed.",
 
 
 

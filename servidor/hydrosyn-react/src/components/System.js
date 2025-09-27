@@ -84,6 +84,7 @@ export default function System() {
         <div className='div-main-login'>
             <h1>{texts.systems}: {system.name}</h1>
             <label htmlFor="options">{texts.options}</label>
+            <br />
             <select id="options" value={selected} onChange={handleChange}>
                 <option value="">--  --</option>
                 {options.map(opt => (

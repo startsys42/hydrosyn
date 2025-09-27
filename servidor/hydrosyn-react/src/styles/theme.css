@@ -431,3 +431,14 @@ div[class*="MuiDataGrid-columnHeader"] {
     background-color: var(--datagrid-bg) !important;
     color: var(--datagrid-text) !important;
 }
+
+#options {
+  background-color: white; /* fondo del select */
+  color: black;            /* texto negro */
+ 
+}
+
+#options option {
+  background-color: white; /* fondo blanco en el desplegable */
+  color: black;            /* texto negro */
+}

@@ -59,13 +59,9 @@ const ActivateDeleteUserAdmin = () => {
 
             // Llamada a la Edge Function
             const { data, error } = await supabase.functions.invoke('activateUserAdmin', {
-                body: JSON.stringify({
-                    userId: currentUser.id, // aquí el UID real
-                    isActive: !toggleValue,   // true=activar, false=desactivar
-                }),
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json'
+                body: {
+                    userId: currentUser.id,
+                    isActive: !toggleValue,
                 }
             });
 
@@ -119,10 +115,8 @@ const ActivateDeleteUserAdmin = () => {
 
             // Llamada a la Edge Function de borrado
             const { data, error } = await supabase.functions.invoke('deleteAdminUser', {
-                body: JSON.stringify({ userId: currentUser.id }),
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json'
+                body: {
+                    userId: currentUser.id
                 }
             });
 
@@ -150,7 +144,7 @@ const ActivateDeleteUserAdmin = () => {
             renderCell: (params) => (
                 <Checkbox
                     checked={params.value}
-                    onChange={async () => await handleToggleClick(params.row)}
+                    onChange={() => handleToggleClick(params.row)}
                 />
             )
         },
@@ -162,7 +156,7 @@ const ActivateDeleteUserAdmin = () => {
             filterable: false,
             width: 150,
             renderCell: (params) => (
-                <button style={{ padding: '4px 16px' }} onClick={async () => await handleDeleteClick(params.row)}>
+                <button style={{ padding: '4px 16px' }} onClick={() => handleDeleteClick(params.row)}>
                     {texts.delete}
                 </button>
             )
@@ -217,7 +211,7 @@ const ActivateDeleteUserAdmin = () => {
                 <DialogTitle>{texts.confirmation}</DialogTitle>
                 <DialogContent>
                     <Typography>
-                        {`${texts.deleteUser} ${currentUser?.email}?`}
+                        {`${texts.deleteUser} ${currentUser?.email}? ${texts.actionIrreversible}`}
                     </Typography>
                 </DialogContent>
                 <DialogActions>

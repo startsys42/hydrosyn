@@ -8,6 +8,7 @@ export default function ChangeEmail() {
     const [newEmail, setNewEmail] = useState('');
     const [confirmEmail, setConfirmEmail] = useState('');
     const [message, setMessage] = useState({ text: '', type: '' });
+    const [messageKey, setMessageKey] = useState('');
     const [loading, setLoading] = useState(false);
     const texts = useTexts();
     const [user, setUser] = useState(null);
@@ -22,10 +23,11 @@ export default function ChangeEmail() {
         e.preventDefault();
         setLoading(true);
         setMessage({ text: '', type: '' });
+        setMessageKey('');
 
         // Validaciones
         if ((newEmail.trim() !== confirmEmail.trim())) {
-            setMessage({ text: texts.noEquals, type: 'error' });
+            setMessageKey('noEquals');
             setLoading(false);
             return;
         }
@@ -40,10 +42,7 @@ export default function ChangeEmail() {
 
             if (updateError) throw updateError;
 
-            setMessage({
-                text: texts.messageEmail,
-                type: 'success',
-            });
+            setMessageKey('messageEmail');
 
             // Limpiar formulario
             setNewEmail('');
@@ -103,7 +102,7 @@ export default function ChangeEmail() {
 
                 {message.text && (
                     <div >
-                        {message.text}
+                        {texts[messageKey]}
                     </div>
                 )}
             </form>

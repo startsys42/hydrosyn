@@ -8,6 +8,7 @@ export default function ChangePassword() {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState({ text: '', type: '' });
+    const [messageKey, setMessageKey] = useState('');
     const [loading, setLoading] = useState(false);
     const texts = useTexts();
     const [user, setUser] = useState(null);
@@ -22,10 +23,11 @@ export default function ChangePassword() {
         e.preventDefault();
         setLoading(true);
         setMessage({ text: '', type: '' });
+        setMessageKey('');
 
         // Validaciones
         if ((newPassword.trim() !== confirmPassword.trim())) {
-            setMessage({ text: texts.noEquals, type: 'error' });
+            setMessageKey('noEquals');
             setLoading(false);
             return;
         }
@@ -40,11 +42,7 @@ export default function ChangePassword() {
 
             if (updateError) throw updateError;
 
-            setMessage({
-                text: texts.messagePassword,
-                type: 'success',
-            });
-
+            setMessageKey('messagePassword');
             // Limpiar formulario
             setNewPassword('');
             setConfirmPassword('');
@@ -105,7 +103,7 @@ export default function ChangePassword() {
 
                 {message.text && (
                     <div >
-                        {message.text}
+                        {texts[messageKey]}
                     </div>
                 )}
             </form>
