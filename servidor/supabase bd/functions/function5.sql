@@ -17,7 +17,7 @@ BEGIN
     
     -- 2. Verificar que el llamante está en public.roles (es admin)
     SELECT EXISTS (
-        SELECT 1 FROM public.roles WHERE user = caller_id
+        SELECT 1 FROM public.roles WHERE "user" = caller_id
     ) INTO is_caller_admin;
     
     IF NOT is_caller_admin THEN
@@ -27,7 +27,7 @@ BEGIN
     -- 3. Cambiar el estado is_active al valor contrario
     UPDATE public.admin_users 
     SET is_active = NOT is_active
-    WHERE user = target_user_id;
+    WHERE "user" = target_user_id;
     
     -- Si no se actualizó ninguna fila, el usuario no existe
     IF NOT FOUND THEN

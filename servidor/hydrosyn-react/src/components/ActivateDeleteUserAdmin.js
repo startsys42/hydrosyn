@@ -67,8 +67,14 @@ const ActivateDeleteUserAdmin = () => {
 
             // Actualiza la tabla local
             setUsers(prev =>
-                prev.map(u => u.id === currentUser.id ? { ...u, is_active: !toggleValue } : u)
+                prev.map(u =>
+                    u.user === currentUser.id  // Comparar con u.user (no u.id)
+                        ? { ...u, is_active: !u.is_active }  // Usar el valor actual, no toggleValue
+                        : u
+                )
             );
+            setConfirmOpen(false);
+            setCurrentUser(null);
         } catch (err) {
             console.error(err);
 
@@ -120,7 +126,7 @@ const ActivateDeleteUserAdmin = () => {
 
 
             // Actualiza la tabla local
-            setUsers(prev => prev.filter(u => u.id !== currentUser.id));
+            setUsers(prev => prev.filter(u => u.user !== currentUser.id));
         } catch (err) {
             console.error(err);
         }

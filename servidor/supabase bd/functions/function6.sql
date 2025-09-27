@@ -26,7 +26,7 @@ BEGIN
     
     -- Verificar que el llamante es admin
     SELECT EXISTS (
-        SELECT 1 FROM public.roles WHERE user = caller_id
+        SELECT 1 FROM public.roles WHERE "user" = caller_id
     ) INTO is_caller_admin;
     
     IF NOT is_caller_admin THEN
@@ -38,7 +38,7 @@ BEGIN
     service_key := 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlvbHpka3RhbnBubG9mZ2Zqb3J3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDIxMzc1NCwiZXhwIjoyMDY5Nzg5NzU0fQ.WkCG_yk-NHjMh1dtPcLvwPnFtDAy-vNxFNPDeT4WrhA';
     
     -- 3. Primero eliminar de admin_users (si existe)
-    DELETE FROM public.admin_users WHERE user = target_user_id;
+    DELETE FROM public.admin_users WHERE "user" = target_user_id;
     
     -- 4. Buscar y eliminar usuarios huérfanos
     FOR orphaned_user IN 
@@ -48,7 +48,7 @@ BEGIN
         AND NOT EXISTS (SELECT 1 FROM public.admin_users au2 WHERE au2.user = au.id)
         AND NOT EXISTS (SELECT 1 FROM public.systems_users su WHERE su.user_id = au.id)
         AND au.id != caller_id
-        AND au.id != target_user_id
+      
     LOOP
         BEGIN
             -- Llamar a la API de Auth para eliminar el usuario huérfano
