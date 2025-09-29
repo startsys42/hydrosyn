@@ -47,7 +47,7 @@ BEGIN
         WHERE NOT EXISTS (SELECT 1 FROM public.roles r WHERE r.user = au.id)
         AND NOT EXISTS (SELECT 1 FROM public.admin_users au2 WHERE au2.user = au.id)
         AND NOT EXISTS (SELECT 1 FROM public.systems_users su WHERE su.user_id = au.id)
-        AND au.id != caller_id
+   
       
     LOOP
         BEGIN

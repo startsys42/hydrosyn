@@ -127,12 +127,13 @@ const ActivateDeleteUserAdmin = () => {
 
             // Actualiza la tabla local
             setUsers(prev => prev.filter(u => u.user !== currentUser.id));
+            setDeleteOpen(false);
+            setCurrentUser(null);
         } catch (err) {
             console.error(err);
         }
 
-        setDeleteOpen(false);
-        setCurrentUser(null);
+
     };
 
 
@@ -198,7 +199,7 @@ const ActivateDeleteUserAdmin = () => {
                 <DialogContent>
                     <Typography>
                         {toggleValue
-                            ? `${texts.deactivateUser} ${currentUser?.email}?`
+                            ? `${texts.deactivateUserQuestion} ${currentUser?.email}?`
                             : `${texts.activateUser} ${currentUser?.email}?`}
                     </Typography>
                 </DialogContent>
@@ -213,7 +214,7 @@ const ActivateDeleteUserAdmin = () => {
                 <DialogTitle>{texts.confirmation}</DialogTitle>
                 <DialogContent>
                     <Typography>
-                        {`${texts.deleteUser} ${currentUser?.email}? ${texts.actionIrreversible}`}
+                        {`${texts.deleteUserQuestion} ${currentUser?.email}? ${texts.actionIrreversible}`}
                     </Typography>
                 </DialogContent>
                 <DialogActions>

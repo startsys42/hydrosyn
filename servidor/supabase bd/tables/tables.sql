@@ -36,15 +36,28 @@ CREATE TABLE public.systems_users (
   system bigint NOT NULL,
   user_id uuid NOT NULL,
   is_active boolean NOT NULL DEFAULT true,
-  reason text NOT NULL,
+
   associated_at timestamp with time zone NOT NULL DEFAULT now(),
   CONSTRAINT systems_users_pkey PRIMARY KEY (id),
   CONSTRAINT systems_users_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
   ON UPDATE CASCADE,
+
   CONSTRAINT systems_users_system_fkey FOREIGN KEY (system) REFERENCES public.systems(id) ON DELETE CASCADE
   ON UPDATE CASCADE
 );
 
+
+CREATE TABLE public.systems_users (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  system bigint NOT NULL,
+  user_id uuid NOT NULL,
+  is_active boolean NOT NULL DEFAULT true,
+  associated_at timestamp with time zone NOT NULL,
+ 
+  CONSTRAINT systems_users_pkey PRIMARY KEY (id),
+  CONSTRAINT systems_users_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id),
+  CONSTRAINT systems_users_system_fkey FOREIGN KEY (system) REFERENCES public.systems(id)
+);
 
 CREATE TABLE public.login_attempts (
   id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
@@ -172,3 +185,8 @@ CREATE TABLE public.records_pumps (
 
 
 -- luces y camaras
+
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
+
+
