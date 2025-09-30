@@ -1,3 +1,4 @@
+ALTER TABLE public.login_attempts ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Insert login attempts for non-privileged users"
 ON public.login_attempts
 FOR INSERT
@@ -18,6 +19,18 @@ WITH CHECK (
     AND NOT EXISTS (
         SELECT 1
         FROM public.systems_users s
-        WHERE s.user_id = auth.uid() AND s.is_active = true
+        WHERE s.user_id = auth.uid() AND s.is_active = true)
+         AND (
+        EXISTS (
+            SELECT 1
+            FROM public.admin_users a
+            WHERE a.user = auth.uid()
+        )
+        OR EXISTS (
+            SELECT 1
+            FROM public.systems_users s
+            WHERE s.user_id = auth.uid()
+        )
     )
+     AND reason = 'Login attempt with a deactivated user'
 );

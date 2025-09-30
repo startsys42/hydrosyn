@@ -50,4 +50,4 @@ IF EXISTS (
   -- Devolver el id del system
   return query select new_system_id::uuid;
 end;
-$$ language plpgsql;
+$$ language plpgsql security definer;

@@ -26,7 +26,7 @@ export function AdminProvider({ children }) {
                 .from('roles')
                 .select('id')
                 .eq('user', user.id)
-                .single();
+                .maybeSingle();
 
             setIsAdmin(!error && data !== null);
 

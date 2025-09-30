@@ -31,6 +31,7 @@ export default function UserAccordion({ systemId }) {
     const [loading, setLoading] = useState(false);
     const [loadingUsers, setLoadingUsers] = useState(false);
     const [loadingAvailable, setLoadingAvailable] = useState(false);
+    const [checkedAdmin, setCheckedAdmin] = useState(false);
 
     const [errors, setErrors] = useState({
         create: '',
@@ -43,6 +44,21 @@ export default function UserAccordion({ systemId }) {
     const setDeleteError = (msg) => setErrors({ create: '', delete: msg, activate: '', associate: '' });
     const setActivateError = (msg) => setErrors({ create: '', delete: '', activate: msg, associate: '' });
     const setAssociateError = (msg) => setErrors({ create: '', delete: '', activate: '', associate: msg });
+
+    const fetchAll = async () => {
+        setLoading(true);
+        const user = await checkAdmin();
+        if (!user) return; // ya navegamos si no pasa
+
+        // Llamar ambos fetch en paralelo
+        await Promise.all([
+            fetchUsers(user),
+            fetchAvailableUsers(user)
+        ]);
+
+        setCheckedAdmin(true);
+        setLoading(false);
+    };
 
     // --- Verificación de admin ---
     const checkAdmin = async () => {
@@ -139,9 +155,11 @@ export default function UserAccordion({ systemId }) {
     };
 
     useEffect(() => {
-        fetchUsers();
-        fetchAvailableUsers();
+        fetchAll();
     }, [systemId]);
+
+
+    if (loading || !checkedAdmin) return <p></p>;
 
     return (
         <>
