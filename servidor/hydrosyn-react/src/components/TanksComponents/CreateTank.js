@@ -39,22 +39,27 @@ export default function CreateTank({ systemId, tankList, refresh, error, setErro
 
             const { data: systemData, error: systemError } = await supabase
                 .from("systems")
-                .select(`
-              id,
-              admin,
-              admin_users (
-                user,
-                is_active
-              )
-            `)
+                .select("id, admin")
                 .eq("id", systemId)
-                .eq("admin", user.id)
                 .maybeSingle();
 
             if (systemError) throw systemError;
 
-            const adminUser = systemData?.admin_users?.[0]; // primer admin
-            if (!adminUser || !adminUser.is_active || adminUser.user !== user.id) {
+            if (!systemData) {
+                navigate("/dashboard");
+                return;
+            }
+
+            // Verificar si el usuario es admin activo
+            const { data: adminData, error: adminError } = await supabase
+                .from("admin_users")
+                .select("*")
+                .eq("user", user.id)
+                .eq("is_active", true)
+                .maybeSingle();
+
+            if (adminError) throw adminError;
+            if (!adminData || systemData.admin !== user.id) {
                 navigate("/dashboard");
                 return;
             }
@@ -86,7 +91,7 @@ export default function CreateTank({ systemId, tankList, refresh, error, setErro
             // 3️⃣ Validar regex del nombre
             const nameRegex = /^[A-Za-z0-9][A-Za-z0-9_]{1,28}[A-Za-z0-9]$/;
             if (!nameRegex.test(tankName)) {
-                setError(texts.regexNameTanks);
+                setError("regexNameTanks");
                 return;
             }
 
@@ -100,7 +105,7 @@ export default function CreateTank({ systemId, tankList, refresh, error, setErro
             if (existError) throw existError;
 
             if (existing?.length > 0) {
-                setError(texts.repeatNameTanks);
+                setError("repeatNameTanks");
                 return;
             }
 
@@ -163,7 +168,7 @@ export default function CreateTank({ systemId, tankList, refresh, error, setErro
 
                     <button type="submit" disabled={loading}>{texts.addTank}</button>
                 </form>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
+                {error && <p style={{ color: 'red' }}>{texts[error] || error}</p>}
             </AccordionDetails>
         </Accordion>
 

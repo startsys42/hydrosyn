@@ -65,7 +65,7 @@ export default function RenameTank({ systemId, tankList, refresh, error, setErro
             // ✅ Validar regex
             const nameRegex = /^[A-Za-z0-9][A-Za-z0-9_]{1,28}[A-Za-z0-9]$/;
             if (!nameRegex.test(newName)) {
-                setError(texts.regexNameTanks);
+                setError("regexNameTanks");
                 return;
             }
 
@@ -77,7 +77,7 @@ export default function RenameTank({ systemId, tankList, refresh, error, setErro
                 .eq("name", newName);
 
             if (existing?.length > 0) {
-                setError(texts.repeatNameTanks);
+                setError("repeatNameTanks");
                 return;
             }
 
@@ -138,7 +138,7 @@ export default function RenameTank({ systemId, tankList, refresh, error, setErro
 
 
                 </form>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
+                {error && <p style={{ color: 'red' }}>{texts[error] || error}</p>}
 
             </AccordionDetails>
         </Accordion>

@@ -27,28 +27,33 @@ export default function CreateESP32({ systemId, espList, refresh, error, setErro
             if (!user) throw new Error("No authenticated");
 
 
-
             const { data: systemData, error: systemError } = await supabase
                 .from("systems")
-                .select(`
-          id,
-          admin,
-          admin_users (
-            user,
-            is_active
-          )
-        `)
+                .select("id, admin")
                 .eq("id", systemId)
-                .eq("admin", user.id)
                 .maybeSingle();
 
             if (systemError) throw systemError;
 
-            const adminUser = systemData?.admin_users?.[0]; // primer admin
-            if (!adminUser || !adminUser.is_active || adminUser.user !== user.id) {
+            if (!systemData) {
                 navigate("/dashboard");
                 return;
             }
+
+            // Verificar si el usuario es admin activo
+            const { data: adminData, error: adminError } = await supabase
+                .from("admin_users")
+                .select("*")
+                .eq("user", user.id)
+                .eq("is_active", true)
+                .maybeSingle();
+
+            if (adminError) throw adminError;
+            if (!adminData || systemData.admin !== user.id) {
+                navigate("/dashboard");
+                return;
+            }
+
 
             // 2️⃣ Comprobar límite de 2 ESP32 si no tiene rol
             const { data: espCount, error: espError } = await supabase

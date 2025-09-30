@@ -110,7 +110,7 @@ const texts = {
         water: "Agua",
         rotifers: "Rotíferos",
         copepods: "Copépodos",
-        artemia: "Artemias",
+        artemias: "Artemias",
         microalga: "Microalga",
         nutrients: "Nutrientes",
 
@@ -137,6 +137,7 @@ const texts = {
         removeTank: 'Eliminar tanque',
         renameTank: 'Renombrar tanque',
         nameTank: 'Nombre del tanque',
+        selectTank: 'Selecciona tanque a renombrar',
 
         limitTanks: 'No puedes crear más de 20 Tanques por sistema.',
         regexNameTanks: 'Nombre inválido. Solo letras, números, guiones bajos, mínimo 3 caracteres y máximo 30.',
@@ -271,7 +272,7 @@ const texts = {
         water: "Water",
         rotifers: "Rotifers",
         copepods: "Copepods",
-        artemia: "Artemias",
+        artemias: "Artemias",
         microalga: "Microalga",
         nutrients: "Nutrients",
 
@@ -298,6 +299,7 @@ const texts = {
         removeTank: 'Remove tank',
         renameTank: 'Rename tank',
         nameTank: 'Tank name',
+        selectTank: 'Select tank to rename',
 
         limitTanks: 'You can not create more than 20 Tanks per system.',
         regexNameTanks: 'Invalid name. Only letters, numbers, underscores, minimum 3 characters and maximum 30.',

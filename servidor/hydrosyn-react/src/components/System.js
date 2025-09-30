@@ -85,6 +85,7 @@ export default function System() {
             <h1>{texts.systems}: {system.name}</h1>
             <label htmlFor="options">{texts.options}</label>
             <br />
+            <br />
             <select id="options" value={selected} onChange={handleChange}>
                 <option value="">--  --</option>
                 {options.map(opt => (
