@@ -112,7 +112,7 @@ export default function UserAccordion({ systemId }) {
                     id: u.su_id,      // ID de systems_users
                     user_id: u.user_id,
                     email: u.email,
-                    is_active: u.is_active,
+                    is_active: u.su_is_active,
                 }))
             );
 

@@ -1,5 +1,5 @@
 create function get_possible_users_for_system(p_system bigint, p_user uuid)
-returns table( user_id uuid, email text) as $$
+returns table( user_id uuid, email varchar) as $$
 begin
   -- Comprueba que el usuario que llama es admin del sistema
   if not exists (
@@ -28,9 +28,9 @@ begin
     where s.admin = p_user         -- otros sistemas del mismo admin
       and s.id <> p_system         -- distintos al actual
       and su.user_id not in (
-        select user_id
-        from systems_users
-        where system = p_system    -- usuarios ya asociados al sistema actual
+        select su2.user_id
+        from systems_users su2
+        where su2.system = p_system    -- usuarios ya asociados al sistema actual
       );
 end;
 $$ language plpgsql security definer;
