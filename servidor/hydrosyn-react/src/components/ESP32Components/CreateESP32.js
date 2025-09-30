@@ -82,7 +82,7 @@ export default function CreateESP32({ systemId, espList, refresh, error, setErro
             // 3️⃣ Validar regex del nombre
             const nameRegex = /^[A-Za-z0-9][A-Za-z0-9_]{1,28}[A-Za-z0-9]$/;
             if (!nameRegex.test(ESP32Name)) {
-                setError(texts.regexNameESP32);
+                setError("regexNameESP32");
                 return;
             }
 
@@ -96,7 +96,7 @@ export default function CreateESP32({ systemId, espList, refresh, error, setErro
             if (existError) throw existError;
 
             if (existing?.length > 0) {
-                setError(texts.repeatNameESP32);
+                setError("repeatNameESP32");
                 return;
             }
 
@@ -142,7 +142,7 @@ export default function CreateESP32({ systemId, espList, refresh, error, setErro
                     />
                     <button type="submit">{texts.addESP32}</button>
                 </form>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
+                {error && <p style={{ color: 'red' }}>{texts[error] || error}</p>}
             </AccordionDetails>
         </Accordion>
 

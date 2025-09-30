@@ -65,7 +65,7 @@ export default function RenameESP32({ systemId, espList, refresh, error, setErro
             // ✅ Validar regex
             const nameRegex = /^[A-Za-z0-9][A-Za-z0-9_]{1,28}[A-Za-z0-9]$/;
             if (!nameRegex.test(newName)) {
-                setError(texts.regexNameESP32);
+                setError("regexNameESP32");
                 return;
             }
 
@@ -77,7 +77,7 @@ export default function RenameESP32({ systemId, espList, refresh, error, setErro
                 .eq("name", newName);
 
             if (existing?.length > 0) {
-                setError(texts.repeatNameESP32);
+                setError("repeatNameESP32");
                 return;
             }
 
@@ -138,7 +138,7 @@ export default function RenameESP32({ systemId, espList, refresh, error, setErro
 
 
                 </form>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
+                {error && <p style={{ color: 'red' }}>{texts[error] || error}</p>}
 
             </AccordionDetails>
         </Accordion>
