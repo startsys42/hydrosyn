@@ -93,11 +93,10 @@ export default function UserAccordion({ systemId }) {
         return user;
     };
 
-    const fetchUsers = async () => {
+    const fetchUsers = async (user) => {
         setLoadingUsers(true);
         try {
-            const user = await checkAdmin();
-            if (!user) return;
+
 
             const { data, error } = await supabase
                 .rpc('get_users_for_system', { p_system: systemId, p_user: user.id });
@@ -124,11 +123,10 @@ export default function UserAccordion({ systemId }) {
         }
     };
 
-    const fetchAvailableUsers = async () => {
+    const fetchAvailableUsers = async (user) => {
         setLoadingAvailable(true);
         try {
-            const user = await checkAdmin();
-            if (!user) return;
+
             const { data, error } = await supabase
                 .rpc('get_possible_users_for_system', { p_system: systemId, p_user: user.id });
 
