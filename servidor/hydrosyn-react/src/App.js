@@ -22,6 +22,8 @@ import RecoverPassword from './components/RecoverPassword';
 import ChangePasswordRecovery from './components/ChangePasswordRecovery';
 import CreateUserAdmin from './components/CreateUserAdmin';
 import ActivateDeleteUserAdmin from './components/ActivateDeleteUserAdmin';
+import Help from './components/Help';
+import InfoIcon from '@mui/icons-material/Info';
 
 
 import { useParams } from 'react-router-dom';

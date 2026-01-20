@@ -12,6 +12,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import GroupIcon from '@mui/icons-material/Group';
 import PersonIcon from '@mui/icons-material/Person';
 import ScienceIcon from '@mui/icons-material/Science';
+import InfoIcon from '@mui/icons-material/Info';
 
 export default function Sidebar() {
     const { isAdmin, loading } = useAdminStatus();
