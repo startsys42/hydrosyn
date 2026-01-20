@@ -312,49 +312,6 @@ BEFORE INSERT ON public.system_secrets
 FOR EACH ROW
 EXECUTE FUNCTION prevent_duplicate_secret_per_user();
 
-CREATE OR REPLACE FUNCTION insert_system_with_secret(
-  system_name text,
-  admin_id uuid,
-  secret_value text
-)
-RETURNS TABLE(id uuid) AS $$
-DECLARE
-  new_system_id uuid;
-BEGIN
-
-  IF EXISTS (
-    SELECT 1
-    FROM systems
-    WHERE admin = admin_id
-      AND name = system_name
-  ) THEN
-    RAISE EXCEPTION 'A system with this name already exists for this admin';
-  END IF;
-
-
-  IF EXISTS (
-    SELECT 1
-    FROM systems s
-    JOIN system_secrets ss ON ss.system = s.id
-    WHERE s.admin = admin_id
-      AND ss.secret = secret_value
-  ) THEN
-    RAISE EXCEPTION 'The secret already exists for another system of this admin';
-  END IF;
-
-
-  INSERT INTO systems(name, admin)
-  VALUES (system_name, admin_id)
-  RETURNING id INTO new_system_id;
-
- 
-  INSERT INTO system_secrets(system, secret)
-  VALUES (new_system_id, secret_value);
-
-
-  RETURN QUERY SELECT new_system_id AS id;
-END;
-$$ LANGUAGE plpgsql;
 
 
 

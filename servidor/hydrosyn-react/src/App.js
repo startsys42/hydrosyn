@@ -165,6 +165,15 @@ function App() {
 
                         }
                     />
+                    <Route
+                        path="/help"
+                        element={
+                            !user ? (
+                                <Navigate to="/" replace />
+                            ) : <Help />
+
+                        }
+                    />
 
                     <Route
                         path="/users-admin"

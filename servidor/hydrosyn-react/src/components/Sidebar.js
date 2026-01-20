@@ -63,7 +63,9 @@ export default function Sidebar() {
                         </li>
                     </>
                 )}
-
+                <li style={{ padding: '8px 0' }}>
+                    <Link className="custom-link" to="/help">{collapsed ? <InfoIcon /> : t.guide}</Link>
+                </li>
                 <li style={{ padding: '8px 0' }}>
                     <button
                         onClick={handleLogout}

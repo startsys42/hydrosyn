@@ -56,6 +56,10 @@ export default function NotificationsAdmin() {
             translationKey = 'loginDisabled';
         } else if (reason === 'Password recovery attempt for an inactive user') {
             translationKey = 'recoveryDisabled';
+        } else if (reason === 'User does not exist') {
+            translationKey = 'userNotExists';
+        } else if (reason === 'Invalid password') {
+            translationKey = 'invalidPassword';
         } else {
             return reason;
         }

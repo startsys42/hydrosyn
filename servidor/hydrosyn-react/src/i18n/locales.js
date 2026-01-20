@@ -84,6 +84,8 @@ const texts = {
         users: "Usuarios",
         loginDisabled: "Inicio de sesión deshabilitado",
         recoveryDisabled: "Recuperación deshabilitada",
+        userNotExists: "El usuario no existe",
+        invalidPassword: "Contraseña inválida",
         options: "Elige una opción:",
         confirmation: "Confirmación",
         no: "No",
@@ -160,6 +162,7 @@ const texts = {
         manualRecords: 'Registros manuales',
         viewManualRecords: 'Ver Registros Manuales',
         systemSettings: 'Configuración del sistema',
+        guide: 'Información',
 
 
 
@@ -247,6 +250,8 @@ const texts = {
         users: "Users",
         loginDisabled: "Login disabled",
         recoveryDisabled: "Recovery disabled",
+        userNotExists: "User does not exist",
+        invalidPassword: "Invalid password",
         options: "Choose an option:",
         confirmation: "Confirmation",
         no: "No",
@@ -324,7 +329,7 @@ const texts = {
         systemSettings: 'System Settings',
 
 
-
+        guide: 'Information',
 
 
 

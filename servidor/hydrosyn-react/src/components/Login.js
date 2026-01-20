@@ -40,11 +40,19 @@ export default function Login() {
         try {
             // 1. Autenticación con Supabase
             const { error: authError } = await supabase.auth.signInWithPassword({
+
                 email,
                 password
             });
 
-            if (authError) throw authError;
+
+
+            if (authError) {
+                await supabase.rpc('record_failed_login', {
+                    p_email: email
+                });
+                throw authError;
+            }
 
             // 2. Verificar si el usuario está activo
             const { data: { user } } = await supabase.auth.getUser();

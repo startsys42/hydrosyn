@@ -47,17 +47,7 @@ CREATE TABLE public.systems_users (
 );
 
 
-CREATE TABLE public.systems_users (
-  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-  system bigint NOT NULL,
-  user_id uuid NOT NULL,
-  is_active boolean NOT NULL DEFAULT true,
-  associated_at timestamp with time zone NOT NULL,
- 
-  CONSTRAINT systems_users_pkey PRIMARY KEY (id),
-  CONSTRAINT systems_users_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id),
-  CONSTRAINT systems_users_system_fkey FOREIGN KEY (system) REFERENCES public.systems(id)
-);
+
 
 CREATE TABLE public.login_attempts (
   id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
@@ -99,6 +89,7 @@ CREATE TABLE public.tanks (
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   type public.tank_type NOT NULL,
   name text NOT NULL CHECK (name ~ '^[A-Za-z0-9][A-Za-z0-9_]{1,28}[A-Za-z0-9]$'::text),
+  volume numeric(9,6) CHECK (volume > 0 and volume <= 999.999999) NOT NULL,
   system bigint NOT NULL,
   CONSTRAINT tanks_pkey PRIMARY KEY (id),
   CONSTRAINT tanks_system_fkey FOREIGN KEY (system) REFERENCES public.systems(id) ON DELETE CASCADE
@@ -109,31 +100,65 @@ CREATE TABLE public.tanks (
 
 
 
+
+
+
 -- no ams d e20 tanques si no es admin, no insertar con nombre duplicado, no cmabair a nomber duplicado
 -- coments
+-- que pasa en las bmbas al borrar algo oa ctualizar algo
+
+
+
+CREATE TABLE public.pumps (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  name text NOT NULL  CHECK (name ~ '^[A-Za-z0-9][A-Za-z0-9_]{1,28}[A-Za-z0-9]$'::text),
+  system bigint NOT NULL,
+  origin bigint NOT NULL,
+  destination bigint NOT NULL,
+  CONSTRAINT pumps_pkey PRIMARY KEY (id),
+  CONSTRAINT bombs_system_fkey FOREIGN KEY (system) REFERENCES public.systems(id),
+  CONSTRAINT bombs_destination_fkey FOREIGN KEY (destination) REFERENCES public.tanks(id)  ON DELETE CASCADE
+  ON UPDATE CASCADE,
+  CONSTRAINT bombs_origin_fkey FOREIGN KEY (origin) REFERENCES public.tanks(id)  ON DELETE CASCADE
+  ON UPDATE CASCADE
+);
+
+CREATE TABLE public.esp32_pumps (
+    id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+    esp32 bigint NOT NULL,
+    pump bigint NOT NULL,
+    gpio integer NOT NULL CHECK (gpio IN (2,4,5,12,13,14,15,18,19,21,22,23,25,26,27,32,33)),
+    CONSTRAINT esp32_pumps_pkey PRIMARY KEY (id),
+    CONSTRAINT esp32_pumps_esp32_fkey FOREIGN KEY (esp32) REFERENCES public.esp32(id) ON DELETE CASCADE
+    ON UPDATE CASCADE,
+    CONSTRAINT esp32_pumps_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id) ON DELETE CASCADE
+    ON UPDATE CASCADE
+    );
+
 
 CREATE TABLE public.calibrate (
   id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   pump bigint NOT NULL,
-  volume numeric,
+  volume numeric(9,6) CHECK (volume > 0 and volume <= 999.999999) NOT NULL,
   user uuid NOT NULL DEFAULT auth.uid(),
-  temperature numeric NOT NULL CHECK (temperature >= 0::numeric AND temperature <= 99.99),
-  salinity numeric NOT NULL CHECK (salinity >= 0::numeric AND salinity <= 99.99),
-  mass numeric NOT NULL CHECK (mass > 0::numeric AND mass <= 5000.000),
+
   CONSTRAINT calibrate_pkey PRIMARY KEY (id),
-  CONSTRAINT calibrate_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id),
-  CONSTRAINT calibrate_user_fkey FOREIGN KEY (user) REFERENCES auth.users(id)
+  CONSTRAINT calibrate_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT calibrate_user_fkey FOREIGN KEY (user) REFERENCES auth.users(id) ON DELETE CASCADE ON UPDATE CASCADE
+
 );
+
+
 CREATE TABLE public.drainings (
   id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   tank bigint NOT NULL,
-  volume numeric,
+  volume numeric(9,6) CHECK (volume > 0 and volume <= 999.999999) NOT NULL,
   CONSTRAINT drainings_pkey PRIMARY KEY (id),
-  CONSTRAINT drainings_tank_fkey FOREIGN KEY (tank) REFERENCES public.tanks(id)
+  CONSTRAINT drainings_tank_fkey FOREIGN KEY (tank) REFERENCES public.tanks(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
 
 
 
@@ -147,42 +172,34 @@ CREATE TABLE public.programming_pumps (
   id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   pump bigint NOT NULL,
-  monday numeric,
-  tuesday numeric,
-  wednesday numeric,
-  thursday numeric,
-  friday numeric,
-  saturday numeric,
-  sunday numeric,
+   volume numeric(9,6) NOT NULL CHECK (volume> 0 and volume <= 999.999999),
+    clock time NOT NULL,                  -- Hora del día en que se activa
+     days_of_week day_of_week[] NOT NULL
+        CHECK (array_length(days_of_week,1) = array_length(ARRAY(SELECT DISTINCT UNNEST(days_of_week)),1)),
+    every_n_days integer DEFAULT 0 CHECK (every_n_days BETWEEN 0 AND 30),
   CONSTRAINT programming_pumps_pkey PRIMARY KEY (id),
-  CONSTRAINT programming_pumps_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id)
+  CONSTRAINT programming_pumps_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id) ON DELETE CASCADE
+  ON UPDATE CASCADE
 );
-CREATE TABLE public.pumps (
-  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-  created_at timestamp with time zone NOT NULL DEFAULT now(),
-  name text NOT NULL UNIQUE,
-  pin integer NOT NULL UNIQUE,
-  system bigint NOT NULL,
-  origin bigint NOT NULL,
-  destination bigint NOT NULL,
-  CONSTRAINT pumps_pkey PRIMARY KEY (id),
-  CONSTRAINT bombs_system_fkey FOREIGN KEY (system) REFERENCES public.systems(id),
-  CONSTRAINT bombs_destination_fkey FOREIGN KEY (destination) REFERENCES public.tanks(id),
-  CONSTRAINT bombs_origin_fkey FOREIGN KEY (origin) REFERENCES public.tanks(id)
-);
+
 CREATE TABLE public.records_pumps (
   id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   pump bigint NOT NULL,
-  volume numeric NOT NULL,
+  volume numeric(9,6) CHECK (volume > 0 and volume <= 999.999999) NOT NULL,
   user uuid,
   CONSTRAINT records_pumps_pkey PRIMARY KEY (id),
-  CONSTRAINT records_pumps_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id),
-  CONSTRAINT records_pumps_user_fkey FOREIGN KEY (user) REFERENCES auth.users(id)
+  CONSTRAINT records_pumps_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT records_pumps_user_fkey FOREIGN KEY (user) REFERENCES auth.users(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 
-
+CREATE TABLE public.executions_pumps (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    programming_id BIGINT NOT NULL REFERENCES public.programming_pumps(id) ON DELETE CASCADE on update cascade,
+    executed_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    success BOOLEAN DEFAULT false
+);
 
 -- luces y camaras
 
