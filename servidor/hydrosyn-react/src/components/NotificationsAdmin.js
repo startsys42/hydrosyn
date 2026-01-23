@@ -3,6 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
 import { DataGrid } from '@mui/x-data-grid';
+import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+
 
 
 export default function NotificationsAdmin() {
@@ -17,7 +22,52 @@ export default function NotificationsAdmin() {
 
     const [pageSize, setPageSize] = useState(10);
     const [page, setPage] = useState(0);
+    const [fromDate, setFromDate] = useState(null);
+    const [toDate, setToDate] = useState(null);
 
+    const [openDialog, setOpenDialog] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+
+
+    const handleDelete = async () => {
+        if (!fromDate || !toDate) {
+            setError('Please select both dates');
+            return;
+        }
+
+        try {
+            setDeleting(true);
+            setError(null);
+
+            const fromUTC = dayjs(fromDate).toISOString();
+            const toUTC = dayjs(toDate).toISOString();
+
+            const { error } = await supabase.rpc(
+                'delete_login_attempts_between',
+                {
+                    p_from: fromUTC,
+                    p_to: toUTC
+                }
+            );
+
+            if (error) throw error;
+
+            setOpenDialog(false);
+
+            // refrescar datos
+            setAttempts(prev =>
+                prev.filter(a => {
+                    const d = new Date(a.attempt_created_at);
+                    return d < new Date(fromUTC) || d > new Date(toUTC);
+                })
+            );
+
+        } catch (e) {
+            setError(e.message);
+        } finally {
+            setDeleting(false);
+        }
+    };
 
     useEffect(() => {
         const fetchLoginAttempts = async () => {
@@ -113,7 +163,32 @@ export default function NotificationsAdmin() {
         <div className='div-main-login'>
             <h1>{texts.notifications}</h1>
 
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
+                    <DateTimePicker
+                        label={texts.fromDate ?? 'From'}
+                        value={fromDate}
+                        onChange={setFromDate}
+                        renderInput={(params) => <TextField {...params} size="small" />}
+                    />
 
+                    <DateTimePicker
+                        label={texts.toDate ?? 'To'}
+                        value={toDate}
+                        onChange={setToDate}
+                        renderInput={(params) => <TextField {...params} size="small" />}
+                    />
+
+                    <Button
+                        variant="contained"
+                        color="error"
+                        disabled={!fromDate || !toDate}
+                        onClick={() => setOpenDialog(true)}
+                    >
+                        {texts.delete ?? 'Delete'}
+                    </Button>
+                </div>
+            </LocalizationProvider>
 
             <div style={{ height: 500, width: '100%' }}>
                 <DataGrid className="datagrid"
@@ -131,6 +206,33 @@ export default function NotificationsAdmin() {
             </div>
 
             {error && <p style={{ color: 'red' }}>{error}</p>}
+
+            <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+                <DialogTitle>
+                    {texts.confirmDeletion ?? 'Confirm deletion'}
+                </DialogTitle>
+
+                <DialogContent>
+                    {texts.deleteBetweenDates ??
+                        'This will permanently delete login attempts between the selected dates. Are you sure?'}
+                </DialogContent>
+
+                <DialogActions>
+                    <Button onClick={() => setOpenDialog(false)}>
+                        {texts.cancel ?? 'Cancel'}
+                    </Button>
+
+                    <Button
+                        color="error"
+                        onClick={handleDelete}
+                        disabled={deleting}
+                    >
+                        {deleting ? (texts.deleting ?? 'Deleting...') : (texts.confirm ?? 'Delete')}
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
+
+
     );
 }

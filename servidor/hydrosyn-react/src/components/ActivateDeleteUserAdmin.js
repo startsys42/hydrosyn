@@ -174,7 +174,7 @@ const ActivateDeleteUserAdmin = () => {
 
     return (
         <div className='div-main-login'>
-            <h1>{texts.users}</h1>
+            <h1>{texts.adminMange}</h1>
 
 
             <div style={{ height: 500, width: '100%' }}>

@@ -256,7 +256,7 @@ label {
     display: block;
     width: 100%;
     text-align: center;
-    padding: 10px;
+    padding: 5px;
     color: var(--text-color);
     text-decoration: none;
     background-color: var(--button-bg);

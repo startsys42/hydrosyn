@@ -24,6 +24,12 @@ import CreateUserAdmin from './components/CreateUserAdmin';
 import ActivateDeleteUserAdmin from './components/ActivateDeleteUserAdmin';
 import Help from './components/Help';
 import InfoIcon from '@mui/icons-material/Info';
+import EmailConfirmation from './components/EmailConfirmation';
+import Expenses from './components/Expenses';
+import Profits from './components/Profits';
+import Export from './components/Export';
+import RemoveData from './components/RemoveData';
+import Calendar from './components/Calendar';
 
 
 import { useParams } from 'react-router-dom';
@@ -168,6 +174,15 @@ function App() {
                         }
                     />
                     <Route
+                        path="/email-confirmation"
+                        element={
+                            !user ? (
+                                <Navigate to="/" replace />
+                            ) : <EmailConfirmation />
+
+                        }
+                    />
+                    <Route
                         path="/help"
                         element={
                             !user ? (
@@ -219,17 +234,87 @@ function App() {
                         element={
                             !user ? (
                                 <Navigate to="/" replace />
-                            ) : user && (isAdmin || isOwner) ? (
+                            ) : user && isOwner ? (
                                 <CreateSystem />
-                            ) : user && !loadingAdmin && !loadingOwner ? (
+                            ) : user && !loadingOwner ? (
                                 <Navigate to="/dashboard" replace />
                             ) : null
                         }
                     />
                     <Route
                         path="/notifications-admin"
-                        element={user ? <NotificationsAdmin /> : <Navigate to="/" replace />}
+                        element={
+
+                            !user ? (
+                                <Navigate to="/" replace />
+                            ) : user && isAdmin ? (
+                                <NotificationsAdmin />
+                            ) : user && !loadingAdmin ? (
+                                <Navigate to="/dashboard" replace />
+                            ) : null
+                        }
                     />
+
+                    <Route
+                        path="/expenses"
+                        element={
+                            !user ? (
+                                <Navigate to="/" replace />
+                            ) : user && isOwner ? (
+                                <Expenses />
+                            ) : user && !loadingOwner ? (
+                                <Navigate to="/dashboard" replace />
+                            ) : null
+                        }
+                    />
+
+                    <Route
+                        path="/profits"
+                        element={
+                            !user ? (
+                                <Navigate to="/" replace />
+                            ) : user && isOwner ? (
+                                <Profits />
+                            ) : user && !loadingOwner ? (
+                                <Navigate to="/dashboard" replace />
+                            ) : null
+                        }
+                    />
+                    <Route
+                        path="/export"
+                        element={
+                            !user ? (
+                                <Navigate to="/" replace />
+                            ) : user && isOwner ? (
+                                <Export />
+                            ) : user && !loadingOwner ? (
+                                <Navigate to="/dashboard" replace />
+                            ) : null
+                        }
+                    />
+
+                    <Route
+                        path="/remove-data"
+                        element={
+                            !user ? (
+                                <Navigate to="/" replace />
+                            ) : user && isOwner ? (
+                                <RemoveData />
+                            ) : user && !loadingOwner ? (
+                                <Navigate to="/dashboard" replace />
+                            ) : null
+                        }
+                    />
+                    <Route
+                        path="/calendar"
+                        element={
+                            !user ? (
+                                <Navigate to="/" replace />
+                            ) : <Calendar />
+
+                        }
+                    />
+
                     <Route
                         path="/change-password"
                         element={

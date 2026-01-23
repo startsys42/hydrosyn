@@ -3,29 +3,38 @@ import { use } from "react";
 
 const texts = {
     es: {
-        language: 'Idioma',
-        theme: 'Tema',
 
+        dark: 'Modo oscuro',
+        light: 'Modo claro',
+        adminManage: 'Gestión de administradores',
+
+
+        profile: 'Perfil de usuario',
+
+        systems: 'Sistemas',
+        notifications: 'Notificaciones',
+        guide: 'Información',
+        logout: 'Cerrar sesión',
+
+        verify: 'Verificando...',
         username: 'Usuario',
 
-        changeLanguage: 'Cambiar idioma',
-        changeTheme: 'Cambiar tema',
+        users: 'Gestión de usuarios',
 
 
 
         recoverySent: 'Nueva contraseña enviada al correo',
 
         security: 'Seguridad',
-        notifications: 'Notificaciones',
+
         configuration: 'Configuración',
         fa: 'Autenticación de dos factores',
         code2fa: 'Ingresa tu código 2FA',
 
         welcome: 'Bienvenido a Hydrosyn',
-        dark: 'Modo oscuro',
-        light: 'Modo claro',
-        users: 'Gestión de usuarios',
-        profile: 'Perfil de usuario',
+
+
+
         changePassword: 'Cambiar contraseña',
         changeEmail: 'Cambiar email',
         password: 'Contraseña',
@@ -33,24 +42,25 @@ const texts = {
         email: 'Email',
         backToLogin: 'Volver al inicio de sesión',
         recoverPassword: 'Recuperar contraseña',
-        logout: 'Cerrar sesión',
+
         createUser: 'Crear usuario',
         activateUser: 'Activar usuario',
         activateDeleteUser: 'Activar/Eliminar usuario',
         messageCreateUser: 'Usuario creado',
         messageRecover: 'Hemos enviado un enlace de recuperación a tu correo electrónico',
         sendRecoveryLink: 'Enviar enlace de recuperación',
+        invalidLink: 'Enlace inválido',
         actualPassword: 'Contraseña actual',
         newPassword: 'Nueva contraseña',
-        verify: 'Verificando...',
+
         sending: 'Enviando...',
         changing: 'Cambiando...',
         creating: 'Creando...',
         active: 'Activo',
-        messageEmail: 'Revisa el email para confirmar el cambio',
+        messageEmail: 'Revisa el nuevo email para confirmar el cambio',
         messagePassword: '¡Contraseña cambiada con éxito!',
         noEquals: 'No coinciden',
-        systems: 'Sistema',
+
         newSystem: 'Nuevo sistema',
         deleteUser: 'Eliminar usuario',
         nameSystem: 'Nombre del sistema',
@@ -154,44 +164,53 @@ const texts = {
         lights: 'Luces',
         addLight: 'Añadir Luz',
         removeLight: 'Eliminar Luz',
-        cameras: 'Cámaras',
-        addCamera: 'Añadir Cámara',
-        removeCamera: 'Eliminar Cámara',
+
         calendar: 'Calendario',
         viewCalendar: 'Ver Calendario',
         manualRecords: 'Registros manuales',
         viewManualRecords: 'Ver Registros Manuales',
         systemSettings: 'Configuración del sistema',
-        guide: 'Información',
 
+        manualContent: ' Los administradores no pueden crear mas de cinco usuarios entre todos sus sistemas, el numero de tanques esta limitado y el nuemrod e esp32 a , la informacions e borrar , correo de contacto.  Futuras mejoras',
+
+        passwordRegex: 'La contraseña debe tener al menos 10 caracteres, incluir al menos 3 letras distintas y 2 números, y no contener caracteres especiales.',
+        passwordInvalid: 'Contraseña inválida. Solo se permiten letras y números.',
+        emailChanged: '¡Correo electrónico cambiado con éxito!',
 
 
     },
     en: {
-        language: 'Language',
-        theme: 'Theme',
+
+        dark: 'Dark mode',
+        light: 'Light mode',
+        adminManage: 'Admin management',
+
+        profile: 'User profile',
+        systems: 'Systems',
+        notifications: 'Notifications',
+        guide: 'Information',
+
+        logout: 'Logout',
+        verify: 'Verifying...',
+
 
         username: 'Username',
-
-
-        changeLanguage: 'Change language',
-        changeTheme: 'Change theme',
 
 
 
         recoverySent: 'New password sent to email',
         security: 'Security',
-        notifications: 'Notifications',
+
         configuration: 'Configuration',
         fa: 'Two-Factor Authentication',
         code2fa: 'Enter your 2FA code',
 
-
-        welcome: 'Welcome to Hydrosyn',
-        dark: 'Dark mode',
-        light: 'Light mode',
         users: 'User management',
-        profile: 'User profile',
+        welcome: 'Welcome to Hydrosyn',
+
+
+
+
         changePassword: 'Change password',
         changeEmail: 'Change email',
         password: 'Password',
@@ -199,24 +218,25 @@ const texts = {
         email: 'Email',
         backToLogin: 'Back to login',
         recoverPassword: 'Recover password',
-        logout: 'Logout',
+
         createUser: 'Create user',
         activateUser: 'Activate user',
         activateDeleteUser: 'Activate/Delete user',
         messageCreateUser: 'User created',
         messageRecover: 'We have sent a recovery link to your email address',
         sendRecoveryLink: 'Send recovery link',
+        invalidLink: 'Invalid link',
         actualPassword: 'Current password',
         newPassword: 'New password',
-        verify: 'Verifying...',
+
         sending: 'Sending...',
         changing: 'Changing...',
         creating: 'Creating...',
         active: 'Active',
-        messageEmail: 'Check your email to confirm the change',
+        messageEmail: 'Check your new email to confirm the change',
         messagePassword: 'Password changed successfully',
         noEquals: 'Do not match',
-        systems: 'System',
+
         newSystem: 'New system',
         deleteUser: 'Delete user',
         nameSystem: 'System name',
@@ -319,9 +339,8 @@ const texts = {
         lights: 'Lights',
         addLight: 'Add Light',
         removeLight: 'Remove Light',
-        cameras: 'Cameras',
-        addCamera: 'Add Camera',
-        removeCamera: 'Remove Camera',
+
+
         calendar: 'Calendar',
         viewCalendar: 'View Calendar',
         manualRecords: 'Manual Records',
@@ -329,8 +348,12 @@ const texts = {
         systemSettings: 'System Settings',
 
 
-        guide: 'Information',
 
+        manualContent: ' Los administradores no pueden crear mas de cinco usuarios entre todos sus sistemas, el numero de tanques esta limitado y el nuemrod e esp32 a , la informacions e borrar , correo de contacto.  Futuras mejoras',
+
+        passwordRegex: 'The password must be at least 10 characters long, include at least 3 different letters and 2 numbers, and not contain special characters.',
+        passwordInvalid: 'Invalid password. Only letters and numbers are allowed.',
+        emailChanged: 'Email changed successfully!',
 
 
     }

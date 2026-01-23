@@ -64,6 +64,9 @@ export default function NotificationsAccordion({ systemId }) {
             translationKey = 'loginDisabled';
         } else if (reason === 'Password recovery attempt for an inactive user') {
             translationKey = 'recoveryDisabled';
+        } else if (reason === 'Invalid password') {
+            translationKey = 'invalidPassword';
+
         } else {
             return reason;
         }

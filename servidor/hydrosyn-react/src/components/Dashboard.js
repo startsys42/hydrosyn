@@ -136,6 +136,26 @@ export default function Dashboard() {
                 <>
 
                     <h1>{t.welcome}</h1>
+
+                    <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+                        <button onClick={() => navigate('/expenses')}>
+                            {t.expenses}
+                        </button>
+                        <button onClick={() => navigate('/profits')}>
+                            {t.profits}
+                        </button>
+                        <button onClick={() => navigate('/calendar')}>
+                            {t.calendar}
+                        </button>
+                        <button onClick={() => navigate('/export')}>
+                            {t.export}
+                        </button>
+                        <button onClick={() => navigate('/remove-data')}>
+                            {t.removeData}
+                        </button>
+                        {/* Puedes agregar más botones según necesidad */}
+                    </div>
+
                     <h2>{t.systems}</h2>
                     {(isOwner) && (
                         <>

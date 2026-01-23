@@ -3,6 +3,7 @@ import { supabase } from '../utils/supabaseClient';
 import '../styles/theme.css';
 import useTexts from '../utils/UseTexts';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function ChangePassword() {
     const [newPassword, setNewPassword] = useState('');
@@ -12,6 +13,8 @@ export default function ChangePassword() {
     const [loading, setLoading] = useState(false);
     const texts = useTexts();
     const [user, setUser] = useState(null);
+    const navigate = useNavigate();
+
     useEffect(() => {
         async function getUser() {
             const { data: { user } } = await supabase.auth.getUser();
@@ -32,20 +35,70 @@ export default function ChangePassword() {
             return;
         }
 
+
+        // Verificar 3 letras distintas
+        const letters = newPassword.replace(/[^a-zA-Z]/g, '');
+        const distinctLetters = new Set(letters).size;
+        const numbers = newPassword.replace(/[^0-9]/g, '');
+        const distinctNumbers = new Set(numbers).size;
+
+        if (newPassword.length < 10 || distinctLetters < 3 || distinctNumbers < 2 || !/^[A-Za-z0-9]+$/.test(newPassword)) {
+            setMessageKey('passwordRegex');
+
+            setLoading(false);
+            return;
+        }
         try {
 
 
             // Actualizar la contraseña del usuario
-            const { error: updateError } = await supabase.auth.updateUser({
-                password: newPassword,
+            const { data, error } = await supabase.functions.invoke('changePassword', {
+                body: {
+                    newPassword: newPassword
+                }
             });
 
-            if (updateError) throw updateError;
+            if (error) {
+                console.log(" Error de Edge Function:", error.status, error.message);
 
+                // ERROR 403: No tiene permisos
+                // ERROR 401: Token inválido
+                // ERROR 400: Contraseña mala
+                // ERROR 405: Método incorrecto
+                if (error.status === 403 || error.status === 401 || error.status === 405) {
+
+                    setTimeout(async () => {
+                        await supabase.auth.signOut();
+                        navigate('/');
+                    }, 500);  //  segundos para leer el mensaje
+                    setLoading(false);
+                    return;
+                }
+
+                else if (error.status === 400) {
+                    setMessageKey('passwordRegex');
+                    setNewPassword('');
+                    setConfirmPassword('');
+                    setLoading(false);
+                    return;
+                }
+
+            }
+
+            // ÉXITO: Contraseña cambiada
             setMessageKey('messagePassword');
+
             // Limpiar formulario
             setNewPassword('');
             setConfirmPassword('');
+
+            // Desloguear por seguridad (para que se loguee con nueva contraseña)
+            setTimeout(async () => {
+                await supabase.auth.signOut();
+                navigate('/');
+            }, 2000);
+
+
         } catch (error) {
             setMessage({
                 text: `Error: ${error.message}`,
@@ -73,7 +126,7 @@ export default function ChangePassword() {
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder={texts.newPassword}
                     required
-                    minLength={8}
+                    minLength={10}
                 />
 
 
@@ -88,7 +141,7 @@ export default function ChangePassword() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder={texts.newPassword}
                     required
-                    minLength={8}
+                    minLength={10}
                 />
 
 

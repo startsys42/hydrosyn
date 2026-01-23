@@ -440,3 +440,292 @@ AFTER UPDATE ON admin_users
 FOR EACH ROW
 WHEN (OLD.is_active IS DISTINCT FROM NEW.is_active)
 EXECUTE FUNCTION deactivate_system_users();
+
+
+CREATE FUNCTION check_water_clean_tank_type() RETURNS trigger AS $$
+BEGIN
+    IF (SELECT type FROM public.tanks WHERE id = NEW.tank) <> 'water' THEN
+        RAISE EXCEPTION 'Tank must be of type water';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_check_water_clean_tank_type
+BEFORE INSERT OR UPDATE ON public.water_clean
+FOR EACH ROW EXECUTE FUNCTION check_water_clean_tank_type();
+
+
+CREATE FUNCTION check_water_clean_volume() RETURNS trigger AS $$
+DECLARE
+    tank_volume numeric;
+BEGIN
+    SELECT volume INTO tank_volume FROM public.tanks WHERE id = NEW.tank;
+
+    IF NEW.volume > tank_volume THEN
+        RAISE EXCEPTION 'Volume exceeds tank capacity (%).', tank_volume;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_check_water_clean_volume
+BEFORE INSERT OR UPDATE ON public.water_clean
+FOR EACH ROW EXECUTE FUNCTION check_water_clean_volume();
+
+CREATE FUNCTION check_water_clean_user() RETURNS trigger AS $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM public.tanks t
+        JOIN public.systems s ON s.id = t.system
+        JOIN public.admin_users a ON a."user" = s.admin
+        WHERE t.id = NEW.tank
+          AND a.is_active = true
+          AND (
+                NEW."user" = s.admin
+                OR EXISTS (
+                    SELECT 1
+                    FROM public.systems_users su
+                    WHERE su.system = s.id
+                      AND su.is_active = true
+                      AND su.user_id = NEW."user"
+                )
+          )
+    ) THEN
+        RAISE EXCEPTION 'User is not authorized for this tank or admin inactive';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER trigger_check_water_clean_user
+BEFORE INSERT OR UPDATE ON public.water_clean
+FOR EACH ROW EXECUTE FUNCTION check_water_clean_user();
+
+
+CREATE FUNCTION check_drainings_tank_type() RETURNS trigger AS $$
+DECLARE
+    tank_type tank_type;
+BEGIN
+    SELECT type INTO tank_type FROM public.tanks WHERE id = NEW.tank;
+
+    IF tank_type IN ('water','nutrients') THEN
+        RAISE EXCEPTION 'Tank cannot be of type water or nutrients';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_check_drainings_tank_type
+BEFORE INSERT OR UPDATE ON public.drainings
+FOR EACH ROW EXECUTE FUNCTION check_drainings_tank_type();
+
+
+
+CREATE FUNCTION check_drainings_volume() RETURNS trigger AS $$
+DECLARE
+    tank_volume numeric;
+BEGIN
+    SELECT volume INTO tank_volume FROM public.tanks WHERE id = NEW.tank;
+    IF NEW.volume > tank_volume THEN
+        RAISE EXCEPTION 'Volume exceeds tank capacity (%).', tank_volume;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_check_drainings_volume
+BEFORE INSERT OR UPDATE ON public.drainings
+FOR EACH ROW EXECUTE FUNCTION check_drainings_volume();
+
+CREATE FUNCTION check_drainings_user() RETURNS trigger AS $$
+BEGIN
+    -- Verificar que el tanque pertenece a un sistema cuyo admin está activo
+    -- y que el usuario que inserta es admin o usuario activo del sistema
+    IF NOT EXISTS (
+        SELECT 1
+        FROM public.tanks t
+        JOIN public.systems s ON s.id = t.system
+        JOIN public.admin_users a ON a."user" = s.admin
+        WHERE t.id = NEW.tank
+          AND a.is_active = true
+          AND (
+                NEW."user" = s.admin
+                OR EXISTS (
+                    SELECT 1
+                    FROM public.systems_users su
+                    WHERE su.system = s.id
+                      AND su.is_active = true
+                      AND su.user_id = NEW."user"
+                )
+          )
+    ) THEN
+        RAISE EXCEPTION 'User is not authorized for this tank or admin inactive';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER trigger_check_drainings_user
+BEFORE INSERT OR UPDATE ON public.drainings
+FOR EACH ROW EXECUTE FUNCTION check_drainings_user();
+
+
+CREATE OR REPLACE FUNCTION check_expense_user_admin()
+RETURNS trigger AS $$
+DECLARE
+    is_admin boolean;
+BEGIN
+    SELECT TRUE INTO is_admin
+    FROM public.admin_users
+    WHERE "user" = NEW."user" AND is_active = TRUE;
+
+    IF NOT is_admin THEN
+        RAISE EXCEPTION 'User must be an active admin';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER trigger_check_expense_user
+BEFORE INSERT OR UPDATE ON public.expenses
+FOR EACH ROW
+EXECUTE FUNCTION check_expense_user_admin();
+
+CREATE OR REPLACE FUNCTION check_expense_system_admin()
+RETURNS trigger AS $$
+DECLARE
+    is_valid boolean;
+BEGIN
+    SELECT TRUE INTO is_valid
+    FROM public.expenses e
+    JOIN public.admin_users a ON a."user" = e."user"
+    JOIN public.systems s ON s.id = NEW.system_id
+    WHERE e.id = NEW.expense_id
+      AND a.is_active = TRUE
+      AND s.admin = e."user";
+
+    IF NOT is_valid THEN
+        RAISE EXCEPTION 'User is not admin of this system';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER trigger_check_expense_system
+BEFORE INSERT OR UPDATE ON public.expenses_systems
+FOR EACH ROW
+EXECUTE FUNCTION check_expense_system_admin();
+
+
+CREATE OR REPLACE FUNCTION check_expense_tank_admin()
+RETURNS trigger AS $$
+DECLARE
+    is_valid boolean;
+BEGIN
+    SELECT TRUE INTO is_valid
+    FROM public.expenses e
+    JOIN public.admin_users a ON a."user" = e."user"
+    JOIN public.tanks t ON t.id = NEW.tank_id
+    JOIN public.systems s ON s.id = t.system
+    WHERE e.id = NEW.expense_id
+      AND a.is_active = TRUE
+      AND s.admin = e."user";
+
+    IF NOT is_valid THEN
+        RAISE EXCEPTION 'User is not admin of the system owning this tank';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER trigger_check_expense_tank
+BEFORE INSERT OR UPDATE ON public.expenses_tanks
+FOR EACH ROW
+EXECUTE FUNCTION check_expense_tank_admin();
+
+
+CREATE OR REPLACE FUNCTION check_profit_user_admin()
+RETURNS trigger AS $$
+DECLARE
+    is_admin boolean;
+BEGIN
+    SELECT TRUE INTO is_admin
+    FROM public.admin_users
+    WHERE "user" = NEW."user" AND is_active = TRUE;
+
+    IF NOT is_admin THEN
+        RAISE EXCEPTION 'User must be an active admin';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER trigger_check_profit_user
+BEFORE INSERT OR UPDATE ON public.profit
+FOR EACH ROW
+EXECUTE FUNCTION check_profit_user_admin();
+
+
+CREATE OR REPLACE FUNCTION check_profit_system_admin()
+RETURNS trigger AS $$
+DECLARE
+    is_valid boolean;
+BEGIN
+    SELECT TRUE INTO is_valid
+    FROM public.profit p
+    JOIN public.admin_users a ON a."user" = p."user"
+    JOIN public.systems s ON s.id = NEW.system_id
+    WHERE p.id = NEW.profit_id
+      AND a.is_active = TRUE
+      AND s.admin = p."user";
+
+    IF NOT is_valid THEN
+        RAISE EXCEPTION 'User is not admin of this system';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER trigger_check_profit_system
+BEFORE INSERT OR UPDATE ON public.profit_systems
+FOR EACH ROW
+EXECUTE FUNCTION check_profit_system_admin();
+
+
+CREATE OR REPLACE FUNCTION check_profit_tank_admin()
+RETURNS trigger AS $$
+DECLARE
+    is_valid boolean;
+BEGIN
+    SELECT TRUE INTO is_valid
+    FROM public.profit p
+    JOIN public.admin_users a ON a."user" = p."user"
+    JOIN public.tanks t ON t.id = NEW.tank_id
+    JOIN public.systems s ON s.id = t.system
+    WHERE p.id = NEW.profit_id
+      AND a.is_active = TRUE
+      AND s.admin = p."user";
+
+    IF NOT is_valid THEN
+        RAISE EXCEPTION 'User is not admin of the system owning this tank';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER trigger_check_profit_tank
+BEFORE INSERT OR UPDATE ON public.profit_tanks
+FOR EACH ROW
+EXECUTE FUNCTION check_profit_tank_admin();

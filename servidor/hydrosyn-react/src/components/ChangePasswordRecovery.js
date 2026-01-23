@@ -17,43 +17,73 @@ export default function ChangePasswordRecovery() {
     const navigate = useNavigate();
 
 
-    // Aquí capturamos el token que manda supabase en la URL
-    const access_token = searchParams.get('access_token');
+    useEffect(() => {
+        // Supabase detecta automáticamente el token en la URL y crea una sesión
+        const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+            if (event === "PASSWORD_RECOVERY") {
+                console.log("Evento de recuperación detectado, el usuario ya tiene sesión temporal.");
+            }
+        });
+
+        return () => {
+            authListener.subscription.unsubscribe();
+        };
+    }, []);
+
+    const validatePassword = (password) => {
+        const letters = password.replace(/[^a-zA-Z]/g, '');
+        const distinctLetters = new Set(letters).size;
+        const numbers = password.replace(/[^0-9]/g, '');
+        const distinctNumbers = new Set(numbers).size;
+
+        if (password.length < 10 ||
+            distinctLetters < 3 ||
+            distinctNumbers < 2 ||
+            !/^[A-Za-z0-9]+$/.test(password)) {
+            return false;
+        }
+        return true;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        /*
-        if (!access_token) {
-            setError('Invalid token.');
+        setMessage({ text: '', type: '' });
+
+        // Validaciones básicas
+        if (newPassword !== confirmPassword) {
+            setMessage({ text: 'noEquals', type: 'error' });
             setLoading(false);
             return;
         }
-        */
-        // Validaciones
-        if ((newPassword.trim() !== confirmPassword.trim())) {
-            setMessage({ text: texts.noEquals, type: 'error' });
+
+        if (!validatePassword(newPassword)) {
+            setMessage({ text: 'passwordRegex', type: 'error' });
             setLoading(false);
             return;
         }
 
         try {
+            // 2. Actualizar la contraseña
+            // Como el usuario ya entró con el enlace, ya tiene una sesión activa
+            const { error } = await supabase.auth.updateUser({
+                password: newPassword
+            });
 
-            const { error: updateError } = await supabase.auth.updateUser(
-                { password: newPassword },
-                { accessToken: access_token }
-            );
-
-            if (updateError) throw updateError;
+            if (error) throw error;
 
             setMessage({
-                text: texts.messagePassword,
+                text: 'messagePassword', // Asegúrate que esta clave exista en tu useTexts
                 type: 'success',
             });
 
-            // Limpiar formulario
+            // Limpiar y redirigir
             setNewPassword('');
             setConfirmPassword('');
 
+            setTimeout(() => {
+                navigate('/'); // O a la página que prefieras
+            }, 3000);
 
         } catch (error) {
             setMessage({
@@ -64,7 +94,6 @@ export default function ChangePasswordRecovery() {
             setLoading(false);
         }
     };
-
 
     return (
         <div className="div-main-login">
@@ -83,7 +112,7 @@ export default function ChangePasswordRecovery() {
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder={texts.newPassword}
                     required
-                    minLength={8}
+                    minLength={10}
                 />
 
 
@@ -98,7 +127,7 @@ export default function ChangePasswordRecovery() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder={texts.newPassword}
                     required
-                    minLength={8}
+                    minLength={10}
                 />
 
 
@@ -111,9 +140,9 @@ export default function ChangePasswordRecovery() {
                 </button>
 
 
-                {message.text && (
+                {message && (
                     <div >
-                        {message.text}
+                        {texts[message]}
                     </div>
                 )}
             </form>

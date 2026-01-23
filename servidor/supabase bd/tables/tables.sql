@@ -1,5 +1,4 @@
--- WARNING: This schema is for context only and is not meant to be run.
--- Table order and constraints may not be valid for execution.
+
 
 
 CREATE TABLE public.admin_users (
@@ -105,7 +104,137 @@ CREATE TABLE public.tanks (
 
 -- no ams d e20 tanques si no es admin, no insertar con nombre duplicado, no cmabair a nomber duplicado
 -- coments
+
+
+
+
+
+CREATE TABLE public.expenses(
+    id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+    created_at timestamp with time zone NOT NULL DEFAULT now(),
+    "user" uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+ amount numeric(12,2) NOT NULL CHECK (amount >= 0),          
+    extra_amount numeric(12,2)  CHECK (extra_amount >= 0), 
+    extra_units varchar(10),                                      
+    concepts varchar(50) NOT NULL,                              
+
+    -- CHECK: solo letras en extra_units
+    CONSTRAINT extra_units_letters CHECK (extra_units ~ '^[A-Za-z]*$'),
+
+    -- CHECK: si extra_amount > 0, extra_units NO puede ser nulo ni vacío
+    CONSTRAINT extra_units_required_if_extra_amount CHECK (
+        (extra_amount IS NULL) OR (extra_units IS NOT NULL AND extra_units <> '')
+    ),
+-- CHECK: concepts entre 3 y 50 caracteres y solo letras, números y espacios
+    -- Concepts: 3-50 caracteres, solo letras, números y espacios, no empieza/termina con espacio, no 2 espacios seguidos
+    CONSTRAINT concepts_valid CHECK (
+        concepts ~ '^(?=.{3,50}$)(?! )(?!.*  )(?!.* $)[A-Za-z0-9 ]+$'
+    )
+
+   
+)
+
+CREATE TABLE public.expenses_systems (
+    expense_id bigint NOT NULL REFERENCES public.expenses(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    system_id bigint NOT NULL REFERENCES public.systems(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    PRIMARY KEY(expense_id, system_id)
+);
+
+CREATE TABLE public.expenses_tanks (
+    expense_id bigint NOT NULL REFERENCES public.expenses(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    tank_id bigint NOT NULL REFERENCES public.tanks(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    PRIMARY KEY(expense_id, tank_id)
+);
+
+CREATE TABLE public.expenses_tags (
+    expense_id bigint NOT NULL REFERENCES public.expenses(id) ON DELETE CASCADE ON UPDATE CASCADE,
+     tag varchar(20) NOT NULL,
+
+    -- Solo letras y espacios, no empieza/termina con espacio, no 2 espacios seguidos
+    CONSTRAINT tags_valid CHECK (
+        tag ~ '^(?=.{1,20}$)(?! )(?!.*  )(?!.* $)[A-Za-z ]+$'
+    ),
+    PRIMARY KEY(expense_id, tag)
+);
+
+
+
+
+CREATE TABLE public.profit(
+    id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+    created_at timestamp with time zone NOT NULL DEFAULT now(),
+    "user" uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+ amount numeric(12,2) NOT NULL CHECK (amount >= 0),          
+    extra_amount numeric(12,2)  CHECK (extra_amount >= 0), 
+    extra_units varchar(10),                                      
+    concepts varchar(50) NOT NULL,                              
+
+    -- CHECK: solo letras en extra_units
+    CONSTRAINT extra_units_letters CHECK (extra_units ~ '^[A-Za-z]*$'),
+
+    -- CHECK: si extra_amount > 0, extra_units NO puede ser nulo ni vacío
+    CONSTRAINT extra_units_required_if_extra_amount CHECK (
+        (extra_amount IS NULL) OR (extra_units IS NOT NULL AND extra_units <> '')
+    ),
+-- CHECK: concepts entre 3 y 50 caracteres y solo letras, números y espacios
+    -- Concepts: 3-50 caracteres, solo letras, números y espacios, no empieza/termina con espacio, no 2 espacios seguidos
+    CONSTRAINT concepts_valid CHECK (
+        concepts ~ '^(?=.{3,50}$)(?! )(?!.*  )(?!.* $)[A-Za-z0-9 ]+$'
+    )
+
+   
+)
+
+CREATE TABLE public.profit_systems (
+    expense_id bigint NOT NULL REFERENCES public.profit(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    system_id bigint NOT NULL REFERENCES public.systems(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    PRIMARY KEY(expense_id, system_id)
+);
+
+CREATE TABLE public.profit_tanks (
+    expense_id bigint NOT NULL REFERENCES public.profit(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    tank_id bigint NOT NULL REFERENCES public.tanks(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    PRIMARY KEY(expense_id, tank_id)
+);
+
+CREATE TABLE public.profit_tags (
+    expense_id bigint NOT NULL REFERENCES public.profit(id) ON DELETE CASCADE ON UPDATE CASCADE,
+     tag varchar(20) NOT NULL,
+
+    -- Solo letras y espacios, no empieza/termina con espacio, no 2 espacios seguidos
+    CONSTRAINT tags_valid CHECK (
+        tag ~ '^(?=.{1,20}$)(?! )(?!.*  )(?!.* $)[A-Za-z ]+$'
+    ),
+    PRIMARY KEY(expense_id, tag)
+);
+
+
+
 -- que pasa en las bmbas al borrar algo oa ctualizar algo
+
+CREATE TABLE public.drainings (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  tank bigint NOT NULL,
+  "user" uuid NOT NULL,
+  volume numeric(9,6) CHECK (volume > 0 and volume <= 999.999999) NOT NULL,
+  CONSTRAINT drainings_pkey PRIMARY KEY (id),
+  CONSTRAINT drainings_tank_fkey FOREIGN KEY (tank) REFERENCES public.tanks(id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT drainings_user_fkey FOREIGN KEY (user) REFERENCES auth.users(id) ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+
+CREATE TABLE public.water_clean(
+
+    id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+    created_at timestamp with time zone NOT NULL DEFAULT now(),
+    tank bigint NOT NULL,
+    volume numeric(9,6) CHECK (volume > 0 and volume <= 999.999999) NOT NULL,
+    "user" uuid NOT NULL,
+    CONSTRAINT water_clean_pkey PRIMARY KEY (id),
+    CONSTRAINT water_clean_tank_fkey FOREIGN KEY (tank) REFERENCES public.tanks(id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT water_clean_user_fkey FOREIGN KEY (user) REFERENCES auth.users(id) ON DELETE SET NULL ON UPDATE CASCADE
+)
 
 
 
@@ -118,9 +247,9 @@ CREATE TABLE public.pumps (
   destination bigint NOT NULL,
   CONSTRAINT pumps_pkey PRIMARY KEY (id),
   CONSTRAINT bombs_system_fkey FOREIGN KEY (system) REFERENCES public.systems(id),
-  CONSTRAINT bombs_destination_fkey FOREIGN KEY (destination) REFERENCES public.tanks(id)  ON DELETE CASCADE
+  CONSTRAINT bombs_destination_fkey FOREIGN KEY (destination) REFERENCES public.tanks(id)  ON DELETE SET NULL 
   ON UPDATE CASCADE,
-  CONSTRAINT bombs_origin_fkey FOREIGN KEY (origin) REFERENCES public.tanks(id)  ON DELETE CASCADE
+  CONSTRAINT bombs_origin_fkey FOREIGN KEY (origin) REFERENCES public.tanks(id)  ON DELETE SET NULL
   ON UPDATE CASCADE
 );
 
@@ -142,7 +271,8 @@ CREATE TABLE public.calibrate (
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   pump bigint NOT NULL,
   volume numeric(9,6) CHECK (volume > 0 and volume <= 999.999999) NOT NULL,
-  user uuid NOT NULL DEFAULT auth.uid(),
+   "user" uuid NOT NULL,
+
 
   CONSTRAINT calibrate_pkey PRIMARY KEY (id),
   CONSTRAINT calibrate_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -151,15 +281,21 @@ CREATE TABLE public.calibrate (
 );
 
 
-CREATE TABLE public.drainings (
+
+
+
+
+CREATE TABLE public.ultime_volume_tank (
   id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-  created_at timestamp with time zone NOT NULL DEFAULT now(),
-  tank bigint NOT NULL,
-  volume numeric(9,6) CHECK (volume > 0 and volume <= 999.999999) NOT NULL,
-  CONSTRAINT drainings_pkey PRIMARY KEY (id),
-  CONSTRAINT drainings_tank_fkey FOREIGN KEY (tank) REFERENCES public.tanks(id) ON DELETE CASCADE ON UPDATE CASCADE
+  tank bigint NOT NULL UNIQUE,
+  last_volume numeric(9,6) CHECK (last_volume >= 0 and last_volume <= 999.999999) NOT NULL,
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT ultime_volume_tank_pkey PRIMARY KEY (id),
+  CONSTRAINT ultime_volume_tank_tank_fkey FOREIGN KEY (tank) REFERENCES public.tanks(id) ON DELETE CASCADE
+  ON UPDATE CASCADE
 );
 
+-- tbaal ultimov olumne tabla tanque limpio tabla gastos beneficios
 
 
 
@@ -201,9 +337,6 @@ CREATE TABLE public.executions_pumps (
     success BOOLEAN DEFAULT false
 );
 
--- luces y camaras
-
--- WARNING: This schema is for context only and is not meant to be run.
--- Table order and constraints may not be valid for execution.
+-- luces
 
 

@@ -26,7 +26,7 @@ export default function RecoverPassword() {
 
         try {
             setMessage('If your account exists, you will receive a recovery link in your email.');
-            const { data, error: edgeError } = await supabase.functions.invoke('insertAttempts', {
+            const { data, error: edgeError } = await supabase.functions.invoke('recoverPassword', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
