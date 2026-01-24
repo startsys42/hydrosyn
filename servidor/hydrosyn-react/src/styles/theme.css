@@ -1,0 +1,444 @@
+/* Tema claro */
+.light-theme {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --topbar-bg: #f0f0f0;
+    --aside-bg: #f4f4f4;
+  
+
+    --button-bg: #ffffff;
+    --button-text: #000000;
+    --button-border: #2196f3;
+    
+
+     --datagrid-bg: #ffffff;
+  --datagrid-text: #000000;
+  --datagrid-border: #e0e0e0;
+  --datagrid-header-bg: #ffffff;
+  --datagrid-row-border: #e0e0e0;
+  --datagrid-row-hover: #f5f5f5;
+  --datagrid-footer-bg: #f5f5f5;
+
+    --DataGrid-t-header-background-base: #ffffff !important;
+    --DataGrid-t-color-foreground-base: #000000 !important;
+    --DataGrid-t-color-border-base: #e0e0e0 !important;
+    --DataGrid-t-color-background-base: #ffffff !important;
+
+}
+
+/* Tema oscuro */
+
+
+
+
+.dark-theme {
+    --bg-color: #181b1e;
+    --text-color: #ffffff;
+    --topbar-bg: #2d2d2d;
+    --aside-bg: #282828;
+
+
+    --button-bg: #181b1e;
+    --button-text: #ffffff;
+    --button-border: #F0F0F0;
+  /*  --aside-bg: #353535; */
+
+    --datagrid-bg: #181b1e;
+  --datagrid-text: #ffffff;
+  --datagrid-border: #ffffff;
+  --datagrid-header-bg: #181b1e;
+  --datagrid-row-border: #ffffff;
+  --datagrid-row-hover: #2d2d2d;
+  --datagrid-footer-bg: #2d2d2d;
+
+   --DataGrid-t-header-background-base: #181b1e !important;
+    --DataGrid-t-color-foreground-base: #ffffff !important;
+    --DataGrid-t-color-border-base: #ffffff !important;
+    --DataGrid-t-color-background-base: #181b1e !important;
+}
+
+html {
+    height: 100%;
+    margin: 0;
+    padding: 0;    
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: sans-serif;
+}
+
+body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-image: url('../assets/hydrosyn.png');
+      background-repeat: repeat-y;   
+  background-size: cover;           
+  background-position: center;     
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: sans-serif;
+}
+
+
+button{
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: 3px solid var(--button-border);
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* Sidebar con ancho fijo */
+.sidebar {
+    position: fixed;
+    top: 60px; 
+  width: 200px; /* ajusta al tamaño que uses */
+  height: calc(100vh - 60px); /* altura de ventana menos topbar */
+  padding: 20px;
+  left: 0;
+  
+  background-color:  var(--aside-bg);
+  overflow-y: auto;
+   box-sizing: border-box;
+}
+
+
+/* Sidebar colapsado */
+.sidebar.collapsed {
+  width: 80px;
+}
+
+
+
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: var(--bg-color);
+  color: var(--text-color, #222);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* alineado a la derecha */
+  padding: 0 20px;
+  box-sizing: border-box;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  z-index: 1000;
+  gap: 10px; /* espacio entre los elementos */
+  flex-wrap: wrap; /* para que los elementos bajen de línea si hay poco espacio */
+}
+
+
+.topbar button {
+
+    margin-top: 0px;
+
+}
+
+.topbar select {
+  background-color: var(--button-bg);
+    color: var(--button-text);
+    border: 3px solid var(--button-border);
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 0px;
+  border-radius: 4px;
+  min-width: 100px; /* para evitar que se encojan demasiado */
+ 
+}
+
+
+.div-main {
+    
+    margin: 60px auto 0; 
+  display: block;
+  width: fit-content;     /* ajusta al contenido */
+
+  padding: 20px;          /* opcional: espacio interno */
+   background-color: var(--bg-color);
+   text-align: left;
+}
+
+
+.div-main-login{
+    margin: 60px auto 0; 
+  display: block;
+  width: fit-content;     /* ajusta al contenido */
+ 
+  padding: 20px;          /* opcional: espacio interno */
+  background-color: var(--bg-color);
+  text-align: left;
+}
+
+
+
+
+
+.button-full {
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+
+
+.button-right {
+ 
+  width: min-content;       /* Ajusta al contenido */
+      
+    box-sizing: border-box;
+ 
+  display: inline-block;       /* Para que respete el contenido */
+  max-width: 100%;             /* No superar el ancho del contenedor */
+  white-space: nowrap;         /* Evitar que el texto se rompa */
+  text-align: center;          /* Centrar texto dentro del botón */
+  float: right;                /* Colocarlo a la derecha del contenedor */
+ 
+}
+
+
+.button-width {
+    width: 100%;
+  display: block;
+
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+
+
+.sidebar ul {
+  list-style: none; /* quita los puntos */
+  box-sizing: border-box;
+  margin: 0;
+  
+}
+
+.sidebar li {
+  width: 100%;        /* ocupa todo el ancho del aside */
+  box-sizing: border-box;
+   padding: 0;
+  margin: 0;
+
+}
+
+h1 {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
+  color: var(--text-color);
+}
+
+/* Título centrado dentro del public-content */
+
+
+label {
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+
+
+
+.custom-link {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 5px;
+    color: var(--text-color);
+    text-decoration: none;
+    background-color: var(--button-bg);
+    border: 3px solid var(--button-border);
+    box-sizing: border-box;
+}
+
+.datagrid {
+  background-color: var(--datagrid-bg) !important;
+  color: var(--datagrid-text) !important;
+  border: 2px solid var(--datagrid-border) !important;
+}
+
+/* Fondo y texto general */
+.MuiDataGrid-root {
+  background-color: var(--datagrid-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+/* Cabeceras de columnas */
+.MuiDataGrid-columnHeaders {
+  background-color: var(--datagrid-header-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+
+.MuiDataGrid-columnHeader {
+   background-color: var(--datagrid-header-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+
+ .MuiDataGrid-columnHeaderTitle {
+    color: var(--datagrid-text) !important;
+    font-weight: bold !important;
+}
+/* Celdas */
+.MuiDataGrid-cell {
+  color: var(--datagrid-text) !important;
+  border-bottom: 2px solid var(--datagrid-row-border) !important;
+}
+
+/* Filas */
+.MuiDataGrid-row {
+  background-color: var(--datagrid-bg) !important;
+}
+
+/* Filas al pasar el mouse */
+.MuiDataGrid-row:hover {
+  background-color: var(--datagrid-row-hover) !important;
+}
+
+/* Footer (paginación) */
+.MuiDataGrid-footerContainer {
+  background-color: var(--datagrid-footer-bg) !important;
+  border-top: 2px solid var(--datagrid-border) !important;
+  color: var(--datagrid-text) !important;
+}
+
+/* Texto de la paginación */
+.MuiTablePagination-root {
+  color: var(--datagrid-text) !important;
+}
+
+/* Iconos */
+.MuiSvgIcon-root {
+  color: var(--datagrid-text) !important;
+}
+
+/* Toolbar (si la usas) */
+.MuiDataGrid-toolbarContainer {
+  background-color: var(--datagrid-header-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+.MuiDataGrid-topContainer {
+  background-color: var(--datagrid-header-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+.MuiAccordion-root {
+  background-color: var(--datagrid-bg) !important;
+  color: var(--datagrid-text) !important;
+  border-top: 2px solid var(--datagrid-border) !important;
+}
+
+.MuiAccordionSummary-content {
+   background-color: var(--datagrid-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+.MuiAccordionSummary-root {
+  background-color: var(--datagrid-header-bg) !important; /* fondo cabecera */
+  color: var(--datagrid-text) !important;
+  border-bottom: 2px solid var(--datagrid-border) !important;
+}
+
+.MuiAccordionSummary-expandIconWrapper {
+  color: var(--datagrid-text) !important; /* color del icono de abrir/cerrar */
+}
+
+.MuiAccordionDetails-root {
+  background-color: var(--datagrid-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+div[class*="MuiDataGrid-columnHeaders"] {
+  background-color: var(--datagrid-header-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+div[class*="MuiDataGrid-columnHeader"] {
+  background-color: var(--datagrid-header-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+.MuiDataGrid-columnHeaders,
+[class*="MuiDataGrid-columnHeaders"] {
+  background-color: var(--datagrid-header-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+/* COLUMNAS HEADER - Especificidad máxima */
+.MuiDataGrid-columnHeader,
+[class*="MuiDataGrid-columnHeader"] {
+  background-color: var(--datagrid-header-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+/* TÍTULOS DE COLUMNA - Especificidad máxima */
+.MuiDataGrid-columnHeaderTitle,
+[class*="MuiDataGrid-columnHeaderTitle"] {
+  color: var(--datagrid-text) !important;
+  font-weight: bold !important;
+}
+
+/* CONTENEDOR SUPERIOR */
+.MuiDataGrid-topContainer,
+[class*="MuiDataGrid-topContainer"] {
+  background-color: var(--datagrid-header-bg) !important;
+  color: var(--datagrid-text) !important;
+}
+
+/* BOTONES DE CABECERA */
+.MuiDataGrid-sortButton,
+.MuiDataGrid-menuIconButton {
+  color: var(--datagrid-text) !important;
+}
+
+/* ICONOS DE CABECERA */
+.MuiDataGrid-sortIcon,
+.MuiDataGrid-iconSeparator {
+  color: var(--datagrid-text) !important;
+}
+
+.MuiAccordion-root,
+[class*="MuiAccordion-root"] {
+    background-color: var(--datagrid-bg) !important;
+    color: var(--datagrid-text) !important;
+    border-color: var(--datagrid-border) !important;
+}
+
+.MuiAccordionSummary-root,
+[class*="MuiAccordionSummary-root"] {
+    background-color: var(--datagrid-header-bg) !important;
+    color: var(--datagrid-text) !important;
+    border-bottom-color: var(--datagrid-border) !important;
+}
+
+.MuiAccordionDetails-root,
+[class*="MuiAccordionDetails-root"] {
+    background-color: var(--datagrid-bg) !important;
+    color: var(--datagrid-text) !important;
+}
+
+#options {
+  background-color: white; /* fondo del select */
+  color: black;            /* texto negro */
+ 
+}
+
+#options option {
+  background-color: white; /* fondo blanco en el desplegable */
+  color: black;            /* texto negro */
+}
