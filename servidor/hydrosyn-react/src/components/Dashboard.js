@@ -6,11 +6,14 @@ import { useAdminStatus } from '../utils/AdminContext';
 import { useOwnerStatus } from '../utils/OwnerContext';
 import { useNavigate } from 'react-router-dom';
 import { TextField, CircularProgress } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+
 import { CheckBox, CheckBoxOutlineBlank, Padding } from '@mui/icons-material';
 import Checkbox from '@mui/material/Checkbox';
 import texts from '../i18n/locales';
-
+import { DataGrid } from '@mui/x-data-grid';
+import { esES } from '@mui/x-data-grid/locales';
+import { enUS } from '@mui/x-data-grid/locales';
+import { useLanguage } from '../utils/LanguageContext';
 
 export default function Dashboard() {
     const t = useTexts();
@@ -25,6 +28,8 @@ export default function Dashboard() {
     const [pageSize, setPageSize] = useState(20);
     const [rowCount, setRowCount] = useState(0);
     const [sortModel, setSortModel] = useState([]);
+    const { language } = useLanguage();
+    const locale = language === 'es' ? esES : enUS;
 
     const fetchSystems = async () => {
         setLoading(true);
@@ -176,6 +181,7 @@ export default function Dashboard() {
                             pagination
                             //page={page}
                             pageSize={pageSize}
+                            localeText={locale}
                             // rowCount={rowCount}
                             // paginationMode="client" // CAMBIADO de "server" a "client"
                             // onPageChange={(newPage) => setPage(newPage)}

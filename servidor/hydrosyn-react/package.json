@@ -10,7 +10,7 @@
     "@fortawesome/react-fontawesome": "^0.2.3",
     "@mui/icons-material": "^7.3.2",
     "@mui/material": "^7.3.2",
-    "@mui/x-data-grid": "^8.11.2",
+    "@mui/x-data-grid": "^8.26.0",
     "@mui/x-date-pickers": "^8.11.2",
     "@supabase/supabase-js": "^2.53.0",
     "@testing-library/dom": "^10.4.0",
@@ -50,6 +50,7 @@
     ]
   },
   "devDependencies": {
+    "baseline-browser-mapping": "^2.9.18",
     "eslint": "^8.56.0",
     "eslint-config-react-app": "^7.0.1"
   }

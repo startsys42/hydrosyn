@@ -13,7 +13,7 @@ export default function ChangeEmail() {
     const [loading, setLoading] = useState(false);
     const texts = useTexts();
     const [user, setUser] = useState(null);
-    const [password, setPassword] = useState('');
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -28,15 +28,7 @@ export default function ChangeEmail() {
             return;
         }
 
-        // 2. Validar formato de contraseña (Solo a-zA-Z0-9)
-        // Usamos el regex que pediste
-        const passwordRegex = /^[A-Za-z0-9]+$/;
-        if (!passwordRegex.test(password)) {
-            // Suponiendo que tienes esta clave en tu archivo de textos
-            setMessageKey('passwordInvalid');
-            setLoading(false);
-            return;
-        }
+
 
         try {
             // 3. Llamada a la Edge Function
@@ -44,7 +36,7 @@ export default function ChangeEmail() {
             const { data, error: functionError } = await supabase.functions.invoke('changeEmail', {
                 body: {
                     new_email: newEmail,
-                    current_password: password
+
                 },
             });
 
@@ -60,7 +52,7 @@ export default function ChangeEmail() {
             // Limpiar campos
             setNewEmail('');
             setConfirmEmail('');
-            setPassword('');
+
 
         } catch (error) {
             setMessage({
@@ -104,15 +96,6 @@ export default function ChangeEmail() {
 
                 />
 
-                <label htmlFor='passwordSecurity'>{texts.password}</label>
-
-                <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder={texts.password}
-                    required
-                />
 
 
 
