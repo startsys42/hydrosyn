@@ -316,22 +316,28 @@ CREATE TABLE public.programming_pumps (
   CONSTRAINT programming_pumps_pkey PRIMARY KEY (id),
   CONSTRAINT programming_pumps_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id) ON DELETE CASCADE
   ON UPDATE CASCADE
+  -- desd que momento
 );
 
 CREATE TABLE public.records_pumps (
   id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   pump bigint NOT NULL,
+  --tanque detsino
+  --origen
   volume numeric(9,6) CHECK (volume > 0 and volume <= 999.999999) NOT NULL,
-  user uuid,
+  "user" uuid not null,
   CONSTRAINT records_pumps_pkey PRIMARY KEY (id),
-  CONSTRAINT records_pumps_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT records_pumps_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT records_pumps_user_fkey FOREIGN KEY (user) REFERENCES auth.users(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 
 CREATE TABLE public.executions_pumps (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    -- tanque destino
+    --tanque origen
+    -- volumen
     programming_id BIGINT NOT NULL REFERENCES public.programming_pumps(id) ON DELETE CASCADE on update cascade,
     executed_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     success BOOLEAN DEFAULT false

@@ -56,7 +56,7 @@ export default function CreateUserAdmin() {
 
     return (
         <div className='div-main-login'>
-            <h1>{texts.createUser}</h1>
+            <h1>{texts.createAdmin}</h1>
             <form onSubmit={handleSubmit} className='form-container'>
                 <label>
                     {texts.email}
@@ -70,7 +70,7 @@ export default function CreateUserAdmin() {
                 />
 
                 <button type="submit" disabled={loading}>
-                    {loading ? texts.creating : texts.createUser}
+                    {loading ? texts.creating : texts.createAdmin}
                 </button>
             </form>
             {message && <p style={{ color: 'green' }}>{texts[message]}</p>}

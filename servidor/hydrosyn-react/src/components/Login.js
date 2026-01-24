@@ -47,13 +47,7 @@ export default function Login() {
 
 
 
-            if (authError) {
-                await supabase.rpc('record_failed_login', {
-                    p_email: email
-                });
-                throw authError;
-            }
-
+            if (authError) throw authError;
             // 2. Verificar si el usuario está activo
             const { data: { user } } = await supabase.auth.getUser();
             console.log('Usuario recibido:', user);

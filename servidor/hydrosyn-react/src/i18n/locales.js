@@ -17,9 +17,11 @@ const texts = {
         logout: 'Cerrar sesión',
 
         verify: 'Verificando...',
+        createAdmin: 'Crear administrador',
+        activateDeleteAdmin: 'Activar/Eliminar administrador',
         username: 'Usuario',
 
-        users: 'Gestión de usuarios',
+        usersManage: 'Gestión de usuarios',
 
 
 
@@ -192,6 +194,9 @@ const texts = {
 
         logout: 'Logout',
         verify: 'Verifying...',
+        createAdmin: 'Create admin',
+        activateDeleteAdmin: 'Activate/Delete admin',
+
 
 
         username: 'Username',
@@ -205,7 +210,7 @@ const texts = {
         fa: 'Two-Factor Authentication',
         code2fa: 'Enter your 2FA code',
 
-        users: 'User management',
+        usersManage: 'User management',
         welcome: 'Welcome to Hydrosyn',
 
 
