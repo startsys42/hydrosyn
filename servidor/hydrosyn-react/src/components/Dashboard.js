@@ -99,7 +99,7 @@ export default function Dashboard() {
 
     const columns = [
         // { field: 'id', headerName: 'ID', hide: true },
-        { field: 'name', headerName: t.systems, flex: 1, minWidth: 200, headerClassName: 'data-grid-header' },
+        { field: 'name', headerName: t.system, flex: 1, minWidth: 200, headerClassName: 'data-grid-header' },
         { field: 'created_at', headerName: t.date, flex: 1, minWidth: 120, headerClassName: 'data-grid-header' },
         {
             field: 'owner',

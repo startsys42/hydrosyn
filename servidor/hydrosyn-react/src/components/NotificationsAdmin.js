@@ -7,6 +7,9 @@ import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions } 
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
+import 'dayjs/locale/es';
+import 'dayjs/locale/en';
+import { useLanguage } from '../utils/LanguageContext';
 
 
 
@@ -14,6 +17,7 @@ export default function NotificationsAdmin() {
 
 
     const texts = useTexts();
+    const { language } = useLanguage();
 
 
     const [attempts, setAttempts] = useState([]);
@@ -28,7 +32,9 @@ export default function NotificationsAdmin() {
     const [openDialog, setOpenDialog] = useState(false);
     const [deleting, setDeleting] = useState(false);
 
-
+    useEffect(() => {
+        dayjs.locale(language); // 'es' o 'en' según tu contexto
+    }, [language]);
     const handleDelete = async () => {
         if (!fromDate || !toDate) {
             setError('Please select both dates');
@@ -163,7 +169,7 @@ export default function NotificationsAdmin() {
         <div className='div-main-login'>
             <h1>{texts.notifications}</h1>
 
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={language}>
                 <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
                     <DateTimePicker
                         label={texts.fromDate ?? 'From'}

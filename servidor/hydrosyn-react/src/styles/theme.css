@@ -442,3 +442,44 @@ div[class*="MuiDataGrid-columnHeader"] {
   background-color: white; /* fondo blanco en el desplegable */
   color: black;            /* texto negro */
 }
+
+/* DateTimePicker en Tema CLARO */
+.light-theme .MuiOutlinedInput-root {
+  background-color: var(--button-bg) !important;
+  color: var(--button-text) !important;
+  border: 3px solid var(--button-border) !important;
+}
+
+.light-theme .MuiInputLabel-root {
+  color: var(--text-color) !important;
+}
+
+.light-theme .MuiIconButton-root {
+  color: var(--text-color) !important;
+}
+
+/* DateTimePicker en Tema OSCURO */
+.dark-theme .MuiOutlinedInput-root {
+  background-color: var(--button-bg) !important;
+  color: var(--button-text) !important;
+  border: 3px solid var(--button-border) !important;
+}
+
+.dark-theme .MuiInputLabel-root {
+  color: var(--text-color) !important;
+}
+
+.dark-theme .MuiIconButton-root {
+  color: var(--text-color) !important;
+}
+
+/* Calendario/popup del picker */
+.MuiPickersPopper-root {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+}
+
+.MuiPickersCalendar-root {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+}

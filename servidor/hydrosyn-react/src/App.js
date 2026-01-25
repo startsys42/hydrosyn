@@ -278,6 +278,18 @@ function App() {
                             ) : null
                         }
                     />
+                    <Route
+                        path="/add-expenses"
+                        element={
+                            !user ? (
+                                <Navigate to="/" replace />
+                            ) : user && isOwner ? (
+                                <Expenses />
+                            ) : user && !loadingOwner ? (
+                                <Navigate to="/dashboard" replace />
+                            ) : null
+                        }
+                    />
 
                     <Route
                         path="/profits"
@@ -291,6 +303,7 @@ function App() {
                             ) : null
                         }
                     />
+
                     <Route
                         path="/export"
                         element={

@@ -3,6 +3,7 @@ import { use } from "react";
 
 const texts = {
     es: {
+        system: 'Sistema',
 
         dark: 'Modo oscuro',
         light: 'Modo claro',
@@ -172,6 +173,8 @@ const texts = {
         profits: 'Ingresos',
         export: 'Exportar datos',
         removeData: 'Eliminar datos',
+        fromDate: 'Desde fecha',
+        toDate: 'Hasta fecha',
 
         viewCalendar: 'Ver Calendario',
         manualRecords: 'Registros manuales',
@@ -187,6 +190,7 @@ const texts = {
 
     },
     en: {
+        system: 'System',
 
         dark: 'Dark mode',
         light: 'Light mode',
@@ -356,6 +360,12 @@ const texts = {
         manualRecords: 'Manual Records',
         viewManualRecords: 'View Manual Records',
         systemSettings: 'System Settings',
+        expenses: 'Expenses',
+        profits: 'Profits',
+        export: 'Export data',
+        removeData: 'Remove data',
+        fromDate: 'From Date',
+        toDate: 'To Date',
 
 
 

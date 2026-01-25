@@ -3,15 +3,23 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Button, TextField, MenuItem, Autocomplete, Box, CircularProgress } from '@mui/material';
 import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
+import '../styles/theme.css';
+import { useNavigate } from 'react-router-dom';
 
 export default function Expenses() {
     const t = useTexts();
 
-    const [rows, setRows] = useState([]);
-    const [loading, setLoading] = useState(true);
+
+
     const [systems, setSystems] = useState([]);
     const [tanks, setTanks] = useState([]);
     const [tags, setTags] = useState([]);
+    const [rows, setRows] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(0);
+    const [pageSize, setPageSize] = useState(20);
+    const [rowCount, setRowCount] = useState(0);
+    const navigate = useNavigate();
 
     // Campos del formulario de añadir/modificar
     const [form, setForm] = useState({
@@ -127,35 +135,40 @@ export default function Expenses() {
 
     return (
         <div className="div-main-login">
-            <h1>{t?.expenses}</h1>
 
-            <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-                <TextField label={t?.concept} value={form.concept} onChange={(e) => setForm({ ...form, concept: e.target.value })} />
-                <TextField label={t?.date} type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} InputLabelProps={{ shrink: true }} />
-                <TextField label={t?.amount} type="number" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} />
-                <TextField label={t?.extraAmount} type="number" value={form.extraAmount} onChange={(e) => setForm({ ...form, extraAmount: e.target.value })} />
-                <TextField label={t?.extraUnits} type="number" value={form.extraUnits} onChange={(e) => setForm({ ...form, extraUnits: e.target.value })} />
-                <TextField select label={t?.system} value={form.system?.id || ''} onChange={(e) => setForm({ ...form, system: systems.find(s => s.id === e.target.value) })}>
-                    {systems.map(s => <MenuItem key={s.id} value={s.id}>{s.name}</MenuItem>)}
-                </TextField>
-                <TextField select label={t?.tank} value={form.tank?.id || ''} onChange={(e) => setForm({ ...form, tank: tanks.find(t => t.id === e.target.value) })}>
-                    {tanks.map(t => <MenuItem key={t.id} value={t.id}>{t.name}</MenuItem>)}
-                </TextField>
-                <Autocomplete
-                    multiple
-                    options={tags}
-                    getOptionLabel={(option) => option.name}
-                    value={form.tags}
-                    onChange={(_, value) => setForm({ ...form, tags: value })}
-                    renderInput={(params) => <TextField {...params} label={t?.tags} />}
-                />
-                <Button variant="contained" onClick={handleAdd}>{t?.add}</Button>
-            </Box>
+            {loading ? (
+                <p><CircularProgress /></p>
+            ) : (
+                <>
+                    <h1>{t?.expenses}</h1>
 
-            {loading ? <CircularProgress /> : (
-                <div style={{ height: 500, width: '100%' }}>
-                    <DataGrid rows={rows} columns={columns} pageSize={10} rowsPerPageOptions={[10, 20]} />
-                </div>
+                    <button
+                        className='button-right'
+                        onClick={() => navigate('/add-expenses')}
+                    >
+                        {t.newSystem}
+                    </button>
+                    <div style={{ height: 500, width: '100%' }}>
+                        <DataGrid className='datagrid'
+                            rows={rows}
+                            columns={columns}
+                            pagination
+                            //page={page}
+                            pageSize={pageSize}
+
+                            // rowCount={rowCount}
+                            // paginationMode="client" // CAMBIADO de "server" a "client"
+                            // onPageChange={(newPage) => setPage(newPage)}
+                            onPageSizeChange={(newSize) => { setPageSize(newSize); setPage(0); }}
+                            sortingMode="client" // CAMBIADO de "server" a "client"
+                            //sortModel={sortModel}
+                            //onSortModelChange={setSortModel}
+                            disableSelectionOnClick
+
+                        />
+
+                    </div>
+                </>
             )}
         </div>
     );
