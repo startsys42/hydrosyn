@@ -198,7 +198,7 @@ export default function NotificationsAdmin() {
                 </div>
             </LocalizationProvider>
 
-            <div style={{ height: 500, width: '100%' }}>
+            <div style={{ height: 500, width: 'auto' }}>
                 <DataGrid className="datagrid"
                     rows={attempts.map((a, index) => ({ id: index, ...a }))}
                     columns={columns}

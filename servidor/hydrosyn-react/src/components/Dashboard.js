@@ -175,7 +175,7 @@ export default function Dashboard() {
                         </>
                     )}
 
-                    <div style={{ height: 500, width: '100%' }}>
+                    <div style={{ height: 500, width: 'auto' }}>
                         <DataGrid className='datagrid'
                             rows={rows}
                             columns={columns}
