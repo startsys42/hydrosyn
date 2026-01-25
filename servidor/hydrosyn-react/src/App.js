@@ -24,7 +24,7 @@ import CreateUserAdmin from './components/CreateUserAdmin';
 import ActivateDeleteUserAdmin from './components/ActivateDeleteUserAdmin';
 import Help from './components/Help';
 import InfoIcon from '@mui/icons-material/Info';
-import EmailConfirmation from './components/EmailConfirmation';
+
 import Expenses from './components/Expenses';
 import Profits from './components/Profits';
 import Export from './components/Export';
@@ -50,6 +50,25 @@ function App() {
     const { isOwner, loading: loadingOwner } = useOwnerStatus();
     const t = useTexts();
     const [loadingAuth, setLoadingAuth] = useState(true);
+    const [isMember, setIsMember] = useState(false);
+
+    useEffect(() => {
+        const checkMembership = async () => {
+            if (!user) return setIsMember(false);
+
+            const { data, error } = await supabase
+                .from('systems_users')
+                .select('*')
+                .eq('user_id', user.id)
+                .eq('is_active', true)
+                .limit(1)
+                .maybeSingle();
+
+            setIsMember(!!data);
+        }
+
+        checkMembership();
+    }, [user]);
 
     useEffect(() => {
         // Limpia todas las clases del body para evitar conflictos
@@ -173,15 +192,7 @@ function App() {
 
                         }
                     />
-                    <Route
-                        path="/email-confirmation"
-                        element={
-                            !user ? (
-                                <Navigate to="/" replace />
-                            ) : <EmailConfirmation />
 
-                        }
-                    />
                     <Route
                         path="/help"
                         element={
@@ -308,10 +319,11 @@ function App() {
                     <Route
                         path="/calendar"
                         element={
-                            !user ? (
+                            !user || (!isOwner && !isMember) ? (
                                 <Navigate to="/" replace />
-                            ) : <Calendar />
-
+                            ) : (
+                                <Calendar />
+                            )
                         }
                     />
 

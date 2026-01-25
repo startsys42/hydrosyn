@@ -27,7 +27,10 @@ export default function RecoverPassword() {
         try {
             setMessage('If your account exists, you will receive a recovery link in your email.');
             const { data, error: edgeError } = await supabase.functions.invoke('recoverPassword', {
-                body: { email }, // Pasa el objeto directo, Supabase se encarga del resto
+                body: JSON.stringify({ email }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             });
 
             if (edgeError) throw edgeError;

@@ -9,11 +9,10 @@ import { TextField, CircularProgress } from '@mui/material';
 
 import { CheckBox, CheckBoxOutlineBlank, Padding } from '@mui/icons-material';
 import Checkbox from '@mui/material/Checkbox';
-import texts from '../i18n/locales';
+
 import { DataGrid } from '@mui/x-data-grid';
-import { esES } from '@mui/x-data-grid/locales';
-import { enUS } from '@mui/x-data-grid/locales';
-import { useLanguage } from '../utils/LanguageContext';
+
+
 
 export default function Dashboard() {
     const t = useTexts();
@@ -28,8 +27,9 @@ export default function Dashboard() {
     const [pageSize, setPageSize] = useState(20);
     const [rowCount, setRowCount] = useState(0);
     const [sortModel, setSortModel] = useState([]);
-    const { language } = useLanguage();
-    const locale = language === 'es' ? esES : enUS;
+    const [isMember, setIsMember] = useState(false);
+
+
 
     const fetchSystems = async () => {
         setLoading(true);
@@ -79,6 +79,7 @@ export default function Dashboard() {
                     created_at: new Date(s.system.created_at).toLocaleDateString(),
                     owner: false
                 }));
+            setIsMember(memberSystems.length > 0);
             console.log(ownerData, memberData);
             setRows([...ownerSystems, ...memberSystems]);
             setRowCount(ownerSystems.length + memberSystems.length);
@@ -143,21 +144,21 @@ export default function Dashboard() {
                     <h1>{t.welcome}</h1>
 
                     <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-                        <button onClick={() => navigate('/expenses')}>
-                            {t.expenses}
-                        </button>
-                        <button onClick={() => navigate('/profits')}>
-                            {t.profits}
-                        </button>
-                        <button onClick={() => navigate('/calendar')}>
-                            {t.calendar}
-                        </button>
-                        <button onClick={() => navigate('/export')}>
-                            {t.export}
-                        </button>
-                        <button onClick={() => navigate('/remove-data')}>
-                            {t.removeData}
-                        </button>
+                        {isOwner && (
+                            <>
+                                <button onClick={() => navigate('/expenses')}>{t.expenses}</button>
+                                <button onClick={() => navigate('/profits')}>{t.profits}</button>
+                                <button onClick={() => navigate('/export')}>{t.export}</button>
+                                <button onClick={() => navigate('/remove-data')}>{t.removeData}</button>
+                            </>
+                        )}
+
+                        {(isOwner || isMember) && (
+                            <button onClick={() => navigate('/calendar')}>
+                                {t.calendar}
+                            </button>
+                        )}
+
                         {/* Puedes agregar más botones según necesidad */}
                     </div>
 
@@ -181,7 +182,7 @@ export default function Dashboard() {
                             pagination
                             //page={page}
                             pageSize={pageSize}
-                            localeText={locale}
+
                             // rowCount={rowCount}
                             // paginationMode="client" // CAMBIADO de "server" a "client"
                             // onPageChange={(newPage) => setPage(newPage)}

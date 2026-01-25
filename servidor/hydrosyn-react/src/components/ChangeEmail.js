@@ -4,7 +4,6 @@ import '../styles/theme.css';
 import useTexts from '../utils/UseTexts';
 import { useEffect } from 'react';
 
-
 export default function ChangeEmail() {
     const [newEmail, setNewEmail] = useState('');
     const [confirmEmail, setConfirmEmail] = useState('');
@@ -13,47 +12,41 @@ export default function ChangeEmail() {
     const [loading, setLoading] = useState(false);
     const texts = useTexts();
     const [user, setUser] = useState(null);
-
-
+    useEffect(() => {
+        async function getUser() {
+            const { data: { user } } = await supabase.auth.getUser();
+            setUser(user);
+        }
+        getUser();
+    }, []);
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        setMessage({ text: '', type: '' });
         setMessageKey('');
 
-
-        // 1. Validar que los correos coincidan
-        if (newEmail.trim() !== confirmEmail.trim()) {
+        // Validaciones
+        if ((newEmail.trim() !== confirmEmail.trim())) {
             setMessageKey('noEquals');
             setLoading(false);
             return;
         }
 
-
-
         try {
-            // 3. Llamada a la Edge Function
-            // 'change-email' es el nombre que le diste al desplegarla
-            const { data, error: functionError } = await supabase.functions.invoke('changeEmail', {
-                body: {
-                    new_email: newEmail,
 
-                },
+
+            // Actualizar el correo electrónico del usuario
+            const { error: updateError } = await supabase.auth.updateUser({
+                email: newEmail,
             });
 
-            // Manejo de errores de la función
-            if (functionError) {
-                const errResponse = await functionError.context.json();
-                throw new Error(errResponse.error);
-            }
+            if (updateError) throw updateError;
 
-            // 4. Éxito: El correo de confirmación ha sido enviado por Resend
             setMessageKey('messageEmail');
 
-            // Limpiar campos
+            // Limpiar formulario
             setNewEmail('');
             setConfirmEmail('');
-
-
         } catch (error) {
             setMessage({
                 text: `Error: ${error.message}`,
@@ -63,8 +56,6 @@ export default function ChangeEmail() {
             setLoading(false);
         }
     };
-
-
 
     return (
         <div className="div-main-login">
@@ -95,7 +86,6 @@ export default function ChangeEmail() {
                     required
 
                 />
-
 
 
 

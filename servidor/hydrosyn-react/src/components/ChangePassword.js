@@ -15,6 +15,28 @@ export default function ChangePassword() {
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
+    function validarPassword(password) {
+        // Extraer letras y números
+        const letters = password.match(/[a-zA-Z]/g) || [];
+        const numbers = password.match(/[0-9]/g) || [];
+
+        // Longitud mínima
+        if (password.length < 10) return false;
+
+        // Letras distintas
+        const distinctLetters = [...new Set(letters)];
+        if (distinctLetters.length < 3) return false;
+
+        // Números distintos
+        const distinctNumbers = [...new Set(numbers)];
+        if (distinctNumbers.length < 2) return false;
+
+        // Solo letras y números
+        if (!/^[a-zA-Z0-9]+$/.test(password)) return false;
+
+        return true;
+    }
+
     useEffect(() => {
         async function getUser() {
             const { data: { user } } = await supabase.auth.getUser();
@@ -34,56 +56,22 @@ export default function ChangePassword() {
             setLoading(false);
             return;
         }
-
-
-        // Verificar 3 letras distintas
-        const letters = newPassword.replace(/[^a-zA-Z]/g, '');
-        const distinctLetters = new Set(letters).size;
-        const numbers = newPassword.replace(/[^0-9]/g, '');
-        const distinctNumbers = new Set(numbers).size;
-
-        if (newPassword.length < 10 || distinctLetters < 3 || distinctNumbers < 2 || !/^[A-Za-z0-9]+$/.test(newPassword)) {
-            setMessageKey('passwordRegex');
-
+        if (!validarPassword(newPassword)) {
+            setMessageKey('invalidPassword'); // mensaje nuevo en texts
             setLoading(false);
             return;
         }
+
+
+
         try {
 
-
-            // Actualizar la contraseña del usuario
-            const { data, error } = await supabase.functions.invoke('changePassword', {
-                body: {
-                    newPassword: newPassword
-                }
+            const { error: updateError } = await supabase.auth.updateUser({
+                // Actualizar la contraseña del usuario
+                password: newPassword,
             });
 
-            if (error) {
-                console.log(" Error de Edge Function:", error.status, error.message);
-
-                // ERROR 403: No tiene permisos
-                // ERROR 401: Token inválido
-                // ERROR 400: Contraseña mala
-                // ERROR 405: Método incorrecto
-                if (error.status === 403 || error.status === 401 || error.status === 405) {
-
-                    setTimeout(async () => {
-                        await supabase.auth.signOut();
-                        navigate('/');
-                    }, 500);  //  segundos para leer el mensaje
-                    setLoading(false);
-                    return;
-                }
-
-                else if (error.status === 400) {
-                    setMessageKey('passwordRegex');
-                    setNewPassword('');
-                    setConfirmPassword('');
-                    setLoading(false);
-                    return;
-                }
-
-            }
+            if (updateError) throw updateError;
 
             // ÉXITO: Contraseña cambiada
             setMessageKey('messagePassword');
@@ -92,11 +80,6 @@ export default function ChangePassword() {
             setNewPassword('');
             setConfirmPassword('');
 
-            // Desloguear por seguridad (para que se loguee con nueva contraseña)
-            setTimeout(async () => {
-                await supabase.auth.signOut();
-                navigate('/');
-            }, 2000);
 
 
         } catch (error) {

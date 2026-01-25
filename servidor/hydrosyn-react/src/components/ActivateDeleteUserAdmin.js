@@ -6,12 +6,10 @@ import useTexts from '../utils/UseTexts';
 import { Checkbox, Button, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
-import { esES } from '@mui/x-data-grid/locales';
-import { enUS } from '@mui/x-data-grid/locales';
-import { useLanguage } from '../utils/LanguageContext';
+
 
 const ActivateDeleteUserAdmin = () => {
-    const locale = language === 'es' ? esES : enUS;
+
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const texts = useTexts();
@@ -20,7 +18,7 @@ const ActivateDeleteUserAdmin = () => {
     const [pageSize, setPageSize] = useState(10);
     const [currentUser, setCurrentUser] = useState(null);
     const [toggleValue, setToggleValue] = useState(false);
-    const { language } = useLanguage();
+
     const navigate = useNavigate();
 
     useEffect(() => { fetchUsers() }, []);
@@ -189,7 +187,7 @@ const ActivateDeleteUserAdmin = () => {
                     columns={columns}
                     loading={loading}
                     pagination
-                    localeText={locale}
+
                     pageSize={pageSize}
                     onPageSizeChange={setPageSize}
                     sortingMode="client"
