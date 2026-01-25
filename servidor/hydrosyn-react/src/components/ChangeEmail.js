@@ -12,13 +12,7 @@ export default function ChangeEmail() {
     const [loading, setLoading] = useState(false);
     const texts = useTexts();
     const [user, setUser] = useState(null);
-    useEffect(() => {
-        async function getUser() {
-            const { data: { user } } = await supabase.auth.getUser();
-            setUser(user);
-        }
-        getUser();
-    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -36,10 +30,12 @@ export default function ChangeEmail() {
 
 
             // Actualizar el correo electrónico del usuario
-            const { error: updateError } = await supabase.auth.updateUser({
+            const { data, error: updateError } = await supabase.auth.updateUser({
                 email: newEmail,
             });
 
+            console.log("3. Respuesta de Supabase - Data:", data);
+            console.log("3. Respuesta de Supabase - Error:", updateError);
             if (updateError) throw updateError;
 
             setMessageKey('messageEmail');

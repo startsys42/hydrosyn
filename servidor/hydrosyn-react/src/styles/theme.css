@@ -169,7 +169,7 @@ button{
     margin: 60px auto 0; 
   display: block;
   width: fit-content;     /* ajusta al contenido */
- 
+ max-width: calc(100% - 200px);
   padding: 20px;          /* opcional: espacio interno */
   background-color: var(--bg-color);
   text-align: left;
@@ -400,6 +400,10 @@ div[class*="MuiDataGrid-columnHeader"] {
   color: var(--datagrid-text) !important;
 }
 
+
+.MuiDataGrid-iconButtonContainer {
+    background: transparent !important;
+}
 /* BOTONES DE CABECERA */
 .MuiDataGrid-sortButton,
 .MuiDataGrid-menuIconButton {
