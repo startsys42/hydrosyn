@@ -146,8 +146,9 @@ export default function Expenses() {
                         className='button-right'
                         onClick={() => navigate('/add-expenses')}
                     >
-                        {t.newSystem}
+                        {t.addExpenses}
                     </button>
+                    <div style={{ clear: 'both', marginBottom: '10px' }}></div>
                     <div style={{ height: 500, width: '100%' }}>
                         <DataGrid className='datagrid'
                             rows={rows}

@@ -4,6 +4,8 @@ import { use } from "react";
 const texts = {
     es: {
         system: 'Sistema',
+        addExpenses: 'Añadir gasto',
+        addProfits: 'Añadir ingreso',
 
         dark: 'Modo oscuro',
         light: 'Modo claro',
@@ -191,6 +193,8 @@ const texts = {
     },
     en: {
         system: 'System',
+        addExpenses: 'Add Expense',
+        addProfits: 'Add Profit',
 
         dark: 'Dark mode',
         light: 'Light mode',
@@ -369,7 +373,7 @@ const texts = {
 
 
 
-        manualContent: ' Los administradores no pueden crear mas de cinco usuarios entre todos sus sistemas, el numero de tanques esta limitado y el nuemrod e esp32 a , la informacions e borrar , correo de contacto.  Futuras mejoras',
+
 
         passwordRegex: 'The password must be at least 10 characters long, include at least 3 different letters and 2 numbers, and not contain special characters.',
         passwordInvalid: 'Invalid password. Only letters and numbers are allowed.',

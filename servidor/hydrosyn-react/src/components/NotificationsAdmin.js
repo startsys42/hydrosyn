@@ -45,8 +45,8 @@ export default function NotificationsAdmin() {
             setDeleting(true);
             setError(null);
 
-            const fromUTC = dayjs(fromDate).toISOString();
-            const toUTC = dayjs(toDate).toISOString();
+            const fromUTC = dayjs(fromDate).utc().format(); // Asegura UTC
+            const toUTC = dayjs(toDate).utc().format(); // Asegura UTC
 
             const { error } = await supabase.rpc(
                 'delete_login_attempts_between',
@@ -63,7 +63,9 @@ export default function NotificationsAdmin() {
             // refrescar datos
             setAttempts(prev =>
                 prev.filter(a => {
+                    if (!a.attempt_created_at) return true;
                     const d = new Date(a.attempt_created_at);
+                    // Filtrar los que NO están dentro del rango
                     return d < new Date(fromUTC) || d > new Date(toUTC);
                 })
             );
@@ -149,7 +151,7 @@ export default function NotificationsAdmin() {
                         return 'Date invalid';
                     }
                     return date.toLocaleString(undefined, {
-                        timeZone: 'UTC',
+                        //timeZone: 'UTC',
                         year: 'numeric',
                         month: '2-digit',
                         day: '2-digit',
