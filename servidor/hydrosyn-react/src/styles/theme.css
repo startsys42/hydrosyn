@@ -468,3 +468,7 @@ div[class*="MuiDataGrid-columnHeader"] {
     border-color: var(--datagrid-border) !important;
 
 }
+.MuiPickersInputBase-sectionsContainer{
+    color: var(--datagrid-text) !important;
+
+}

@@ -37,15 +37,18 @@ export default function ChangeEmail() {
 
 
             // Actualizar el correo electrónico del usuario
-            const { data, error: updateError } = await supabase.auth.updateUser({
-                email: newEmail,
-                emailRedirectTo: 'http://192.168.1.134'
+            //const { data, error: updateError } = await supabase.auth.updateUser({  email: newEmail,  emailRedirectTo: 'http://192.168.1.134' });
+            const { data: { session } } = await supabase.auth.getSession();
+            const { data, error: updateError } = await supabase.functions.invoke('changeEmail', {
+                body: { newEmail: newEmail.trim() },
+                headers: {
+                    Authorization: `Bearer ${session?.access_token}` // <--- ESTO ES VITAL
+                }
             });
-
             console.log("3. Respuesta de Supabase - Data:", data);
             console.log("3. Respuesta de Supabase - Error:", updateError);
             if (updateError) throw updateError;
-
+            if (data?.error) throw new Error(data.error);
             setMessageKey('messageEmail');
 
             // Limpiar formulario
