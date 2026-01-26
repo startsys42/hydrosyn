@@ -12,6 +12,13 @@ export default function ChangeEmail() {
     const [loading, setLoading] = useState(false);
     const texts = useTexts();
     const [user, setUser] = useState(null);
+    useEffect(() => {
+        async function getUser() {
+            const { data: { user } } = await supabase.auth.getUser();
+            setUser(user);
+        }
+        getUser();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -32,6 +39,7 @@ export default function ChangeEmail() {
             // Actualizar el correo electrónico del usuario
             const { data, error: updateError } = await supabase.auth.updateUser({
                 email: newEmail,
+                emailRedirectTo: 'http://192.168.1.134'
             });
 
             console.log("3. Respuesta de Supabase - Data:", data);

@@ -187,14 +187,13 @@ export default function NotificationsAdmin() {
                         renderInput={(params) => <TextField {...params} size="small" />}
                     />
 
-                    <Button
-                        variant="contained"
-                        color="error"
+                    <button
+
                         disabled={!fromDate || !toDate}
                         onClick={() => setOpenDialog(true)}
                     >
                         {texts.delete ?? 'Delete'}
-                    </Button>
+                    </button>
                 </div>
             </LocalizationProvider>
 

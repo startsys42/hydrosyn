@@ -168,21 +168,20 @@ button{
 
 
 
-.div-main-login {
+
+
+.div-main-login{
     margin: 60px auto 0; 
-    display: block;               /* ← Cambia a block */
-    width: max-content;           /* ← max-content funciona mejor */
-    max-width: calc(100vw - 200px); /* ← Usa vw, no % */
-    padding: 20px;          
-    background-color: var(--bg-color);
-    text-align: left;
+  display: block;
+  width: fit-content;     /* ajusta al contenido */
+ 
+  padding: 20px;          /* opcional: espacio interno */
+  background-color: var(--bg-color);
+  text-align: left;
 }
 
-/* Asegura que los elementos hijos no expandan el contenedor */
-.div-main-login > * {
-    width: auto !important;      /* ← Todos los hijos con auto */
-    max-width: 100%;
-}
+
+
 
 
 .button-full {
@@ -458,3 +457,14 @@ div[class*="MuiDataGrid-columnHeader"] {
   color: black;            /* texto negro */
 }
 
+
+
+.MuiInputLabel-root{
+    color: var(--datagrid-text) !important;
+
+}
+
+.MuiPickersOutlinedInput-notchedOutline {
+    border-color: var(--datagrid-border) !important;
+
+}
