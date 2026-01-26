@@ -3,6 +3,13 @@ import { use } from "react";
 
 const texts = {
     es: {
+
+        concept: 'Concepto',
+
+        amount: 'Cantidad',
+        extraAmount: 'Cantidad extra',
+        extraUnits: 'Unidades extra',
+        tags: 'Etiquetas',
         deleteBetweenDates: "Esto eliminará permanentemente los intentos de inicio de sesión entre las fechas seleccionadas. ¿Está seguro?",
         system: 'Sistema',
         addExpenses: 'Añadir gasto',
@@ -193,6 +200,12 @@ const texts = {
 
     },
     en: {
+        concept: 'Concept',
+        amount: 'Amount',
+        extraAmount: 'Extra amount',
+        extraUnits: 'Extra units',
+        tags: 'Tags',
+
         deleteBetweenDates: "This will permanently delete login attempts between the selected dates. Are you sure?",
         system: 'System',
         addExpenses: 'Add expense',

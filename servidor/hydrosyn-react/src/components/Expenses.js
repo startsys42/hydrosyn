@@ -117,8 +117,8 @@ export default function Expenses() {
         { field: 'amount', headerName: t?.amount, flex: 1 },
         { field: 'extra_amount', headerName: t?.extraAmount, flex: 1 },
         { field: 'extra_units', headerName: t?.extraUnits, flex: 1 },
-        { field: 'system', headerName: t?.system, flex: 1, valueGetter: (params) => params.row.system?.name || '' },
-        { field: 'tank', headerName: t?.tank, flex: 1, valueGetter: (params) => params.row.tank?.name || '' },
+        { field: 'system', headerName: t?.systems, flex: 1, valueGetter: (params) => params.row.system?.name || '' },
+        { field: 'tank', headerName: t?.tanks, flex: 1, valueGetter: (params) => params.row.tank?.name || '' },
         { field: 'tags', headerName: t?.tags, flex: 1, valueGetter: (params) => params.row.tags?.map(t => t.name).join(', ') },
         {
             field: 'actions',
