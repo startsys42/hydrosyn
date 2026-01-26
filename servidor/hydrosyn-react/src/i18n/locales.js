@@ -3,6 +3,7 @@ import { use } from "react";
 
 const texts = {
     es: {
+        deleteBetweenDates: "Esto eliminará permanentemente los intentos de inicio de sesión entre las fechas seleccionadas. ¿Está seguro?",
         system: 'Sistema',
         addExpenses: 'Añadir gasto',
         addProfits: 'Añadir ingreso',
@@ -192,9 +193,10 @@ const texts = {
 
     },
     en: {
+        deleteBetweenDates: "This will permanently delete login attempts between the selected dates. Are you sure?",
         system: 'System',
-        addExpenses: 'Add Expense',
-        addProfits: 'Add Profit',
+        addExpenses: 'Add expense',
+        addProfits: 'Add profit',
 
         dark: 'Dark mode',
         light: 'Light mode',

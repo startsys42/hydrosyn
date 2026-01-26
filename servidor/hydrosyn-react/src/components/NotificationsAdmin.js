@@ -11,7 +11,12 @@ import 'dayjs/locale/es';
 import 'dayjs/locale/en';
 import { useLanguage } from '../utils/LanguageContext';
 
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
+// Extiende dayjs con los plugins
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export default function NotificationsAdmin() {
 
@@ -143,13 +148,13 @@ export default function NotificationsAdmin() {
                     return '--';
                 }
                 try {
-                    const date = new Date(params.value);
-                    console.log('JS Date object:', date);
-                    console.log('ISO String:', date.toISOString());
-                    console.log('UTC Hours:', date.getUTCHours(), 'UTC Minutes:', date.getUTCMinutes());
-                    if (isNaN(date.getTime())) {
-                        return 'Date invalid';
-                    }
+                    const localDate = dayjs.utc(params.value).local();
+
+                    return localDate.format('DD/MM/YYYY HH:mm:ss');
+                    //const date = new Date(params.value);
+
+                    // if (isNaN(date.getTime())) { return 'Date invalid'; }
+                    /*
                     return date.toLocaleString(undefined, {
                         //timeZone: 'UTC',
                         year: 'numeric',
@@ -159,6 +164,7 @@ export default function NotificationsAdmin() {
                         minute: '2-digit',
                         second: '2-digit'
                     });
+                    */
                 } catch (error) {
 
                     return 'Error date';
@@ -216,27 +222,18 @@ export default function NotificationsAdmin() {
 
             <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
                 <DialogTitle>
-                    {texts.confirmDeletion ?? 'Confirm deletion'}
+                    {texts.confirmation}
                 </DialogTitle>
 
                 <DialogContent>
-                    {texts.deleteBetweenDates ??
-                        'This will permanently delete login attempts between the selected dates. Are you sure?'}
+                    {texts.deleteBetweenDates}
                 </DialogContent>
-
                 <DialogActions>
-                    <Button onClick={() => setOpenDialog(false)}>
-                        {texts.cancel ?? 'Cancel'}
-                    </Button>
-
-                    <Button
-                        color="error"
-                        onClick={handleDelete}
-                        disabled={deleting}
-                    >
-                        {deleting ? (texts.deleting ?? 'Deleting...') : (texts.confirm ?? 'Delete')}
-                    </Button>
+                    <Button onClick={() => setOpenDialog(false)}>{texts.no}</Button>
+                    <Button onClick={handleDelete} variant="contained" color="error" disabled={loading}>{texts.yes}</Button>
                 </DialogActions>
+
+
             </Dialog>
         </div>
 

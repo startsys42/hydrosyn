@@ -149,7 +149,7 @@ export default function Expenses() {
                         {t.addExpenses}
                     </button>
                     <div style={{ clear: 'both', marginBottom: '10px' }}></div>
-                    <div style={{ height: 500, width: '100%' }}>
+                    <div style={{ height: 500, width: '100%', minWidth: '900px', overflowX: 'auto' }}>  // ← Scroll horizontal si es necesario }}>
                         <DataGrid className='datagrid'
                             rows={rows}
                             columns={columns}
