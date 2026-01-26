@@ -112,24 +112,30 @@ export default function Expenses() {
     };
 
     const columns = [
-        { field: 'concept', headerName: t?.concept, flex: 1 },
-        { field: 'date', headerName: t?.date, flex: 1 },
-        { field: 'amount', headerName: t?.amount, flex: 1 },
-        { field: 'extra_amount', headerName: t?.extraAmount, flex: 1 },
-        { field: 'extra_units', headerName: t?.extraUnits, flex: 1 },
-        { field: 'system', headerName: t?.systems, flex: 1, valueGetter: (params) => params.row.system?.name || '' },
-        { field: 'tank', headerName: t?.tanks, flex: 1, valueGetter: (params) => params.row.tank?.name || '' },
-        { field: 'tags', headerName: t?.tags, flex: 1, valueGetter: (params) => params.row.tags?.map(t => t.name).join(', ') },
+        { field: 'concept', headerName: t?.concept, flex: 1, headerClassName: 'data-grid-header' },
+        { field: 'date', headerName: t?.date, flex: 1, headerClassName: 'data-grid-header' },
+        { field: 'amount', headerName: t?.amount, flex: 1, headerClassName: 'data-grid-header' },
+        { field: 'extra_amount', headerName: t?.extraAmount, flex: 1, headerClassName: 'data-grid-header' },
+        { field: 'extra_units', headerName: t?.extraUnits, flex: 1, headerClassName: 'data-grid-header' },
+        { field: 'system', headerName: t?.systems, flex: 1, valueGetter: (params) => params.row.system?.name || '', headerClassName: 'data-grid-header' },
+        { field: 'tank', headerName: t?.tanks, flex: 1, valueGetter: (params) => params.row.tank?.name || '', headerClassName: 'data-grid-header' },
+        { field: 'tags', headerName: t?.tags, flex: 1, valueGetter: (params) => params.row.tags?.map(t => t.name).join(', '), headerClassName: 'data-grid-header' },
         {
-            field: 'actions',
-            headerName: t?.actions,
-            flex: 1,
+            field: 'action',
+            headerName: () => null,
+            flex: 1, minWidth: 150,
+            filterable: false,
+            headerClassName: 'data-grid-header',
+            sortable: false,
+            disableColumnMenu: true,
             renderCell: (params) => (
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                    <Button variant="outlined" size="small" onClick={() => handleEdit(params.row)}>Modificar</Button>
-                    <Button variant="outlined" size="small" color="error" onClick={() => handleDelete(params.row.id)}>Borrar</Button>
-                </Box>
-            )
+                <button style={{ padding: '4px 16px' }} onClick={() => navigate(`/system/${params.row.id}`)}>
+                    {t.delete}
+                </button>
+                 <button style={{ padding: '4px 16px' }} onClick={() => navigate(`/system/${params.row.id}`)}>
+                    {t.update}
+                </button>
+            ),
         }
     ];
 
@@ -149,7 +155,7 @@ export default function Expenses() {
                         {t.addExpenses}
                     </button>
                     <div style={{ clear: 'both', marginBottom: '10px' }}></div>
-                    <div style={{ height: 500, width: '100%', minWidth: '900px', overflowX: 'auto' }}>  // ← Scroll horizontal si es necesario }}>
+                    <div style={{ height: 500, width: '100%', minWidth: '1000px', overflowX: 'auto' }}>
                         <DataGrid className='datagrid'
                             rows={rows}
                             columns={columns}

@@ -3,6 +3,7 @@ import { use } from "react";
 
 const texts = {
     es: {
+        update: "Modificar",
 
         concept: 'Concepto',
 
@@ -200,6 +201,7 @@ const texts = {
 
     },
     en: {
+        update: "Update",
         concept: 'Concept',
         amount: 'Amount',
         extraAmount: 'Extra amount',

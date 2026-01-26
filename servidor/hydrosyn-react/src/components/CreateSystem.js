@@ -129,7 +129,7 @@ export default function CreateSystem() {
             setSystemCode('');
             setError('');
             // ✅ Redirigir si existe ID
-            const insertedSystemId = data[0]?.id;
+            const insertedSystemId = data[0]?.system_id;
             if (insertedSystemId) navigate(`/system/${insertedSystemId}`);
 
         } catch (err) {

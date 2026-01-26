@@ -3,14 +3,14 @@ create or replace function insert_system_with_secret(
   admin_id uuid,
   secret_value text
 )
-returns table(system_id uuid) as $$
+returns table(system_id int8) as $$
 declare
-  new_system_id uuid;
+  new_system_id int8;
   is_admin_active boolean;
 begin
  SELECT is_active INTO is_admin_active
   FROM admin_users
-  WHERE user = admin_id;
+  WHERE "user" = admin_id;
   
   IF NOT FOUND THEN
     RAISE EXCEPTION 'Admin user not found';
@@ -48,6 +48,7 @@ IF EXISTS (
   values (new_system_id, secret_value);
 
   -- Devolver el id del system
-  return query select new_system_id::uuid;
+   RETURN QUERY SELECT new_system_id;  -- Sin conversión
+  --return query select new_system_id::uuid;
 end;
 $$ language plpgsql security definer;
