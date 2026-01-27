@@ -82,7 +82,7 @@ export default function System() {
 
     return (
         <div className='div-main-login'>
-            <h1>{texts.systems}: {system.name}</h1>
+            <h1>{texts.system}: {system.name}</h1>
             <label htmlFor="options">{texts.options}</label>
             <br />
             <br />

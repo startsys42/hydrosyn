@@ -148,7 +148,8 @@ export default function NotificationsAdmin() {
                     return '--';
                 }
                 try {
-                    const localDate = dayjs.utc(params.value.replace(' ', 'T')).local();
+                    const isoDate = params.value.replace(' ', 'T').split('.')[0] + 'Z';
+                    const localDate = dayjs(isoDate).local(); // convierte a hora local
 
                     return localDate.format('DD/MM/YYYY HH:mm:ss');
                     //const date = new Date(params.value);
