@@ -219,7 +219,7 @@ CREATE TABLE public.drainings (
   "user" uuid NOT NULL,
   volume numeric(9,6) CHECK (volume > 0 and volume <= 999.999999) NOT NULL,
   CONSTRAINT drainings_pkey PRIMARY KEY (id),
-  CONSTRAINT drainings_tank_fkey FOREIGN KEY (tank) REFERENCES public.tanks(id) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT drainings_tank_fkey FOREIGN KEY (tank) REFERENCES public.tanks(id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT drainings_user_fkey FOREIGN KEY (user) REFERENCES auth.users(id) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
@@ -232,7 +232,7 @@ CREATE TABLE public.water_clean(
     volume numeric(9,6) CHECK (volume > 0 and volume <= 999.999999) NOT NULL,
     "user" uuid NOT NULL,
     CONSTRAINT water_clean_pkey PRIMARY KEY (id),
-    CONSTRAINT water_clean_tank_fkey FOREIGN KEY (tank) REFERENCES public.tanks(id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT water_clean_tank_fkey FOREIGN KEY (tank) REFERENCES public.tanks(id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT water_clean_user_fkey FOREIGN KEY (user) REFERENCES auth.users(id) ON DELETE SET NULL ON UPDATE CASCADE
 )
 

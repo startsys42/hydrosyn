@@ -4,6 +4,8 @@ import { use } from "react";
 const texts = {
     es: {
         update: "Modificar",
+        messageDeleteExpense: '¿Está seguro que desea borrar este gasto? Esta acción no se puede deshacer y borrará todos los datos asociados.',
+        messageDeleteProfits: '¿Está seguro que desea borrar este ingreso? Esta acción no se puede deshacer y borrará todos los datos asociados.',
 
         concept: 'Concepto',
 
@@ -202,6 +204,8 @@ const texts = {
     },
     en: {
         update: "Update",
+        messageDeleteExpense: 'Are you sure you want to delete this expense? This action cannot be undone and will delete all associated data.',
+        messageDeleteProfits: 'Are you sure you want to delete this profit? This action cannot be undone and will delete all associated data.',
         concept: 'Concept',
         amount: 'Amount',
         extraAmount: 'Extra amount',

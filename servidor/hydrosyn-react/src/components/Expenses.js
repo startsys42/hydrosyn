@@ -1,10 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Button, TextField, MenuItem, Autocomplete, Box, CircularProgress } from '@mui/material';
+
 import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
 import '../styles/theme.css';
 import { useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
+import 'dayjs/locale/es';
+import 'dayjs/locale/en';
+import { useLanguage } from '../utils/LanguageContext';
+import {
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions
+} from '@mui/material';
+
 
 export default function Expenses() {
     const t = useTexts();
@@ -20,6 +32,8 @@ export default function Expenses() {
     const [pageSize, setPageSize] = useState(20);
     const [rowCount, setRowCount] = useState(0);
     const navigate = useNavigate();
+    const [openDialog, setOpenDialog] = useState(false);
+    const [expenseIdToDelete, setExpenseIdToDelete] = useState(null);
 
     // Campos del formulario de añadir/modificar
     const [form, setForm] = useState({
@@ -87,11 +101,19 @@ export default function Expenses() {
         }
     };
 
-    const handleDelete = async (id) => {
-        if (!window.confirm('¿Seguro que quieres borrar este registro?')) return;
+    const handleDelete = async () => {
+        if (!expenseIdToDelete) return;
+
         try {
-            const { error } = await supabase.from('expenses').delete().eq('id', id);
+            const { error } = await supabase
+                .from('expenses')
+                .delete()
+                .eq('id', expenseIdToDelete);
+
             if (error) throw error;
+
+            setOpenDialog(false);
+            setExpenseIdToDelete(null);
             fetchData();
         } catch (err) {
             console.error(err);
@@ -122,19 +144,24 @@ export default function Expenses() {
         { field: 'tags', headerName: t?.tags, flex: 1, valueGetter: (params) => params.row.tags?.map(t => t.name).join(', '), headerClassName: 'data-grid-header' },
         {
             field: 'action',
-            headerName: () => null,
+            headerName: '',
             flex: 1, minWidth: 150,
             filterable: false,
             headerClassName: 'data-grid-header',
             sortable: false,
             disableColumnMenu: true,
             renderCell: (params) => (
-                <button style={{ padding: '4px 16px' }} onClick={() => navigate(`/system/${params.row.id}`)}>
-                    {t.delete}
-                </button>
-                 <button style={{ padding: '4px 16px' }} onClick={() => navigate(`/system/${params.row.id}`)}>
-                    {t.update}
-                </button>
+                <div>
+                    <button style={{ padding: '4px 16px' }} onClick={() => {
+                        setExpenseIdToDelete(params.row.id);
+                        setOpenDialog(true);
+                    }}>
+                        {t.delete}
+                    </button>
+                    <button style={{ padding: '4px 16px' }} onClick={() => navigate(`/update-expenses/${params.row.id}`)}>
+                        {t.update}
+                    </button>
+                </div>
             ),
         }
     ];
@@ -175,6 +202,22 @@ export default function Expenses() {
                         />
 
                     </div>
+
+                    <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+                        <DialogTitle>
+                            {t.confirmation}
+                        </DialogTitle>
+
+                        <DialogContent>
+                            {t.messageDeleteExpense}
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => setOpenDialog(false)}>{t.no}</Button>
+                            <Button onClick={handleDelete} variant="contained" color="error" disabled={loading}>{t.yes}</Button>
+                        </DialogActions>
+
+
+                    </Dialog>
                 </>
             )}
         </div>

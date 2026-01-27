@@ -148,7 +148,7 @@ export default function NotificationsAdmin() {
                     return '--';
                 }
                 try {
-                    const localDate = dayjs.utc(params.value).local();
+                    const localDate = dayjs.utc(params.value.replace(' ', 'T')).local();
 
                     return localDate.format('DD/MM/YYYY HH:mm:ss');
                     //const date = new Date(params.value);
