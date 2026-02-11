@@ -65,12 +65,12 @@ export default function CreateTank({ systemId, tankList, refresh, error, setErro
             }
 
             // 2️⃣ Comprobar límite de 2 ESP32 si no tiene rol
-            const { data: espCount, count, error: espError } = await supabase
+            const { data: tankCount, count, error: tankError } = await supabase
                 .from("tanks")
                 .select("*", { count: "exact" })
                 .eq("system", systemId);
 
-            if (espError) throw espError;
+            if (tankError) throw tankError;
 
             // 2️⃣ Si hay 2 o más ESP32, comprobar si el usuario tiene rol
             if (count >= 20) {

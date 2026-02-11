@@ -442,6 +442,87 @@ WHEN (OLD.is_active IS DISTINCT FROM NEW.is_active)
 EXECUTE FUNCTION deactivate_system_users();
 
 
+
+
+CREATE OR REPLACE FUNCTION prevent_duplicate_pump_name_insert()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM public.pumps p
+    WHERE p.system = NEW.system
+      AND p.name = NEW.name
+  ) THEN
+    RAISE EXCEPTION 'Cannot insert: this system already has a pump  with this name';
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_prevent_duplicate_pump_name_insert
+BEFORE INSERT ON public.pumps
+FOR EACH ROW
+EXECUTE FUNCTION prevent_duplicate_pump_name_insert();
+
+
+CREATE OR REPLACE FUNCTION prevent_duplicate_pump_name_update()
+RETURNS TRIGGER AS $$
+BEGIN
+
+  IF NEW.name IS DISTINCT FROM OLD.name THEN
+    IF EXISTS (
+      SELECT 1
+      FROM public.pump p
+      WHERE p.system = NEW.system
+        AND p.name = NEW.name
+        AND p.id <> OLD.id
+    ) THEN
+      RAISE EXCEPTION 'Cannot update: this system already has another pump with this name';
+    END IF;
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_prevent_duplicate_pump_name_update
+BEFORE UPDATE ON public.pumps
+FOR EACH ROW
+EXECUTE FUNCTION prevent_duplicate_pump_name_update();
+
+
+
+
+CREATE OR REPLACE FUNCTION validate_pump_esp32_system()
+RETURNS TRIGGER AS $$
+DECLARE
+    esp_system bigint;
+BEGIN
+    -- obtener system del ESP32
+    SELECT system INTO esp_system FROM esp32 WHERE id = NEW.esp32;
+
+    IF esp_system IS NULL THEN
+        RAISE EXCEPTION 'ESP32 not found in this system';
+    END IF;
+
+    IF esp_system != NEW.system THEN
+        RAISE EXCEPTION 'ESP32 and Pump must belong to the same system';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger
+CREATE TRIGGER check_pump_esp32_system
+BEFORE INSERT OR UPDATE ON pumps
+FOR EACH ROW
+EXECUTE FUNCTION validate_pump_esp32_system();
+
+
+
+
 CREATE FUNCTION check_water_clean_tank_type() RETURNS trigger AS $$
 BEGIN
     IF (SELECT type FROM public.tanks WHERE id = NEW.tank) <> 'water' THEN
@@ -574,158 +655,3 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE TRIGGER trigger_check_drainings_user
 BEFORE INSERT OR UPDATE ON public.drainings
 FOR EACH ROW EXECUTE FUNCTION check_drainings_user();
-
-
-CREATE OR REPLACE FUNCTION check_expense_user_admin()
-RETURNS trigger AS $$
-DECLARE
-    is_admin boolean;
-BEGIN
-    SELECT TRUE INTO is_admin
-    FROM public.admin_users
-    WHERE "user" = NEW."user" AND is_active = TRUE;
-
-    IF NOT is_admin THEN
-        RAISE EXCEPTION 'User must be an active admin';
-    END IF;
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-CREATE TRIGGER trigger_check_expense_user
-BEFORE INSERT OR UPDATE ON public.expenses
-FOR EACH ROW
-EXECUTE FUNCTION check_expense_user_admin();
-
-CREATE OR REPLACE FUNCTION check_expense_system_admin()
-RETURNS trigger AS $$
-DECLARE
-    is_valid boolean;
-BEGIN
-    SELECT TRUE INTO is_valid
-    FROM public.expenses e
-    JOIN public.admin_users a ON a."user" = e."user"
-    JOIN public.systems s ON s.id = NEW.system_id
-    WHERE e.id = NEW.expense_id
-      AND a.is_active = TRUE
-      AND s.admin = e."user";
-
-    IF NOT is_valid THEN
-        RAISE EXCEPTION 'User is not admin of this system';
-    END IF;
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-CREATE TRIGGER trigger_check_expense_system
-BEFORE INSERT OR UPDATE ON public.expenses_systems
-FOR EACH ROW
-EXECUTE FUNCTION check_expense_system_admin();
-
-
-CREATE OR REPLACE FUNCTION check_expense_tank_admin()
-RETURNS trigger AS $$
-DECLARE
-    is_valid boolean;
-BEGIN
-    SELECT TRUE INTO is_valid
-    FROM public.expenses e
-    JOIN public.admin_users a ON a."user" = e."user"
-    JOIN public.tanks t ON t.id = NEW.tank_id
-    JOIN public.systems s ON s.id = t.system
-    WHERE e.id = NEW.expense_id
-      AND a.is_active = TRUE
-      AND s.admin = e."user";
-
-    IF NOT is_valid THEN
-        RAISE EXCEPTION 'User is not admin of the system owning this tank';
-    END IF;
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-CREATE TRIGGER trigger_check_expense_tank
-BEFORE INSERT OR UPDATE ON public.expenses_tanks
-FOR EACH ROW
-EXECUTE FUNCTION check_expense_tank_admin();
-
-
-CREATE OR REPLACE FUNCTION check_profit_user_admin()
-RETURNS trigger AS $$
-DECLARE
-    is_admin boolean;
-BEGIN
-    SELECT TRUE INTO is_admin
-    FROM public.admin_users
-    WHERE "user" = NEW."user" AND is_active = TRUE;
-
-    IF NOT is_admin THEN
-        RAISE EXCEPTION 'User must be an active admin';
-    END IF;
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-CREATE TRIGGER trigger_check_profit_user
-BEFORE INSERT OR UPDATE ON public.profit
-FOR EACH ROW
-EXECUTE FUNCTION check_profit_user_admin();
-
-
-CREATE OR REPLACE FUNCTION check_profit_system_admin()
-RETURNS trigger AS $$
-DECLARE
-    is_valid boolean;
-BEGIN
-    SELECT TRUE INTO is_valid
-    FROM public.profit p
-    JOIN public.admin_users a ON a."user" = p."user"
-    JOIN public.systems s ON s.id = NEW.system_id
-    WHERE p.id = NEW.profit_id
-      AND a.is_active = TRUE
-      AND s.admin = p."user";
-
-    IF NOT is_valid THEN
-        RAISE EXCEPTION 'User is not admin of this system';
-    END IF;
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-CREATE TRIGGER trigger_check_profit_system
-BEFORE INSERT OR UPDATE ON public.profit_systems
-FOR EACH ROW
-EXECUTE FUNCTION check_profit_system_admin();
-
-
-CREATE OR REPLACE FUNCTION check_profit_tank_admin()
-RETURNS trigger AS $$
-DECLARE
-    is_valid boolean;
-BEGIN
-    SELECT TRUE INTO is_valid
-    FROM public.profit p
-    JOIN public.admin_users a ON a."user" = p."user"
-    JOIN public.tanks t ON t.id = NEW.tank_id
-    JOIN public.systems s ON s.id = t.system
-    WHERE p.id = NEW.profit_id
-      AND a.is_active = TRUE
-      AND s.admin = p."user";
-
-    IF NOT is_valid THEN
-        RAISE EXCEPTION 'User is not admin of the system owning this tank';
-    END IF;
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-CREATE TRIGGER trigger_check_profit_tank
-BEFORE INSERT OR UPDATE ON public.profit_tanks
-FOR EACH ROW
-EXECUTE FUNCTION check_profit_tank_admin();

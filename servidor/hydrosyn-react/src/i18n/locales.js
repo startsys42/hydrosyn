@@ -3,6 +3,18 @@ import { use } from "react";
 
 const texts = {
     es: {
+        nothingToUpdate: 'Debes cambiar al menos un campo.',
+        deletePumpQuestion: "¿Está seguro que desea eliminar la bomba",
+        repeatNamePumps: 'Ya existe una bomba con ese nombre.',
+        regexNamePumps: 'Nombre inválido. Solo letras, números, guiones bajos, mínimo 3 caracteres y máximo 30.',
+        incompleteFields: 'Por favor completa todos los campos.',
+        originDestinationSame: 'El tanque de origen y destino no pueden ser el mismo.',
+        GPIO: 'GPIO',
+        selectGPIO: 'Selecciona GPIO libre',
+        originTank: 'Tanque de origen',
+        destinationTank: 'Tanque de destino',
+        selectOriginTank: 'Selecciona tanque de origen',
+        selectDestinationTank: 'Selecciona tanque de destino',
         update: "Modificar",
         messageDeleteExpense: '¿Está seguro que desea borrar este gasto? Esta acción no se puede deshacer y borrará todos los datos asociados.',
         messageDeleteProfits: '¿Está seguro que desea borrar este ingreso? Esta acción no se puede deshacer y borrará todos los datos asociados.',
@@ -203,6 +215,18 @@ const texts = {
 
     },
     en: {
+        nothingToUpdate: 'You must change at least one field.',
+        deletePumpQuestion: "Are you sure you want to delete the pump",
+        repeatNamePumps: 'A pump with that name already exists.',
+        regexNamePumps: 'Invalid name. Only letters, numbers, underscores, minimum 3 characters and maximum 30.',
+        incompleteFields: 'Please fill in all fields.',
+        originDestinationSame: 'Origin and destination tank cannot be the same.',
+        GPIO: 'GPIO',
+        selectGPIO: 'Select free GPIO',
+        originTank: 'Origin tank',
+        destinationTank: 'Destination tank',
+        selectOriginTank: 'Select origin tank',
+        selectDestinationTank: 'Select destination tank',
         update: "Update",
         messageDeleteExpense: 'Are you sure you want to delete this expense? This action cannot be undone and will delete all associated data.',
         messageDeleteProfits: 'Are you sure you want to delete this profit? This action cannot be undone and will delete all associated data.',

@@ -148,14 +148,12 @@ export default function NotificationsAdmin() {
                     return '--';
                 }
                 try {
-                    const isoDate = params.value.replace(' ', 'T').split('.')[0] + 'Z';
-                    const localDate = dayjs(isoDate).local(); // convierte a hora local
-
-                    return localDate.format('DD/MM/YYYY HH:mm:ss');
                     //const date = new Date(params.value);
+                    //return dayjs(date).format('DD/MM/YYYY HH:mm:ss');
+                    const date = new Date(params.value);
 
-                    // if (isNaN(date.getTime())) { return 'Date invalid'; }
-                    /*
+                    if (isNaN(date.getTime())) { return 'Date invalid'; }
+
                     return date.toLocaleString(undefined, {
                         //timeZone: 'UTC',
                         year: 'numeric',
@@ -165,7 +163,7 @@ export default function NotificationsAdmin() {
                         minute: '2-digit',
                         second: '2-digit'
                     });
-                    */
+
                 } catch (error) {
 
                     return 'Error date';
