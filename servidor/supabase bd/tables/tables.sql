@@ -129,29 +129,18 @@ CREATE TABLE public.pumps (
 
 
 
-CREATE TABLE public.drainings (
+CREATE TABLE public.records (
   id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   tank bigint NOT NULL,
-  "user" uuid NOT NULL,
+  "user" uuid not null,
   volume numeric(9,6) CHECK (volume > 0 and volume <= 999.999999) NOT NULL,
   CONSTRAINT drainings_pkey PRIMARY KEY (id),
   CONSTRAINT drainings_tank_fkey FOREIGN KEY (tank) REFERENCES public.tanks(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT drainings_user_fkey FOREIGN KEY (user) REFERENCES auth.users(id) ON DELETE SET NULL ON UPDATE CASCADE
+    CONSTRAINT drainings_user_fkey FOREIGN KEY (user) REFERENCES auth.users(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 
-CREATE TABLE public.water_clean(
-
-    id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
-    created_at timestamp with time zone NOT NULL DEFAULT now(),
-    tank bigint NOT NULL,
-    volume numeric(9,6) CHECK (volume > 0 and volume <= 999.999999) NOT NULL,
-    "user" uuid NOT NULL,
-    CONSTRAINT water_clean_pkey PRIMARY KEY (id),
-    CONSTRAINT water_clean_tank_fkey FOREIGN KEY (tank) REFERENCES public.tanks(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT water_clean_user_fkey FOREIGN KEY (user) REFERENCES auth.users(id) ON DELETE SET NULL ON UPDATE CASCADE
-)
 
 
 
@@ -166,9 +155,9 @@ CREATE TABLE public.programming_pumps (
   pump bigint NOT NULL,
    volume numeric(9,6) NOT NULL CHECK (volume> 0 and volume <= 999.999999),
     clock time NOT NULL,                  -- Hora del día en que se activa
-     days_of_week day_of_week[] NOT NULL
-        CHECK (array_length(days_of_week,1) = array_length(ARRAY(SELECT DISTINCT UNNEST(days_of_week)),1)),
-    every_n_days integer DEFAULT 0 CHECK (every_n_days BETWEEN 0 AND 30),
+      day_of_week day_of_week NOT NULL,
+    
+     
   CONSTRAINT programming_pumps_pkey PRIMARY KEY (id),
   CONSTRAINT programming_pumps_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id) ON DELETE CASCADE
   ON UPDATE CASCADE
@@ -181,6 +170,18 @@ CREATE TABLE public.programming_pumps (
 -- que pasa en las bmbas al borrar algo oa ctualizar algo
 
 
+CREATE TABLE public.calibration (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  pump bigint NOT NULL,
+   "user" uuid NOT NULL,
+success BOOLEAN DEFAULT false,
+
+  CONSTRAINT calibrate_pkey PRIMARY KEY (id),
+  CONSTRAINT calibrate_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT calibrate_user_fkey FOREIGN KEY (user) REFERENCES auth.users(id) ON DELETE RESTRICT ON UPDATE CASCADE
+
+);
 
 
 
@@ -195,7 +196,7 @@ CREATE TABLE public.calibrate (
 
   CONSTRAINT calibrate_pkey PRIMARY KEY (id),
   CONSTRAINT calibrate_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT calibrate_user_fkey FOREIGN KEY (user) REFERENCES auth.users(id) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT calibrate_user_fkey FOREIGN KEY (user) REFERENCES auth.users(id) ON DELETE restrict ON UPDATE CASCADE
 
 );
 
@@ -218,21 +219,18 @@ CREATE TABLE public.records_pumps (
   id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   pump bigint NOT NULL,
-  --tanque detsino
-  --origen
+success BOOLEAN DEFAULT false,
   volume numeric(9,6) CHECK (volume > 0 and volume <= 999.999999) NOT NULL,
   "user" uuid not null,
   CONSTRAINT records_pumps_pkey PRIMARY KEY (id),
-  CONSTRAINT records_pumps_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT records_pumps_user_fkey FOREIGN KEY (user) REFERENCES auth.users(id) ON UPDATE CASCADE ON DELETE CASCADE
+  CONSTRAINT records_pumps_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id) ON DELETE CASCADE  ON UPDATE CASCADE,
+  CONSTRAINT records_pumps_user_fkey FOREIGN KEY (user) REFERENCES auth.users(id) ON UPDATE RESTRICT ON DELETE CASCADE
 );
 
 
 CREATE TABLE public.executions_pumps (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    -- tanque destino
-    --tanque origen
-    -- volumen
+   
     programming_id BIGINT NOT NULL REFERENCES public.programming_pumps(id) ON DELETE CASCADE on update cascade,
     executed_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     success BOOLEAN DEFAULT false

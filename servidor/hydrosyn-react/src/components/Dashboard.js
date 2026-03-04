@@ -149,15 +149,11 @@ export default function Dashboard() {
                                 <button onClick={() => navigate('/expenses')}>{t.expenses}</button>
                                 <button onClick={() => navigate('/profits')}>{t.profits}</button>
                                 <button onClick={() => navigate('/export')}>{t.export}</button>
-                                <button onClick={() => navigate('/remove-data')}>{t.removeData}</button>
+
                             </>
                         )}
 
-                        {(isOwner || isMember) && (
-                            <button onClick={() => navigate('/calendar')}>
-                                {t.calendar}
-                            </button>
-                        )}
+
 
                         {/* Puedes agregar más botones según necesidad */}
                     </div>

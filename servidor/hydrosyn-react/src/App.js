@@ -33,8 +33,8 @@ import AddExpenses from './components/AddExpenses';
 import Expenses from './components/Expenses';
 import Profits from './components/Profits';
 import Export from './components/Export';
-import RemoveData from './components/RemoveData';
-import Calendar from './components/Calendar';
+
+
 
 
 import { useParams } from 'react-router-dom';
@@ -334,28 +334,7 @@ function App() {
                         }
                     />
 
-                    <Route
-                        path="/remove-data"
-                        element={
-                            !user ? (
-                                <Navigate to="/" replace />
-                            ) : user && isOwner ? (
-                                <RemoveData />
-                            ) : user && !loadingOwner ? (
-                                <Navigate to="/dashboard" replace />
-                            ) : null
-                        }
-                    />
-                    <Route
-                        path="/calendar"
-                        element={
-                            !user || (!isOwner && !isMember) ? (
-                                <Navigate to="/" replace />
-                            ) : (
-                                <Calendar />
-                            )
-                        }
-                    />
+
 
                     <Route
                         path="/change-password"

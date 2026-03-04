@@ -18,6 +18,10 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../utils/supabaseClient';
 import { useRoleSystem } from "../utils/RoleSystemContext";
 import TanksAccordion from './accordions/TanksAccordion';
+import PumpsAccordion from './accordions/PumpsAccordion';
+import CalendarAccordion from './accordions/CalendarAccordion';
+import RecordsAccordion from './accordions/RecordsAccordion';
+
 
 export default function System() {
     const navigate = useNavigate();
@@ -36,11 +40,17 @@ export default function System() {
             { value: "notifications", label: texts.notifications },
             { value: "users", label: texts.users },
             { value: "esp32", label: texts.esp32 },
-            { value: "settings", label: texts.systemSettings }
+            { value: "settings", label: texts.systemSettings },
+            { value: "pumps", label: texts.pumps },
+            { value: "records", label: texts.records }
         ],
         member: [
-            { value: "notifications", label: texts.notifications },
-            { value: "users", label: texts.users }
+
+
+            { value: "records", label: texts.records },
+            { value: "pumps", label: texts.pumps }
+
+
         ]
     };
 
@@ -97,7 +107,10 @@ export default function System() {
             {selected === "notifications" && role === "owner" && <NotificationsAccordion systemId={systemId} />}
             {selected === "users" && role === "owner" && <UserAccordion systemId={systemId} />}
             {selected === "esp32" && role === "owner" && <ESP32Accordion systemId={systemId} />}
+            {selected === "pumps" && <PumpsAccordion systemId={systemId} />}
             {selected === "settings" && role === "owner" && <SettingsAccordion systemId={systemId} />}
+            {selected === "records" && <RecordsAccordion systemId={systemId} />}
+
 
 
 

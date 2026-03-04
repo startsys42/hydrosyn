@@ -48,7 +48,7 @@ export default function TanksAccordion({ systemId }) {
             setTankList(data || []);
         } catch (err) {
             console.error(err);
-            setErrors({ create: err.message || "Error", rename: "", delete: "" });
+            setErrors({ create: err.message || "Error", rename: err.message || "Error", delete: err.message || "Error" });
         } finally {
             setLoading(false);
         }
