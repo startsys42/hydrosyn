@@ -7,7 +7,7 @@ import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
 
-export default function CreateRecord({ systemId, recordList, refresh, error, setError }) {
+export default function CreateRecord({ systemId, tankList, refresh, error, setError }) {
 
 
 
@@ -16,12 +16,18 @@ export default function CreateRecord({ systemId, recordList, refresh, error, set
     const navigate = useNavigate();
     const texts = useTexts();
 
+
     const [selectedTank, setSelectedTank] = useState("");
     const [volume, setVolume] = useState("");
     const [unit, setUnit] = useState("liters");
-    const [tankList, setTankList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [customDate, setCustomDate] = useState("");
+
+    useEffect(() => {
+        if (selectedTank && !tankList.find(t => t.id === parseInt(selectedTank))) {
+            setSelectedTank("");
+        }
+    }, [tankList, selectedTank]);
 
     useEffect(() => {
         const init = async () => {
@@ -32,7 +38,6 @@ export default function CreateRecord({ systemId, recordList, refresh, error, set
                 return;
             }
 
-            await fetchTanks();
         };
 
         init();
@@ -80,38 +85,6 @@ export default function CreateRecord({ systemId, recordList, refresh, error, set
     };
 
 
-    const fetchTanks = async () => {
-        try {
-            let createdAtUTC = null;
-
-            if (customDate) {
-                // Convierte fecha local a objeto Date
-                const localDate = new Date(customDate);
-
-                // Convertir a ISO (esto lo transforma a UTC automáticamente)
-                createdAtUTC = localDate.toISOString();
-            }
-
-            const insertData = {
-                tank: parseInt(selectedTank),
-                user: user.id,
-                volume: volumeNum
-            };
-
-            // Solo enviamos created_at si el usuario eligió fecha
-            if (createdAtUTC) {
-                insertData.created_at = createdAtUTC;
-            }
-
-            const { error: insertError } = await supabase
-                .from("records")
-                .insert(insertData);
-            if (error) throw error;
-            setTankList(data || []);
-        } catch (err) {
-
-        }
-    };
 
     const handleCreateRecord = async (e) => {
         e.preventDefault();

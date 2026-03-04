@@ -48,7 +48,7 @@ export default function ProgrammingPump({ systemId, pumpList, programmingList, r
 
     // ---------- BORRAR PROGRAMACIÓN ----------
     const handleDelete = async (id) => {
-        if (!confirm("¿Seguro que quieres borrar esta programación?")) return;
+        if (!window.confirm("¿Seguro que quieres borrar esta programación?")) return;
         try {
             const { error: deleteError } = await supabase
                 .from("programming_pumps")

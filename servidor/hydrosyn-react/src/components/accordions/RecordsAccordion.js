@@ -28,59 +28,99 @@ export default function RecordsAccordion({ systemId }) {
     const navigate = useNavigate();
     const texts = useTexts();
     const { role } = useRoleSystem();
-
+    const [tankList, setTankList] = useState([]);
     const [recordList, setRecordList] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const [errors, setErrors] = useState({
         create: "",
-        update: "",
         delete: ""
     });
 
-    const setCreateError = (msg) => setErrors({ create: msg, update: "", delete: "" });
-    const setDeleteError = (msg) => setErrors({ create: "", update: "", delete: msg });
-    const fetchRecords = async () => {
-        setLoading(true);
-        setErrors({ create: "", update: "", delete: "" });
+    const setCreateError = (msg) => setErrors({ create: msg, delete: "" });
+    const setDeleteError = (msg) => setErrors({ create: "", delete: msg });
+
+
+    const fetchTanks = async () => {
         try {
             const { data, error } = await supabase
-                .from('records')
-                .select(`
-                id,
-                created_at,
-                volume,
-                tank (
-                    id,
-                    name,
-                    type,
-                    system
-                )
-            `)
-                .eq('tank.system', systemId)
+                .from('tanks')
+                .select('id, name, type')
+                .eq('system', systemId);
+
+            if (error) throw error;
+
+            setTankList(data || []);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+
+
+    const fetchRecords = async () => {
+        setLoading(true);
+
+        try {
+            const { data, error } = await supabase.rpc('get_records_for_system', {
+                p_system_id: systemId,
+                p_current_user: supabase.auth.user()?.id
+            });
 
             if (error) throw error;
 
             setRecordList(data || []);
         } catch (err) {
             console.error(err);
-            setErrors({ create: err.message || "Error", delete: "" });
+
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchRecords();
-    }, [systemId]);
+        // Canal para escuchar cambios en 'records'
+        const recordsChannel = supabase
+            .channel('public:records')
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'records', filter: `tank.system=eq.${systemId}` },
+                payload => {
+                    console.log('Cambio detectado en records:', payload);
+                    fetchRecords(); // actualiza recordList automáticamente
+                }
+            )
+            .subscribe();
 
+        // Canal para escuchar cambios en 'tanks'
+        const tanksChannel = supabase
+            .channel('public:tanks')
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'tanks', filter: `system=eq.${systemId}` },
+                payload => {
+                    console.log('Cambio detectado en tanks:', payload);
+                    fetchTanks(); // actualiza tankList automáticamente
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(recordsChannel);
+            supabase.removeChannel(tanksChannel);
+        };
+    }, [systemId]);
+    useEffect(() => {
+        fetchRecords();
+        fetchTanks(); // <-- Traemos también los tanques al cargar
+    }, [systemId]);
     return (
         <>
             <h2>{texts.records}</h2>
 
             <CreateRecord
                 systemId={systemId}
-                recordList={recordList}
+                tankList={tankList}
                 refresh={fetchRecords}
                 error={errors.create}
                 setError={setCreateError}
