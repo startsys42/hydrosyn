@@ -3,6 +3,7 @@ import { use } from "react";
 
 const texts = {
     es: {
+        records: 'Registros',
         nothingToUpdate: 'Debes cambiar al menos un campo.',
         deletePumpQuestion: "¿Está seguro que desea eliminar la bomba",
         repeatNamePumps: 'Ya existe una bomba con ese nombre.',
@@ -215,6 +216,7 @@ const texts = {
 
     },
     en: {
+        records: 'Records',
         nothingToUpdate: 'You must change at least one field.',
         deletePumpQuestion: "Are you sure you want to delete the pump",
         repeatNamePumps: 'A pump with that name already exists.',
