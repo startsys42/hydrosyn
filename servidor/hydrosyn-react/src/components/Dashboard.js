@@ -146,8 +146,7 @@ export default function Dashboard() {
                     <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
                         {isOwner && (
                             <>
-                                <button onClick={() => navigate('/expenses')}>{t.expenses}</button>
-                                <button onClick={() => navigate('/profits')}>{t.profits}</button>
+
                                 <button onClick={() => navigate('/export')}>{t.export}</button>
 
                             </>

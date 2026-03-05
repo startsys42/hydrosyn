@@ -127,16 +127,18 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
                 navigate("/dashboard");
                 return;
             }
+            const recordDate = customDate ? new Date(customDate).toISOString() : null;
 
-            const { error: insertError } = await supabase
-                .from("records")
-                .insert({
-                    tank: parseInt(selectedTank),
-                    user: user.id,
-                    volume: volumeNum
-                });
+            // Llamada RPC
+            const { error: rpcError } = await supabase.rpc('insert_record_for_system', {
+                p_system_id: systemId,
+                p_tank_id: parseInt(selectedTank),
+                p_user: user.id,
+                p_volume: volumeNum,
+                p_created_at: recordDate
+            });
 
-            if (insertError) throw insertError;
+            if (rpcError) throw rpcError;
 
             setSelectedTank("");
             setVolume("");
@@ -175,7 +177,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
                             </option>
                         ))}
                     </select>
-                    <label>{texts.dateOptional || "Fecha (opcional)"}</label>
+                    <label>{texts.dateOptional}</label>
                     <input
                         type="datetime-local"
                         value={customDate}
@@ -197,7 +199,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
                         disabled={loading}
                     />
 
-                    <label>Unidad</label>
+                    <label>{texts.units}</label>
                     <select
                         value={unit}
                         onChange={(e) => setUnit(e.target.value)}
@@ -207,7 +209,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
                         <option value="ml">Ml</option>
                     </select>
                     <button type="submit" disabled={loading}>
-                        {loading ? texts.creatin : texts.addRecord}
+                        {loading ? texts.creating : texts.addRecord}
                     </button>
                 </form>
 

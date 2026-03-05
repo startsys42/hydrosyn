@@ -137,7 +137,7 @@ CREATE TABLE public.records (
   volume numeric(9,6) CHECK (volume > 0 and volume <= 999.999999) NOT NULL,
   CONSTRAINT drainings_pkey PRIMARY KEY (id),
   CONSTRAINT drainings_tank_fkey FOREIGN KEY (tank) REFERENCES public.tanks(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT drainings_user_fkey FOREIGN KEY (user) REFERENCES auth.users(id) ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT drainings_user_fkey FOREIGN KEY ("user") REFERENCES auth.users(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 
@@ -177,9 +177,9 @@ CREATE TABLE public.calibration (
    "user" uuid NOT NULL,
 success BOOLEAN DEFAULT false,
 
-  CONSTRAINT calibrate_pkey PRIMARY KEY (id),
-  CONSTRAINT calibrate_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT calibrate_user_fkey FOREIGN KEY (user) REFERENCES auth.users(id) ON DELETE RESTRICT ON UPDATE CASCADE
+  CONSTRAINT calibration_pkey PRIMARY KEY (id),
+  CONSTRAINT calibration_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT calibration_user_fkey FOREIGN KEY ("user") REFERENCES auth.users(id) ON DELETE RESTRICT ON UPDATE CASCADE
 
 );
 
@@ -196,7 +196,7 @@ CREATE TABLE public.calibrate (
 
   CONSTRAINT calibrate_pkey PRIMARY KEY (id),
   CONSTRAINT calibrate_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT calibrate_user_fkey FOREIGN KEY (user) REFERENCES auth.users(id) ON DELETE restrict ON UPDATE CASCADE
+  CONSTRAINT calibrate_user_fkey FOREIGN KEY ("user") REFERENCES auth.users(id) ON DELETE restrict ON UPDATE CASCADE
 
 );
 
@@ -224,7 +224,7 @@ success BOOLEAN DEFAULT false,
   "user" uuid not null,
   CONSTRAINT records_pumps_pkey PRIMARY KEY (id),
   CONSTRAINT records_pumps_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id) ON DELETE CASCADE  ON UPDATE CASCADE,
-  CONSTRAINT records_pumps_user_fkey FOREIGN KEY (user) REFERENCES auth.users(id) ON UPDATE RESTRICT ON DELETE CASCADE
+  CONSTRAINT records_pumps_user_fkey FOREIGN KEY ("user") REFERENCES auth.users(id) ON UPDATE RESTRICT ON DELETE CASCADE
 );
 
 

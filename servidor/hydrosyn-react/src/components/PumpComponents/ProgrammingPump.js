@@ -5,6 +5,8 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Button, TextField, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
 import { supabase } from "../../utils/supabaseClient";
+import texts from "../../i18n/locales";
+import useTexts from "../../utils/UseTexts";
 
 export default function ProgrammingPump({ systemId, pumpList, programmingList, refresh, error, setError }) {
     const [editing, setEditing] = useState(null); // fila en edición
@@ -12,6 +14,7 @@ export default function ProgrammingPump({ systemId, pumpList, programmingList, r
     const [day, setDay] = useState("");
     const [clock, setClock] = useState("");
     const [volume, setVolume] = useState("");
+    const texts = useTexts();
 
     const daysOfWeek = [
         { value: "mon", label: "Lunes" },
@@ -107,7 +110,7 @@ export default function ProgrammingPump({ systemId, pumpList, programmingList, r
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <h3>Programaciones</h3>
+                <h3>{texts.programs}</h3>
             </AccordionSummary>
             <AccordionDetails>
                 {error && <p style={{ color: "red" }}>{error}</p>}

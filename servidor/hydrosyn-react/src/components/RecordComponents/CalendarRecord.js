@@ -39,26 +39,18 @@ export default function CalendarRecord() {
             setEvents(formatted);
         }
     };
-
+    useEffect(() => {
+        if (texts.language === 'es') {
+            moment.locale('es');
+        } else {
+            moment.locale('en');
+        }
+    }, [texts.language]);
     useEffect(() => {
         fetchEvents();
     }, []);
 
     // Añadir evento al seleccionar un rango en el calendario
-    const handleSelectSlot = async ({ start, end }) => {
-        const title = prompt('Título del evento:');
-        if (!title) return;
-        const color = prompt('Color del evento (red, green, blue, etc.):', 'blue');
-
-        const { data, error } = await supabase
-            .from('events')
-            .insert([{ title, start, end, color }])
-            .select();
-
-        if (!error) {
-            setEvents([...events, { ...data[0], start: new Date(data[0].start), end: new Date(data[0].end) }]);
-        }
-    };
 
     // Estilo de eventos por color
     const eventStyleGetter = (event) => ({
@@ -77,16 +69,15 @@ export default function CalendarRecord() {
                     <Calendar
                         localizer={localizer}
                         events={events}
+                        views={['month']}
+                        defaultView="month"
                         startAccessor="start"
                         endAccessor="end"
                         style={{ height: 500 }}
-                        selectable
-                        onSelectSlot={handleSelectSlot} // para añadir eventos
+                        toolbar={false}
                         eventPropGetter={eventStyleGetter} // colorear eventos
                     />
-                    <button onClick={fetchEvents} style={{ marginTop: '10px' }}>
-                        Recargar calendario
-                    </button>
+
                 </div>
             </AccordionDetails>
         </Accordion>

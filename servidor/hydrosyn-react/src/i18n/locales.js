@@ -3,6 +3,12 @@ import { use } from "react";
 
 const texts = {
     es: {
+        invalidVolume: 'Volumen inválido. Debe ser un número positivo.',
+        volumeTooHigh: 'Volumen demasiado alto. El volumen debe ser inferior a 1000 litros.',
+        volumen: "Cantidad",
+        units: 'Unidades',
+        programs: 'Programaciones',
+        addRecord: 'Añadir registro',
         records: 'Registros',
         nothingToUpdate: 'Debes cambiar al menos un campo.',
         deletePumpQuestion: "¿Está seguro que desea eliminar la bomba",
@@ -195,8 +201,7 @@ const texts = {
         removeLight: 'Eliminar Luz',
 
         calendar: 'Calendario',
-        expenses: 'Gastos',
-        profits: 'Ingresos',
+
         export: 'Exportar datos',
         removeData: 'Eliminar datos',
         fromDate: 'Desde fecha',
@@ -216,6 +221,12 @@ const texts = {
 
     },
     en: {
+        invalidVolume: 'Invalid volume. Must be a positive number.',
+        volumeTooHigh: 'Volume too high. Volume must be less than 1000 liters.',
+        volume: "Amount",
+        units: 'Units',
+        programs: 'Programming',
+        addRecord: 'Add record',
         records: 'Records',
         nothingToUpdate: 'You must change at least one field.',
         deletePumpQuestion: "Are you sure you want to delete the pump",
@@ -240,8 +251,7 @@ const texts = {
 
         deleteBetweenDates: "This will permanently delete login attempts between the selected dates. Are you sure?",
         system: 'System',
-        addExpenses: 'Add expense',
-        addProfits: 'Add profit',
+
 
         dark: 'Dark mode',
         light: 'Light mode',
@@ -411,8 +421,7 @@ const texts = {
         manualRecords: 'Manual Records',
         viewManualRecords: 'View Manual Records',
         systemSettings: 'System Settings',
-        expenses: 'Expenses',
-        profits: 'Profits',
+
         export: 'Export data',
         removeData: 'Remove data',
         fromDate: 'From Date',
