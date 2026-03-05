@@ -25,13 +25,10 @@ import ActivateDeleteUserAdmin from './components/ActivateDeleteUserAdmin';
 import Help from './components/Help';
 import InfoIcon from '@mui/icons-material/Info';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import CreateProfits from './components/AddProfits';
-import AddProfits from './components/AddProfits';
-import AddExpenses from './components/AddExpenses';
 
 
-import Expenses from './components/Expenses';
-import Profits from './components/Profits';
+
+
 import Export from './components/Export';
 
 
@@ -271,55 +268,7 @@ function App() {
                         }
                     />
 
-                    <Route
-                        path="/expenses"
-                        element={
-                            !user ? (
-                                <Navigate to="/" replace />
-                            ) : user && isOwner ? (
-                                <Expenses />
-                            ) : user && !loadingOwner ? (
-                                <Navigate to="/dashboard" replace />
-                            ) : null
-                        }
-                    />
-                    <Route
-                        path="/add-expenses"
-                        element={
-                            !user ? (
-                                <Navigate to="/" replace />
-                            ) : user && isOwner ? (
-                                <AddExpenses />
-                            ) : user && !loadingOwner ? (
-                                <Navigate to="/dashboard" replace />
-                            ) : null
-                        }
-                    />
 
-                    <Route
-                        path="/profits"
-                        element={
-                            !user ? (
-                                <Navigate to="/" replace />
-                            ) : user && isOwner ? (
-                                <Profits />
-                            ) : user && !loadingOwner ? (
-                                <Navigate to="/dashboard" replace />
-                            ) : null
-                        }
-                    />
-                    <Route
-                        path="/add-profits"
-                        element={
-                            !user ? (
-                                <Navigate to="/" replace />
-                            ) : user && isOwner ? (
-                                <AddProfits />
-                            ) : user && !loadingOwner ? (
-                                <Navigate to="/dashboard" replace />
-                            ) : null
-                        }
-                    />
 
                     <Route
                         path="/export"
