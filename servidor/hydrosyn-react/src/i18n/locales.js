@@ -6,7 +6,7 @@ const texts = {
         listRecords: "Lista de registros",
         invalidVolume: 'Volumen inválido. Debe ser un número positivo.',
         volumeTooHigh: 'Volumen demasiado alto. El volumen debe ser inferior a 1000 litros.',
-        volumen: "Cantidad",
+        volume: "Cantidad",
         units: 'Unidades',
         programs: 'Programaciones',
         addRecord: 'Añadir registro',

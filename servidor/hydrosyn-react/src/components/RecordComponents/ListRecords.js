@@ -93,7 +93,7 @@ export default function ListRecords({
         { field: 'volume', headerName: texts.volume, flex: 1 },
         {
             field: 'created_at',
-            headerName: texts.Date,
+            headerName: texts.date,
             flex: 1,
             renderCell: (params) => {
                 if (!params.value) return '--';

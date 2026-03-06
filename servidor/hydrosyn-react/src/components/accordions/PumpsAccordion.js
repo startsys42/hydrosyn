@@ -43,17 +43,12 @@ export default function PumpsAccordion({ systemId }) {
     const [calibrateList, setCalibrateList] = useState([]);
     const [calibrationList, setCalibrationList] = useState([]);
     const [recordPumpList, setRecordPumpList] = useState([]);
+    const [initialLoading, setInitialLoading] = useState(true);
     const [programmingList, setProgrammingList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentUserId, setCurrentUserId] = useState(null);
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            const { data } = await supabase.auth.getUser();
-            setCurrentUserId(data?.user?.id);
-        };
-        fetchUser();
-    }, []);
+
 
     const [errors, setErrors] = useState({
         create: "",
@@ -84,6 +79,38 @@ export default function PumpsAccordion({ systemId }) {
         });
     };
 
+    useEffect(() => {
+        const fetchUser = async () => {
+            console.log("🔍 Obteniendo usuario...");
+            const { data } = await supabase.auth.getUser();
+            console.log("✅ Usuario obtenido:", data?.user?.id);
+            setCurrentUserId(data?.user?.id);
+            setInitialLoading(false); // Marcamos que ya sabemos quién es (o no) el usuario
+        };
+        fetchUser();
+    }, []); // Solo se ejecuta una vez al montar
+
+    // 🔴 2. SEGUNDO: Una vez que tenemos el userId, cargar bombas
+    useEffect(() => {
+        if (!currentUserId) {
+            console.log("⏳ Esperando currentUserId...");
+            return;
+        }
+
+        console.log("🚀 Cargando bombas para usuario:", currentUserId);
+        fetchPumps();
+    }, [currentUserId]); // Solo cuando cambia currentUserId
+
+    // 🔴 3. TERCERO: Una vez que tenemos bombas, cargar todo lo demás
+    useEffect(() => {
+        if (pumpList.length > 0 && currentUserId) {
+            console.log("📊 Cargando datos adicionales para", pumpList.length, "bombas");
+            fetchCalibrateList();
+            fetchCalibrationList();
+            fetchRecordsPump();
+            fetchProgrammingList();
+        }
+    }, [pumpList, currentUserId]); // Solo cuando cambian las bombas o el usuario
 
 
     const refreshCalibrations = async () => {
@@ -121,8 +148,6 @@ export default function PumpsAccordion({ systemId }) {
             setLoading(false);
         }
     };
-
-
     const fetchCalibrateList = async () => {
         setLoading(true);
         setErrors({ create: "", update: "", delete: "", calibrate: "", calibration: "", record: "", program: "", calibrateList: "", calibrationList: "" });
@@ -145,7 +170,6 @@ export default function PumpsAccordion({ systemId }) {
             setLoading(false);
         }
     };
-
     const fetchCalibrationList = async () => {
 
         setLoading(true);
@@ -233,7 +257,6 @@ export default function PumpsAccordion({ systemId }) {
             setLoading(false);
         }
     };
-
     useEffect(() => {
         if (!currentUserId) return;
 
@@ -280,19 +303,7 @@ export default function PumpsAccordion({ systemId }) {
             supabase.removeSubscription(programmingSub);
         };
     }, [currentUserId, systemId]);
-    useEffect(() => {
-        if (currentUserId) {
-            fetchPumps();   // Solo cuando currentUserId ya esté definido
-        }
-    }, [currentUserId]);
-    useEffect(() => {
-        if (pumpList.length > 0 && currentUserId) {
-            fetchCalibrateList();
-            fetchCalibrationList();
-            fetchRecordsPump();
-            fetchProgrammingList();
-        }
-    }, [pumpList, currentUserId])
+
     return (
         <>
             <h2>{texts.pumps}</h2>

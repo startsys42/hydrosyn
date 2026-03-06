@@ -26,7 +26,24 @@ export default function CalendarRecord() {
 
     const [events, setEvents] = useState([]);
     const [date, setDate] = useState(new Date());
+    moment.locale(texts.language === "es" ? "es" : "en");
 
+
+
+    // traducciones del calendario
+    const messages = texts.language === "es"
+        ? {
+            today: "Hoy",
+            next: "Siguiente",
+            previous: "Anterior",
+            month: "Mes"
+        }
+        : {
+            today: "Today",
+            next: "Next",
+            previous: "Back",
+            month: "Month"
+        };
     // Función para recargar los eventos desde Supabase
     const fetchEvents = async () => {
         const { data, error } = await supabase.from('events').select('*');
@@ -79,6 +96,8 @@ export default function CalendarRecord() {
                         style={{ height: 500 }}
                         toolbar={true}
                         eventPropGetter={eventStyleGetter} // colorear eventos
+
+                        messages={messages} // ← esto hace que aparezca Hoy, Siguiente, Anterior
                     />
 
                 </div>
