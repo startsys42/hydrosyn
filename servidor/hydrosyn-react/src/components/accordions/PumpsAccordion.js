@@ -154,7 +154,7 @@ export default function PumpsAccordion({ systemId }) {
 
         try {
 
-            const pumpIds = pumpList.map(p => p.id);
+
             const { data, error } = await supabase.rpc('get_calibrates_for_system', {
                 p_system_id: systemId,
                 p_current_user: currentUserId
@@ -176,7 +176,7 @@ export default function PumpsAccordion({ systemId }) {
         setErrors({ create: "", update: "", delete: "", calibrate: "", calibration: "", record: "", program: "", calibrateList: "", calibrationList: "" });
 
         try {
-            const pumpIds = pumpList.map(p => p.id);
+
 
             const { data, error } = await supabase.rpc('get_calibrations_for_system', {
                 p_system_id: systemId,
@@ -197,7 +197,7 @@ export default function PumpsAccordion({ systemId }) {
         }
     };
     const fetchProgrammingList = async () => {
-        if (pumpList.length === 0) return;
+
 
         setLoading(true);
 
