@@ -89,11 +89,11 @@ export default function ListRecords({
     };
 
     const columns = [
-        { field: 'tank_name', headerName: 'Tanque', flex: 1 },
-        { field: 'volume', headerName: 'Volumen', flex: 1 },
+        { field: 'tank_name', headerName: texts.tanks, flex: 1 },
+        { field: 'volume', headerName: texts.volume, flex: 1 },
         {
             field: 'created_at',
-            headerName: 'Fecha',
+            headerName: texts.Date,
             flex: 1,
             renderCell: (params) => {
                 if (!params.value) return '--';
@@ -104,7 +104,7 @@ export default function ListRecords({
 
     return (
         <div className='div-main-login'>
-            <h1>{texts.notifications}</h1>
+            <h1>{texts.listRecords}</h1>
             {userRole === 'owner' && (
 
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={language}>

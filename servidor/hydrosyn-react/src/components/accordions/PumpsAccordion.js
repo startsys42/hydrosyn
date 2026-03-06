@@ -126,7 +126,7 @@ export default function PumpsAccordion({ systemId }) {
     const fetchCalibrateList = async () => {
         setLoading(true);
         setErrors({ create: "", update: "", delete: "", calibrate: "", calibration: "", record: "", program: "", calibrateList: "", calibrationList: "" });
-        if (pumpList.length === 0) return;
+
         try {
 
             const pumpIds = pumpList.map(p => p.id);
@@ -147,7 +147,7 @@ export default function PumpsAccordion({ systemId }) {
     };
 
     const fetchCalibrationList = async () => {
-        if (pumpList.length === 0) return;
+
         setLoading(true);
         setErrors({ create: "", update: "", delete: "", calibrate: "", calibration: "", record: "", program: "", calibrateList: "", calibrationList: "" });
 
@@ -206,7 +206,7 @@ export default function PumpsAccordion({ systemId }) {
         }
     };
     const fetchRecordsPump = async () => {
-        if (pumpList.length === 0) return;
+
         setLoading(true);
         try {
             const { data, error } = await supabase.rpc('get_records_for_system', {
@@ -237,18 +237,19 @@ export default function PumpsAccordion({ systemId }) {
     useEffect(() => {
         if (!currentUserId) return;
 
-        const pumpSubscription = supabase
-            .from(`pumps:system_id=eq.${systemId}`)
-            .on('INSERT', payload => fetchPumps())
-            .on('UPDATE', payload => fetchPumps())
-            .on('DELETE', payload => fetchPumps())
+        const channel = supabase
+            .channel('pumps-changes')
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'pumps' },
+                () => fetchPumps()
+            )
             .subscribe();
 
         return () => {
-            supabase.removeSubscription(pumpSubscription);
+            supabase.removeChannel(channel);
         };
     }, [currentUserId, systemId]);
-
     useEffect(() => {
         if (!currentUserId) return;
 

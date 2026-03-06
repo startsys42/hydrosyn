@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import 'moment/locale/es';
 
 // se recargue,..., añadir datos, los colores de eventos,...
 
@@ -24,6 +25,7 @@ export default function CalendarRecord() {
     const texts = useTexts(); // ✅ ya no lo pasamos como prop
 
     const [events, setEvents] = useState([]);
+    const [date, setDate] = useState(new Date());
 
     // Función para recargar los eventos desde Supabase
     const fetchEvents = async () => {
@@ -71,6 +73,7 @@ export default function CalendarRecord() {
                         events={events}
                         views={['month']}
                         defaultView="month"
+                        date={date}
                         startAccessor="start"
                         endAccessor="end"
                         style={{ height: 500 }}

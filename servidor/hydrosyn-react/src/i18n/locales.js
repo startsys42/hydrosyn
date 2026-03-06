@@ -3,6 +3,7 @@ import { use } from "react";
 
 const texts = {
     es: {
+        listRecords: "Lista de registros",
         invalidVolume: 'Volumen inválido. Debe ser un número positivo.',
         volumeTooHigh: 'Volumen demasiado alto. El volumen debe ser inferior a 1000 litros.',
         volumen: "Cantidad",
@@ -221,6 +222,7 @@ const texts = {
 
     },
     en: {
+        listRecords: "List of records",
         invalidVolume: 'Invalid volume. Must be a positive number.',
         volumeTooHigh: 'Volume too high. Volume must be less than 1000 liters.',
         volume: "Amount",
