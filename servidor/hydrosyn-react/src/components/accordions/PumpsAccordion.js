@@ -45,6 +45,15 @@ export default function PumpsAccordion({ systemId }) {
     const [recordPumpList, setRecordPumpList] = useState([]);
     const [programmingList, setProgrammingList] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [currentUserId, setCurrentUserId] = useState(null);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const { data } = await supabase.auth.getUser();
+            setCurrentUserId(data?.user?.id);
+        };
+        fetchUser();
+    }, []);
 
     const [errors, setErrors] = useState({
         create: "",
@@ -59,16 +68,22 @@ export default function PumpsAccordion({ systemId }) {
         recordList: ""
     });
 
-    const setCreateError = (msg) => setErrors({ create: msg, update: "", delete: "", calibrate: "", calibration: "", record: "", program: "", calibrateList: "", calibrationList: "", recordList: "" });
-    const setUpdateError = (msg) => setErrors({ create: "", update: msg, delete: "", calibrate: "", calibration: "", record: "", program: "", calibrateList: "", calibrationList: "", recordList: "" });
-    const setDeleteError = (msg) => setErrors({ create: "", update: "", delete: msg, calibrate: "", calibration: "", record: "", program: "", calibrateList: "", calibrationList: "", recordList: "" });
-    const setCalibrateError = (msg) => setErrors({ create: "", update: "", delete: "", calibrate: msg, calibration: "", record: "", program: "", calibrateList: "", calibrationList: "", recordList: "" });
-    const setCalibrationError = (msg) => setErrors({ create: "", update: "", delete: "", calibrate: "", calibration: msg, record: "", program: "", calibrateList: "", calibrationList: "", recordList: "" });
-    const setRecordError = (msg) => setErrors({ create: "", update: "", delete: "", calibrate: "", calibration: "", record: msg, program: "", calibrateList: "", calibrationList: "", recordList: "" });
-    const setProgramError = (msg) => setErrors({ create: "", update: "", delete: "", calibrate: "", calibration: "", record: "", program: msg, calibrateList: "", calibrationList: "", recordList: "" });
-    const setCalibrateListError = (msg) => setErrors({ create: "", update: "", delete: "", calibrate: "", calibration: "", record: "", program: "", calibrateList: msg, calibrationList: "", recordList: "" });
-    const setCalibrationListError = (msg) => setErrors({ create: "", update: "", delete: "", calibrate: "", calibration: "", record: "", program: "", calibrateList: "", calibrationList: msg, recordList: "" });
-    const setRecordListError = (msg) => setErrors({ create: "", update: "", delete: "", calibrate: "", calibration: "", record: "", program: "", calibrateList: "", calibrationList: "", recordList: msg, });
+    const setComponentError = (component, msg) => {
+        setErrors({
+            create: "",
+            update: "",
+            delete: "",
+            calibrate: "",
+            calibration: "",
+            record: "",
+            program: "",
+            calibrateList: "",
+            calibrationList: "",
+            recordList: "",
+            [component]: msg
+        });
+    };
+
 
 
     const refreshCalibrations = async () => {
@@ -79,31 +94,26 @@ export default function PumpsAccordion({ systemId }) {
         setLoading(true);
         setErrors({ create: "", update: "", delete: "", calibrate: "", calibration: "", record: "", program: "", calibrateList: "", calibrationList: "" });
         try {
-            const { data, error } = await supabase
-                .from('pumps')
-                .select(`
-    id,
-    name,
-    gpio,
-    system,
-    origin (
-      id,
-      name
-    ),
-    destination (
-      id,
-      name
-    ),
-    esp32 (
-      id,
-      name
-    )
-  `)
-                .eq('system', systemId);
+
+            const { data, error } = await supabase.rpc('get_pumps_for_system', {
+                p_system_id: systemId,
+                p_current_user: currentUserId
+            });
 
             if (error) throw error;
 
-            setPumpList(data || []);
+            // Convertimos a la misma forma que antes para mantener compatibilidad
+            const formatted = (data || []).map(p => ({
+                id: p.id,
+                name: p.name,
+                gpio: p.gpio,
+                system: p.system_id,
+                origin: { id: p.origin_id, name: p.origin_name },
+                destination: { id: p.destination_id, name: p.destination_name },
+                esp32: { id: p.esp32_id, name: p.esp32_name }
+            }));
+
+            setPumpList(formatted);
         } catch (err) {
             console.error(err);
             setErrors({ create: err.message || "Error", update: err.message || "Error", delete: err.message || "Error", calibrate: err.message || "Error", calibration: err.message || "Error", record: err.message || "Error", program: err.message || "Error", calibrateList: err.message || "Error", calibrationList: err.message || "Error" });
@@ -120,23 +130,10 @@ export default function PumpsAccordion({ systemId }) {
         try {
 
             const pumpIds = pumpList.map(p => p.id);
-            const { data, error } = await supabase
-                .from("calibrate")
-                .select(`
-                id,
-                volume,
-                created_at,
-                pump (
-                    id,
-                    name
-                ),
-                user (
-                    id,
-                    email
-                )
-            `)
-                .in("pump", pumpIds);
-
+            const { data, error } = await supabase.rpc('get_calibrates_for_system', {
+                p_system_id: systemId,
+                p_current_user: currentUserId
+            });
 
             if (error) throw error;
 
@@ -157,26 +154,16 @@ export default function PumpsAccordion({ systemId }) {
         try {
             const pumpIds = pumpList.map(p => p.id);
 
-            const { data, error } = await supabase
-                .from("calibration")
-                .select(`
-    id,
-    success,
-    created_at,
-    pump (
-      id,
-      name
-    ),
-    user (
-      id,
-      email
-    )
-  `)
-                .in("pump", pumpIds);
+            const { data, error } = await supabase.rpc('get_calibrations_for_system', {
+                p_system_id: systemId,
+                p_current_user: currentUserId
+            });
 
             if (error) throw error;
 
             setCalibrationList(data || []);
+
+
         } catch (err) {
             setErrors({ create: err.message || "Error", update: err.message || "Error", delete: err.message || "Error", calibrate: err.message || "Error", calibration: err.message || "Error", record: err.message || "Error", program: err.message || "Error", calibrateList: err.message || "Error", calibrationList: err.message || "Error" });
 
@@ -222,28 +209,24 @@ export default function PumpsAccordion({ systemId }) {
         if (pumpList.length === 0) return;
         setLoading(true);
         try {
-            const pumpIds = pumpList.map(p => p.id);
-            const { data, error } = await supabase
-                .from("records_pumps")
-                .select(`
-        id,
-        volume,
-        success,
-        created_at,
-        pump (
-          id,
-          name
-        ),
-        user (
-          id,
-          email
-        )
-      `)
-                .in("pump", pumpIds)
-                .order("created_at", { ascending: false });
+            const { data, error } = await supabase.rpc('get_records_for_system', {
+                p_system_id: systemId,
+                p_current_user: currentUserId
+            });
 
             if (error) throw error;
-            setRecordPumpList(data || []);
+
+            // Formatear para que tu componente siga funcionando igual
+            const formatted = (data || []).map(r => ({
+                id: r.id,
+                volume: r.volume,
+                success: r.success,
+                created_at: r.created_at,
+                pump: { id: r.pump_id, name: r.pump_name },
+                user: { id: r.user_id, email: r.user_email }
+            }));
+
+            setRecordPumpList(formatted);
         } catch (err) {
             setErrors(prev => ({ ...prev, record: err.message || "Error al cargar registros" }));
         } finally {
@@ -252,14 +235,63 @@ export default function PumpsAccordion({ systemId }) {
     };
 
     useEffect(() => {
-        if (pumpList.length > 0) {
+        if (!currentUserId) return;
+
+        const pumpSubscription = supabase
+            .from(`pumps:system_id=eq.${systemId}`)
+            .on('INSERT', payload => fetchPumps())
+            .on('UPDATE', payload => fetchPumps())
+            .on('DELETE', payload => fetchPumps())
+            .subscribe();
+
+        return () => {
+            supabase.removeSubscription(pumpSubscription);
+        };
+    }, [currentUserId, systemId]);
+
+    useEffect(() => {
+        if (!currentUserId) return;
+
+        const calibrateSub = supabase
+            .from(`calibrates:system_id=eq.${systemId}`)
+            .on('*', payload => fetchCalibrateList())
+            .subscribe();
+
+        const calibrationSub = supabase
+            .from(`calibrations:system_id=eq.${systemId}`)
+            .on('*', payload => fetchCalibrationList())
+            .subscribe();
+
+        const recordsSub = supabase
+            .from(`records_pumps:pump.system_id=eq.${systemId}`)
+            .on('*', payload => fetchRecordsPump())
+            .subscribe();
+
+        const programmingSub = supabase
+            .from(`programming_pumps:pump.system_id=eq.${systemId}`)
+            .on('*', payload => fetchProgrammingList())
+            .subscribe();
+
+        return () => {
+            supabase.removeSubscription(calibrateSub);
+            supabase.removeSubscription(calibrationSub);
+            supabase.removeSubscription(recordsSub);
+            supabase.removeSubscription(programmingSub);
+        };
+    }, [currentUserId, systemId]);
+    useEffect(() => {
+        if (currentUserId) {
+            fetchPumps();   // Solo cuando currentUserId ya esté definido
+        }
+    }, [currentUserId]);
+    useEffect(() => {
+        if (pumpList.length > 0 && currentUserId) {
             fetchCalibrateList();
             fetchCalibrationList();
             fetchRecordsPump();
             fetchProgrammingList();
         }
-    }, [pumpList]);
-
+    }, [pumpList, currentUserId])
     return (
         <>
             <h2>{texts.pumps}</h2>
@@ -271,7 +303,7 @@ export default function PumpsAccordion({ systemId }) {
                         pumpList={pumpList}
                         refresh={fetchPumps}
                         error={errors.create}
-                        setError={setCreateError}
+                        setError={(msg) => setComponentError("create", msg)}
                     />
 
                     <UpdatePump
@@ -279,7 +311,7 @@ export default function PumpsAccordion({ systemId }) {
                         pumpList={pumpList}
                         refresh={fetchPumps}
                         error={errors.update}
-                        setError={setUpdateError}
+                        setError={(msg) => setComponentError("update", msg)}
                     />
 
 
@@ -289,7 +321,7 @@ export default function PumpsAccordion({ systemId }) {
                         refresh={fetchPumps}
                         loading={loading}
                         error={errors.delete}
-                        setError={setDeleteError} />
+                        setError={(msg) => setComponentError("delete", msg)} />
                 </>
             )}
 
@@ -300,7 +332,7 @@ export default function PumpsAccordion({ systemId }) {
                 pumpList={pumpList}
                 refresh={refreshCalibrations}
                 error={errors.calibrate}
-                setError={setCalibrateError}
+                setError={(msg) => setComponentError("calibrate", msg)}
             />
 
             <ListCalibrate
@@ -309,7 +341,7 @@ export default function PumpsAccordion({ systemId }) {
                 refresh={fetchCalibrateList}  // Solo para refrescar después de eliminar
                 userRole={role}
                 error={errors.calibrateList}  // ← Error específico para calibraciones
-                setError={setCalibrateListError}  // ← Setter específico para calibraciones
+                setError={(msg) => setComponentError("calibrateList", msg)}
             />
 
             <ListCalibration
@@ -318,14 +350,14 @@ export default function PumpsAccordion({ systemId }) {
                 refresh={fetchCalibrationList}  // Solo para refrescar después de eliminar
                 userRole={role}
                 error={errors.calibration}  // ← Error específico para calibraciones
-                setError={setCalibrationError}  // ← Setter específico para calibraciones
+                setError={(msg) => setComponentError("calibration", msg)}
             />
             <InsertPumping
                 systemId={systemId}
                 pumpList={pumpList}
                 refresh={fetchRecordsPump}
                 error={errors.record}
-                setError={setRecordError}
+                setError={(msg) => setComponentError("record", msg)}
             />
 
 
@@ -335,8 +367,7 @@ export default function PumpsAccordion({ systemId }) {
                 refresh={fetchRecordsPump}  // Solo para refrescar después de eliminar
                 userRole={role}
                 error={errors.recordList}  // ← Error específico para registros de bombas
-                setError={setRecordListError}  // ← Setter específico para registros de bombas
-
+                setError={(msg) => setComponentError("recordList", msg)}
 
             />
 
@@ -350,7 +381,7 @@ export default function PumpsAccordion({ systemId }) {
                         programmingList={programmingList}
                         refresh={fetchProgrammingList}
                         error={errors.program}  // ← Error específico para registros de bombas
-                        setError={setProgramError}  // ← Setter específico para registros de bombas
+                        setError={(msg) => setComponentError("program", msg)}
 
                     />
                 </>

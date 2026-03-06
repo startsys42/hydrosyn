@@ -74,7 +74,7 @@ export default function CalendarRecord() {
                         startAccessor="start"
                         endAccessor="end"
                         style={{ height: 500 }}
-                        toolbar={false}
+                        toolbar={true}
                         eventPropGetter={eventStyleGetter} // colorear eventos
                     />
 

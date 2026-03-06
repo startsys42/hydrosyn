@@ -206,7 +206,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
                         disabled={loading}
                     >
                         <option value="liters">L</option>
-                        <option value="ml">Ml</option>
+                        <option value="ml">mL</option>
                     </select>
                     <button type="submit" disabled={loading}>
                         {loading ? texts.creating : texts.addRecord}
