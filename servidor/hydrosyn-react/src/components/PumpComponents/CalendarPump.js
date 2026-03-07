@@ -17,7 +17,11 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 
 const localizer = momentLocalizer(moment);
 
-export default function CalendarPump() {
+export default function CalendarPump(systemId,
+    calibrateList = [],
+    calibrationList = [],
+    recordPumpList = [],
+    loading = false) {
 
     const navigate = useNavigate();
     const texts = useTexts(); // ✅ ya no lo pasamos como prop

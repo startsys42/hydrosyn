@@ -103,14 +103,14 @@ export default function PumpsAccordion({ systemId }) {
 
     // 🔴 3. TERCERO: Una vez que tenemos bombas, cargar todo lo demás
     useEffect(() => {
-        if (pumpList.length > 0 && currentUserId) {
-            console.log("📊 Cargando datos adicionales para", pumpList.length, "bombas");
-            fetchCalibrateList();
-            fetchCalibrationList();
-            fetchRecordsPump();
-            fetchProgrammingList();
-        }
-    }, [pumpList, currentUserId]); // Solo cuando cambian las bombas o el usuario
+        if (!currentUserId || !systemId) return;
+
+        console.log("📊 Cargando datos adicionales (haya o no bombas)");
+        fetchCalibrateList();
+        fetchCalibrationList();
+        fetchRecordsPump();
+        fetchProgrammingList();
+    }, [currentUserId, systemId]); // Solo cuando cambia usuario o systemId
 
 
     const refreshCalibrations = async () => {
@@ -274,34 +274,90 @@ export default function PumpsAccordion({ systemId }) {
         };
     }, [currentUserId, systemId]);
     useEffect(() => {
-        if (!currentUserId) return;
+        if (!currentUserId || !systemId) return;
 
+        console.log("📡 Configurando suscripciones secundarias...");
+
+        // Calibrates
         const calibrateSub = supabase
-            .from(`calibrates:system_id=eq.${systemId}`)
-            .on('*', payload => fetchCalibrateList())
+            .channel('calibrates-changes')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'public',
+                    table: 'calibrates',
+                    filter: `system_id=eq.${systemId}`
+                },
+                (payload) => {
+                    console.log("🔄 Cambio en calibrates:", payload);
+                    fetchCalibrateList();
+                }
+            )
             .subscribe();
 
+        // Calibrations
         const calibrationSub = supabase
-            .from(`calibrations:system_id=eq.${systemId}`)
-            .on('*', payload => fetchCalibrationList())
+            .channel('calibrations-changes')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'public',
+                    table: 'calibrations',
+                    filter: `system_id=eq.${systemId}`
+                },
+                (payload) => {
+                    console.log("🔄 Cambio en calibrations:", payload);
+                    fetchCalibrationList();
+                }
+            )
             .subscribe();
 
+        // Records
         const recordsSub = supabase
-            .from(`records_pumps:pump.system_id=eq.${systemId}`)
-            .on('*', payload => fetchRecordsPump())
+            .channel('records-changes')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'public',
+                    table: 'records_pumps'
+                },
+                (payload) => {
+                    console.log("🔄 Cambio en records:", payload);
+                    fetchRecordsPump();
+                }
+            )
             .subscribe();
 
+        // Programming
         const programmingSub = supabase
-            .from(`programming_pumps:pump.system_id=eq.${systemId}`)
-            .on('*', payload => fetchProgrammingList())
+            .channel('programming-changes')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'public',
+                    table: 'programming_pumps'
+                },
+                (payload) => {
+                    console.log("🔄 Cambio en programming:", payload);
+                    fetchProgrammingList();
+                }
+            )
             .subscribe();
+
+
 
         return () => {
-            supabase.removeSubscription(calibrateSub);
-            supabase.removeSubscription(calibrationSub);
-            supabase.removeSubscription(recordsSub);
-            supabase.removeSubscription(programmingSub);
+            console.log("🧹 Limpiando suscripciones secundarias");
+            supabase.removeChannel(calibrateSub);
+            supabase.removeChannel(calibrationSub);
+            supabase.removeChannel(recordsSub);
+            supabase.removeChannel(programmingSub);
         };
+
     }, [currentUserId, systemId]);
 
     return (
