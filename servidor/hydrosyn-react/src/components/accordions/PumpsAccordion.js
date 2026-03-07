@@ -392,7 +392,7 @@ export default function PumpsAccordion({ systemId }) {
                         setError={(msg) => setComponentError("delete", msg)} />
                 </>
             )}
-
+            {/*
 
             <CalibratePump
 
@@ -406,18 +406,18 @@ export default function PumpsAccordion({ systemId }) {
             <ListCalibrate
                 systemId={systemId}
                 calibrateList={calibrateList}
-                refresh={fetchCalibrateList}  // Solo para refrescar después de eliminar
+                refresh={fetchCalibrateList}  
                 userRole={role}
-                error={errors.calibrateList}  // ← Error específico para calibraciones
+                error={errors.calibrateList} 
                 setError={(msg) => setComponentError("calibrateList", msg)}
             />
 
             <ListCalibration
                 systemId={systemId}
                 calibrationList={calibrationList}
-                refresh={fetchCalibrationList}  // Solo para refrescar después de eliminar
+                refresh={fetchCalibrationList}  
                 userRole={role}
-                error={errors.calibration}  // ← Error específico para calibraciones
+                error={errors.calibration}  
                 setError={(msg) => setComponentError("calibration", msg)}
             />
             <InsertPumping
@@ -454,6 +454,8 @@ export default function PumpsAccordion({ systemId }) {
                     />
                 </>
             )}
+            
+            */}
             <CalendarPump
                 systemId={systemId}
                 calibrateList={calibrateList}
