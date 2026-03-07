@@ -1,4 +1,4 @@
-create or replace function get_records_for_system(
+create or replace function get_records_pumps_for_system(
     p_system_id uuid,
     p_current_user uuid
 )

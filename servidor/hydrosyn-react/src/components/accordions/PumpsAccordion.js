@@ -233,7 +233,7 @@ export default function PumpsAccordion({ systemId }) {
 
         setLoading(true);
         try {
-            const { data, error } = await supabase.rpc('get_records_for_system', {
+            const { data, error } = await supabase.rpc('get_records_pumps_for_system', {
                 p_system_id: systemId,
                 p_current_user: currentUserId
             });
