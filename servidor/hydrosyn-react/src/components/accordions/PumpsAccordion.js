@@ -402,24 +402,25 @@ export default function PumpsAccordion({ systemId }) {
                 error={errors.calibrate}
                 setError={(msg) => setComponentError("calibrate", msg)}
             />
-            {/*
+
             <ListCalibrate
                 systemId={systemId}
                 calibrateList={calibrateList}
-                refresh={fetchCalibrateList}  
+                refresh={fetchCalibrateList}
                 userRole={role}
-                error={errors.calibrateList} 
+                error={errors.calibrateList}
                 setError={(msg) => setComponentError("calibrateList", msg)}
             />
 
             <ListCalibration
                 systemId={systemId}
                 calibrationList={calibrationList}
-                refresh={fetchCalibrationList}  
+                refresh={fetchCalibrationList}
                 userRole={role}
-                error={errors.calibration}  
+                error={errors.calibration}
                 setError={(msg) => setComponentError("calibration", msg)}
             />
+            {/*
             <InsertPumping
                 systemId={systemId}
                 pumpList={pumpList}
