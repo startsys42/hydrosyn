@@ -1,8 +1,10 @@
 import { ownerDocument } from "@mui/material";
 import { use } from "react";
+import InsertPumping from "../components/PumpComponents/InsertPumping";
 
 const texts = {
     es: {
+        InsertPump: "Añadir bombeo manual",
         calibratePump: "Calibrar bomba",
         updatePump: "Modificar bomba",
         listRecords: "Lista de registros",
@@ -224,6 +226,7 @@ const texts = {
 
     },
     en: {
+        InsertPump: "Add manual pumping",
         updatePump: "Update pump",
         listRecords: "List of records",
         invalidVolume: 'Invalid volume. Must be a positive number.',

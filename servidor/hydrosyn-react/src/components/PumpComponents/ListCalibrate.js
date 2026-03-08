@@ -134,69 +134,76 @@ export default function ListCalibrate({ systemId, calibrateList, refresh, userRo
     ];
 
     return (
-        <div className='div-main-login'>
-            <h1>{texts.notifications}</h1>
-            {userRole === 'owner' && (
-
-                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={language}>
-                    <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
-                        <DateTimePicker
-                            label={texts.fromDate ?? 'From'}
-                            value={fromDate}
-                            onChange={setFromDate}
-                            renderInput={(params) => <TextField {...params} size="small" />}
-                        />
-
-                        <DateTimePicker
-                            label={texts.toDate ?? 'To'}
-                            value={toDate}
-                            onChange={setToDate}
-                            renderInput={(params) => <TextField {...params} size="small" />}
-                        />
-
-                        <button
-
-                            disabled={!fromDate || !toDate}
-                            onClick={() => setOpenDialog(true)}
-                        >
-                            {texts.delete ?? 'Delete'}
-                        </button>
-                    </div>
-                </LocalizationProvider>
-            )}
-            <div style={{ height: 500, width: 'auto' }}>
-                <DataGrid className="datagrid"
-                    rows={rows}
-                    columns={columns}
-                    loading={loading}
-                    pagination
-                    pageSize={pageSize}
-                    onPageSizeChange={setPageSize}
-                    sortingMode="client"
+        <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
 
 
-                    disableSelectionOnClick
-                />
-            </div>
+                <h1>{texts.listCalibrate}</h1>
+            </AccordionSummary>
+            <AccordionDetails>
 
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+                {userRole === 'owner' && (
 
-            <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-                <DialogTitle>
-                    {texts.confirmation}
-                </DialogTitle>
+                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={language}>
+                        <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
+                            <DateTimePicker
+                                label={texts.fromDate ?? 'From'}
+                                value={fromDate}
+                                onChange={setFromDate}
+                                renderInput={(params) => <TextField {...params} size="small" />}
+                            />
 
-                <DialogContent>
-                    {texts.deleteBetweenDates}
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setOpenDialog(false)}>{texts.no}</Button>
-                    <Button onClick={handleDelete} variant="contained" color="error" disabled={loading}>{texts.yes}</Button>
-                </DialogActions>
+                            <DateTimePicker
+                                label={texts.toDate ?? 'To'}
+                                value={toDate}
+                                onChange={setToDate}
+                                renderInput={(params) => <TextField {...params} size="small" />}
+                            />
+
+                            <button
+
+                                disabled={!fromDate || !toDate}
+                                onClick={() => setOpenDialog(true)}
+                            >
+                                {texts.delete ?? 'Delete'}
+                            </button>
+                        </div>
+                    </LocalizationProvider>
+                )}
+                <div style={{ height: 500, width: 'auto' }}>
+                    <DataGrid className="datagrid"
+                        rows={rows}
+                        columns={columns}
+                        loading={loading}
+                        pagination
+                        pageSize={pageSize}
+                        onPageSizeChange={setPageSize}
+                        sortingMode="client"
 
 
-            </Dialog>
-        </div>
+                        disableSelectionOnClick
+                    />
+                </div>
+
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+
+                <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+                    <DialogTitle>
+                        {texts.confirmation}
+                    </DialogTitle>
+
+                    <DialogContent>
+                        {texts.deleteBetweenDates}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setOpenDialog(false)}>{texts.no}</Button>
+                        <Button onClick={handleDelete} variant="contained" color="error" disabled={loading}>{texts.yes}</Button>
+                    </DialogActions>
+
+
+                </Dialog>
+            </AccordionDetails>
+        </Accordion>
 
 
     );

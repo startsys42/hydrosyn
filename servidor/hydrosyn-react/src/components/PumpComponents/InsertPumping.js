@@ -82,7 +82,7 @@ export default function InsertPumping({ systemId, pumpList, refresh, error, setE
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <h3>{texts.insertPump || "Registrar bombeo manual"}</h3>
+                <h3>{texts.insertPump}</h3>
             </AccordionSummary>
 
             <AccordionDetails>
