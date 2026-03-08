@@ -103,7 +103,7 @@ export default function DeletePump({ systemId, pumpList, refresh, loading, error
     };
 
     const columns = [
-        { field: "name", headerName: texts.pump, width: 250 },
+        { field: "name", headerName: texts.pumps, width: 250 },
         { field: "esp32Name", headerName: texts.esp32, width: 150 },
         { field: "originName", headerName: texts.originTank, width: 150 },
         { field: "destinationName", headerName: texts.destinationTank, width: 150 },

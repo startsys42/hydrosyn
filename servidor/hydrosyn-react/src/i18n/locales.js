@@ -3,6 +3,8 @@ import { use } from "react";
 
 const texts = {
     es: {
+        calibratePump: "Calibrar bomba",
+        updatePump: "Modificar bomba",
         listRecords: "Lista de registros",
         invalidVolume: 'Volumen inválido. Debe ser un número positivo.',
         volumeTooHigh: 'Volumen demasiado alto. El volumen debe ser inferior a 1000 litros.',
@@ -195,8 +197,8 @@ const texts = {
         messageDeleteSystem: '¿Está seguro que desea eliminar este sistema? Esta acción no se puede deshacer y eliminará todos los datos y componentes asociados.',
 
         pumps: 'Bombas peristálticas',
-        addPump: 'Añadir Bomba',
-        removePump: 'Eliminar Bomba',
+        addPump: 'Añadir bomba',
+        removePump: 'Eliminar bomba',
         lights: 'Luces',
         addLight: 'Añadir Luz',
         removeLight: 'Eliminar Luz',
@@ -222,6 +224,7 @@ const texts = {
 
     },
     en: {
+        updatePump: "Update pump",
         listRecords: "List of records",
         invalidVolume: 'Invalid volume. Must be a positive number.',
         volumeTooHigh: 'Volume too high. Volume must be less than 1000 liters.',
@@ -410,18 +413,18 @@ const texts = {
 
         messageDeleteSystem: 'Are you sure you want to delete this system? This action can not be undone and will delete all associated data.',
 
-        pumps: 'Peristaltic Pumps',
-        addPump: 'Add Pump',
-        removePump: 'Remove Pump',
+        pumps: 'Peristaltic pumps',
+        addPump: 'Add pump',
+        removePump: 'Remove pump',
         lights: 'Lights',
-        addLight: 'Add Light',
-        removeLight: 'Remove Light',
+        addLight: 'Add light',
+        removeLight: 'Remove light',
 
 
         calendar: 'Calendar',
-        viewCalendar: 'View Calendar',
-        manualRecords: 'Manual Records',
-        viewManualRecords: 'View Manual Records',
+        viewCalendar: 'View calendar',
+        manualRecords: 'Manual records',
+        viewManualRecords: 'View manual records',
         systemSettings: 'System Settings',
 
         export: 'Export data',

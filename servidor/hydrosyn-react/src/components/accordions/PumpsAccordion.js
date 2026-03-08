@@ -440,7 +440,7 @@ export default function PumpsAccordion({ systemId }) {
 
             />
 
-            {/*
+
 
             {role === 'owner' && (
                 <>
@@ -455,8 +455,8 @@ export default function PumpsAccordion({ systemId }) {
                     />
                 </>
             )}
-            
-            */}
+
+
             <CalendarPump
                 systemId={systemId}
                 calibrateList={calibrateList}

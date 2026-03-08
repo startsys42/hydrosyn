@@ -5,7 +5,6 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Button, TextField, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
 import { supabase } from "../../utils/supabaseClient";
-import texts from "../../i18n/locales";
 import useTexts from "../../utils/UseTexts";
 
 export default function ProgrammingPump({ systemId, pumpList, programmingList, refresh, error, setError }) {
@@ -117,7 +116,7 @@ export default function ProgrammingPump({ systemId, pumpList, programmingList, r
 
                 {/* LISTA DE PROGRAMACIONES */}
                 <ul>
-                    {programmingList.map((p) => (
+                    {(programmingList || []).map((p) => (
                         <li key={p.id}>
                             <strong>{p.pump.name}</strong> - {p.day_of_week} - {p.clock} - {p.volume} L
                             <Button onClick={() => handleEdit(p)} size="small" variant="outlined" style={{ marginLeft: 5 }}>
@@ -135,7 +134,7 @@ export default function ProgrammingPump({ systemId, pumpList, programmingList, r
                     <FormControl fullWidth>
                         <InputLabel id="pump-label">Bomba</InputLabel>
                         <Select labelId="pump-label" value={pump} onChange={(e) => setPump(e.target.value)} required>
-                            {pumpList.map((p) => (
+                            {(pumpList || []).map((p) => (
                                 <MenuItem key={p.id} value={p.id}>{p.name}</MenuItem>
                             ))}
                         </Select>

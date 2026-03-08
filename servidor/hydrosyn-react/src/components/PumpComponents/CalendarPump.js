@@ -73,7 +73,8 @@ export default function CalendarPump(systemId,
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>{texts.calendar}</Typography>
+                <h3>{texts.calendar}</h3>
+
             </AccordionSummary>
             <AccordionDetails>
                 <div style={{ width: '100%' }}>
@@ -87,9 +88,7 @@ export default function CalendarPump(systemId,
                         onSelectSlot={handleSelectSlot} // para añadir eventos
                         eventPropGetter={eventStyleGetter} // colorear eventos
                     />
-                    <button onClick={fetchEvents} style={{ marginTop: '10px' }}>
-                        Recargar calendario
-                    </button>
+
                 </div>
             </AccordionDetails>
         </Accordion>
