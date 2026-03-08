@@ -420,7 +420,7 @@ export default function PumpsAccordion({ systemId }) {
                 error={errors.calibration}
                 setError={(msg) => setComponentError("calibration", msg)}
             />
-            {/*
+
             <InsertPumping
                 systemId={systemId}
                 pumpList={pumpList}
@@ -440,7 +440,7 @@ export default function PumpsAccordion({ systemId }) {
 
             />
 
-
+            {/*
 
             {role === 'owner' && (
                 <>
