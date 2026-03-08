@@ -6,6 +6,10 @@ import useTexts from '../../utils/UseTexts';
 import { DataGrid } from '@mui/x-data-grid';
 import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
@@ -103,69 +107,74 @@ export default function ListRecords({
     ];
 
     return (
-        <div className='div-main-login'>
-            <h1>{texts.listRecords}</h1>
-            {userRole === 'owner' && (
+        <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <h3>{texts.listRecords}</h3>
+            </AccordionSummary>
+            <AccordionDetails>
 
-                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={language}>
-                    <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
-                        <DateTimePicker
-                            label={texts.fromDate ?? 'From'}
-                            value={fromDate}
-                            onChange={setFromDate}
-                            renderInput={(params) => <TextField {...params} size="small" />}
-                        />
+                {userRole === 'owner' && (
 
-                        <DateTimePicker
-                            label={texts.toDate ?? 'To'}
-                            value={toDate}
-                            onChange={setToDate}
-                            renderInput={(params) => <TextField {...params} size="small" />}
-                        />
+                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={language}>
+                        <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
+                            <DateTimePicker
+                                label={texts.fromDate ?? 'From'}
+                                value={fromDate}
+                                onChange={setFromDate}
+                                renderInput={(params) => <TextField {...params} size="small" />}
+                            />
 
-                        <button
+                            <DateTimePicker
+                                label={texts.toDate ?? 'To'}
+                                value={toDate}
+                                onChange={setToDate}
+                                renderInput={(params) => <TextField {...params} size="small" />}
+                            />
 
-                            disabled={!fromDate || !toDate}
-                            onClick={() => setOpenDialog(true)}
-                        >
-                            {texts.delete ?? 'Delete'}
-                        </button>
-                    </div>
-                </LocalizationProvider>
-            )}
-            <div style={{ height: 500, width: 'auto' }}>
-                <DataGrid className="datagrid"
-                    rows={rows}
-                    columns={columns}
-                    loading={loading}
-                    pagination
-                    pageSize={pageSize}
-                    onPageSizeChange={setPageSize}
-                    sortingMode="client"
+                            <button
 
-
-                    disableSelectionOnClick
-                />
-            </div>
-
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-
-            <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-                <DialogTitle>
-                    {texts.confirmation}
-                </DialogTitle>
-
-                <DialogContent>
-                    {texts.deleteBetweenDates}
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setOpenDialog(false)}>{texts.no}</Button>
-                    <Button onClick={handleDelete} variant="contained" color="error" disabled={loading}>{texts.yes}</Button>
-                </DialogActions>
+                                disabled={!fromDate || !toDate}
+                                onClick={() => setOpenDialog(true)}
+                            >
+                                {texts.delete ?? 'Delete'}
+                            </button>
+                        </div>
+                    </LocalizationProvider>
+                )}
+                <div style={{ height: 500, width: 'auto' }}>
+                    <DataGrid className="datagrid"
+                        rows={rows}
+                        columns={columns}
+                        loading={loading}
+                        pagination
+                        pageSize={pageSize}
+                        onPageSizeChange={setPageSize}
+                        sortingMode="client"
 
 
-            </Dialog>
-        </div>
+                        disableSelectionOnClick
+                    />
+                </div>
+
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+
+                <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+                    <DialogTitle>
+                        {texts.confirmation}
+                    </DialogTitle>
+
+                    <DialogContent>
+                        {texts.deleteBetweenDates}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setOpenDialog(false)}>{texts.no}</Button>
+                        <Button onClick={handleDelete} variant="contained" color="error" disabled={loading}>{texts.yes}</Button>
+                    </DialogActions>
+
+
+                </Dialog>
+            </AccordionDetails>
+        </Accordion>
 
 
     );

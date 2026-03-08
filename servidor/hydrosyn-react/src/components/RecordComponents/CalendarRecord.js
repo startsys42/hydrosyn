@@ -81,7 +81,8 @@ export default function CalendarRecord() {
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>{texts.calendar}</Typography>
+                <h3>{texts.calendar}</h3>
+
             </AccordionSummary>
             <AccordionDetails>
                 <div style={{ width: '100%' }}>

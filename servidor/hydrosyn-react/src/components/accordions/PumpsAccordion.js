@@ -392,7 +392,7 @@ export default function PumpsAccordion({ systemId }) {
                         setError={(msg) => setComponentError("delete", msg)} />
                 </>
             )}
-            {/*
+
 
             <CalibratePump
 
@@ -402,7 +402,7 @@ export default function PumpsAccordion({ systemId }) {
                 error={errors.calibrate}
                 setError={(msg) => setComponentError("calibrate", msg)}
             />
-
+            {/*
             <ListCalibrate
                 systemId={systemId}
                 calibrateList={calibrateList}
