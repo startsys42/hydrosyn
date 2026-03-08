@@ -4,7 +4,12 @@ import { supabase } from '../../utils/supabaseClient';
 import useTexts from '../../utils/UseTexts';
 import { DataGrid } from '@mui/x-data-grid';
 import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
