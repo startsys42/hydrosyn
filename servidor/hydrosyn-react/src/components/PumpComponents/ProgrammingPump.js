@@ -6,6 +6,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Button, TextField, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
 import { supabase } from "../../utils/supabaseClient";
 import useTexts from "../../utils/UseTexts";
+import '../../styles/theme.css';
 
 export default function ProgrammingPump({ systemId, pumpList, programmingList, refresh, error, setError }) {
     const [editing, setEditing] = useState(null); // fila en edición
