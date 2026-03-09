@@ -6,7 +6,7 @@ returns table(
     id bigint,
     pump_id bigint,
     pump_name text,
-    volume numeric,
+
     success boolean,
     created_at timestamptz,
     user_id uuid,
@@ -18,12 +18,12 @@ begin
     select c.id,
            p.id as pump_id,
            p.name as pump_name,
-           c.volume,
+        
            c.success,
            c.created_at,
            u.id as user_id,
-            u.email as user_email
-    from public.calibrate c
+            u.email::text as user_email
+    from public.calibration c
     join public.pumps p on p.id = c.pump
     join auth.users u on u.id = c.user
     where p.system = p_system_id

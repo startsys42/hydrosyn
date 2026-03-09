@@ -286,7 +286,7 @@ export default function PumpsAccordion({ systemId }) {
                 {
                     event: '*',
                     schema: 'public',
-                    table: 'calibrates',
+                    table: 'calibrate',
                     filter: `system_id=eq.${systemId}`
                 },
                 (payload) => {
@@ -362,111 +362,113 @@ export default function PumpsAccordion({ systemId }) {
 
     return (
         <>
-            <h2>{texts.pumps}</h2>
-            {role === 'owner' && (
-                <>
+            <div className='div-main-login'>
+                <h2>{texts.pumps}</h2>
+                {role === 'owner' && (
+                    <>
 
-                    <CreatePump
-                        systemId={systemId}
-                        pumpList={pumpList}
-                        refresh={fetchPumps}
-                        error={errors.create}
-                        setError={(msg) => setComponentError("create", msg)}
-                    />
+                        <CreatePump
+                            systemId={systemId}
+                            pumpList={pumpList}
+                            refresh={fetchPumps}
+                            error={errors.create}
+                            setError={(msg) => setComponentError("create", msg)}
+                        />
 
-                    <UpdatePump
-                        systemId={systemId}
-                        pumpList={pumpList}
-                        refresh={fetchPumps}
-                        error={errors.update}
-                        setError={(msg) => setComponentError("update", msg)}
-                    />
-
-
-                    <DeletePump
-                        systemId={systemId}
-                        pumpList={pumpList}
-                        refresh={fetchPumps}
-                        loading={loading}
-                        error={errors.delete}
-                        setError={(msg) => setComponentError("delete", msg)} />
-                </>
-            )}
+                        <UpdatePump
+                            systemId={systemId}
+                            pumpList={pumpList}
+                            refresh={fetchPumps}
+                            error={errors.update}
+                            setError={(msg) => setComponentError("update", msg)}
+                        />
 
 
-            <CalibratePump
-
-                systemId={systemId}
-                pumpList={pumpList}
-                refresh={refreshCalibrations}
-                error={errors.calibrate}
-                setError={(msg) => setComponentError("calibrate", msg)}
-            />
-
-            <ListCalibrate
-                systemId={systemId}
-                calibrateList={calibrateList}
-                refresh={fetchCalibrateList}
-                userRole={role}
-                error={errors.calibrateList}
-                setError={(msg) => setComponentError("calibrateList", msg)}
-            />
-
-            <ListCalibration
-                systemId={systemId}
-                calibrationList={calibrationList}
-                refresh={fetchCalibrationList}
-                userRole={role}
-                error={errors.calibration}
-                setError={(msg) => setComponentError("calibration", msg)}
-            />
-
-            <InsertPumping
-                systemId={systemId}
-                pumpList={pumpList}
-                refresh={fetchRecordsPump}
-                error={errors.record}
-                setError={(msg) => setComponentError("record", msg)}
-            />
+                        <DeletePump
+                            systemId={systemId}
+                            pumpList={pumpList}
+                            refresh={fetchPumps}
+                            loading={loading}
+                            error={errors.delete}
+                            setError={(msg) => setComponentError("delete", msg)} />
+                    </>
+                )}
 
 
-            <ListRecordsPump
-                systemId={systemId}
-                recordPumpList={recordPumpList}
-                refresh={fetchRecordsPump}  // Solo para refrescar después de eliminar
-                userRole={role}
-                error={errors.recordList}  // ← Error específico para registros de bombas
-                setError={(msg) => setComponentError("recordList", msg)}
+                <CalibratePump
 
-            />
+                    systemId={systemId}
+                    pumpList={pumpList}
+                    refresh={refreshCalibrations}
+                    error={errors.calibrate}
+                    setError={(msg) => setComponentError("calibrate", msg)}
+                />
+
+                <ListCalibrate
+                    systemId={systemId}
+                    calibrateList={calibrateList}
+                    refresh={fetchCalibrateList}
+                    userRole={role}
+                    error={errors.calibrateList}
+                    setError={(msg) => setComponentError("calibrateList", msg)}
+                />
+
+                <ListCalibration
+                    systemId={systemId}
+                    calibrationList={calibrationList}
+                    refresh={fetchCalibrationList}
+                    userRole={role}
+                    error={errors.calibration}
+                    setError={(msg) => setComponentError("calibration", msg)}
+                />
+
+                <InsertPumping
+                    systemId={systemId}
+                    pumpList={pumpList}
+                    refresh={fetchRecordsPump}
+                    error={errors.record}
+                    setError={(msg) => setComponentError("record", msg)}
+                />
+
+
+                <ListRecordsPump
+                    systemId={systemId}
+                    recordPumpList={recordPumpList}
+                    refresh={fetchRecordsPump}  // Solo para refrescar después de eliminar
+                    userRole={role}
+                    error={errors.recordList}  // ← Error específico para registros de bombas
+                    setError={(msg) => setComponentError("recordList", msg)}
+
+                />
 
 
 
-            {role === 'owner' && (
-                <>
-                    <ProgrammingPump
+                {role === 'owner' && (
+                    <>
+                        <ProgrammingPump
 
-                        systemId={systemId}
-                        programmingList={programmingList}
-                        refresh={fetchProgrammingList}
-                        error={errors.program}  // ← Error específico para registros de bombas
-                        setError={(msg) => setComponentError("program", msg)}
+                            systemId={systemId}
+                            programmingList={programmingList}
+                            refresh={fetchProgrammingList}
+                            error={errors.program}  // ← Error específico para registros de bombas
+                            setError={(msg) => setComponentError("program", msg)}
 
-                    />
-                </>
-            )}
-
-
-            <CalendarPump
-                systemId={systemId}
-                calibrateList={calibrateList}
-                calibrationList={calibrationList}
-                recordPumpList={recordPumpList}
+                        />
+                    </>
+                )}
 
 
-                loading={loading} />
+                <CalendarPump
+                    systemId={systemId}
+                    calibrateList={calibrateList}
+                    calibrationList={calibrationList}
+                    recordPumpList={recordPumpList}
 
 
+                    loading={loading} />
+
+            </div >
         </>
+
     );
 }

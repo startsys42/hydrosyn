@@ -19,7 +19,7 @@ begin
            c.volume,
            c.created_at,
            u.id as user_id,
-            u.email as user_email
+            u.email::text as user_email
     from public.calibrate c
     join public.pumps p on p.id = c.pump
     join auth.users u on u.id = c.user
