@@ -362,7 +362,7 @@ export default function PumpsAccordion({ systemId }) {
 
     return (
         <>
-            <div style="max-width: 800px; ">
+            <div style={{ maxWidth: 800 }}>
                 <h2>{texts.pumps}</h2>
                 {role === 'owner' && (
                     <>
