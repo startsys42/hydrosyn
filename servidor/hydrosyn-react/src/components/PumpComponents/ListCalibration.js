@@ -141,7 +141,7 @@ export default function ListCalibration({ systemId, calibrationList, refresh, us
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
 
 
-                <h1>{texts.listCalibration}</h1>
+                <h3>{texts.listCalibrations}</h3>
             </AccordionSummary>
             <AccordionDetails>
 
