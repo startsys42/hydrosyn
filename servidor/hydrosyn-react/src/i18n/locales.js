@@ -5,6 +5,8 @@ import ListRecordsPump from "../components/PumpComponents/ListRecordsPump";
 
 const texts = {
     es: {
+        listCalibrate: "Lista de calibraciones",
+        listCalibrations: "Ejecución de las calibraciones",
         listRecordsPump: "Lista de registros",
         insertPump: "Añadir bombeo manual",
         calibratePump: "Calibrar bomba",
@@ -228,6 +230,8 @@ const texts = {
 
     },
     en: {
+        listCalibrate: "List of calibrations",
+        listCalibrations: "Execution of calibrations",
         listRecordsPump: "List of records",
         insertPump: "Add manual pumping",
         updatePump: "Update pump",
