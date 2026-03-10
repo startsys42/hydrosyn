@@ -5,6 +5,9 @@ import ListRecordsPump from "../components/PumpComponents/ListRecordsPump";
 
 const texts = {
     es: {
+        namePump: "Nombre de la bomba",
+        calibratePump: "Calibrar bomba",
+        succes: 'Éxito',
         listCalibrate: "Lista de calibraciones",
         listCalibrations: "Ejecución de las calibraciones",
         listRecordsPump: "Lista de registros",
@@ -202,7 +205,7 @@ const texts = {
 
         messageDeleteSystem: '¿Está seguro que desea eliminar este sistema? Esta acción no se puede deshacer y eliminará todos los datos y componentes asociados.',
 
-        pumps: 'Bombas peristálticas',
+        pumps: 'Bombas',
         addPump: 'Añadir bomba',
         removePump: 'Eliminar bomba',
         lights: 'Luces',
@@ -230,6 +233,9 @@ const texts = {
 
     },
     en: {
+        namePump: "Pump name",
+        calibratePump: "Calibrate pump",
+        succes: 'Success',
         listCalibrate: "List of calibrations",
         listCalibrations: "Execution of calibrations",
         listRecordsPump: "List of records",
@@ -423,7 +429,7 @@ const texts = {
 
         messageDeleteSystem: 'Are you sure you want to delete this system? This action can not be undone and will delete all associated data.',
 
-        pumps: 'Peristaltic pumps',
+        pumps: 'Pumps',
         addPump: 'Add pump',
         removePump: 'Remove pump',
         lights: 'Lights',

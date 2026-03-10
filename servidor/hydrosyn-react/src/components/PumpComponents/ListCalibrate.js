@@ -100,9 +100,9 @@ export default function ListCalibrate({ systemId, calibrateList, refresh, userRo
 
 
     const columns = [
-        { field: 'pump_name', headerName: 'Bomba', flex: 1, minWidth: 180 },
-        { field: 'user_email', headerName: 'Email', flex: 1, minWidth: 220 },
-        { field: 'volume', headerName: 'Volumen', flex: 1, minWidth: 120 },
+        { field: 'pump_name', headerName: texts.pumps, flex: 1, minWidth: 180 },
+        { field: 'user_email', headerName: texts.email, flex: 1, minWidth: 220 },
+        { field: 'volume', headerName: texts.volume, flex: 1, minWidth: 120 },
         {
             field: 'created_at',
             headerName: texts.dateTime,

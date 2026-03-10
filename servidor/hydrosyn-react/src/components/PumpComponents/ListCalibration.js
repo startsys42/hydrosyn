@@ -99,9 +99,9 @@ export default function ListCalibration({ systemId, calibrationList, refresh, us
 
 
     const columns = [
-        { field: 'pump_name', headerName: 'Bomba', flex: 1, minWidth: 180 },
-        { field: 'user_email', headerName: 'Email', flex: 1, minWidth: 220 },
-        { field: 'success', headerName: 'Éxito', flex: 1, minWidth: 120 },
+        { field: 'pump_name', headerName: texts.pumps, flex: 1, minWidth: 180 },
+        { field: 'user_email', headerName: texts.email, flex: 1, minWidth: 220 },
+        { field: 'success', headerName: texts.success, flex: 1, minWidth: 120 },
         {
             field: 'created_at',
             headerName: texts.dateTime,

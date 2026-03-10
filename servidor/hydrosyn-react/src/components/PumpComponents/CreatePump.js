@@ -30,18 +30,22 @@ export default function CreatePump({ systemId, pumpList, refresh, error, setErro
 
 
     useEffect(() => {
-        if (!esp32Id) return setUsedGpios([]);
+        if (!esp32Id) {
+            setUsedGpios([]);
+            return;
+        }
 
         const fetchUsedGpios = async () => {
             const { data } = await supabase
                 .from("pumps")
                 .select("gpio")
                 .eq("esp32", esp32Id);
-            setUsedGpios(data.map(d => d.gpio));
+
+            setUsedGpios((data || []).map(d => d.gpio));
         };
 
         fetchUsedGpios();
-    }, [esp32Id]);
+    }, [esp32Id, pumpList]);
 
     const availableGpios = [2, 4, 5, 12, 13, 14, 15, 18, 19, 21, 22, 23, 25, 26, 27, 32, 33]
         .filter(pin => !usedGpios.includes(pin));
@@ -197,7 +201,7 @@ export default function CreatePump({ systemId, pumpList, refresh, error, setErro
                         onChange={(e) => setEsp32Id(e.target.value)}
                         required
                     >
-                        <option value="">{texts.selectESP}</option>
+                        <option value="">{texts.selectESP32}</option>
                         {esp32List.map((esp) => (
                             <option key={esp.id} value={esp.id}>
                                 {esp.name}
