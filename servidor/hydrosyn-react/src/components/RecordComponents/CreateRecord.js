@@ -186,7 +186,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
                     <label>{texts.dateOptional}</label>
                     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={language}>
                         <DateTimePicker
-                            label={texts.dateOptional}
+
                             value={customDate}
                             onChange={(newValue) => setCustomDate(newValue)}
                             disabled={loading}

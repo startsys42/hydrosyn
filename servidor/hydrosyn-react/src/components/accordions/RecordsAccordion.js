@@ -62,9 +62,11 @@ export default function RecordsAccordion({ systemId }) {
         setLoading(true);
 
         try {
+            const { data: { user } } = await supabase.auth.getUser();
+
             const { data, error } = await supabase.rpc('get_records_for_system', {
                 p_system_id: systemId,
-                p_current_user: supabase.auth.user()?.id
+                p_current_user: user?.id
             });
 
             if (error) throw error;
@@ -72,7 +74,6 @@ export default function RecordsAccordion({ systemId }) {
             setRecordList(data || []);
         } catch (err) {
             console.error(err);
-
         } finally {
             setLoading(false);
         }
