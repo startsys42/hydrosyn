@@ -6,6 +6,9 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
+import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 
 export default function CreateRecord({ systemId, tankList, refresh, error, setError }) {
 
@@ -21,7 +24,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
     const [volume, setVolume] = useState("");
     const [unit, setUnit] = useState("liters");
     const [loading, setLoading] = useState(false);
-    const [customDate, setCustomDate] = useState("");
+    const [customDate, setCustomDate] = useState(null);
 
     useEffect(() => {
         if (selectedTank && !tankList.find(t => t.id === parseInt(selectedTank))) {
@@ -127,7 +130,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
                 navigate("/dashboard");
                 return;
             }
-            const recordDate = customDate ? new Date(customDate).toISOString() : null;
+            const recordDate = customDate ? customDate.utc().toISOString() : null;
 
             // Llamada RPC
             const { error: rpcError } = await supabase.rpc('insert_record_for_system', {
@@ -178,12 +181,14 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
                         ))}
                     </select>
                     <label>{texts.dateOptional}</label>
-                    <input
-                        type="datetime-local"
-                        value={customDate}
-                        onChange={(e) => setCustomDate(e.target.value)}
-                        disabled={loading}
-                    />
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DateTimePicker
+                            label={texts.dateOptional}
+                            value={customDate}
+                            onChange={(newValue) => setCustomDate(newValue)}
+                            disabled={loading}
+                        />
+                    </LocalizationProvider>
 
                     {/* CAMPO DE VOLUMEN */}
                     <label>{texts.volume}</label>
