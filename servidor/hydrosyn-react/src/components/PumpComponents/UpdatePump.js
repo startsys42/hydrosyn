@@ -38,8 +38,8 @@ export default function UpdatePump({ systemId, pumpList, refresh, error, setErro
         const pump = pumpList.find(p => p.id === selectedPump);
         if (pump) {
             setNewName(pump.name);
-            setNewOrigin(pump.origin?.id || "");
-            setNewDestination(pump.destination?.id || "");
+            setNewOrigin(pump.origin?.id || null);
+            setNewDestination(pump.destination?.id || null);
         }
     }, [selectedPump, pumpList]);
 
@@ -136,12 +136,15 @@ export default function UpdatePump({ systemId, pumpList, refresh, error, setErro
 
                 updates.name = newName; // 💡 solo actualizar si cambió
             }
-            if (newOrigin && newOrigin !== originalPump.origin?.id) updates.origin = newOrigin;
-            if (newDestination && newDestination !== originalPump.destination?.id) updates.destination = newDestination;
+            if (newOrigin && newOrigin !== originalPump.origin.id)
+                updates.origin = newOrigin;
+
+            if (newDestination && newDestination !== originalPump.destination.id)
+                updates.destination = newDestination;
 
             // 💡 CAMBIO AQUÍ: Si no hay cambios, no hacer nada
             if (Object.keys(updates).length === 0) {
-                setError(texts.nothingToUpdate);
+                setError("nothingToUpdate");
                 setLoading(false);
                 return;
             }
@@ -185,7 +188,7 @@ export default function UpdatePump({ systemId, pumpList, refresh, error, setErro
                     <label htmlFor="select-pump">{texts.selectPump}</label>
                     <select id="select-pump"
                         value={selectedPump || ''}
-                        onChange={(e) => setSelectedPump(e.target.value)}
+                        onChange={(e) => setSelectedPump(Number(e.target.value))}
                     >
                         <option value='' disabled>{texts.selectPump}</option>
                         {pumpList.map(p => (
@@ -206,7 +209,7 @@ export default function UpdatePump({ systemId, pumpList, refresh, error, setErro
                     <label>{texts.originTank}</label>
                     <select
                         value={newOrigin}
-                        onChange={(e) => setNewOrigin(e.target.value)}
+                        onChange={(e) => setNewOrigin(Number(e.target.value))}
 
                     >
                         <option value="" disabled>{texts.selectOriginTank}</option>
@@ -218,8 +221,7 @@ export default function UpdatePump({ systemId, pumpList, refresh, error, setErro
                     <label>{texts.destinationTank}</label>
                     <select
                         value={newDestination}
-                        onChange={(e) => setNewDestination(e.target.value)}
-
+                        onChange={(e) => setNewDestination(Number(e.target.value))}
                     >
                         <option value="" disabled>{texts.selectDestinationTank}</option>
                         {tankList.map(t => (

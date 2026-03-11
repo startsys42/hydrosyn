@@ -457,7 +457,7 @@ export default function PumpsAccordion({ systemId }) {
                     </>
                 )}
 
-
+                {/*}
                 <CalendarPump
                     systemId={systemId}
                     calibrateList={calibrateList}
@@ -466,6 +466,7 @@ export default function PumpsAccordion({ systemId }) {
 
 
                     loading={loading} />
+                */}
             </div>
 
 

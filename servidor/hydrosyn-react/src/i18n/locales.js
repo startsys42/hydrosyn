@@ -5,9 +5,11 @@ import ListRecordsPump from "../components/PumpComponents/ListRecordsPump";
 
 const texts = {
     es: {
+        nothingToUpdate: 'Debes cambiar al menos un campo.',
+        selectPump: "Selecciona una bomba",
         namePump: "Nombre de la bomba",
         calibratePump: "Calibrar bomba",
-        succes: 'Éxito',
+        success: 'Éxito',
         listCalibrate: "Lista de calibraciones",
         listCalibrations: "Ejecución de las calibraciones",
         listRecordsPump: "Lista de registros",
@@ -233,9 +235,11 @@ const texts = {
 
     },
     en: {
+        nothingToUpdate: 'You must change at least one field.',
+        selectPump: "Select a pump",
         namePump: "Pump name",
         calibratePump: "Calibrate pump",
-        succes: 'Success',
+        success: 'Success',
         listCalibrate: "List of calibrations",
         listCalibrations: "Execution of calibrations",
         listRecordsPump: "List of records",

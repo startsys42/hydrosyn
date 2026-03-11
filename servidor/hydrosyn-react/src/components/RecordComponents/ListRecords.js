@@ -49,13 +49,25 @@ export default function ListRecords({
     }, [language]);
 
     // Mapear datos
+
     useEffect(() => {
-        const mapped = recordList.map(r => ({
-            id: r.id,
-            tank_name: r.tank?.name || '--',
-            volume: r.volume,
-            created_at: r.created_at
-        }));
+        const mapped = recordList.map(r => {
+            let displayVolume = r.volume;
+            let displayUnit = 'L';
+
+            if (r.volume < 1) {
+                displayVolume = r.volume * 1000; // pasamos a mL
+                displayUnit = 'mL';
+            }
+
+            return {
+                id: r.id,
+                tank_name: r.tank_name || '--',
+                volume: `${displayVolume.toFixed(3)} ${displayUnit}`,
+                created_at: r.created_at,
+                user_email: r.user_email || '--'
+            };
+        });
         setRows(mapped);
     }, [recordList]);
 
@@ -94,6 +106,8 @@ export default function ListRecords({
 
     const columns = [
         { field: 'tank_name', headerName: texts.tanks, flex: 1 },
+
+        { field: 'user_email', headerName: texts.email, flex: 1 },
         { field: 'volume', headerName: texts.volume, flex: 1 },
         {
             field: 'created_at',
