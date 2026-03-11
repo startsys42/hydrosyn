@@ -36,4 +36,4 @@ begin
     insert into public.records (tank, "user", volume, created_at)
     values (p_tank_id, p_user, p_volume, record_date);
 end;
-$$ language plpgsql security definer stable;
+$$language plpgsql security definer volatile;

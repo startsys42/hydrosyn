@@ -9,6 +9,9 @@ import { useNavigate } from "react-router-dom";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import { useLanguage } from "../../utils/LanguageContext";
+import 'dayjs/locale/es';
+import 'dayjs/locale/en';
 
 export default function CreateRecord({ systemId, tankList, refresh, error, setError }) {
 
@@ -18,7 +21,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
 
     const navigate = useNavigate();
     const texts = useTexts();
-
+    const { language } = useLanguage();
 
     const [selectedTank, setSelectedTank] = useState("");
     const [volume, setVolume] = useState("");
@@ -95,13 +98,13 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
         setLoading(true);
 
         if (!selectedTank) {
-            setError(texts.selectTank);
+            setError("selectTank");
             setLoading(false);
             return;
         }
 
         if (!volume || parseFloat(volume) <= 0) {
-            setError(texts.invalidVolume);
+            setError("invalidVolume");
             setLoading(false);
             return;
         }
@@ -118,7 +121,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
         }
 
         if (volumeNum > 999.999999) {
-            setError(texts.volumeTooHigh);
+            setError("volumeTooHigh");
             setLoading(false);
             return;
         }
@@ -181,7 +184,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
                         ))}
                     </select>
                     <label>{texts.dateOptional}</label>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={language}>
                         <DateTimePicker
                             label={texts.dateOptional}
                             value={customDate}

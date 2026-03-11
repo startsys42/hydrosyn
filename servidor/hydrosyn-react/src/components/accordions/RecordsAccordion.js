@@ -81,17 +81,15 @@ export default function RecordsAccordion({ systemId }) {
     useEffect(() => {
         // Canal para escuchar cambios en 'records'
         const recordsChannel = supabase
-            .channel('public:records')
+            .channel('records-changes')
             .on(
                 'postgres_changes',
-                { event: '*', schema: 'public', table: 'records', filter: `tank.system=eq.${systemId}` },
+                { event: '*', schema: 'public', table: 'records' },
                 payload => {
-                    console.log('Cambio detectado en records:', payload);
-                    fetchRecords(); // actualiza recordList automáticamente
+                    fetchRecords();
                 }
             )
             .subscribe();
-
         // Canal para escuchar cambios en 'tanks'
         const tanksChannel = supabase
             .channel('public:tanks')
