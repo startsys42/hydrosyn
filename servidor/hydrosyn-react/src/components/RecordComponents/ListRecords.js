@@ -75,7 +75,7 @@ export default function ListRecords({
     const handleDelete = async () => {
 
         if (!fromDate || !toDate) {
-            setError("Select both dates");
+            setError(texts.bothDates);
             return;
         }
 

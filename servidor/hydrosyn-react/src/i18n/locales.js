@@ -5,6 +5,7 @@ import ListRecordsPump from "../components/PumpComponents/ListRecordsPump";
 
 const texts = {
     es: {
+        bothDates: "Por favor selecciona ambas fechas.",
         dateOptional: 'Fecha y hora (opcional)',
         nothingToUpdate: 'Debes cambiar al menos un campo.',
         selectPump: "Selecciona una bomba",
@@ -236,6 +237,7 @@ const texts = {
 
     },
     en: {
+        bothDates: "Please select both dates.",
         dateOptional: 'Date and time (optional)',
         nothingToUpdate: 'You must change at least one field.',
         selectPump: "Select a pump",

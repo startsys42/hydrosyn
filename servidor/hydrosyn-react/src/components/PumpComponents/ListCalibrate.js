@@ -46,7 +46,7 @@ export default function ListCalibrate({ systemId, calibrateList, refresh, userRo
     }, [language]);
     const handleDelete = async () => {
         if (!fromDate || !toDate) {
-            setError('Please select both dates');
+            setError(texts.bothDates);
             return;
         }
 
@@ -87,12 +87,13 @@ export default function ListCalibrate({ systemId, calibrateList, refresh, userRo
     useEffect(() => {
         // Mapear los datos para DataGrid
         setRows(calibrateList.map((c, index) => ({
-            id: index,
-            pump_name: c.pump?.name || '--',
-            user_email: c.user?.email || '--',
+            id: c.id,
+            pump_name: c.pump_name || '--',
+            user_email: c.user_email || '--',
             volume: c.volume,
             created_at: new Date(c.created_at).toLocaleString()
         })));
+        setLoading(false);
     }, [calibrateList]);
 
 

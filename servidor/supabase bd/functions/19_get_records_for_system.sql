@@ -44,7 +44,7 @@ begin
         t.name as tank_name,
         t.type as tank_type,
         r."user" as user_id,
-        u.email as user_email
+        u.email::text as user_email
     from public.records r
     join public.tanks t on r.tank = t.id
     join auth.users u on r."user" = u.id

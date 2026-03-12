@@ -304,7 +304,7 @@ export default function PumpsAccordion({ systemId }) {
                 {
                     event: '*',
                     schema: 'public',
-                    table: 'calibrations',
+                    table: 'calibration',
                     filter: `system_id=eq.${systemId}`
                 },
                 (payload) => {

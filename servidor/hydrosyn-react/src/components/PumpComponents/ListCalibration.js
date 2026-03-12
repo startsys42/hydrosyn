@@ -46,7 +46,7 @@ export default function ListCalibration({ systemId, calibrationList, refresh, us
     }, [language]);
     const handleDelete = async () => {
         if (!fromDate || !toDate) {
-            setError('Please select both dates');
+            setError(texts.bothDates);
             return;
         }
 
@@ -87,11 +87,12 @@ export default function ListCalibration({ systemId, calibrationList, refresh, us
     useEffect(() => {
         setRows(calibrationList.map((c) => ({
             id: c.id,
-            pump_name: c.pump?.name || '--',
-            user_email: c.user?.email || '--',
+            pump_name: c.pump_name || '--',
+            user_email: c.user_email || '--',
             success: c.success ? '✔' : '✖',
             created_at: c.created_at
         })));
+        setLoading(false);
     }, [calibrationList]);
 
 
