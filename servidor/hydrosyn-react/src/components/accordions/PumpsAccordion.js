@@ -246,8 +246,8 @@ export default function PumpsAccordion({ systemId }) {
                 volume: r.volume,
                 success: r.success,
                 created_at: r.created_at,
-                pump: { id: r.pump_id, name: r.pump_name },
-                user: { id: r.user_id, email: r.user_email }
+                pump_name: r.pump_name,   // <-- plano
+                user_email: r.user_email  // <-- plano
             }));
 
             setRecordPumpList(formatted);
