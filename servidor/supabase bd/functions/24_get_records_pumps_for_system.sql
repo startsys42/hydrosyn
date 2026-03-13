@@ -6,7 +6,7 @@ returns table (
     id bigint,
     volume numeric,
     success boolean,
-    created_at timestamp,
+    created_at timestamptz,
     pump_id bigint,
     pump_name text,
     user_id uuid,

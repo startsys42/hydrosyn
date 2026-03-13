@@ -98,8 +98,8 @@ export default function ListRecordsPump({ systemId, recordPumpList, refresh, use
 
             return {
                 id: c.id,
-                pump_name: c.pump_name || '--',
-                user_email: c.user_email || '--',
+                pump_name: c.pump?.name || '--',   // <- accediendo al objeto pump
+                user_email: c.user?.email || '--', // <- accediendo al objeto user
                 volume: `${displayVolume.toFixed(3)} ${displayUnit}`,
                 success: c.success ? "✔" : "✘",
                 created_at: new Date(c.created_at).toLocaleString()
