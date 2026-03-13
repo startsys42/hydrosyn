@@ -100,7 +100,7 @@ export default function ListRecordsPump({ systemId, recordPumpList, refresh, use
                 id: c.id,
                 pump_name: c.pump_name || '--',
                 user_email: c.user_email || '--',
-                volume: `${displayVolume.toFixed(3)} ${displayUnit}`, // mostrar unidad
+                volume: `${displayVolume.toFixed(3)} ${displayUnit}`,
                 success: c.success ? "✔" : "✘",
                 created_at: new Date(c.created_at).toLocaleString()
             };
