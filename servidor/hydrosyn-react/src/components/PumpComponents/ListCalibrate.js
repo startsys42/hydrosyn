@@ -86,13 +86,24 @@ export default function ListCalibrate({ systemId, calibrateList, refresh, userRo
     };
     useEffect(() => {
         // Mapear los datos para DataGrid
-        setRows(calibrateList.map((c, index) => ({
-            id: c.id,
-            pump_name: c.pump_name || '--',
-            user_email: c.user_email || '--',
-            volume: c.volume,
-            created_at: new Date(c.created_at).toLocaleString()
-        })));
+        setRows(calibrateList.map((c) => {
+            let displayVolume = c.volume;
+            let displayUnit = 'L';
+
+            if (c.volume < 1) {
+                displayVolume = c.volume * 1000; // convertir a mL
+                displayUnit = 'mL';
+            }
+
+            return {
+                id: c.id,
+                pump_name: c.pump_name || '--',
+                user_email: c.user_email || '--',
+                volume: `${displayVolume.toFixed(3)} ${displayUnit}`, // mostrar con unidad
+                created_at: new Date(c.created_at).toLocaleString()
+            };
+        }));
+
         setLoading(false);
     }, [calibrateList]);
 

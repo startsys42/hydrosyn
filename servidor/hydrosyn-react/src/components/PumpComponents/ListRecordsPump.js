@@ -46,7 +46,7 @@ export default function ListRecordsPump({ systemId, recordPumpList, refresh, use
     }, [language]);
     const handleDelete = async () => {
         if (!fromDate || !toDate) {
-            setError('Please select both dates');
+            setError(texts.bothDates);
             return;
         }
 
@@ -87,15 +87,25 @@ export default function ListRecordsPump({ systemId, recordPumpList, refresh, use
     useEffect(() => {
         // Mapear los datos para DataGrid
 
-        setRows(recordPumpList.map((c, index) => ({
-            id: index,
-            pump_name: c.pump_name || '--',
-            user_email: c.user_email || '--',
-            volume: c.volume,
-            success: c.success ? "✔" : "✘",
+        setRows(recordPumpList.map((c, index) => {
+            let displayVolume = c.volume;
+            let displayUnit = 'L';
 
-            created_at: new Date(c.created_at).toLocaleString()
-        })));
+            if (c.volume < 1) {
+                displayVolume = c.volume * 1000; // convertir a mL
+                displayUnit = 'mL';
+            }
+
+            return {
+                id: c.id,
+                pump_name: c.pump_name || '--',
+                user_email: c.user_email || '--',
+                volume: `${displayVolume.toFixed(3)} ${displayUnit}`, // mostrar unidad
+                success: c.success ? "✔" : "✘",
+                created_at: new Date(c.created_at).toLocaleString()
+            };
+        }));
+        setLoading(false)
     }, [recordPumpList]);
 
 
