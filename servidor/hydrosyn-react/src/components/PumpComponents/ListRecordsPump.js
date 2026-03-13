@@ -89,8 +89,8 @@ export default function ListRecordsPump({ systemId, recordPumpList, refresh, use
 
         setRows(recordPumpList.map((c, index) => ({
             id: index,
-            pump_name: c.pump?.name || "--",
-            user_email: c.user?.email || "--",
+            pump_name: c.pump_name || '--',
+            user_email: c.user_email || '--',
             volume: c.volume,
             success: c.success ? "✔" : "✘",
 
