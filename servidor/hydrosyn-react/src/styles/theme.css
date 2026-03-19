@@ -763,6 +763,10 @@ select:not(.topbar select):disabled {
     cursor: not-allowed;
 }
 
+.MuiOutlinedInput-notchedOutline {
+    border: 2px solid var(--text-color) !important;
+    border-radius: 8px !important;
+}
 .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
     border-color: var(--input-border) !important;
 
