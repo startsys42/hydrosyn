@@ -134,13 +134,10 @@ export default function ChangeSecretAccordion({ systemId, secret: initialSecret,
                         placeholder={texts.currentSecret}
                         readOnly
                     />
-                    <button type="button" onClick={toggleShowSecret}>
-                        {showSecret ? texts.hide : texts.show}
-                    </button>
 
                     <label>{texts.newSecret}</label>
                     <input
-                        type="text"
+                        type={showSecrets ? "text" : "password"}
                         value={newSecret}
                         onChange={(e) => setNewSecret(e.target.value)}
                         required
@@ -148,6 +145,10 @@ export default function ChangeSecretAccordion({ systemId, secret: initialSecret,
                         maxLength={30}
                         placeholder={texts.newSecret}
                     />
+                    <button type="button" onClick={toggleShowSecret}>
+                        {showSecret ? texts.hide : texts.show}
+                    </button>
+
                     <button type="submit" disabled={loading}>{texts.newSecret}</button>
 
                 </form>
