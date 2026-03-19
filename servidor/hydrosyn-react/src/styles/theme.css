@@ -82,7 +82,9 @@ body, #root {
 }
 
 
-svg{
+.sidebar svg,
+.sidebar button svg,
+.sidebar .custom-link svg{
     color: var( --button-text) !important;
     transition: color 0.3s ease;
 }
@@ -596,6 +598,6 @@ input[type="text"]:focus::placeholder,
 input[type="email"]:focus::placeholder,
 input[type="password"]:focus::placeholder,
 input[type="number"]:focus::placeholder {
-    color: var(--input-border);     /* MISMO COLOR QUE EL BORDE FOCUS */
+    color: var(--text-color);     /* MISMO COLOR QUE EL BORDE FOCUS */
     opacity: 0.8;                    /* Un poco más visible */
 }
