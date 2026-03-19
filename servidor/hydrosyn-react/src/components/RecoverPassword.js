@@ -61,15 +61,23 @@ export default function RecoverPassword() {
                     placeholder={t?.email}
                     required
                 />
-                <button type="submit" disabled={loading}>
-                    {loading ? t.sending : t?.recoverPassword}
-                </button>
+                <div className="button-group">
+                    <button type="submit" disabled={loading}>
+                        {loading ? t.sending : t?.recoverPassword}
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => navigate('/')}
+                    >
+                        {t?.backToLogin}
+                    </button>
+                </div>
+
             </form>
             {message && <div className="success-message" style={{ color: 'green', marginTop: '10px' }}>{t.messageRecover}</div>}
             {/* {error && <p style={{ color: 'red' }}>Error</p>} */}
-            <button onClick={() => navigate('/')} className="button-width">
-                {t?.backToLogin}
-            </button>
+
         </div>
     );
 }

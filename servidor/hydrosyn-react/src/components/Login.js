@@ -115,18 +115,23 @@ export default function Login() {
                     placeholder={t.password}
                     required
                 />
-                <button type="submit" disabled={loading}>
-                    {loading ? t.verify : t.login}
-                </button>
+                <div className="button-group">
+                    <button type="submit" disabled={loading}>
+                        {loading ? t.verify : t.login}
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => navigate('/recover-password')}
+                    >
+                        {t.recoverPassword}
+                    </button>
+                </div>
+
             </form>
 
             {error && <p style={{ color: 'red' }}>Error</p>}
-            <button
-                className='button-width'
-                onClick={() => navigate('/recover-password')}
-            >
-                {t.recoverPassword}
-            </button>
+
         </div>
     );
 }

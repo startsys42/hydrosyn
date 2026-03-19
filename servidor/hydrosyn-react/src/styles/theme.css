@@ -268,6 +268,37 @@ label {
     border: 3px solid var(--button-border);
     box-sizing: border-box;
 }
+.button-group {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.button-group button {
+    /* 🔑 ESTA ES LA CLAVE */
+    flex: 1;                    /* Se reparten el espacio disponible */
+    min-width: fit-content;     /* Mínimo = ancho de su texto */
+    width: 0;                   /* Permite que flex funcione correctamente */
+    
+    /* Estilos visuales */
+    padding: 12px 16px;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: 2px solid var(--button-border);
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    
+    /* 🔑 PARA QUE EL TEXTO NO SE CORTE */
+    white-space: nowrap;        /* El texto se mantiene en UNA línea */
+    
+    /* Para centrar el texto */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .datagrid {
   background-color: var(--datagrid-bg) !important;
