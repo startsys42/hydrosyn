@@ -82,6 +82,11 @@ body, #root {
 }
 
 
+svg{
+    color: var( --button-text) !important;
+    transition: color 0.3s ease;
+}
+
 button{
     background-color: var(--button-bg);
     color: var(--button-text);
