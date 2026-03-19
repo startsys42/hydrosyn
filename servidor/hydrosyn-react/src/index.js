@@ -16,7 +16,8 @@ import { enUS } from '@mui/x-data-grid/locales';
 
 // 🔥 Componente que usa el idioma para MUI
 function AppWithMuiTheme() {
-    const { language } = React.useContext(LanguageProvider._currentValue); // Así sacamos el idioma
+    const languageContext = React.useContext(LanguageProvider);
+    const language = languageContext?.language || 'es';
 
     const muiTheme = createTheme(
         {},
