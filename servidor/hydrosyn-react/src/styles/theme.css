@@ -5,6 +5,7 @@
     --topbar-bg: #f0f0f0;
     --aside-bg: #f4f4f4;
   
+   --input-border: #2196f3;
 
     --button-bg: #2196f3;
     --button-text: #ffffff ;/* #000000;*/
@@ -37,6 +38,7 @@
     --topbar-bg: #2d2d2d;
     --aside-bg: #282828;
 
+--input-border: #9600fa;
 
     --button-bg: #181b1e;
     --button-text: #ffffff;
@@ -277,7 +279,7 @@ label {
 
 .button-group button {
     /* 🔑 ESTA ES LA CLAVE */
-    flex: 1;                    /* Se reparten el espacio disponible */
+    flex: 1 1 0;                    /* Se reparten el espacio disponible */
     min-width: fit-content;     /* Mínimo = ancho de su texto */
     width: 0;                   /* Permite que flex funcione correctamente */
     
@@ -502,4 +504,63 @@ div[class*="MuiDataGrid-columnHeader"] {
 .MuiPickersInputBase-sectionsContainer{
     color: var(--datagrid-text) !important;
 
+}
+
+
+input[type="text"] {
+    background-color: #f0f0f0;
+    border: 2px solid var(--text-color);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 16px;
+}
+
+/* Inputs de tipo email */
+input[type="email"] {
+    background-color: #f0f0f0;
+    border: 2px solid var(--text-color);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 16px;
+}
+
+/* Inputs de tipo password */
+input[type="password"] {
+    background-color: #f0f0f0;
+    border: 2px solid var(--text-color);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 16px;
+}
+
+/* Inputs de tipo number */
+input[type="number"] {
+    background-color: #f0f0f0;
+    border: 2px solid var(--text-color);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 16px;
+}
+
+input[type="text"]:focus {
+    border-color: var(--input-border);
+    outline: none;
+}
+
+/* Inputs de email */
+input[type="email"]:focus {
+    border-color: var(--input-border);
+    outline: none;
+}
+
+/* Inputs de password */
+input[type="password"]:focus {
+    border-color: var(--input-border);
+    outline: none;
+}
+
+/* Inputs de número */
+input[type="number"]:focus {
+    border-color: var(--input-border);
+    outline: none;
 }
