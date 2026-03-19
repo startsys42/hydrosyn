@@ -762,3 +762,8 @@ select:not(.topbar select):disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }
+
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: var(--input-border) !important;
+
+}
