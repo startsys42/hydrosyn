@@ -10,6 +10,26 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { OwnerProvider } from './utils/OwnerContext';
 
 
+import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles';
+import { esES } from '@mui/x-data-grid/locales';
+import { enUS } from '@mui/x-data-grid/locales';
+
+// 🔥 Componente que usa el idioma para MUI
+function AppWithMuiTheme() {
+    const { language } = React.useContext(LanguageProvider._currentValue); // Así sacamos el idioma
+
+    const muiTheme = createTheme(
+        {},
+        language === 'es' ? esES : enUS
+    );
+
+    return (
+        <MuiThemeProvider theme={muiTheme}>
+            <App />
+        </MuiThemeProvider>
+    );
+}
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -19,7 +39,8 @@ root.render(
                 <Router>
                     <AdminProvider>
                         <OwnerProvider>
-                            <App />
+                            <AppWithMuiTheme />  {/* 🔥 ESTE ENVUELVE App con MUI */}
+                            {/*<App />*/}
                         </OwnerProvider>
                     </AdminProvider>
 
