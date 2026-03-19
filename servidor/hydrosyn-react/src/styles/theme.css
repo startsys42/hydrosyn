@@ -577,3 +577,20 @@ input[type="number"]:focus {
       color: var(--text-color);
     outline: none;
 }
+/* PLACEHOLDER - ESTADO NORMAL */
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
+input[type="number"]::placeholder {
+    color: var(--text-color);      /* Mismo color que el texto normal */
+    opacity: 0.6;                   /* Un poco más transparente */
+}
+
+/* PLACEHOLDER - CUANDO EL INPUT ESTÁ ENFOCADO */
+input[type="text"]:focus::placeholder,
+input[type="email"]:focus::placeholder,
+input[type="password"]:focus::placeholder,
+input[type="number"]:focus::placeholder {
+    color: var(--input-border);     /* MISMO COLOR QUE EL BORDE FOCUS */
+    opacity: 0.8;                    /* Un poco más visible */
+}
