@@ -40,9 +40,9 @@
 
 --input-border: #a011ff;
 
-    --button-bg: #181b1e;
+    --button-bg: #a011ff; /* #181b1e;*/
     --button-text: #ffffff;
-    --button-border: #F0F0F0;
+    --button-border:#a011ff; /* #F0F0F0; */
   /*  --aside-bg: #353535; */
 
     --datagrid-bg: #181b1e;
