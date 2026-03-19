@@ -601,3 +601,80 @@ input[type="number"]:focus::placeholder {
     color: var(--text-color);     /* MISMO COLOR QUE EL BORDE FOCUS */
     opacity: 0.8;                    /* Un poco más visible */
 }
+
+
+.tabs-container {
+    width: 100%;
+    margin-bottom: 25px;
+    border-bottom: 2px solid var(--text-color);
+    opacity: 0.3;
+}
+
+/* ESTILOS PARA LOS TABS DE MATERIAL-UI */
+.tabs-container .MuiTabs-root {
+    background-color: transparent;
+}
+
+/* INDICADOR DE TAB ACTIVO */
+.tabs-container .MuiTabs-indicator {
+    background-color: var(--input-border);
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+}
+
+/* CADA TAB INDIVIDUAL */
+.tabs-container .MuiTab-root {
+    color: var(--text-color);
+    opacity: 0.6;                    /* Igual que placeholder */
+    font-size: 16px;
+    font-weight: 500;
+    text-transform: none;
+    padding: 12px 20px;
+    transition: all 0.3s ease;
+    min-height: 64px;
+}
+
+/* HOVER DE LOS TABS (igual que hover de inputs) */
+.tabs-container .MuiTab-root:hover {
+    opacity: 0.8;
+    background-color: rgba(128, 128, 128, 0.05);
+}
+
+/* TAB ACTIVO (igual que focus de inputs) */
+.tabs-container .MuiTab-root.Mui-selected {
+    color: var(--input-border);
+    opacity: 1;
+    font-weight: 600;
+}
+
+/* ICONOS DENTRO DE LOS TABS */
+.tabs-container .MuiTab-root .MuiSvgIcon-root {
+    color: currentColor;
+    font-size: 1.5rem;
+    margin-right: 8px;
+}
+
+/* ICONO EN TAB ACTIVO */
+.tabs-container .MuiTab-root.Mui-selected .MuiSvgIcon-root {
+    color: var(--input-border);
+}
+
+/* BOTONES DE SCROLL */
+.tabs-container .MuiTabs-scrollButtons {
+    color: var(--text-color);
+    opacity: 0.6;
+}
+
+.tabs-container .MuiTabs-scrollButtons:hover {
+    opacity: 0.8;
+    background-color: rgba(128, 128, 128, 0.05);
+}
+
+/* TEMA OSCURO - hover más claro */
+.dark-theme .tabs-container .MuiTab-root:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.dark-theme .tabs-container .MuiTabs-scrollButtons:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
