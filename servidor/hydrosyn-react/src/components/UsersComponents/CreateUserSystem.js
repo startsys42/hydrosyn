@@ -90,7 +90,7 @@ export default function CreateUserSystem({ systemId, refreshUsers, refreshAvaila
             }
             // Llamada correcta a Supabase Edge Function
             const { data, error: funcError } = await supabase.functions.invoke(
-                "create-user", // nombre de tu Edge Function
+                "createUserSystem", // nombre de tu Edge Function
                 {
                     body: { systemId, email }
                 }

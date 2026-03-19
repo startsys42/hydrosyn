@@ -5,16 +5,17 @@ begin
   if not exists (
     select 1
     from admin_users
-    where "user" = p_user
-      and is_active = true
+    where admin_users."user" = p_user  -- ← calificado con nombre_tabla.columna
+      and admin_users.is_active = true
   ) then
     raise exception 'Unauthorized';
   end if;
+  
   if not exists (
     select 1 
     from systems
-    where id = p_system
-      and admin = p_user
+    where systems.id = p_system
+      and systems.admin = p_user
   ) then
     raise exception 'Unauthorized';
   end if;
