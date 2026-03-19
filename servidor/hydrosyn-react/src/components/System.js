@@ -167,21 +167,15 @@ export default function System() {
 
 
 */}
-            <Paper sx={{ width: '100%', mb: 2 }}>
+            <div className="tabs-container">
                 <Tabs
                     value={selectedTab}
                     onChange={handleTabChange}
                     variant="scrollable"
                     scrollButtons="auto"
                     allowScrollButtonsMobile
-                    sx={{
-                        borderBottom: 1,
-                        borderColor: 'divider',
-                        '& .MuiTab-root': {
-                            minHeight: 72,
-                            fontSize: '0.9rem',
-                        }
-                    }}
+
+
                 >
                     {tabs.map((tab, index) => (
                         <Tab
@@ -189,22 +183,17 @@ export default function System() {
                             icon={tab.icon}
                             label={tab.label}
                             iconPosition="start"
-                            sx={{
-                                textTransform: 'none',
-                                '&.Mui-selected': {
-                                    color: 'primary.main',
-                                    fontWeight: 'bold',
-                                }
-                            }}
+
                         />
                     ))}
                 </Tabs>
-            </Paper>
 
-            {/* Contenido del tab seleccionado */}
-            <Box sx={{ mt: 3 }}>
+            </div>
+
+            {/* CONTENIDO SIN BOX - SOLO UN DIV NORMAL */}
+            <div className="tab-content-container">
                 {renderTabContent()}
-            </Box>
+            </div>
 
 
 
