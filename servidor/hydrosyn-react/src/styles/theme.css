@@ -637,7 +637,7 @@ input[type="number"]:focus::placeholder {
 /* CADA TAB INDIVIDUAL */
 .tabs-container .MuiTab-root {
     color: var(--text-color) !important;
-    opacity: 0.6;
+
     font-size: 16px !important;
     font-weight: 500 !important;
     text-transform: none !important;
@@ -649,7 +649,7 @@ input[type="number"]:focus::placeholder {
 
 /* HOVER DE LOS TABS - SOLO LÍNEA INFERIOR, SIN CAMBIO DE FONDO */
 .tabs-container .MuiTab-root:hover {
-    opacity: 0.8 !important;
+   
     background-color: transparent !important; /* SIN FONDO */
 }
 
@@ -677,7 +677,7 @@ input[type="number"]:focus::placeholder {
     color: var(--text-color) !important;
     font-size: 1.5rem !important;
     margin-right: 8px !important;
-    opacity: 0.8;
+   
 }
 
 /* ICONO EN TAB ACTIVO */
@@ -694,11 +694,11 @@ input[type="number"]:focus::placeholder {
 /* BOTONES DE SCROLL */
 .tabs-container .MuiTabs-scrollButtons {
     color: var(--text-color) !important;
-    opacity: 0.6 !important;
+ 
 }
 
 .tabs-container .MuiTabs-scrollButtons:hover {
-    opacity: 0.8 !important;
+  
     background-color: transparent !important;
 }
 
