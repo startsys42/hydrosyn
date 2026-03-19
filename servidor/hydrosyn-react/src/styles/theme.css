@@ -274,6 +274,7 @@ h1 {
 label {
     font-weight: bold;
     color: var(--text-color);
+    margin-bottom: 5px;
 }
 
 
