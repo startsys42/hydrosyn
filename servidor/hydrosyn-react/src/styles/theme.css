@@ -112,6 +112,35 @@ button{
   width: 80px;
 }
 
+select {
+    background-color: white;
+    color: black;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 16px;
+    width: 100%;
+    cursor: pointer;
+    appearance: none; /* Quita la flecha por defecto */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 16px;
+}
+
+/* ESTILOS PARA LAS OPCIONES */
+select option {
+    background-color: white;
+    color: black;
+    padding: 12px;
+}
+
+/* CUANDO EL SELECT ESTÁ ENFOCADO */
+select:focus {
+    outline: none;
+    border-color: #2196f3;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+}
 
 
 
@@ -508,7 +537,7 @@ div[class*="MuiDataGrid-columnHeader"] {
 
 
 input[type="text"] {
-    background-color: #ffffff;
+    background-color: var(--bg-color) ;
     border: 2px solid var(--text-color);
     border-radius: 8px;
     padding: 12px 16px;
@@ -517,7 +546,7 @@ input[type="text"] {
 
 /* Inputs de tipo email */
 input[type="email"] {
-    background-color: #ffffff;
+    background-color: var(--bg-color) ;
     border: 3px solid var(--text-color);
     border-radius: 8px;
     padding: 12px 16px;
@@ -526,7 +555,7 @@ input[type="email"] {
 
 /* Inputs de tipo password */
 input[type="password"] {
-    background-color: #ffffff;
+    background-color: var(--bg-color) ;
     border: 3px solid var(--text-color);
     border-radius: 8px;
     padding: 12px 16px;
@@ -535,7 +564,7 @@ input[type="password"] {
 
 /* Inputs de tipo number */
 input[type="number"] {
-    background-color: #ffffff;
+    background-color: var(--bg-color) ;
     border: 3px solid var(--text-color);
     border-radius: 8px;
     padding: 12px 16px;
@@ -543,28 +572,28 @@ input[type="number"] {
 }
 
 input[type="text"]:focus {
-    background-color: #ffffff;
+    background-color: var(--bg-color) ;
     border-color: var(--input-border);
     outline: none;
 }
 
 /* Inputs de email */
 input[type="email"]:focus {
-    background-color: #ffffff;
+    background-color: var(--bg-color) ;
     border-color: var(--input-border);
     outline: none;
 }
 
 /* Inputs de password */
 input[type="password"]:focus {
-    background-color: #ffffff;
+    background-color: var(--bg-color) ;
     border-color: var(--input-border);
     outline: none;
 }
 
 /* Inputs de número */
 input[type="number"]:focus {
-    background-color: #ffffff;
+    background-color: var(--bg-color) ;
     border-color: var(--input-border);
     outline: none;
 }
