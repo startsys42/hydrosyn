@@ -619,74 +619,73 @@ input[type="number"]:focus::placeholder {
     width: 100%;
     margin-bottom: 25px;
   
-    opacity: 0.3;
+
 }
 
 /* ESTILOS PARA LOS TABS DE MATERIAL-UI */
 .tabs-container .MuiTabs-root {
-    background-color: transparent;
+    background-color: transparent !important;
 }
 
 /* INDICADOR DE TAB ACTIVO */
 .tabs-container .MuiTabs-indicator {
-    background-color: var(--input-border);
-    height: 3px;
-    border-radius: 3px 3px 0 0;
+    background-color: var(--input-border) !important;
+    height: 3px !important;
+    border-radius: 3px 3px 0 0 !important;
 }
 
 /* CADA TAB INDIVIDUAL */
 .tabs-container .MuiTab-root {
-    color: var(--text-color);
-    opacity: 0.6;                    /* Igual que placeholder */
-    font-size: 16px;
-    font-weight: 500;
-    text-transform: none;
-    padding: 12px 20px;
-    transition: all 0.3s ease;
-    min-height: 64px;
+    color: var(--text-color) !important;
+    opacity: 0.6 !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    text-transform: none !important;
+    padding: 12px 20px !important;
+    min-height: 64px !important;
 }
 
-/* HOVER DE LOS TABS (igual que hover de inputs) */
+/* HOVER DE LOS TABS */
 .tabs-container .MuiTab-root:hover {
-    opacity: 0.8;
-    background-color: rgba(128, 128, 128, 0.05);
+    opacity: 0.8 !important;
+    background-color: rgba(128, 128, 128, 0.05) !important;
 }
 
-/* TAB ACTIVO (igual que focus de inputs) */
+/* TAB ACTIVO */
 .tabs-container .MuiTab-root.Mui-selected {
-    color: var(--input-border);
-    opacity: 1;
-    font-weight: 600;
+    color: var(--input-border) !important;
+    opacity: 1 !important;
+    font-weight: 600 !important;
 }
 
 /* ICONOS DENTRO DE LOS TABS */
 .tabs-container .MuiTab-root .MuiSvgIcon-root {
-    color: var(--text-color);
-    font-size: 1.5rem;
-    margin-right: 8px;
+    color: var(--text-color) !important;
+    font-size: 1.5rem !important;
+    margin-right: 8px !important;
 }
 
-/* ICONO EN TAB ACTIVO */
+/* ICONO EN TAB ACTIVO - CORREGIDO */
 .tabs-container .MuiTab-root.Mui-selected .MuiSvgIcon-root {
-    color: var(--text-color);
+    color: var(--input-border) !important; /* ANTES: var(--text-color) */
 }
 
 /* BOTONES DE SCROLL */
 .tabs-container .MuiTabs-scrollButtons {
-    color: var(--text-color);
-    opacity: 0.6;
+    color: var(--text-color) !important;
+    opacity: 0.6 !important;
 }
 
 .tabs-container .MuiTabs-scrollButtons:hover {
-    opacity: 0.8;
-    background-color: rgba(128, 128, 128, 0.05);
+    opacity: 0.8 !important;
+    background-color: rgba(128, 128, 128, 0.05) !important;
 }
 
-/* TEMA OSCURO - hover más claro */
+/* TEMA OSCURO */
 .dark-theme .tabs-container .MuiTab-root:hover {
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.05) !important;
 }
 
 .dark-theme .tabs-container .MuiTabs-scrollButtons:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.1) !important;
 }
