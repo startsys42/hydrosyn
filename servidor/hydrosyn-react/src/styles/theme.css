@@ -161,6 +161,11 @@ button{
   min-width: 100px; /* para evitar que se encojan demasiado */
  
 }
+.topbar select option {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    padding: 10px;
+}
 .topbar select option:hover {
     background-color: var(--button-bg) !important;
     color: var(--button-text) !important;
