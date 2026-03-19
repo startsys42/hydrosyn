@@ -763,6 +763,32 @@ select:not(.topbar select):disabled {
     cursor: not-allowed;
 }
 
+.MuiCheckbox-root {
+    color: var(--button-bg) !important;
+}
+
+.MuiCheckbox-root .MuiSvgIcon-root {
+    border: 2px solid var(--button-bg) !important;
+    border-radius: 4px !important;
+}
+
+.MuiCheckbox-root.Mui-checked {
+    color: var(--button-bg) !important;
+}
+
+.MuiCheckbox-root.Mui-checked .MuiSvgIcon-root {
+    border: 2px solid var(--button-bg) !important;
+    background-color: var(--button-bg) !important;
+    color: white !important;
+}
+
+
+
+
+
+
+
+
 .MuiOutlinedInput-notchedOutline {
     border: 2px solid var(--text-color) !important;
     border-radius: 8px !important;
