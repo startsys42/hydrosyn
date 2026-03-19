@@ -161,6 +161,13 @@ button{
   min-width: 100px; /* para evitar que se encojan demasiado */
  
 }
+.topbar select option:hover {
+    background-color: var(--button-bg) !important;
+    color: var(--button-text) !important;
+    border: 2px solid white !important;
+    box-shadow: inset 0 0 0 2px white; /* Efecto de borde interno */
+}
+
 
 
 .div-main {
