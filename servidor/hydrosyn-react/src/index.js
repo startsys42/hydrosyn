@@ -16,13 +16,15 @@ import { enUS } from '@mui/x-data-grid/locales';
 
 // 🔥 Componente que usa el idioma para MUI
 function AppWithMuiTheme() {
-    const languageContext = React.useContext(LanguageProvider);
-    const language = languageContext?.language || 'es';
+    const { language } = useLanguage();
 
-    const muiTheme = createTheme(
-        {},
-        language === 'es' ? esES : enUS
+    // 👇 useMemo hace que se re-calcule CADA VEZ que language cambie
+    const muiTheme = React.useMemo(
+        () => createTheme({}, language === 'es' ? esES : enUS),
+        [language] // ← ESTA ES LA CLAVE - depende de language
     );
+
+    console.log('Tema MUI actualizado:', language); // Para ver cuándo cambia
 
     return (
         <MuiThemeProvider theme={muiTheme}>
