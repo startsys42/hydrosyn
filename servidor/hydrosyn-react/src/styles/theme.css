@@ -627,7 +627,7 @@ input[type="number"]:focus::placeholder {
     background-color: transparent !important;
 }
 
-/* INDICADOR DE TAB ACTIVO */
+/* INDICADOR DE TAB ACTIVO (línea inferior del seleccionado) */
 .tabs-container .MuiTabs-indicator {
     background-color: var(--input-border) !important;
     height: 3px !important;
@@ -637,18 +637,32 @@ input[type="number"]:focus::placeholder {
 /* CADA TAB INDIVIDUAL */
 .tabs-container .MuiTab-root {
     color: var(--text-color) !important;
- 
+    opacity: 0.6;
     font-size: 16px !important;
     font-weight: 500 !important;
     text-transform: none !important;
     padding: 12px 20px !important;
     min-height: 64px !important;
+    position: relative !important;
+    transition: opacity 0.3s ease !important;
 }
 
-/* HOVER DE LOS TABS */
+/* HOVER DE LOS TABS - SOLO LÍNEA INFERIOR, SIN CAMBIO DE FONDO */
 .tabs-container .MuiTab-root:hover {
+    opacity: 0.8 !important;
+    background-color: transparent !important; /* SIN FONDO */
+}
 
-    background-color: rgba(128, 128, 128, 0.05) !important;
+/* LÍNEA INFERIOR EN HOVER (la que pides) */
+.tabs-container .MuiTab-root:hover::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: var(--input-border) !important;
+    border-radius: 3px 3px 0 0;
 }
 
 /* TAB ACTIVO */
@@ -663,29 +677,32 @@ input[type="number"]:focus::placeholder {
     color: var(--text-color) !important;
     font-size: 1.5rem !important;
     margin-right: 8px !important;
+    opacity: 0.8;
 }
 
-/* ICONO EN TAB ACTIVO - CORREGIDO */
+/* ICONO EN TAB ACTIVO */
 .tabs-container .MuiTab-root.Mui-selected .MuiSvgIcon-root {
-    color: var(--input-border) !important; /* ANTES: var(--text-color) */
+    color: var(--input-border) !important;
+    opacity: 1 !important;
+}
+
+/* ICONO EN HOVER */
+.tabs-container .MuiTab-root:hover .MuiSvgIcon-root {
+    opacity: 1 !important;
 }
 
 /* BOTONES DE SCROLL */
 .tabs-container .MuiTabs-scrollButtons {
     color: var(--text-color) !important;
-   
+    opacity: 0.6 !important;
 }
 
 .tabs-container .MuiTabs-scrollButtons:hover {
-   
-    background-color: rgba(128, 128, 128, 0.05) !important;
+    opacity: 0.8 !important;
+    background-color: transparent !important;
 }
 
-/* TEMA OSCURO */
-.dark-theme .tabs-container .MuiTab-root:hover {
-    background-color: rgba(255, 255, 255, 0.05) !important;
-}
-
-.dark-theme .tabs-container .MuiTabs-scrollButtons:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
+/* TEMA OSCURO - mismas reglas, solo cambia el color por variable */
+.dark-theme .tabs-container .MuiTab-root:hover::after {
+    background-color: var(--input-border) !important; /* Morado */
 }
