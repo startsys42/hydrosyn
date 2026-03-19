@@ -6,8 +6,8 @@
     --aside-bg: #f4f4f4;
   
 
-    --button-bg: #ffffff;
-    --button-text:#2196f3 ;/* #000000;*/
+    --button-bg: #2196f3;
+    --button-text: ##ffffff ;/* #000000;*/
     --button-border: #2196f3;
     
 
@@ -262,7 +262,7 @@ label {
     width: 100%;
     text-align: center;
     padding: 5px;
-    color: var(--button-color);
+    color: var(--text-color);
     text-decoration: none;
     background-color: var(--button-bg);
     border: 3px solid var(--button-border);
