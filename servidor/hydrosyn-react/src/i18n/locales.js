@@ -5,6 +5,7 @@ import ListRecordsPump from "../components/PumpComponents/ListRecordsPump";
 
 const texts = {
     es: {
+        associateUser: "Asociar usuario",
         type: "Tipo",
         bothDates: "Por favor selecciona ambas fechas.",
         dateOptional: 'Fecha y hora (opcional)',
@@ -238,6 +239,7 @@ const texts = {
 
     },
     en: {
+        associateUser: "Associate user",
         type: "Type",
         bothDates: "Please select both dates.",
         dateOptional: 'Date and time (optional)',
