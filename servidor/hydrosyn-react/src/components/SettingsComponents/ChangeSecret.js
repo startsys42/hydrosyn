@@ -137,7 +137,7 @@ export default function ChangeSecretAccordion({ systemId, secret: initialSecret,
 
                     <label>{texts.newSecret}</label>
                     <input
-                        type={showSecrets ? "text" : "password"}
+                        type={showSecret ? "text" : "password"}
                         value={newSecret}
                         onChange={(e) => setNewSecret(e.target.value)}
                         required
