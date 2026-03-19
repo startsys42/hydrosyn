@@ -6,6 +6,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function ChangeSecretAccordion({ systemId, secret: initialSecret, refreshSecret, error, setError }) {
     const texts = useTexts();
