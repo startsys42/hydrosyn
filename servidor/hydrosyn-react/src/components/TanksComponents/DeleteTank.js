@@ -103,7 +103,7 @@ export default function DeleteTank({ systemId, tankList, refresh, loading, error
     };
 
     const columns = [
-        { field: "name", headerName: texts.tank, width: 250 },
+        { field: "name", headerName: texts.tanks, width: 250 },
         {
             field: "type",
             headerName: texts.type,

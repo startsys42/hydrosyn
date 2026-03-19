@@ -5,6 +5,7 @@ import ListRecordsPump from "../components/PumpComponents/ListRecordsPump";
 
 const texts = {
     es: {
+        type: "Tipo",
         bothDates: "Por favor selecciona ambas fechas.",
         dateOptional: 'Fecha y hora (opcional)',
         nothingToUpdate: 'Debes cambiar al menos un campo.',
@@ -237,6 +238,7 @@ const texts = {
 
     },
     en: {
+        type: "Type",
         bothDates: "Please select both dates.",
         dateOptional: 'Date and time (optional)',
         nothingToUpdate: 'You must change at least one field.',
