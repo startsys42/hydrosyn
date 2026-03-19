@@ -779,7 +779,7 @@ select:not(.topbar select):disabled {
 .MuiCheckbox-root.Mui-checked .MuiSvgIcon-root {
     border: 2px solid var(--button-bg) !important;
     background-color: var(--button-bg) !important;
-    color: white !important;
+    color:var(--button-bg) !important;
 }
 
 
