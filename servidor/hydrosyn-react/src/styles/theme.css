@@ -767,3 +767,8 @@ select:not(.topbar select):disabled {
     border-color: var(--input-border) !important;
 
 }
+
+.MuiDataGrid-filler,
+.MuiDataGrid-scrollbarFiller {
+    display: none !important;
+}
