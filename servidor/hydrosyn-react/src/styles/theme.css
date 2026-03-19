@@ -668,7 +668,7 @@ input[type="number"]:focus::placeholder {
 
 /* ICONO EN TAB ACTIVO */
 .tabs-container .MuiTab-root.Mui-selected .MuiSvgIcon-root {
-    color: var(--input-border);
+    color: var(--text-color);
 }
 
 /* BOTONES DE SCROLL */
