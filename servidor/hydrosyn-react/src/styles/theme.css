@@ -606,7 +606,7 @@ input[type="number"]:focus::placeholder {
 .tabs-container {
     width: 100%;
     margin-bottom: 25px;
-    border-bottom: 2px solid var(--text-color);
+  
     opacity: 0.3;
 }
 
@@ -649,7 +649,7 @@ input[type="number"]:focus::placeholder {
 
 /* ICONOS DENTRO DE LOS TABS */
 .tabs-container .MuiTab-root .MuiSvgIcon-root {
-    color: currentColor;
+    color: var(--text-color);
     font-size: 1.5rem;
     margin-right: 8px;
 }
