@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider } from './utils/ThemeContext';
-import { LanguageProvider } from './utils/LanguageContext';
+import { LanguageProvider, useLanguage } from './utils/LanguageContext';
 import { AdminProvider } from './utils/AdminContext';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { OwnerProvider } from './utils/OwnerContext';
