@@ -275,6 +275,7 @@ label {
     font-weight: bold;
     color: var(--text-color);
     margin-bottom: 5px;
+    margin-top: 5px;
 }
 
 
