@@ -274,7 +274,7 @@ h1 {
 label {
     font-weight: bold;
     color: var(--text-color);
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     margin-top: 5px;
 }
 
@@ -604,7 +604,7 @@ input[type="email"]::placeholder,
 input[type="password"]::placeholder,
 input[type="number"]::placeholder {
     color: var(--text-color);      /* Mismo color que el texto normal */
-    opacity: 0.6;                   /* Un poco más transparente */
+  
 }
 
 /* PLACEHOLDER - CUANDO EL INPUT ESTÁ ENFOCADO */
@@ -613,7 +613,7 @@ input[type="email"]:focus::placeholder,
 input[type="password"]:focus::placeholder,
 input[type="number"]:focus::placeholder {
     color: var(--text-color);     /* MISMO COLOR QUE EL BORDE FOCUS */
-    opacity: 0.8;                    /* Un poco más visible */
+   
 }
 
 
