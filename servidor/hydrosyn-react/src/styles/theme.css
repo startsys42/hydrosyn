@@ -508,7 +508,7 @@ div[class*="MuiDataGrid-columnHeader"] {
 
 
 input[type="text"] {
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     border: 2px solid var(--text-color);
     border-radius: 8px;
     padding: 12px 16px;
@@ -517,7 +517,7 @@ input[type="text"] {
 
 /* Inputs de tipo email */
 input[type="email"] {
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     border: 3px solid var(--text-color);
     border-radius: 8px;
     padding: 12px 16px;
@@ -526,7 +526,7 @@ input[type="email"] {
 
 /* Inputs de tipo password */
 input[type="password"] {
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     border: 3px solid var(--text-color);
     border-radius: 8px;
     padding: 12px 16px;
@@ -535,7 +535,7 @@ input[type="password"] {
 
 /* Inputs de tipo number */
 input[type="number"] {
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     border: 3px solid var(--text-color);
     border-radius: 8px;
     padding: 12px 16px;
@@ -543,28 +543,28 @@ input[type="number"] {
 }
 
 input[type="text"]:focus {
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     border-color: var(--input-border);
     outline: none;
 }
 
 /* Inputs de email */
 input[type="email"]:focus {
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     border-color: var(--input-border);
     outline: none;
 }
 
 /* Inputs de password */
 input[type="password"]:focus {
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     border-color: var(--input-border);
     outline: none;
 }
 
 /* Inputs de número */
 input[type="number"]:focus {
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     border-color: var(--input-border);
     outline: none;
 }
