@@ -28,11 +28,14 @@ export default function System() {
     const texts = useTexts();
     const { systemId } = useParams();
     const { role, loading: roleLoading } = useRoleSystem();
-    const [selected, setSelected] = useState("");
+    // const [selected, setSelected] = useState("");
+    const [selectedTab, setSelectedTab] = useState(0); // Cambiado a índice numérico
 
 
     const [system, setSystem] = useState(null);
     const [loadingSystem, setLoadingSystem] = useState(true);
+
+    /*
 
     const roleOptions = {
         owner: [
@@ -53,8 +56,27 @@ export default function System() {
 
         ]
     };
+      const options = roleOptions[role] || [];
+*/
+    // Configuración de tabs con iconos y valores
+    const tabConfig = {
+        owner: [
+            { value: "tanks", label: texts.tanks, icon: <WaterIcon />, component: TanksAccordion },
+            { value: "notifications", label: texts.notifications, icon: <NotificationsIcon />, component: NotificationsAccordion },
+            { value: "users", label: texts.users, icon: <PeopleIcon />, component: UserAccordion },
+            { value: "esp32", label: texts.esp32, icon: <MemoryIcon />, component: ESP32Accordion },
+            { value: "settings", label: texts.systemSettings, icon: <SettingsIcon />, component: SettingsAccordion },
+            { value: "pumps", label: texts.pumps, icon: <BuildIcon />, component: PumpsAccordion },
+            { value: "records", label: texts.records, icon: <HistoryIcon />, component: RecordsAccordion }
+        ],
+        member: [
+            { value: "records", label: texts.records, icon: <HistoryIcon />, component: RecordsAccordion },
+            { value: "pumps", label: texts.pumps, icon: <BuildIcon />, component: PumpsAccordion }
+        ]
+    };
 
-    const options = roleOptions[role] || [];
+    const tabs = tabConfig[role] || [];
+
 
     useEffect(() => {
         const fetchSystem = async () => {
@@ -75,9 +97,15 @@ export default function System() {
         };
         fetchSystem();
     }, [systemId]);
+    /*
     const handleChange = (e) => {
         setSelected(e.target.value);
     }
+    */
+    const handleTabChange = (event, newValue) => {
+        setSelectedTab(newValue);
+    };
+
     // Redirigir si no hay acceso
     useEffect(() => {
         if (!loadingSystem && !roleLoading) {
@@ -90,9 +118,18 @@ export default function System() {
     // Esperar a que cargue el sistema y rol
     if (loadingSystem || roleLoading || !system || role === "none") return null;
 
+    const renderTabContent = () => {
+        const currentTab = tabs[selectedTab];
+        if (!currentTab) return null;
+
+        const Component = currentTab.component;
+        return <Component systemId={systemId} />;
+    };
+
     return (
         <div className='div-main-login'>
             <h1>{texts.system}: {system.name}</h1>
+            {/*}
             <label htmlFor="options">{texts.options}</label>
             <br />
             <br />
@@ -113,7 +150,45 @@ export default function System() {
 
 
 
+*/}
+            <Paper sx={{ width: '100%', mb: 2 }}>
+                <Tabs
+                    value={selectedTab}
+                    onChange={handleTabChange}
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    allowScrollButtonsMobile
+                    sx={{
+                        borderBottom: 1,
+                        borderColor: 'divider',
+                        '& .MuiTab-root': {
+                            minHeight: 72,
+                            fontSize: '0.9rem',
+                        }
+                    }}
+                >
+                    {tabs.map((tab, index) => (
+                        <Tab
+                            key={tab.value}
+                            icon={tab.icon}
+                            label={tab.label}
+                            iconPosition="start"
+                            sx={{
+                                textTransform: 'none',
+                                '&.Mui-selected': {
+                                    color: 'primary.main',
+                                    fontWeight: 'bold',
+                                }
+                            }}
+                        />
+                    ))}
+                </Tabs>
+            </Paper>
 
+            {/* Contenido del tab seleccionado */}
+            <Box sx={{ mt: 3 }}>
+                {renderTabContent()}
+            </Box>
 
 
 
