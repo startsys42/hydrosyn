@@ -16,6 +16,10 @@ export default function ChangeSecretAccordion({ systemId, secret: initialSecret,
     const navigate = useNavigate();
     const toggleShowSecret = () => setShowSecret(!showSecret);
 
+    useEffect(() => {
+        setSecret(initialSecret || "");
+    }, [initialSecret]);
+
     const handleSecretChange = async (e) => {
         e.preventDefault();
         setError("");
@@ -123,6 +127,10 @@ export default function ChangeSecretAccordion({ systemId, secret: initialSecret,
                     <input
                         type={showSecret ? "text" : "password"}  // cambia dinámicamente
                         value={secret}
+                        required
+                        minLength={10}
+                        maxLength={30}
+                        placeholder={texts.currentSecret}
                         readOnly
                     />
                     <button type="button" onClick={toggleShowSecret}>
