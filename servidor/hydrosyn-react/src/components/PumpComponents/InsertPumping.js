@@ -63,7 +63,8 @@ export default function InsertPumping({ systemId, pumpList, refresh, error, setE
                 .insert({
                     pump: parseInt(selectedPump),
                     user: userId,
-                    volume: vol   // puedes cambiar lógica si necesitas
+                    volume: vol,
+                    success: false// puedes cambiar lógica si necesitas
                 });
 
             if (insertError) throw insertError;
