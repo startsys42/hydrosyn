@@ -46,7 +46,7 @@ export default function InsertPumping({ systemId, pumpList, refresh, error, setE
     };
     const handleInsertPump = async () => {
         setError("");
-        if (!selectedPump) return setError(texts.selectPump);
+        if (!selectedPump) return setError("selectPump");
 
 
 
@@ -58,11 +58,11 @@ export default function InsertPumping({ systemId, pumpList, refresh, error, setE
             if (unit === "ml") vol = vol / 1000;
 
             if (vol <= 0) {
-                setError(texts.invalidVolume);
+                setError("invalidVolume");
                 return;
             }
             if (vol > 999.999999) {
-                setError(texts.volumeTooHigh);
+                setError("volumeTooHigh");
                 return;
             }
             setLoading(true);
