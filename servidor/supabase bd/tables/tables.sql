@@ -219,7 +219,7 @@ CREATE TABLE public.records_pumps (
   id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   pump bigint NOT NULL,
-success BOOLEAN DEFAULT false,
+success BOOLEAN DEFAULT false not null,
   volume numeric(9,6) CHECK (volume > 0 and volume <= 999.999999) NOT NULL,
   "user" uuid not null,
   CONSTRAINT records_pumps_pkey PRIMARY KEY (id),
