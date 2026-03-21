@@ -73,7 +73,7 @@ export default function InsertPumping({ systemId, pumpList, refresh, error, setE
             refresh();
 
         } catch (err) {
-            setError(err.message || "Error");
+            setError("Error" || err.message);
         } finally {
             setLoading(false);
         }
@@ -102,7 +102,7 @@ export default function InsertPumping({ systemId, pumpList, refresh, error, setE
                         ))}
                     </select>
 
-                    <label>{texts.volume || "Volumen"}</label>
+                    <label>{texts.volume}</label>
                     <input
                         type="number"
                         step="0.000001"
@@ -114,7 +114,7 @@ export default function InsertPumping({ systemId, pumpList, refresh, error, setE
                         required
                     />
 
-                    <label>Unidad</label>
+                    <label>{texts.units}</label>
                     <select
                         value={unit}
                         onChange={(e) => setUnit(e.target.value)}
