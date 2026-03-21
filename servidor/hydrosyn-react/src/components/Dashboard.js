@@ -29,7 +29,9 @@ export default function Dashboard() {
     const [sortModel, setSortModel] = useState([]);
     const [isMember, setIsMember] = useState(false);
 
-
+    console.log("🔴🔴🔴 DASHBOARD RENDERIZADO 🔴🔴🔴");
+    console.log("isAdmin:", isAdmin, "loadingAdmin:", loadingAdmin);
+    console.log("isOwner:", isOwner, "loadingOwner:", loadingOwner);
 
     const fetchSystems = async () => {
         setLoading(true);
