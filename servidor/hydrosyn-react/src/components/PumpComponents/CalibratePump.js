@@ -16,6 +16,7 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
     const [volume, setVolume] = useState("");
     const [unit, setUnit] = useState("l");
     const [loading, setLoading] = useState(false);
+    const [action, setAction] = useState("");
 
     const checkUserActive = async () => {
         const { data: sessionData } = await supabase.auth.getSession();
@@ -40,7 +41,16 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
         if (!adminData && !systemUserData) return null;
         return user.id;
     };
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setError("");
 
+        if (action === "calibrate") {
+            handleInsertCalibrate();
+        } else if (action === "calibration") {
+            handleInsertCalibration();
+        }
+    };
     const handleInsertCalibrate = async () => {
         setError("");
         if (!selectedPump) return setError("selectPump");
@@ -107,7 +117,7 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
                 <h3>{texts.calibratePump}</h3>
             </AccordionSummary>
             <AccordionDetails>
-                <form onSubmit={(e) => e.preventDefault()} className='form-container'>
+                <form onSubmit={handleSubmit} className='form-container'>
 
                     <label htmlFor="select-pump">{texts.selectPump}</label>
                     <select id="select-pump"
@@ -148,7 +158,7 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
                     </select>
 
 
-                    <button type="button" onClick={handleInsertCalibrate} disabled={loading}>
+                    <button type="submit" onClick={() => setAction("calibrate")} disabled={loading}>
                         {loading ? texts.creating : texts.saveCalibration}
                     </button>
 
