@@ -39,12 +39,16 @@ export default function InsertPumping({ systemId, pumpList, refresh, error, setE
         if (!adminData && !systemUserData) return null;
         return user.id;
     };
-
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setError("");
+        handleInsertPump();
+    };
     const handleInsertPump = async () => {
         setError("");
-        if (!selectedPump || !volume) return setError(texts.selectPump);
+        if (!selectedPump) return setError(texts.selectPump);
 
-        setLoading(true);
+
 
         try {
             const userId = await checkUserActive();
@@ -53,11 +57,15 @@ export default function InsertPumping({ systemId, pumpList, refresh, error, setE
             let vol = parseFloat(volume);
             if (unit === "ml") vol = vol / 1000;
 
-            if (vol <= 0 || vol > 999.999999) {
+            if (vol <= 0) {
                 setError(texts.invalidVolume);
                 return;
             }
-
+            if (vol > 999.999999) {
+                setError(texts.volumeTooHigh);
+                return;
+            }
+            setLoading(true);
             const { error: insertError } = await supabase
                 .from("records_pumps")
                 .insert({
@@ -70,6 +78,7 @@ export default function InsertPumping({ systemId, pumpList, refresh, error, setE
             if (insertError) throw insertError;
 
             setVolume("");
+            setSelectedPump("");
             refresh();
 
         } catch (err) {
@@ -86,7 +95,7 @@ export default function InsertPumping({ systemId, pumpList, refresh, error, setE
             </AccordionSummary>
 
             <AccordionDetails>
-                <div className="form-container">
+                <form onSubmit={handleSubmit} className='form-container'>
 
                     <label>{texts.selectPump}</label>
                     <select
@@ -124,8 +133,8 @@ export default function InsertPumping({ systemId, pumpList, refresh, error, setE
                         <option value="l">L</option>
                     </select>
 
-                    <button
-                        onClick={handleInsertPump}
+                    <button type="submit"
+
                         disabled={loading}
                     >
                         {loading ? "Procesando..." : "Guardar bombeo"}
@@ -136,7 +145,7 @@ export default function InsertPumping({ systemId, pumpList, refresh, error, setE
                             {texts[error] || error}
                         </p>
                     )}
-                </div>
+                </form>
             </AccordionDetails>
         </Accordion>
     );
