@@ -137,7 +137,7 @@ export default function InsertPumping({ systemId, pumpList, refresh, error, setE
 
                         disabled={loading}
                     >
-                        {loading ? "Procesando..." : "Guardar bombeo"}
+                        {loading ? texts.creating : texts.createPumping}
                     </button>
 
                     {error && (

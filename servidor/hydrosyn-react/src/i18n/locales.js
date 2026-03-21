@@ -5,6 +5,9 @@ import ListRecordsPump from "../components/PumpComponents/ListRecordsPump";
 
 const texts = {
     es: {
+        calibrate: "Calibrar",
+        saveCalibration: "Guardar calibración",
+        createPumping: "Crear bombeo manual",
         associateUser: "Asociar usuario",
         type: "Tipo",
         bothDates: "Por favor selecciona ambas fechas.",
@@ -18,7 +21,7 @@ const texts = {
         listCalibrations: "Ejecución de las calibraciones",
         listRecordsPump: "Lista de registros",
         insertPump: "Añadir bombeo manual",
-        calibratePump: "Calibrar bomba",
+
         updatePump: "Modificar bomba",
         listRecords: "Lista de registros",
         invalidVolume: 'Volumen inválido. Debe ser un número positivo.',
@@ -239,6 +242,9 @@ const texts = {
 
     },
     en: {
+        calibrate: "Calibrate",
+        saveCalibration: "Save calibration",
+        createPumping: "Create manual pumping",
         associateUser: "Associate user",
         type: "Type",
         bothDates: "Please select both dates.",
