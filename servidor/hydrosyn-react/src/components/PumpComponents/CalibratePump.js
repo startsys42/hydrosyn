@@ -44,6 +44,7 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
     const handleInsertCalibrate = async () => {
         setError("");
         if (!selectedPump) return setError("selectPump");
+        if (!volume) return setError("invalidVolume");
         setLoading(true);
 
         try {
@@ -147,11 +148,11 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
                     </select>
 
 
-                    <button onClick={handleInsertCalibrate} disabled={loading}>
+                    <button type="button" onClick={handleInsertCalibrate} disabled={loading}>
                         {loading ? texts.creating : texts.saveCalibration}
                     </button>
 
-                    <button onClick={handleInsertCalibration} disabled={loading}>
+                    <button type="button" onClick={handleInsertCalibration} disabled={loading}>
                         {loading ? texts.creating : texts.calibrate}
                     </button>
 
