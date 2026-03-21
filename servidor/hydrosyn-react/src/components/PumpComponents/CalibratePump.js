@@ -43,7 +43,7 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
 
     const handleInsertCalibrate = async () => {
         setError("");
-        if (!selectedPump || !volume) return setError(texts.selectPump);
+        if (!selectedPump) return setError("selectPump");
         setLoading(true);
 
         try {
@@ -52,8 +52,12 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
 
             let vol = parseFloat(volume);
             if (unit === "ml") vol = vol / 1000;
-            if (vol <= 0 || vol > 999.999999) {
-                setError(texts.invalidVolume);
+            if (vol <= 0) {
+                setError("invalidVolume");
+                return;
+            }
+            if (vol > 999.999999) {
+                setError("volumeTooHigh");
                 return;
             }
 
@@ -63,9 +67,10 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
 
             if (insertError) throw insertError;
             setVolume("");
+            setSelectedPump("");
             refresh();
         } catch (err) {
-            setError(err.message || "Error");
+            setError("Error" || err.message);
         } finally {
             setLoading(false);
         }
@@ -73,29 +78,22 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
 
     const handleInsertCalibration = async () => {
         setError("");
-        if (!selectedPump || !volume) return setError(texts.selectPump);
+        if (!selectedPump) return setError("selectPump");
         setLoading(true);
 
         try {
             const userId = await checkUserActive();
             if (!userId) return navigate("/dashboard", { replace: true });
 
-            let vol = parseFloat(volume);
-            if (unit === "ml") vol = vol / 1000;
-            if (vol <= 0 || vol > 999.999999) {
-                setError(texts.invalidVolume);
-                return;
-            }
-
             const { error: insertError } = await supabase
                 .from("calibration")
-                .insert({ pump: parseInt(selectedPump), user: userId, volume: vol, success: false });
+                .insert({ pump: parseInt(selectedPump), user: userId, success: false });
 
             if (insertError) throw insertError;
             setVolume("");
             refresh();
         } catch (err) {
-            setError(err.message || "Error ");
+            setError("Error" || err.message);
         } finally {
             setLoading(false);
         }
@@ -122,7 +120,7 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
                     </select>
 
                     <label htmlFor="calibration-volume">
-                        {texts.calibrationVolume}
+                        {texts.volume}
                     </label>
                     <input
                         id="calibration-volume"
@@ -138,7 +136,7 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
                     />
 
                     {/* SELECTOR DE UNIDAD */}
-                    <label>Unidad:</label>
+                    <label>{texts.units}</label>
                     <select
                         value={unit}
                         onChange={(e) => setUnit(e.target.value)}
@@ -150,11 +148,11 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
 
 
                     <button onClick={handleInsertCalibrate} disabled={loading}>
-                        {loading ? "Procesando..." : "Guardar en calibrate"}
+                        {loading ? texts.creating : texts.saveCalibration}
                     </button>
 
                     <button onClick={handleInsertCalibration} disabled={loading}>
-                        {loading ? "Procesando..." : "Guardar en calibration"}
+                        {loading ? texts.creating : texts.calibrate}
                     </button>
 
 
