@@ -54,6 +54,8 @@ export default function Dashboard() {
                 .eq('admin', userId)
                 .eq('admin_users.is_active', true);
 
+            console.log('🏢 Owner systems query result:', ownerData);
+            console.log('❌ Owner error:', ownerErr);
             if (ownerErr) throw ownerErr;
 
             const ownerSystems = (ownerData || []).map(s => ({
@@ -62,7 +64,7 @@ export default function Dashboard() {
                 created_at: new Date(s.created_at).toLocaleDateString(),
                 owner: true
             }));
-
+            console.log('✅ Owner systems processed:', ownerSystems);
             // Sistemas donde es miembro
             const { data: memberData, error: memberErr } = await supabase
                 .from('systems_users')
