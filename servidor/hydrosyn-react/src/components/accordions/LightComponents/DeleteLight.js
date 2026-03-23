@@ -1,0 +1,202 @@
+// DeleteLight.jsx
+import { useState } from "react";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import useTexts from "../../utils/UseTexts";
+import { supabase } from "../../utils/supabaseClient";
+import { useNavigate } from "react-router-dom";
+import { DataGrid } from "@mui/x-data-grid";
+import '../../styles/theme.css';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from "@mui/material";
+
+export default function DeleteLight({ systemId, lightList, refresh, loading, error, setError }) {
+    const texts = useTexts();
+    const [pageSize, setPageSize] = useState(10);
+    const navigate = useNavigate();
+
+    const [openDialog, setOpenDialog] = useState(false);
+    const [selectedLight, setSelectedLight] = useState(null);
+
+    const handleOpenDialog = (light) => {
+        setSelectedLight(light);
+        setOpenDialog(true);
+        setError(""); // limpiar error antes de abrir
+    };
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+        setSelectedLight(null);
+    };
+
+    const handleDelete = async () => {
+        if (!selectedLight) return;
+
+        try {
+            // 1. Verificar autenticación
+            const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+            if (sessionError || !sessionData?.session) {
+                navigate("/dashboard", { replace: true });
+                return;
+            }
+
+            const uid = sessionData.session.user.id;
+
+            // 2. Verificar que el usuario está activo en admin_users
+            const { data: adminUser, error: adminError } = await supabase
+                .from("admin_users")
+                .select("*")
+                .eq("user", uid)
+                .eq("is_active", true)
+                .maybeSingle();
+
+            if (adminError || !adminUser) {
+                navigate("/dashboard", { replace: true });
+                return;
+            }
+
+            // 3. Verificar que el usuario es admin del sistema correspondiente
+            const { data: systemData, error: systemError } = await supabase
+                .from("systems")
+                .select("*")
+                .eq("id", systemId)
+                .eq("admin", uid)
+                .maybeSingle();
+
+            if (systemError || !systemData) {
+                navigate("/dashboard", { replace: true });
+                return;
+            }
+
+            // 4. Verificar que la luz no tenga programaciones activas
+            const { data: programmingCheck, error: programmingError } = await supabase
+                .from("programming_lights")
+                .select("id")
+                .eq("light", selectedLight.id)
+                .limit(1);
+
+            if (programmingError) throw programmingError;
+
+            if (programmingCheck && programmingCheck.length > 0) {
+                setError(texts.lightHasProgramming || "No se puede eliminar: esta luz tiene programaciones asociadas");
+                handleCloseDialog();
+                return;
+            }
+
+            // 5. Eliminar la luz
+            const { error } = await supabase
+                .from("lights")
+                .delete()
+                .eq("id", selectedLight.id)
+                .eq("system", systemId);
+
+            if (error) throw error;
+
+            // 6. Refrescar lista y cerrar diálogo
+            refresh();
+            handleCloseDialog();
+
+        } catch (err) {
+            console.error("Error deleting light:", err);
+            setError(err.message || "Error al eliminar luz");
+            handleCloseDialog();
+        }
+    };
+
+    const columns = [
+        {
+            field: "name",
+            headerName: texts.lights || "Luz",
+            width: 200
+        },
+        {
+            field: "esp32Name",
+            headerName: texts.esp32 || "ESP32",
+            width: 150
+        },
+        {
+            field: "gpio",
+            headerName: texts.GPIO || "GPIO",
+            width: 100
+        },
+        {
+            field: "delete",
+            headerName: texts.delete || "Eliminar",
+            width: 120,
+            sortable: false,
+            disableColumnMenu: true,
+            filterable: false,
+            renderCell: (params) => (
+                <button
+                    onClick={() => handleOpenDialog(params.row)}
+                    style={{ padding: "4px 12px", cursor: "pointer" }}
+                >
+                    {texts.delete || "Eliminar"}
+                </button>
+            ),
+        },
+    ];
+
+    // DataGrid necesita que cada fila tenga id único
+    const rows = lightList.map((light) => ({
+        id: light.id,
+        name: light.name,
+        esp32Name: light.esp32?.name || "-",
+        gpio: light.gpio || "-",
+    }));
+
+    return (
+        <>
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <h3>{texts.removeLight || "Eliminar Luz"}</h3>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <div style={{ height: 400, width: '100%' }}>
+                        <DataGrid
+                            className="datagrid"
+                            rows={rows}
+                            columns={columns}
+                            loading={loading}
+                            pagination
+                            pageSize={pageSize}
+                            onPageSizeChange={setPageSize}
+                            rowsPerPageOptions={[5, 10, 25, 50]}
+                            sortingMode="client"
+                            disableSelectionOnClick
+                        />
+                    </div>
+                    {error && <p style={{ color: 'red', marginTop: 16 }}>{error}</p>}
+                </AccordionDetails>
+            </Accordion>
+
+            {/* Diálogo de confirmación */}
+            <Dialog open={openDialog} onClose={handleCloseDialog}>
+                <DialogTitle>{texts.confirmation || "Confirmación"}</DialogTitle>
+                <DialogContent>
+                    <Typography>
+                        {texts.deleteLightQuestion || `¿Estás seguro de que quieres eliminar la luz "${selectedLight?.name}"?`}
+                        <br />
+                        <strong style={{ color: 'red' }}>
+                            {texts.actionIrreversible || "Esta acción es irreversible."}
+                        </strong>
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog}>
+                        {texts.no || "No"}
+                    </Button>
+                    <Button
+                        onClick={handleDelete}
+                        variant="contained"
+                        color="error"
+                        disabled={loading}
+                    >
+                        {texts.yes || "Sí"}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
+    );
+}

@@ -556,3 +556,216 @@ CREATE TRIGGER trigger_records_user
 BEFORE INSERT OR UPDATE ON public.records
 FOR EACH ROW EXECUTE FUNCTION check_records_user();
 
+-- 1.1 Función para verificar límite de 6 luces por sistema
+CREATE OR REPLACE FUNCTION check_lights_limit()
+RETURNS TRIGGER AS $$
+DECLARE
+    light_count INTEGER;
+BEGIN
+    SELECT COUNT(*) INTO light_count
+    FROM public.lights
+    WHERE system = NEW.system;
+    
+    IF light_count >= 6 THEN
+        RAISE EXCEPTION 'Each system can only have a maximum of 6 lights. Currently has % lights.', light_count;
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_check_lights_limit
+    BEFORE INSERT ON public.lights
+    FOR EACH ROW
+    EXECUTE FUNCTION check_lights_limit();
+
+-- 1.2 Verificar que el GPIO no esté usado por una bomba (para luces)
+CREATE OR REPLACE FUNCTION check_gpio_not_used_by_pump()
+RETURNS TRIGGER AS $$
+DECLARE
+    pump_exists BOOLEAN;
+BEGIN
+    SELECT EXISTS(
+        SELECT 1 
+        FROM public.pumps 
+        WHERE esp32 = NEW.esp32 AND gpio = NEW.gpio
+    ) INTO pump_exists;
+    
+    IF pump_exists THEN
+        RAISE EXCEPTION 'GPIO % is already used by a pump on ESP32 %. Cannot use the same pin for a light.', NEW.gpio, NEW.esp32;
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_check_gpio_not_used_by_pump
+    BEFORE INSERT OR UPDATE ON public.lights
+    FOR EACH ROW
+    EXECUTE FUNCTION check_gpio_not_used_by_pump();
+
+-- 1.3 Verificar que el GPIO no esté usado por una luz (para bombas - ya tienes, pero asegurar)
+CREATE OR REPLACE FUNCTION check_gpio_not_used_by_light()
+RETURNS TRIGGER AS $$
+DECLARE
+    light_exists BOOLEAN;
+BEGIN
+    SELECT EXISTS(
+        SELECT 1 
+        FROM public.lights 
+        WHERE esp32 = NEW.esp32 AND gpio = NEW.gpio
+    ) INTO light_exists;
+    
+    IF light_exists THEN
+        RAISE EXCEPTION 'GPIO % is already used by a light on ESP32 %. Cannot use the same pin for a pump.', NEW.gpio, NEW.esp32;
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Agregar trigger a pumps si no existe
+DROP TRIGGER IF EXISTS trg_check_gpio_not_used_by_light ON public.pumps;
+CREATE TRIGGER trg_check_gpio_not_used_by_light
+    BEFORE INSERT OR UPDATE ON public.pumps
+    FOR EACH ROW
+    EXECUTE FUNCTION check_gpio_not_used_by_light();
+
+-- 1.4 Validar que la luz pertenezca al mismo sistema que el ESP32
+CREATE OR REPLACE FUNCTION validate_light_esp32_system()
+RETURNS TRIGGER AS $$
+DECLARE
+    esp_system BIGINT;
+BEGIN
+    SELECT system INTO esp_system FROM public.esp32 WHERE id = NEW.esp32;
+    
+    IF esp_system IS NULL THEN
+        RAISE EXCEPTION 'ESP32 not found';
+    END IF;
+    
+    IF esp_system != NEW.system THEN
+        RAISE EXCEPTION 'ESP32 and Light must belong to the same system';
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_validate_light_esp32_system
+    BEFORE INSERT OR UPDATE ON public.lights
+    FOR EACH ROW
+    EXECUTE FUNCTION validate_light_esp32_system();
+
+-- 1.5 Prevenir nombre duplicado para luces (INSERT)
+CREATE OR REPLACE FUNCTION prevent_duplicate_light_name_insert()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM public.lights l
+        WHERE l.system = NEW.system
+          AND l.name = NEW.name
+    ) THEN
+        RAISE EXCEPTION 'Cannot insert: this system already has a light with this name';
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_prevent_duplicate_light_name_insert
+    BEFORE INSERT ON public.lights
+    FOR EACH ROW
+    EXECUTE FUNCTION prevent_duplicate_light_name_insert();
+
+-- 1.6 Prevenir nombre duplicado para luces (UPDATE)
+CREATE OR REPLACE FUNCTION prevent_duplicate_light_name_update()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.name IS DISTINCT FROM OLD.name THEN
+        IF EXISTS (
+            SELECT 1
+            FROM public.lights l
+            WHERE l.system = NEW.system
+              AND l.name = NEW.name
+              AND l.id <> OLD.id
+        ) THEN
+            RAISE EXCEPTION 'Cannot update: this system already has another light with this name';
+        END IF;
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_prevent_duplicate_light_name_update
+    BEFORE UPDATE ON public.lights
+    FOR EACH ROW
+    EXECUTE FUNCTION prevent_duplicate_light_name_update();
+
+
+    
+-- 4. FUNCIÓN para verificar que no hay superposición de horarios
+CREATE OR REPLACE FUNCTION check_light_schedule_overlap()
+RETURNS TRIGGER AS $$
+DECLARE
+    overlapping_schedule RECORD;
+BEGIN
+    -- Buscar si existe alguna programación que se superponga
+    SELECT * INTO overlapping_schedule
+    FROM public.programming_lights
+    WHERE light = NEW.light
+      AND day_of_week = NEW.day_of_week
+      AND id IS DISTINCT FROM NEW.id  -- Excluir la misma programación en caso de UPDATE
+      AND (
+          -- Caso 1: El nuevo horario empieza dentro de otro existente
+          (NEW.start_time >= start_time AND NEW.start_time < end_time)
+          OR
+          -- Caso 2: El nuevo horario termina dentro de otro existente
+          (NEW.end_time > start_time AND NEW.end_time <= end_time)
+          OR
+          -- Caso 3: El nuevo horario envuelve a otro existente
+          (NEW.start_time <= start_time AND NEW.end_time >= end_time)
+      );
+    
+    -- Si encontró superposición, lanzar error
+    IF FOUND THEN
+        RAISE EXCEPTION 'Cannot create/update schedule: Overlaps with existing schedule from % to % on %', 
+            overlapping_schedule.start_time, 
+            overlapping_schedule.end_time,
+            overlapping_schedule.day_of_week;
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- 5. TRIGGER para INSERT y UPDATE
+CREATE TRIGGER trg_check_light_schedule_overlap
+    BEFORE INSERT OR UPDATE ON public.programming_lights
+    FOR EACH ROW
+    EXECUTE FUNCTION check_light_schedule_overlap();
+
+    
+
+
+CREATE OR REPLACE FUNCTION record_light_history()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Solo registrar si realmente cambió el estado de la luz
+    IF NEW.is_active IS DISTINCT FROM OLD.is_active THEN
+        INSERT INTO public.lights_history (light_id, action)
+        VALUES (
+            NEW.light, 
+            CASE WHEN NEW.is_active THEN 1 ELSE 0 END
+        );
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger que se activa cuando se actualiza programming_lights
+CREATE TRIGGER trigger_record_light_history
+    AFTER UPDATE OF is_active ON public.programming_lights
+    FOR EACH ROW
+    EXECUTE FUNCTION record_light_history();

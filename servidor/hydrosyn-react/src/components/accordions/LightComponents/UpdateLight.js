@@ -1,0 +1,316 @@
+// UpdateLight.jsx
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import useTexts from "../../utils/UseTexts";
+import { supabase } from "../../utils/supabaseClient";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import '../../styles/theme.css';
+
+export default function UpdateLight({ systemId, lightList, refresh, error, setError }) {
+    const texts = useTexts();
+    const navigate = useNavigate();
+
+    const [selectedLight, setSelectedLight] = useState("");
+    const [newName, setNewName] = useState("");
+    const [newEsp32, setNewEsp32] = useState("");
+    const [newGpio, setNewGpio] = useState("");
+
+    const [esp32List, setEsp32List] = useState([]);
+    const [usedGpios, setUsedGpios] = useState([]);
+    const [usedGpiosByPumps, setUsedGpiosByPumps] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    // Obtener ESP32 del sistema
+    useEffect(() => {
+        const fetchEsp32List = async () => {
+            const { data } = await supabase
+                .from("esp32")
+                .select("id,name")
+                .eq("system", systemId);
+            setEsp32List(data || []);
+        };
+        fetchEsp32List();
+    }, [systemId]);
+
+    // Cargar datos de la luz seleccionada
+    useEffect(() => {
+        if (!selectedLight) return;
+        const light = lightList.find(l => l.id === selectedLight);
+        if (light) {
+            setNewName(light.name);
+            setNewEsp32(light.esp32?.id || "");
+            setNewGpio(light.gpio || "");
+        }
+    }, [selectedLight, lightList]);
+
+    // Obtener GPIOs usados por otras luces en el ESP32 seleccionado
+    useEffect(() => {
+        if (!newEsp32) {
+            setUsedGpios([]);
+            return;
+        }
+
+        const fetchUsedGpiosByLights = async () => {
+            const { data } = await supabase
+                .from("lights")
+                .select("gpio")
+                .eq("esp32", newEsp32)
+                .neq("id", selectedLight || 0); // Excluir la luz actual
+            setUsedGpios((data || []).map(d => d.gpio));
+        };
+
+        fetchUsedGpiosByLights();
+    }, [newEsp32, selectedLight]);
+
+    // Obtener GPIOs usados por bombas en el ESP32 seleccionado
+    useEffect(() => {
+        if (!newEsp32) {
+            setUsedGpiosByPumps([]);
+            return;
+        }
+
+        const fetchUsedGpiosByPumps = async () => {
+            const { data } = await supabase
+                .from("pumps")
+                .select("gpio")
+                .eq("esp32", newEsp32);
+            setUsedGpiosByPumps((data || []).map(d => d.gpio));
+        };
+
+        fetchUsedGpiosByPumps();
+    }, [newEsp32]);
+
+    // GPIOs disponibles (todos los GPIOs válidos menos los usados)
+    const allGpios = [2, 4, 5, 12, 13, 14, 15, 18, 19, 21, 22, 23, 25, 26, 27, 32, 33];
+    const availableGpios = allGpios.filter(pin =>
+        !usedGpios.includes(pin) && !usedGpiosByPumps.includes(pin)
+    );
+
+    const handleUpdateLight = async (e) => {
+        e.preventDefault();
+        setError("");
+        setLoading(true);
+
+        if (!selectedLight) {
+            setError(texts.selectLight || "Selecciona una luz");
+            setLoading(false);
+            return;
+        }
+
+        const originalLight = lightList.find(l => l.id === selectedLight);
+        if (!originalLight) {
+            setError(texts.selectLight || "Luz no encontrada");
+            setLoading(false);
+            return;
+        }
+
+        // Verificar si hay cambios
+        const hasNameChange = newName && newName !== originalLight.name;
+        const hasEsp32Change = newEsp32 && newEsp32 !== originalLight.esp32?.id;
+        const hasGpioChange = newGpio && newGpio !== originalLight.gpio;
+
+        if (!hasNameChange && !hasEsp32Change && !hasGpioChange) {
+            setError(texts.nothingToUpdate || "No hay cambios para actualizar");
+            setLoading(false);
+            return;
+        }
+
+        try {
+            // 1. Verificar autenticación
+            const { data: sessionData } = await supabase.auth.getSession();
+            if (!sessionData?.session) {
+                navigate("/dashboard", { replace: true });
+                return;
+            }
+            const uid = sessionData.session.user.id;
+
+            // 2. Verificar admin activo
+            const { data: adminData } = await supabase
+                .from("admin_users")
+                .select("*")
+                .eq("user", uid)
+                .eq("is_active", true)
+                .maybeSingle();
+
+            if (!adminData) {
+                navigate("/dashboard", { replace: true });
+                return;
+            }
+
+            // 3. Verificar admin del sistema
+            const { data: systemData } = await supabase
+                .from("systems")
+                .select("*")
+                .eq("id", systemId)
+                .eq("admin", uid)
+                .maybeSingle();
+
+            if (!systemData) {
+                navigate("/dashboard", { replace: true });
+                return;
+            }
+
+            const updates = {};
+
+            // Validar y actualizar nombre
+            if (hasNameChange) {
+                const nameRegex = /^[A-Za-z0-9][A-Za-z0-9_]{1,28}[A-Za-z0-9]$/;
+                if (!nameRegex.test(newName)) {
+                    setError("regexNameLights");
+                    setLoading(false);
+                    return;
+                }
+
+                // Verificar nombre duplicado
+                const { data: existing } = await supabase
+                    .from("lights")
+                    .select("*")
+                    .eq("system", systemId)
+                    .eq("name", newName)
+                    .neq("id", selectedLight);
+
+                if (existing && existing.length > 0) {
+                    setError("repeatNameLights");
+                    setLoading(false);
+                    return;
+                }
+
+                updates.name = newName;
+            }
+
+            // Validar y actualizar ESP32 y GPIO
+            if (hasEsp32Change || hasGpioChange) {
+                const finalEsp32 = newEsp32 || originalLight.esp32?.id;
+                const finalGpio = newGpio || originalLight.gpio;
+
+                // Si cambia el ESP32 o el GPIO, verificar que el GPIO esté disponible
+                if (hasGpioChange || hasEsp32Change) {
+                    // Verificar si el GPIO está usado por otra luz (excluyendo la actual)
+                    const { data: conflictingLight } = await supabase
+                        .from("lights")
+                        .select("*")
+                        .eq("esp32", finalEsp32)
+                        .eq("gpio", finalGpio)
+                        .neq("id", selectedLight)
+                        .maybeSingle();
+
+                    if (conflictingLight) {
+                        setError("gpioUsedByLight");
+                        setLoading(false);
+                        return;
+                    }
+
+                    // Verificar si el GPIO está usado por una bomba
+                    const { data: conflictingPump } = await supabase
+                        .from("pumps")
+                        .select("*")
+                        .eq("esp32", finalEsp32)
+                        .eq("gpio", finalGpio)
+                        .maybeSingle();
+
+                    if (conflictingPump) {
+                        setError("gpioUsedByPump");
+                        setLoading(false);
+                        return;
+                    }
+                }
+
+                updates.esp32 = finalEsp32;
+                updates.gpio = finalGpio;
+            }
+
+            // Actualizar luz
+            const { error: updateError } = await supabase
+                .from("lights")
+                .update(updates)
+                .eq("id", selectedLight)
+                .eq("system", systemId);
+
+            if (updateError) throw updateError;
+
+            // Resetear campos
+            setSelectedLight("");
+            setNewName("");
+            setNewEsp32("");
+            setNewGpio("");
+            refresh();
+
+        } catch (err) {
+            console.error(err);
+            setError(err.message || "Error al actualizar luz");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <h3>{texts.updateLight || "Actualizar Luz"}</h3>
+            </AccordionSummary>
+            <AccordionDetails>
+                <form onSubmit={handleUpdateLight} className='form-container'>
+                    <label htmlFor="select-light">{texts.selectLight || "Seleccionar Luz"}</label>
+                    <select
+                        id="select-light"
+                        value={selectedLight || ''}
+                        onChange={(e) => setSelectedLight(Number(e.target.value))}
+                    >
+                        <option value='' disabled>{texts.selectLight || "Seleccionar Luz"}</option>
+                        {lightList.map(l => (
+                            <option key={l.id} value={l.id}>
+                                {l.name}
+                            </option>
+                        ))}
+                    </select>
+
+                    <label>{texts.newName || "Nuevo Nombre"}</label>
+                    <input
+                        type="text"
+                        value={newName}
+                        onChange={(e) => setNewName(e.target.value)}
+                        placeholder={texts.newName || "Nuevo nombre"}
+                        minLength={3}
+                        maxLength={30}
+                    />
+
+                    <label>{texts.esp32 || "ESP32"}</label>
+                    <select
+                        value={newEsp32 || ''}
+                        onChange={(e) => setNewEsp32(Number(e.target.value))}
+                        disabled={!selectedLight}
+                    >
+                        <option value="">{texts.noChange || "Sin cambios"}</option>
+                        {esp32List.map(esp => (
+                            <option key={esp.id} value={esp.id}>
+                                {esp.name}
+                            </option>
+                        ))}
+                    </select>
+
+                    <label>{texts.GPIO || "GPIO"}</label>
+                    <select
+                        value={newGpio || ''}
+                        onChange={(e) => setNewGpio(Number(e.target.value))}
+                        disabled={!selectedLight}
+                    >
+                        <option value="">{texts.noChange || "Sin cambios"}</option>
+                        {availableGpios.map(pin => (
+                            <option key={pin} value={pin}>
+                                {pin}
+                            </option>
+                        ))}
+                    </select>
+
+                    <button type="submit" disabled={loading || !selectedLight}>
+                        {loading ? texts.updating : texts.update}
+                    </button>
+                </form>
+                {error && <p style={{ color: 'red' }}>{texts[error] || error}</p>}
+            </AccordionDetails>
+        </Accordion>
+    );
+}

@@ -239,3 +239,39 @@ CREATE TABLE public.executions_pumps (
 -- luces
 
 
+-- 1. Tabla de luces (sin is_active, con límite de 6 luces por sistema)
+CREATE TABLE public.lights (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+    name TEXT NOT NULL CHECK (name ~ '^[A-Za-z0-9][A-Za-z0-9_]{1,28}[A-Za-z0-9]$'::text),
+    esp32 BIGINT NOT NULL,
+    gpio INTEGER NOT NULL CHECK (gpio IN (2,4,5,12,13,14,15,18,19,21,22,23,25,26,27,32,33)),
+    system BIGINT NOT NULL,
+    CONSTRAINT lights_system_fkey FOREIGN KEY (system) REFERENCES public.systems(id) ON DELETE restrict ON UPDATE CASCADE,
+    CONSTRAINT lights_esp32_fkey FOREIGN KEY (esp32) REFERENCES public.esp32(id) ON DELETE restrict ON UPDATE CASCADE,
+    CONSTRAINT unique_esp32_gpio_lights UNIQUE (esp32, gpio)
+);
+
+
+-- 2. Crear la tabla con las restricciones necesarias
+CREATE TABLE public.programming_lights (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+    light BIGINT NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    day_of_week day_of_week NOT NULL,
+    is_active BOOLEAN DEFAULT false,
+    CONSTRAINT programming_lights_light_fkey FOREIGN KEY (light) REFERENCES public.lights(id) ON DELETE restrict ON UPDATE CASCADE,
+    CONSTRAINT valid_time_range CHECK (end_time > start_time)
+);
+
+CREATE TABLE public.lights_history (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    light_id BIGINT NOT NULL,
+    action SMALLINT NOT NULL,                -- 0 = apagado, 1 = encendido
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+    
+    CONSTRAINT lights_history_light_fkey FOREIGN KEY (light_id) REFERENCES public.lights(id) ON DELETE restrict ON UPDATE CASCADE,
+    CONSTRAINT valid_action CHECK (action IN (0, 1))
+);
