@@ -19,6 +19,7 @@ import { supabase } from '../utils/supabaseClient';
 import { useRoleSystem } from "../utils/RoleSystemContext";
 import TanksAccordion from './accordions/TanksAccordion';
 import PumpsAccordion from './accordions/PumpsAccordion';
+import LightAccordion from './accordions/LightAccordion';
 
 import RecordsAccordion from './accordions/RecordsAccordion';
 
@@ -83,11 +84,13 @@ export default function System() {
             { value: "esp32", label: texts.esp32, icon: <MemoryIcon />, component: ESP32Accordion },
             { value: "settings", label: texts.systemSettings, icon: <SettingsIcon />, component: SettingsAccordion },
             { value: "pumps", label: texts.pumps, icon: <BuildIcon />, component: PumpsAccordion },
+            { value: "lights", label: texts.lights, icon: <LightbulbIcon />, component: LightAccordion },
             { value: "records", label: texts.records, icon: <HistoryIcon />, component: RecordsAccordion }
         ],
         member: [
             { value: "records", label: texts.records, icon: <HistoryIcon />, component: RecordsAccordion },
-            { value: "pumps", label: texts.pumps, icon: <BuildIcon />, component: PumpsAccordion }
+            { value: "pumps", label: texts.pumps, icon: <BuildIcon />, component: PumpsAccordion },
+            { value: "lights", label: texts.lights, icon: <LightbulbIcon />, component: LightAccordion }
         ]
     };
 
