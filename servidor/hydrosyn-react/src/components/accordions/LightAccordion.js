@@ -8,12 +8,8 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import '../../styles/theme.css';
-import CreateLight from './CreateLight';
-import UpdateLight from './UpdateLight';
-import DeleteLight from './DeleteLight';
-import ControlLight from './ControlLight';
-import ProgrammingLight from './ProgrammingLight';
-import ListRecordsLights from './ListRecordsLights';
+
+
 import { useState, useEffect } from "react";
 import { supabase } from "../../utils/supabaseClient";
 import { useRoleSystem } from "../../utils/RoleSystemContext";
