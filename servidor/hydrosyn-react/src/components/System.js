@@ -30,7 +30,7 @@ import {
     Paper
 } from '@mui/material';
 
-// Importaciones de iconos que faltaban
+
 import WaterIcon from '@mui/icons-material/Water';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import PeopleIcon from '@mui/icons-material/People';
@@ -38,6 +38,7 @@ import MemoryIcon from '@mui/icons-material/Memory';
 import SettingsIcon from '@mui/icons-material/Settings';
 import BuildIcon from '@mui/icons-material/Build';
 import HistoryIcon from '@mui/icons-material/History';
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
 
 
 export default function System() {
