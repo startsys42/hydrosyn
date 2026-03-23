@@ -17,6 +17,13 @@ import ListRecordsLights from './ListRecordsLights';
 import { useState, useEffect } from "react";
 import { supabase } from "../../utils/supabaseClient";
 import { useRoleSystem } from "../../utils/RoleSystemContext";
+import { useLanguage } from '../../utils/LanguageContext';
+import CreateLight from '../LightComponents/CreateLight';
+import DeleteLight from '../LightComponents/DeleteLight';
+import UpdateLight from '../LightComponents/UpdateLight';
+import ProgrammingLight from '../LightComponents/ProgrammingLight';
+import ListRecordsLights from '../LightComponents/ListRecordsLights';
+
 
 export default function LightAccordion({ systemId }) {
     const navigate = useNavigate();
@@ -171,21 +178,7 @@ export default function LightAccordion({ systemId }) {
                 </>
             )}
 
-            {/* Control manual de luces */}
-            <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography>{texts.controlLights || "Control de Luces"}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <ControlLight
-                        systemId={systemId}
-                        lightList={lightList}
-                        refresh={fetchLights}
-                        error={errors.control}
-                        setError={(msg) => setComponentError("control", msg)}
-                    />
-                </AccordionDetails>
-            </Accordion>
+
 
             {/* Programación de luces */}
             {role === 'owner' && (
