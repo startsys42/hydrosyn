@@ -125,7 +125,11 @@ export default function System() {
     const handleTabChange = (event, newValue) => {
         setSelectedTab(newValue);
     };
-
+    useEffect(() => {
+        if (tabs.length > 0) {
+            setSelectedTab(0);
+        }
+    }, [role]);
     // Redirigir si no hay acceso
     useEffect(() => {
         if (!loadingSystem && !roleLoading) {
