@@ -154,7 +154,7 @@ export default function CreateProgrammingLight({
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <h3>{texts.createProgramming || "Crear Programación de Luz"}</h3>
+                <h3>{texts.createProgrammingLight}</h3>
             </AccordionSummary>
             <AccordionDetails>
                 <Button
