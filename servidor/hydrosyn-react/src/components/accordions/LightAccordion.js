@@ -17,7 +17,10 @@ import { useLanguage } from '../../utils/LanguageContext';
 import CreateLight from '../LightComponents/CreateLight';
 import DeleteLight from '../LightComponents/DeleteLight';
 import UpdateLight from '../LightComponents/UpdateLight';
-import ProgrammingLight from '../LightComponents/ProgrammingLight';
+import CreateProgrammingLight from '../LightComponents/CreateProgrammingLight';
+import UpdateProgrammingLight from '../LightComponents/UpdateProgrammingLight';
+import ListProgrammingLights from '../LightComponents/ListProgrammingLights';
+
 import ListRecordsLights from '../LightComponents/ListRecordsLights';
 
 
@@ -177,24 +180,35 @@ export default function LightAccordion({ systemId }) {
                         setError={(msg) => setComponentError("delete", msg)}
                     />
 
+                    <CreateProgrammingLight
+                        lightList={lightList}
+                        programmingList={programmingList}
+                        refresh={fetchProgrammingList}
+                        error={errors.program}
+                        setError={(msg) => setComponentError("program", msg)}
+                    />
+
+                    <UpdateProgrammingLight
+                        lightList={lightList}
+                        programmingList={programmingList}
+                        refresh={fetchProgrammingList}
+                        error={errors.programUpdate}
+                        setError={(msg) => setComponentError("programUpdate", msg)}
+                    />
+
                 </>
             )}
 
 
 
-            {/* Programación de luces 
-            {role === 'owner' && (
-                <ProgrammingLight
-                    systemId={systemId}
-                    lightList={lightList}
-                    programmingList={programmingList}
-                    refresh={fetchProgrammingList}
-                    error={errors.program}
-                    setError={(msg) => setComponentError("program", msg)}
-                />
-            )}
-*/}
-            {/* Historial de luces */}
+            <ListProgrammingLights
+                lightList={lightList}
+                programmingList={programmingList}
+                refresh={fetchProgrammingList}
+                error={errors.programList}
+                setError={(msg) => setComponentError("programList", msg)}
+                userRole={role}
+            />
 
             <ListRecordsLights
                 systemId={systemId}
