@@ -29,8 +29,7 @@ import CalibratePump from '../PumpComponents/CalibratePump';
 import ListCalibration from '../PumpComponents/ListCalibration';
 import ListRecordsPump from '../PumpComponents/ListRecordsPump';
 import InsertPumping from '../PumpComponents/InsertPumping';
-import ProgrammingPump from '../PumpComponents/ProgrammingPump';
-import CalendarPump from '../PumpComponents/CalendarPump';
+
 import ListCalibrate from '../PumpComponents/ListCalibrate';
 import CreateProgrammingPump from '../PumpComponents/CreateProgrammingPump';
 import UpdateProgrammingPump from '../PumpComponents/UpdateProgrammingPump';
