@@ -5,15 +5,6 @@ import { useNavigate } from "react-router-dom";
 import '../../styles/theme.css';
 import useTexts from "../../utils/UseTexts";
 
-const DAYS = [
-    { value: "monday", label: texts.dayMonday },
-    { value: "tuesday", label: texts.dayTuesday },
-    { value: "wednesday", label: texts.dayWednesday },
-    { value: "thursday", label: texts.dayThursday },
-    { value: "friday", label: texts.dayFriday },
-    { value: "saturday", label: texts.daySaturday },
-    { value: "sunday", label: texts.daySunday },
-];
 
 export default function UpdateProgrammingPump({ pumpList, programmingList, refresh, error, setError }) {
     const texts = useTexts();
@@ -27,6 +18,16 @@ export default function UpdateProgrammingPump({ pumpList, programmingList, refre
         clock: "12:00",
         volume: 0,
     });
+
+    const DAYS = [
+        { value: "monday", label: texts.dayMonday },
+        { value: "tuesday", label: texts.dayTuesday },
+        { value: "wednesday", label: texts.dayWednesday },
+        { value: "thursday", label: texts.dayThursday },
+        { value: "friday", label: texts.dayFriday },
+        { value: "saturday", label: texts.daySaturday },
+        { value: "sunday", label: texts.daySunday },
+    ];
 
     // Actualiza formData al seleccionar una programación
     useEffect(() => {
