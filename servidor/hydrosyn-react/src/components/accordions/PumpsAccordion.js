@@ -32,6 +32,9 @@ import InsertPumping from '../PumpComponents/InsertPumping';
 import ProgrammingPump from '../PumpComponents/ProgrammingPump';
 import CalendarPump from '../PumpComponents/CalendarPump';
 import ListCalibrate from '../PumpComponents/ListCalibrate';
+import CreateProgrammingPump from '../PumpComponents/CreateProgrammingPump';
+import UpdateProgrammingPump from '../PumpComponents/UpdateProgrammingPump';
+import ListProgrammingPumps from '../PumpComponents/ListProgrammingPumps';
 
 
 export default function PumpsAccordion({ systemId }) {
@@ -442,31 +445,35 @@ export default function PumpsAccordion({ systemId }) {
                 />
 
 
-
                 {role === 'owner' && (
                     <>
-                        <ProgrammingPump
-
-                            systemId={systemId}
+                        <CreateProgrammingPump
+                            pumpList={pumpList}
                             programmingList={programmingList}
                             refresh={fetchProgrammingList}
-                            error={errors.program}  // ← Error específico para registros de bombas
+                            error={errors.program}
                             setError={(msg) => setComponentError("program", msg)}
+                        />
 
+                        <UpdateProgrammingPump
+                            pumpList={pumpList}
+                            programmingList={programmingList}
+                            refresh={fetchProgrammingList}
+                            error={errors.programUpdate}
+                            setError={(msg) => setComponentError("programUpdate", msg)}
                         />
                     </>
                 )}
 
-                {/*}
-                <CalendarPump
-                    systemId={systemId}
-                    calibrateList={calibrateList}
-                    calibrationList={calibrationList}
-                    recordPumpList={recordPumpList}
+                <ListProgrammingPumps
+                    pumpList={pumpList}
+                    programmingList={programmingList}
+                    refresh={fetchProgrammingList}
+                    error={errors.programList}
+                    setError={(msg) => setComponentError("programList", msg)}
+                    userRole={role}
+                />
 
-
-                    loading={loading} />
-                */}
             </div>
 
 

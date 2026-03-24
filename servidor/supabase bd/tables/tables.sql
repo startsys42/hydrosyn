@@ -123,7 +123,9 @@ CREATE TABLE public.pumps (
   ON UPDATE CASCADE,
   CONSTRAINT bombs_origin_fkey FOREIGN KEY (origin) REFERENCES public.tanks(id)  ON DELETE RESTRICT
   ON UPDATE CASCADE,
-  CONSTRAINT unique_esp32_gpio UNIQUE (esp32, gpio) 
+  CONSTRAINT unique_esp32_gpio UNIQUE (esp32, gpio) ,
+  
+    CONSTRAINT different_tanks CHECK (origin != destination)
 );
 
 

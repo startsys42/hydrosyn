@@ -473,7 +473,7 @@ BEGIN
   IF NEW.name IS DISTINCT FROM OLD.name THEN
     IF EXISTS (
       SELECT 1
-      FROM public.pump p
+      FROM public.pumps p
       WHERE p.system = NEW.system
         AND p.name = NEW.name
         AND p.id <> OLD.id
@@ -769,3 +769,57 @@ CREATE TRIGGER trigger_record_light_history
     AFTER UPDATE OF is_active ON public.programming_lights
     FOR EACH ROW
     EXECUTE FUNCTION record_light_history();
+
+    CREATE OR REPLACE FUNCTION check_lights_limit_update()
+RETURNS TRIGGER AS $$
+DECLARE
+    light_count INTEGER;
+BEGIN
+    -- Si cambia el sistema, verificar límite en el nuevo sistema
+    IF NEW.system IS DISTINCT FROM OLD.system THEN
+        SELECT COUNT(*) INTO light_count
+        FROM public.lights
+        WHERE system = NEW.system;
+        
+        IF light_count >= 6 THEN
+            RAISE EXCEPTION 'Each system can only have a maximum of 6 lights. Currently has % lights.', light_count;
+        END IF;
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_check_lights_limit_update
+    BEFORE UPDATE ON public.lights
+    FOR EACH ROW
+    EXECUTE FUNCTION check_lights_limit_update();
+
+
+    CREATE OR REPLACE FUNCTION validate_pump_tanks_system()
+RETURNS TRIGGER AS $$
+DECLARE
+    origin_system BIGINT;
+    dest_system BIGINT;
+BEGIN
+    -- Obtener sistema del tanque origen
+    SELECT system INTO origin_system FROM tanks WHERE id = NEW.origin;
+    -- Obtener sistema del tanque destino
+    SELECT system INTO dest_system FROM tanks WHERE id = NEW.destination;
+    
+    IF origin_system IS NULL OR dest_system IS NULL THEN
+        RAISE EXCEPTION 'Tank not found';
+    END IF;
+    
+    IF origin_system != NEW.system OR dest_system != NEW.system THEN
+        RAISE EXCEPTION 'Both tanks must belong to the same system as the pump';
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_validate_pump_tanks_system
+    BEFORE INSERT OR UPDATE ON public.pumps
+    FOR EACH ROW
+    EXECUTE FUNCTION validate_pump_tanks_system();
