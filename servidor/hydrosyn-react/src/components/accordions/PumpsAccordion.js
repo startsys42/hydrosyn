@@ -60,6 +60,8 @@ export default function PumpsAccordion({ systemId }) {
         calibration: "",
         record: "",
         program: "",
+        programUpdate: "",
+        programList: "",
         calibrateList: "",
         calibrationList: "",
         recordList: ""
@@ -74,6 +76,8 @@ export default function PumpsAccordion({ systemId }) {
             calibration: "",
             record: "",
             program: "",
+            programUpdate: "",
+            programList: "",
             calibrateList: "",
             calibrationList: "",
             recordList: "",
@@ -121,7 +125,7 @@ export default function PumpsAccordion({ systemId }) {
     };
     const fetchPumps = async () => {
         setLoading(true);
-        setErrors({ create: "", update: "", delete: "", calibrate: "", calibration: "", record: "", program: "", calibrateList: "", calibrationList: "" });
+        setErrors({ create: "", update: "", delete: "", calibrate: "", calibration: "", record: "", program: "", calibrateList: "", calibrationList: "", recordList: "", programList: "", programUpdate: "" });
         try {
 
             const { data, error } = await supabase.rpc('get_pumps_for_system', {
@@ -145,14 +149,14 @@ export default function PumpsAccordion({ systemId }) {
             setPumpList(formatted);
         } catch (err) {
             console.error(err);
-            setErrors({ create: err.message || "Error", update: err.message || "Error", delete: err.message || "Error", calibrate: err.message || "Error", calibration: err.message || "Error", record: err.message || "Error", program: err.message || "Error", calibrateList: err.message || "Error", calibrationList: err.message || "Error" });
+            setErrors({ create: err.message || "Error", update: err.message || "Error", delete: err.message || "Error", calibrate: err.message || "Error", calibration: err.message || "Error", record: err.message || "Error", program: err.message || "Error", calibrateList: err.message || "Error", calibrationList: err.message || "Error", recordList: err.message || "Error", programList: err.message || "Error", programUpdate: err.message || "Error" });
         } finally {
             setLoading(false);
         }
     };
     const fetchCalibrateList = async () => {
         setLoading(true);
-        setErrors({ create: "", update: "", delete: "", calibrate: "", calibration: "", record: "", program: "", calibrateList: "", calibrationList: "" });
+        setErrors({ create: "", update: "", delete: "", calibrate: "", calibration: "", record: "", program: "", calibrateList: "", calibrationList: "", recordList: "", programList: "", programUpdate: "" });
 
         try {
 
@@ -166,7 +170,7 @@ export default function PumpsAccordion({ systemId }) {
 
             setCalibrateList(data || []);
         } catch (err) {
-            setErrors({ create: err.message || "Error", update: err.message || "Error", delete: err.message || "Error", calibrate: err.message || "Error", calibration: err.message || "Error", record: err.message || "Error", program: err.message || "Error", calibrateList: err.message || "Error", calibrationList: "" });
+            setErrors({ create: err.message || "Error", update: err.message || "Error", delete: err.message || "Error", calibrate: err.message || "Error", calibration: err.message || "Error", record: err.message || "Error", program: err.message || "Error", calibrateList: err.message || "Error", calibrationList: err.message || "Error", recordList: err.message || "Error", programList: err.message || "Error", programUpdate: err.message || "Error" });
         }
         finally {
             setLoading(false);
@@ -175,7 +179,7 @@ export default function PumpsAccordion({ systemId }) {
     const fetchCalibrationList = async () => {
 
         setLoading(true);
-        setErrors({ create: "", update: "", delete: "", calibrate: "", calibration: "", record: "", program: "", calibrateList: "", calibrationList: "" });
+        setErrors({ create: "", update: "", delete: "", calibrate: "", calibration: "", record: "", program: "", calibrateList: "", calibrationList: "", recordList: "", programList: "", programUpdate: "" });
 
         try {
 
@@ -191,7 +195,7 @@ export default function PumpsAccordion({ systemId }) {
 
 
         } catch (err) {
-            setErrors({ create: err.message || "Error", update: err.message || "Error", delete: err.message || "Error", calibrate: err.message || "Error", calibration: err.message || "Error", record: err.message || "Error", program: err.message || "Error", calibrateList: err.message || "Error", calibrationList: err.message || "Error" });
+            setErrors({ create: err.message || "Error", update: err.message || "Error", delete: err.message || "Error", calibrate: err.message || "Error", calibration: err.message || "Error", record: err.message || "Error", program: err.message || "Error", calibrateList: err.message || "Error", calibrationList: err.message || "Error", recordList: err.message || "Error", programList: err.message || "Error", programUpdate: err.message || "Error" });
 
         }
         finally {
