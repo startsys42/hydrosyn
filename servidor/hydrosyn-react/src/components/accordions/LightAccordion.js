@@ -159,7 +159,7 @@ export default function LightAccordion({ systemId }) {
                         error={errors.create}
                         setError={(msg) => setComponentError("create", msg)}
                     />
-
+ */}
                     <UpdateLight
                         systemId={systemId}
                         lightList={lightList}
@@ -167,7 +167,7 @@ export default function LightAccordion({ systemId }) {
                         error={errors.update}
                         setError={(msg) => setComponentError("update", msg)}
                     />
- */}
+
                     <DeleteLight
                         systemId={systemId}
                         lightList={lightList}
