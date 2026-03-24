@@ -19,7 +19,7 @@ import DeleteLight from '../LightComponents/DeleteLight';
 import UpdateLight from '../LightComponents/UpdateLight';
 import CreateProgrammingLight from '../LightComponents/CreateProgrammingLight';
 import UpdateProgrammingLight from '../LightComponents/UpdateProgrammingLight';
-import ListProgrammingLights from '../LightComponents/ListProgrammingLight';
+import ListProgrammingLights from '../LightComponents/ListProgrammingLights';
 
 import ListRecordsLights from '../LightComponents/ListRecordsLights';
 
