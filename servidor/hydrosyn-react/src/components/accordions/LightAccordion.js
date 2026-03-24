@@ -34,7 +34,7 @@ export default function LightAccordion({ systemId }) {
         create: "",
         update: "",
         delete: "",
-        control: "",
+
         program: "",
         records: ""
     });
@@ -44,7 +44,7 @@ export default function LightAccordion({ systemId }) {
             create: "",
             update: "",
             delete: "",
-            control: "",
+
             program: "",
             records: "",
             [component]: msg
@@ -142,7 +142,7 @@ export default function LightAccordion({ systemId }) {
     return (
         <div style={{ maxWidth: 800 }}>
             <h2 style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <LightbulbIcon /> {texts.lights || "Luces"}
+                <LightbulbIcon /> {texts.lights}
             </h2>
 
             {role === 'owner' && (
@@ -191,6 +191,7 @@ export default function LightAccordion({ systemId }) {
             {/* Historial de luces */}
             <ListRecordsLights
                 systemId={systemId}
+                currentUserId={currentUserId}
                 refresh={fetchRecordsLights}  // ✅ Necesitas crear esta función
                 userRole={role}                // ✅ Pasar el rol
                 error={errors.records}         // ✅ Pasar el error
