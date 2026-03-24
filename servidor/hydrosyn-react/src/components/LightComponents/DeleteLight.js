@@ -69,20 +69,7 @@ export default function DeleteLight({ systemId, lightList, refresh, loading, err
                 return;
             }
 
-            // 4. Verificar que la luz no tenga programaciones activas
-            const { data: programmingCheck, error: programmingError } = await supabase
-                .from("programming_lights")
-                .select("id")
-                .eq("light", selectedLight.id)
-                .limit(1);
 
-            if (programmingError) throw programmingError;
-
-            if (programmingCheck && programmingCheck.length > 0) {
-                setError(texts.lightHasProgramming || "No se puede eliminar: esta luz tiene programaciones asociadas");
-                handleCloseDialog();
-                return;
-            }
 
             // 5. Eliminar la luz
             const { error } = await supabase
@@ -98,8 +85,8 @@ export default function DeleteLight({ systemId, lightList, refresh, loading, err
             handleCloseDialog();
 
         } catch (err) {
-            console.error("Error deleting light:", err);
-            setError(err.message || "Error al eliminar luz");
+
+            setError("Error" || err.message);
             handleCloseDialog();
         }
     };
@@ -107,22 +94,22 @@ export default function DeleteLight({ systemId, lightList, refresh, loading, err
     const columns = [
         {
             field: "name",
-            headerName: texts.lights || "Luz",
+            headerName: texts.lights,
             width: 200
         },
         {
             field: "esp32Name",
-            headerName: texts.esp32 || "ESP32",
+            headerName: texts.esp32,
             width: 150
         },
         {
             field: "gpio",
-            headerName: texts.GPIO || "GPIO",
+            headerName: texts.GPIO,
             width: 100
         },
         {
             field: "delete",
-            headerName: texts.delete || "Eliminar",
+            headerName: texts.delete,
             width: 120,
             sortable: false,
             disableColumnMenu: true,
@@ -150,7 +137,7 @@ export default function DeleteLight({ systemId, lightList, refresh, loading, err
         <>
             <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <h3>{texts.removeLight || "Eliminar Luz"}</h3>
+                    <h3>{texts.removeLight}</h3>
                 </AccordionSummary>
                 <AccordionDetails>
                     <div style={{ height: 400, width: '100%' }}>

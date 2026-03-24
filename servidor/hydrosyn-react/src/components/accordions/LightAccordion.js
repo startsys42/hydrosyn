@@ -151,7 +151,7 @@ export default function LightAccordion({ systemId }) {
 
             {role === 'owner' && (
                 <>
-                    {/*
+
                     <CreateLight
                         systemId={systemId}
                         lightList={lightList}
@@ -159,7 +159,7 @@ export default function LightAccordion({ systemId }) {
                         error={errors.create}
                         setError={(msg) => setComponentError("create", msg)}
                     />
- */}
+
                     <UpdateLight
                         systemId={systemId}
                         lightList={lightList}
