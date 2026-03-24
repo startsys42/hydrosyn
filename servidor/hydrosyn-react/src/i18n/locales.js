@@ -5,6 +5,18 @@ import ListRecordsPump from "../components/PumpComponents/ListRecordsPump";
 
 const texts = {
     es: {
+        dayMonday: "Lunes",
+        dayTuesday: "Martes",
+        dayWednesday: "Miércoles",
+        dayThursday: "Jueves",
+        dayFriday: "Viernes",
+        daySaturday: "Sábado",
+        daySunday: "Domingo",
+        time: "Hora",
+        createProgramming: "Crear programación",
+        days: "Selecciona el día",
+        createProgrammingPump: "Crear programador de bomba",
+        createProgrammingLight: "Crear programador de luz",
         calibrate: "Calibrar",
         saveCalibration: "Guardar calibración",
         createPumping: "Crear bombeo manual",
@@ -242,6 +254,19 @@ const texts = {
 
     },
     en: {
+        dayMonday: "Monday",
+        dayTuesday: "Tuesday",
+        dayWednesday: "Wednesday",
+        dayThursday: "Thursday",
+        dayFriday: "Friday",
+        daySaturday: "Saturday",
+        daySunday: "Sunday",
+
+        time: "Time",
+        createProgramming: "Create programming",
+        days: "Select the day",
+        createProgrammingPump: "Create pump programming",
+        createProgrammingLight: "Create light programming",
         calibrate: "Calibrate",
         saveCalibration: "Save calibration",
         createPumping: "Create manual pumping",
