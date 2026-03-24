@@ -196,7 +196,7 @@ export default function LightAccordion({ systemId }) {
             )}
 */}
             {/* Historial de luces */}
-
+            {/*}
             <ListRecordsLights
                 systemId={systemId}
                 currentUserId={currentUserId}
@@ -205,7 +205,7 @@ export default function LightAccordion({ systemId }) {
                 error={errors.records}         // ✅ Pasar el error
                 setError={(msg) => setComponentError("records", msg)}  // ✅ Pasar setError
             />
-
+*/}
         </div>
     );
 }
