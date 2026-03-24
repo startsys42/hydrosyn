@@ -183,7 +183,7 @@ export default function LightAccordion({ systemId }) {
 
 
 
-            {/* Programación de luces */}
+            {/* Programación de luces 
             {role === 'owner' && (
                 <ProgrammingLight
                     systemId={systemId}
@@ -194,7 +194,7 @@ export default function LightAccordion({ systemId }) {
                     setError={(msg) => setComponentError("program", msg)}
                 />
             )}
-
+*/}
             {/* Historial de luces */}
 
             <ListRecordsLights
