@@ -308,7 +308,7 @@ export default function PumpsAccordion({ systemId }) {
                     filter: `system_id=eq.${systemId}`
                 },
                 (payload) => {
-                    console.log("🔄 Cambio en calibrations:", payload);
+
                     fetchCalibrationList();
                 }
             )
@@ -325,7 +325,7 @@ export default function PumpsAccordion({ systemId }) {
                     table: 'records_pumps'
                 },
                 (payload) => {
-                    console.log("🔄 Cambio en records:", payload);
+
                     fetchRecordsPump();
                 }
             )

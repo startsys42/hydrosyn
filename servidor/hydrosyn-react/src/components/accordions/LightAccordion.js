@@ -146,8 +146,7 @@ export default function LightAccordion({ systemId }) {
 
     return (
         <div style={{ maxWidth: 800 }}>
-            <h2 style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <LightbulbIcon /> {texts.lights}
+            <h2> {texts.lights}
             </h2>
 
             {role === 'owner' && (
@@ -168,7 +167,7 @@ export default function LightAccordion({ systemId }) {
                         error={errors.update}
                         setError={(msg) => setComponentError("update", msg)}
                     />
-
+ */}
                     <DeleteLight
                         systemId={systemId}
                         lightList={lightList}
@@ -177,7 +176,7 @@ export default function LightAccordion({ systemId }) {
                         error={errors.delete}
                         setError={(msg) => setComponentError("delete", msg)}
                     />
-                    */}
+
                 </>
             )}
 
@@ -196,7 +195,7 @@ export default function LightAccordion({ systemId }) {
             )}
 */}
             {/* Historial de luces */}
-            {/*}
+
             <ListRecordsLights
                 systemId={systemId}
                 currentUserId={currentUserId}
@@ -205,7 +204,7 @@ export default function LightAccordion({ systemId }) {
                 error={errors.records}         // ✅ Pasar el error
                 setError={(msg) => setComponentError("records", msg)}  // ✅ Pasar setError
             />
-*/}
+
         </div>
     );
 }
