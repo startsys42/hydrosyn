@@ -139,6 +139,11 @@ export default function LightAccordion({ systemId }) {
         };
     }, [currentUserId, systemId]);
 
+    console.log("DEBUG:", {
+        systemId,
+        currentUserId
+    });
+
     return (
         <div style={{ maxWidth: 800 }}>
             <h2 style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
