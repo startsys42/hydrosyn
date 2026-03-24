@@ -1,4 +1,3 @@
-// LightComponents/CreateProgrammingLight.jsx
 import { useState } from "react";
 import { supabase } from "../../utils/supabaseClient";
 import {
@@ -19,7 +18,8 @@ import {
     Alert,
     Switch,
     FormControlLabel,
-} from "@mui/material";m "@mui/icons-material/ExpandMore";
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Add as AddIcon } from "@mui/icons-material";
 import useTexts from "../../utils/UseTexts";
 import { useNavigate } from "react-router-dom";
