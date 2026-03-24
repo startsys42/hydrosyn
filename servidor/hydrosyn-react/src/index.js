@@ -14,17 +14,17 @@ import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/st
 import { esES } from '@mui/x-data-grid/locales';
 import { enUS } from '@mui/x-data-grid/locales';
 
-// 🔥 Componente que usa el idioma para MUI
+//  Componente que usa el idioma para MUI
 function AppWithMuiTheme() {
     const { language } = useLanguage();
 
-    // 👇 useMemo hace que se re-calcule CADA VEZ que language cambie
+    //  useMemo hace que se re-calcule CADA VEZ que language cambie
     const muiTheme = React.useMemo(
         () => createTheme({}, language === 'es' ? esES : enUS),
-        [language] // ← ESTA ES LA CLAVE - depende de language
+        [language]
     );
 
-    console.log('Tema MUI actualizado:', language); // Para ver cuándo cambia
+
 
     return (
         <MuiThemeProvider theme={muiTheme}>
@@ -42,7 +42,7 @@ root.render(
                 <Router>
                     <AdminProvider>
                         <OwnerProvider>
-                            <AppWithMuiTheme />  {/* 🔥 ESTE ENVUELVE App con MUI */}
+                            <AppWithMuiTheme />
                             {/*<App />*/}
                         </OwnerProvider>
                     </AdminProvider>
@@ -54,7 +54,5 @@ root.render(
     </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+
 reportWebVitals();
