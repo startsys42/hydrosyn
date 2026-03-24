@@ -60,9 +60,9 @@ export default function LightAccordion({ systemId }) {
     }, []);
 
     useEffect(() => {
-        if (!currentUserId) return;
+        if (!currentUserId || !systemId) return;
         fetchLights();
-    }, [currentUserId]);
+    }, [currentUserId, systemId]);
 
     useEffect(() => {
         if (!currentUserId || !systemId) return;
@@ -189,7 +189,7 @@ export default function LightAccordion({ systemId }) {
             )}
 
             {/* Historial de luces */}
-            {/*}
+
             <ListRecordsLights
                 systemId={systemId}
                 currentUserId={currentUserId}
@@ -198,7 +198,7 @@ export default function LightAccordion({ systemId }) {
                 error={errors.records}         // ✅ Pasar el error
                 setError={(msg) => setComponentError("records", msg)}  // ✅ Pasar setError
             />
-            */}
+
         </div>
     );
 }
