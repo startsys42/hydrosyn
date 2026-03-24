@@ -139,7 +139,7 @@ export default function DeleteLight({ systemId, lightList, refresh, loading, err
     ];
 
     // DataGrid necesita que cada fila tenga id único
-    const rows = lightList.map((light) => ({
+    const rows = (lightList || []).map((light) => ({
         id: light.id,
         name: light.name,
         esp32Name: light.esp32?.name || "-",
