@@ -139,11 +139,11 @@ export default function UpdateProgrammingPump({
             <AccordionDetails>
                 <form onSubmit={handleSubmit} className="form-container">
 
-                    {error && <p style={{ color: "red" }}>{texts[error] || error}</p>}
 
-                    <label>{texts.selectProgramming}</label>
+
+                    <label>{texts.selectProgrammingPump}</label>
                     <select value={selectedProgramming} onChange={(e) => setSelectedProgramming(Number(e.target.value))}>
-                        <option value="" disabled>{texts.selectProgramming}</option>
+                        <option value="" disabled>{texts.selectProgrammingPump}</option>
                         {programmingList.map(p => (
                             <option key={p.id} value={p.id}>
                                 {getProgrammingLabel(p)}
@@ -165,7 +165,7 @@ export default function UpdateProgrammingPump({
                             ))}
                         </select>
 
-                        <label>{texts.day}</label>
+                        <label>{texts.days}</label>
                         <select
                             value={formData.day_of_week}
                             onChange={(e) => setFormData({ ...formData, day_of_week: e.target.value })}
@@ -175,7 +175,7 @@ export default function UpdateProgrammingPump({
                             ))}
                         </select>
 
-                        <label>{texts.hour}</label>
+                        <label>{texts.time}</label>
                         <input
                             type="time"
                             value={formData.clock}
@@ -185,6 +185,9 @@ export default function UpdateProgrammingPump({
                         <label>{texts.volume}</label>
                         <input
                             type="number"
+                            step="0.000001"
+                            min="0.000001"
+                            max="999.999999"
                             value={formData.volume}
                             onChange={(e) => setFormData({ ...formData, volume: e.target.value })}
                         />
@@ -198,6 +201,7 @@ export default function UpdateProgrammingPump({
                         <button type="submit" disabled={loading}>
                             {loading ? texts.updating : texts.update}
                         </button>
+                        {error && <p style={{ color: "red" }}>{texts[error] || error}</p>}
                     </>}
                 </form>
             </AccordionDetails>

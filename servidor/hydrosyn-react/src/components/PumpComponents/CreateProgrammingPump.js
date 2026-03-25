@@ -121,7 +121,7 @@ export default function CreateProgrammingPump({
                         ))}
                     </select>
 
-                    <label>{texts.day}</label>
+                    <label>{texts.days}</label>
                     <select
                         value={day}
                         onChange={(e) => setDay(e.target.value)}
@@ -134,7 +134,7 @@ export default function CreateProgrammingPump({
                         ))}
                     </select>
 
-                    <label>{texts.hour}</label>
+                    <label>{texts.time}</label>
                     <input
                         type="time"
                         value={hour}
