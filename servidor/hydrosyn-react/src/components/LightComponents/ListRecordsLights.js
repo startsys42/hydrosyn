@@ -118,7 +118,7 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
             fetchRecords();
             if (refresh) refresh();
 
-        } catch (e) {
+        } catch (err) {
 
             if (setError) setError("Error" || err.message);
         } finally {
