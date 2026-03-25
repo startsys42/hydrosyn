@@ -5,6 +5,7 @@ CREATE OR REPLACE FUNCTION get_lights_history(
 RETURNS TABLE(
     id BIGINT,
     light_id BIGINT,
+     light_name TEXT,
     action SMALLINT,
     created_at TIMESTAMP WITH TIME ZONE
 ) AS $$
@@ -48,6 +49,7 @@ BEGIN
     SELECT 
         lh.id,
         lh.light_id,
+         l.name AS light_name, 
         lh.action,
         lh.created_at
     FROM public.lights_history lh
