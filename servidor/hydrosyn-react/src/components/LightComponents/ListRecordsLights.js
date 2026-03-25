@@ -179,7 +179,7 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <h3>{texts.lightsHistory || "Historial de Luces"}</h3>
+                <h3>{texts.lightsHistory}</h3>
             </AccordionSummary>
             <AccordionDetails>
                 {/* Solo los owners pueden eliminar registros */}
@@ -204,7 +204,7 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
                                 disabled={!fromDate || !toDate || deleting}
                                 onClick={() => setOpenDialog(true)}
                             >
-                                {texts.delete ?? 'Eliminar'}
+                                {texts.delete}
                             </Button>
                         </div>
                     </LocalizationProvider>
@@ -220,8 +220,9 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
                         pagination
                         pageSize={pageSize}
                         onPageSizeChange={setPageSize}
-                        rowsPerPageOptions={[5, 10, 25, 50]}
                         sortingMode="client"
+
+
                         disableSelectionOnClick
                     />
                 </div>
@@ -230,13 +231,13 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
 
                 {/* Diálogo de confirmación para eliminar */}
                 <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-                    <DialogTitle>{texts.confirmation || "Confirmación"}</DialogTitle>
+                    <DialogTitle>{texts.confirmation}</DialogTitle>
                     <DialogContent>
-                        {texts.deleteBetweenDates || "¿Estás seguro de que quieres eliminar los registros entre las fechas seleccionadas?"}
+                        {texts.deleteBetweenDates}
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => setOpenDialog(false)}>
-                            {texts.no || "No"}
+                            {texts.no}
                         </Button>
                         <Button
                             onClick={handleDelete}
@@ -244,7 +245,7 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
                             color="error"
                             disabled={deleting}
                         >
-                            {texts.yes || "Sí"}
+                            {texts.yes}
                         </Button>
                     </DialogActions>
                 </Dialog>
