@@ -137,7 +137,7 @@ export default function CreateLight({ systemId, lightList, refresh, error, setEr
 
             if (existError) throw existError;
             if (existing?.length > 0) {
-                setError("repeatNameLights");
+                setError("repeatNameLight");
                 return;
             }
 

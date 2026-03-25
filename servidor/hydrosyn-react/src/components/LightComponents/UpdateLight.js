@@ -95,14 +95,14 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
         setLoading(true);
 
         if (!selectedLight) {
-            setError(texts.selectLight || "Selecciona una luz");
+            setError("selectLight");
             setLoading(false);
             return;
         }
 
         const originalLight = lightList.find(l => l.id === selectedLight);
         if (!originalLight) {
-            setError(texts.selectLight || "Luz no encontrada");
+            setError("selectLight");
             setLoading(false);
             return;
         }
@@ -113,7 +113,7 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
         const hasGpioChange = newGpio && newGpio !== originalLight.gpio;
 
         if (!hasNameChange && !hasEsp32Change && !hasGpioChange) {
-            setError(texts.nothingToUpdate || "No hay cambios para actualizar");
+            setError("nothingToUpdate");
             setLoading(false);
             return;
         }
@@ -173,7 +173,7 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
                     .neq("id", selectedLight);
 
                 if (existing && existing.length > 0) {
-                    setError("repeatNameLights");
+                    setError("repeatNameLight");
                     setLoading(false);
                     return;
                 }
@@ -181,46 +181,6 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
                 updates.name = newName;
             }
 
-            // Validar y actualizar ESP32 y GPIO
-            if (hasEsp32Change || hasGpioChange) {
-                const finalEsp32 = newEsp32 || originalLight.esp32?.id;
-                const finalGpio = newGpio || originalLight.gpio;
-
-                // Si cambia el ESP32 o el GPIO, verificar que el GPIO esté disponible
-                if (hasGpioChange || hasEsp32Change) {
-                    // Verificar si el GPIO está usado por otra luz (excluyendo la actual)
-                    const { data: conflictingLight } = await supabase
-                        .from("lights")
-                        .select("*")
-                        .eq("esp32", finalEsp32)
-                        .eq("gpio", finalGpio)
-                        .neq("id", selectedLight)
-                        .maybeSingle();
-
-                    if (conflictingLight) {
-                        setError("gpioUsedByLight");
-                        setLoading(false);
-                        return;
-                    }
-
-                    // Verificar si el GPIO está usado por una bomba
-                    const { data: conflictingPump } = await supabase
-                        .from("pumps")
-                        .select("*")
-                        .eq("esp32", finalEsp32)
-                        .eq("gpio", finalGpio)
-                        .maybeSingle();
-
-                    if (conflictingPump) {
-                        setError("gpioUsedByPump");
-                        setLoading(false);
-                        return;
-                    }
-                }
-
-                updates.esp32 = finalEsp32;
-                updates.gpio = finalGpio;
-            }
 
             // Actualizar luz
             const { error: updateError } = await supabase
@@ -240,7 +200,7 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
 
         } catch (err) {
             console.error(err);
-            setError(err.message || "Error al actualizar luz");
+            setError("Error" || err.message);
         } finally {
             setLoading(false);
         }
@@ -253,13 +213,13 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
             </AccordionSummary>
             <AccordionDetails>
                 <form onSubmit={handleUpdateLight} className='form-container'>
-                    <label htmlFor="select-light">{texts.selectLight || "Seleccionar Luz"}</label>
+                    <label htmlFor="select-light">{texts.selectLight}</label>
                     <select
                         id="select-light"
                         value={selectedLight || ''}
                         onChange={(e) => setSelectedLight(Number(e.target.value))}
                     >
-                        <option value='' disabled>{texts.selectLight || "Seleccionar Luz"}</option>
+                        <option value='' disabled>{texts.selectLight}</option>
                         {lightList.map(l => (
                             <option key={l.id} value={l.id}>
                                 {l.name}
@@ -267,43 +227,19 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
                         ))}
                     </select>
 
-                    <label>{texts.newName || "Nuevo Nombre"}</label>
+                    <label>{texts.newName}</label>
                     <input
                         type="text"
                         value={newName}
                         onChange={(e) => setNewName(e.target.value)}
-                        placeholder={texts.newName || "Nuevo nombre"}
+                        placeholder={texts.newName}
                         minLength={3}
                         maxLength={30}
                     />
 
-                    <label>{texts.esp32 || "ESP32"}</label>
-                    <select
-                        value={newEsp32 || ''}
-                        onChange={(e) => setNewEsp32(Number(e.target.value))}
-                        disabled={!selectedLight}
-                    >
-                        <option value="">{texts.noChange || "Sin cambios"}</option>
-                        {esp32List.map(esp => (
-                            <option key={esp.id} value={esp.id}>
-                                {esp.name}
-                            </option>
-                        ))}
-                    </select>
 
-                    <label>{texts.GPIO || "GPIO"}</label>
-                    <select
-                        value={newGpio || ''}
-                        onChange={(e) => setNewGpio(Number(e.target.value))}
-                        disabled={!selectedLight}
-                    >
-                        <option value="">{texts.noChange || "Sin cambios"}</option>
-                        {availableGpios.map(pin => (
-                            <option key={pin} value={pin}>
-                                {pin}
-                            </option>
-                        ))}
-                    </select>
+
+
 
                     <button type="submit" disabled={loading || !selectedLight}>
                         {loading ? texts.updating : texts.update}

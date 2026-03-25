@@ -5,6 +5,9 @@ import ListRecordsPump from "../components/PumpComponents/ListRecordsPump";
 
 const texts = {
     es: {
+        updating: "Actualizando...",
+        updateLight: "Modificar luz",
+        deleteLightQuestion: "¿Está seguro que desea eliminar la luz",
         turnedOn: 'On',
         turnedOff: 'Off',
         nameLight: 'Nombre de la luz',
@@ -261,6 +264,10 @@ const texts = {
 
     },
     en: {
+        updating: "Updating...",
+        updateLight: "Update light",
+        deleteLightQuestion: "Are you sure you want to delete the light",
+
         turnedOn: 'On',
         turnedOff: 'Off',
         nameLight: 'Light name',

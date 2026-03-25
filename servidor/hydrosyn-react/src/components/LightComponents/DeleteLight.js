@@ -161,14 +161,12 @@ export default function DeleteLight({ systemId, lightList, refresh, loading, err
 
             {/* Diálogo de confirmación */}
             <Dialog open={openDialog} onClose={handleCloseDialog}>
-                <DialogTitle>{texts.confirmation || "Confirmación"}</DialogTitle>
+                <DialogTitle>{texts.confirmation}</DialogTitle>
                 <DialogContent>
                     <Typography>
-                        {texts.deleteLightQuestion || `¿Estás seguro de que quieres eliminar la luz "${selectedLight?.name}"?`}
-                        <br />
-                        <strong style={{ color: 'red' }}>
-                            {texts.actionIrreversible || "Esta acción es irreversible."}
-                        </strong>
+
+                        {`${texts.deleteLightQuestion} ${selectedLight?.name}?  ${texts.actionIrreversible}`}
+
                     </Typography>
                 </DialogContent>
                 <DialogActions>
@@ -184,7 +182,7 @@ export default function DeleteLight({ systemId, lightList, refresh, loading, err
                         {texts.yes}
                     </Button>
                 </DialogActions>
-            </Dialog>
+            </Dialog >
         </>
     );
 }
