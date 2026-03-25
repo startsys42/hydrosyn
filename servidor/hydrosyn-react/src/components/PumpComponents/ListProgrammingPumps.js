@@ -1,55 +1,44 @@
-// PumpComponents/ListProgrammingPumps.jsx
 import { useState } from "react";
-import { supabase } from "../../utils/supabaseClient";
-import {
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
-    Box,
-    Alert,
-    IconButton,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    Button,
-    Typography,
-} from "@mui/material";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Delete as DeleteIcon } from "@mui/icons-material";
 import { DataGrid } from "@mui/x-data-grid";
-import useTexts from "../../utils/UseTexts";
+import { IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from "@mui/material";
+import { Delete as DeleteIcon } from "@mui/icons-material";
+import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
+import useTexts from "../../utils/UseTexts";
+import '../../styles/theme.css';
 
-export default function ListProgrammingPumps({
-    pumpList,
-    programmingList,
-    refresh,
-    error,
-    setError,
-    userRole,
-}) {
+export default function ListProgrammingPumps({ pumpList, programmingList, refresh, error, setError, userRole }) {
     const texts = useTexts();
     const navigate = useNavigate();
+
     const [pageSize, setPageSize] = useState(10);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [selectedProgramming, setSelectedProgramming] = useState(null);
     const [loading, setLoading] = useState(false);
 
     const getPumpName = (pumpId) => {
-        const pump = pumpList.find((p) => p.id === pumpId);
-        return pump ? pump.name : "Bomba no encontrada";
+        const pump = pumpList.find(p => p.id === pumpId);
+        return pump ? pump.name : "-";
     };
 
     const getDayLabel = (dayValue) => {
         const days = {
-            monday: "Lunes", tuesday: "Martes", wednesday: "Miércoles",
-            thursday: "Jueves", friday: "Viernes", saturday: "Sábado", sunday: "Domingo",
+            monday: texts.dayMonday,
+            tuesday: texts.dayTuesday,
+            wednesday: texts.dayWednesday,
+            thursday: texts.dayThursday,
+            friday: texts.dayFriday,
+            saturday: texts.daySaturday,
+            sunday: texts.daySunday,
         };
         return days[dayValue] || dayValue;
     };
 
-    const formatTime = (time) => time.substring(0, 5);
+    const formatTime = (time) => time?.substring(0, 5) || "--:--";
 
     const handleDeleteClick = (programming) => {
         setSelectedProgramming(programming);
@@ -78,47 +67,41 @@ export default function ListProgrammingPumps({
             setSelectedProgramming(null);
             setError(null);
         } catch (err) {
-            setError(err.message || "Error al eliminar");
+            setError(err.message || texts.errorDeleting);
         } finally {
             setLoading(false);
         }
     };
 
     const columns = [
-        { field: "pumpName", headerName: "Bomba", width: 200, sortable: true },
-        { field: "day", headerName: "Día", width: 120, sortable: true },
-        { field: "time", headerName: "Hora", width: 100, sortable: true },
-        {
-            field: "volume",
-            headerName: "Volumen (m³)",
-            width: 130,
-            sortable: true,
-            renderCell: (params) => params.value.toFixed(3),
-        },
+        { field: 'pumpName', headerName: texts.pumps, flex: 1, minWidth: 150 },
+        { field: 'day', headerName: texts.day, flex: 1, minWidth: 120 },
+        { field: 'time', headerName: texts.time, flex: 1, minWidth: 100 },
+        { field: 'volume', headerName: texts.volume, flex: 1, minWidth: 100, renderCell: (params) => Number(params.value)?.toFixed(3) || "0.000" },
     ];
 
-    // Solo owner puede ver el botón eliminar
-    if (userRole === "owner") {
+    if (userRole === 'owner') {
         columns.push({
-            field: "actions",
-            headerName: "Acciones",
-            width: 100,
+            field: 'actions',
+            headerName: texts.actions,
+            width: 80,
             sortable: false,
+            filterable: false,
             renderCell: (params) => (
-                <IconButton size="small" onClick={() => handleDeleteClick(params.row.originalData)} color="error">
+                <IconButton size="small" color="error" onClick={() => handleDeleteClick(params.row.originalData)}>
                     <DeleteIcon />
                 </IconButton>
-            ),
+            )
         });
     }
 
-    const rows = programmingList.map((prog) => ({
+    const rows = programmingList.map(prog => ({
         id: prog.id,
-        pumpName: getPumpName(prog.pump_id),
+        pumpName: prog.pump?.name || getPumpName(prog.pump_id),
         day: getDayLabel(prog.day_of_week),
-        time: formatTime(prog.clock),
+        time: formatTime(prog.clock || prog.start_time),
         volume: prog.volume,
-        originalData: prog,
+        originalData: prog
     }));
 
     return (
@@ -127,49 +110,43 @@ export default function ListProgrammingPumps({
                 <h3>{texts.listProgramming || "Lista de Programaciones"}</h3>
             </AccordionSummary>
             <AccordionDetails>
-                {error && (
-                    <Alert severity="error" sx={{ mb: 2 }}>
-                        {error}
-                    </Alert>
-                )}
 
-                {programmingList.length === 0 ? (
-                    <Alert severity="info">No hay programaciones configuradas</Alert>
-                ) : (
-                    <Box sx={{ height: 400, width: "100%" }}>
-                        <DataGrid
-                            rows={rows}
-                            columns={columns}
-                            pageSize={pageSize}
-                            onPageSizeChange={setPageSize}
-                            rowsPerPageOptions={[5, 10, 25]}
-                            disableSelectionOnClick
-                            autoHeight
-                        />
-                    </Box>
-                )}
+                <div style={{ height: 500, width: '100%' }}>
+                    <DataGrid
+                        rows={rows}
+                        columns={columns}
+                        pageSize={pageSize}
+                        onPageSizeChange={setPageSize}
+                        pagination
+                        disableSelectionOnClick
+                    />
+                </div>
 
-                {/* Diálogo de eliminar */}
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+
                 <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-                    <DialogTitle>Confirmar eliminación</DialogTitle>
+                    <DialogTitle>{texts.confirmation}</DialogTitle>
                     <DialogContent>
-                        <Typography>¿Estás seguro de eliminar esta programación?</Typography>
+                        <Typography>
+                            {texts.deleteProgrammingQuestion || "¿Estás seguro de eliminar esta programación?"}
+                        </Typography>
                         {selectedProgramming && (
-                            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                                <strong>Bomba:</strong> {getPumpName(selectedProgramming.pump_id)}<br />
-                                <strong>Día:</strong> {getDayLabel(selectedProgramming.day_of_week)}<br />
-                                <strong>Hora:</strong> {formatTime(selectedProgramming.clock)}<br />
-                                <strong>Volumen:</strong> {selectedProgramming.volume} m³
+                            <Typography variant="body2" color="text.secondary" style={{ marginTop: 8 }}>
+                                <strong>{texts.pumps}:</strong> {getPumpName(selectedProgramming.pump_id)}<br />
+                                <strong>{texts.day}:</strong> {getDayLabel(selectedProgramming.day_of_week)}<br />
+                                <strong>{texts.time}:</strong> {formatTime(selectedProgramming.clock)}<br />
+                                <strong>{texts.volume}:</strong> {selectedProgramming.volume} m³
                             </Typography>
                         )}
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => setDeleteDialogOpen(false)}>Cancelar</Button>
+                        <Button onClick={() => setDeleteDialogOpen(false)}>{texts.no}</Button>
                         <Button onClick={handleDeleteConfirm} variant="contained" color="error" disabled={loading}>
-                            {loading ? "Eliminando..." : "Eliminar"}
+                            {loading ? texts.deleting : texts.yes}
                         </Button>
                     </DialogActions>
                 </Dialog>
+
             </AccordionDetails>
         </Accordion>
     );
