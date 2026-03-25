@@ -5,6 +5,8 @@ import ListRecordsPump from "../components/PumpComponents/ListRecordsPump";
 
 const texts = {
     es: {
+        turnedOn: 'On',
+        turnedOff: 'Off',
         nameLight: 'Nombre de la luz',
         regexNameLight: 'Nombre inválido. Solo letras, números, guiones bajos, mínimo 3 caracteres y máximo 30.',
         repeatNameLight: 'Ya existe una luz con ese nombre.',
@@ -259,6 +261,8 @@ const texts = {
 
     },
     en: {
+        turnedOn: 'On',
+        turnedOff: 'Off',
         nameLight: 'Light name',
         regexNameLight: 'Invalid name. Only letters, numbers, underscores, minimum 3 characters and maximum 30.',
         repeatNameLight: 'A light with that name already exists.',
