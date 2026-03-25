@@ -13,7 +13,7 @@ const texts = {
         turnedOn: 'On',
         turnedOff: 'Off',
         nameLight: 'Nombre de la luz',
-        regexNameLight: 'Nombre inválido. Solo letras, números, guiones bajos, mínimo 3 caracteres y máximo 30.',
+        regexNameLights: 'Nombre inválido. Solo letras, números, guiones bajos, mínimo 3 caracteres y máximo 30.',
         repeatNameLight: 'Ya existe una luz con ese nombre.',
         maxLightsReached: "No puedes crear más de 6 luces por sistema.",
         updateProgrammingPump: "Actualizar programador de bomba",
