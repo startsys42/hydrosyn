@@ -5,6 +5,7 @@ import ListRecordsPump from "../components/PumpComponents/ListRecordsPump";
 
 const texts = {
     es: {
+        selectLight: "Selecciona luz",
         updating: "Actualizando...",
         updateLight: "Modificar luz",
         deleteLightQuestion: "¿Está seguro que desea eliminar la luz",
@@ -264,6 +265,7 @@ const texts = {
 
     },
     en: {
+        selectLight: "Select light",
         updating: "Updating...",
         updateLight: "Update light",
         deleteLightQuestion: "Are you sure you want to delete the light",
