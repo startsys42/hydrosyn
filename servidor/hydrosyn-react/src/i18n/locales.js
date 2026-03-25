@@ -5,6 +5,7 @@ import ListRecordsPump from "../components/PumpComponents/ListRecordsPump";
 
 const texts = {
     es: {
+        lightsHistory: "Historial de luces",
         selectLight: "Selecciona luz",
         updating: "Actualizando...",
         updateLight: "Modificar luz",
@@ -265,6 +266,7 @@ const texts = {
 
     },
     en: {
+        lightsHistory: "Lights history",
         selectLight: "Select light",
         updating: "Updating...",
         updateLight: "Update light",

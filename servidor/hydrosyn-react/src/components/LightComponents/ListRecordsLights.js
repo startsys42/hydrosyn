@@ -130,17 +130,17 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
     const columns = [
         {
             field: 'light_name',
-            headerName: texts.lights || "Luz",
+            headerName: texts.lights,
             flex: 1,
             minWidth: 150
         },
         {
             field: 'action',
-            headerName: texts.action || "Acción",
+            headerName: texts.action,
             flex: 0.8,
             minWidth: 120,
             renderCell: (params) => {
-                const isOn = params.value === (texts.turnedOn || "Encendió");
+                const isOn = params.value === (texts.turnedOn);
                 return (
                     <Chip
                         label={params.value}
@@ -153,14 +153,14 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
         },
         {
             field: 'created_at',
-            headerName: texts.dateTime || "Fecha/Hora",
+            headerName: texts.dateTime,
             minWidth: 180,
             flex: 1,
             renderCell: (params) => {
                 if (!params.value) return '--';
                 try {
                     const date = new Date(params.value);
-                    if (isNaN(date.getTime())) return 'Fecha inválida';
+                    if (isNaN(date.getTime())) { return 'Date invalid'; }
                     return date.toLocaleString(undefined, {
                         year: 'numeric',
                         month: '2-digit',
@@ -187,13 +187,13 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
                     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={language}>
                         <div style={{ display: 'flex', gap: 16, marginBottom: 16, alignItems: 'center' }}>
                             <DateTimePicker
-                                label={texts.fromDate ?? 'Desde'}
+                                label={texts.fromDate ?? 'From'}
                                 value={fromDate}
                                 onChange={setFromDate}
                                 renderInput={(params) => <TextField {...params} size="small" />}
                             />
                             <DateTimePicker
-                                label={texts.toDate ?? 'Hasta'}
+                                label={texts.toDate ?? 'To'}
                                 value={toDate}
                                 onChange={setToDate}
                                 renderInput={(params) => <TextField {...params} size="small" />}
