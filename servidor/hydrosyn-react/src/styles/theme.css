@@ -541,7 +541,7 @@ input[type="text"] {
 /* Inputs de tipo email */
 input[type="email"] {
     background-color: var(--bg-color) ;
-    border: 3px solid var(--text-color);
+    border: 2px solid var(--text-color);
       color: var(--text-color);
     border-radius: 8px;
     padding: 12px 16px;
@@ -551,7 +551,7 @@ input[type="email"] {
 /* Inputs de tipo password */
 input[type="password"] {
     background-color: var(--bg-color) ;
-    border: 3px solid var(--text-color);
+    border: 2px solid var(--text-color);
       color: var(--text-color);
     border-radius: 8px;
     padding: 12px 16px;
@@ -561,7 +561,7 @@ input[type="password"] {
 /* Inputs de tipo number */
 input[type="number"] {
     background-color: var(--bg-color) ;
-    border: 3px solid var(--text-color);
+    border: 2px solid var(--text-color);
       color: var(--text-color);
     border-radius: 8px;
     padding: 12px 16px;

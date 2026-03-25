@@ -5,6 +5,7 @@ import ListRecordsPump from "../components/PumpComponents/ListRecordsPump";
 
 const texts = {
     es: {
+        updateProgrammingPump: "Actualizar programador de bomba",
         dayMonday: "Lunes",
         dayTuesday: "Martes",
         dayWednesday: "Miércoles",
@@ -254,6 +255,7 @@ const texts = {
 
     },
     en: {
+        updateProgrammingPump: "Update pump programming",
         dayMonday: "Monday",
         dayTuesday: "Tuesday",
         dayWednesday: "Wednesday",
