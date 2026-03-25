@@ -136,20 +136,9 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
         },
         {
             field: 'action',
-            headerName: texts.action,
+            headerName: texts.onOff,
             flex: 0.8,
-            minWidth: 120,
-            renderCell: (params) => {
-                const isOn = params.value === (texts.turnedOn);
-                return (
-                    <Chip
-                        label={params.value}
-                        color={isOn ? "success" : "default"}
-                        size="small"
-                        variant={isOn ? "filled" : "outlined"}
-                    />
-                );
-            }
+            minWidth: 120
         },
         {
             field: 'created_at',
