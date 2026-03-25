@@ -1,22 +1,33 @@
-// PumpComponents/UpdateProgrammingPump.jsx
 import { useState, useEffect } from "react";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
-import '../../styles/theme.css';
 import useTexts from "../../utils/UseTexts";
+import '../../styles/theme.css';
 
-
-export default function UpdateProgrammingPump({ pumpList, programmingList, refresh, error, setError }) {
+export default function UpdateProgrammingPump({
+    pumpList,
+    programmingList,
+    refresh,
+    error,
+    setError
+}) {
     const texts = useTexts();
     const navigate = useNavigate();
+
     const [loading, setLoading] = useState(false);
     const [selectedProgramming, setSelectedProgramming] = useState("");
+    const [unit, setUnit] = useState("l");
+
     const [formData, setFormData] = useState({
         id: null,
         pump_id: "",
         day_of_week: "monday",
         clock: "12:00",
-        volume: 0,
+        volume: "",
     });
 
     const DAYS = [
@@ -29,14 +40,15 @@ export default function UpdateProgrammingPump({ pumpList, programmingList, refre
         { value: "sunday", label: texts.daySunday },
     ];
 
-    // Actualiza formData al seleccionar una programación
     useEffect(() => {
         if (!selectedProgramming) return;
+
         const prog = programmingList.find(p => p.id === selectedProgramming);
+
         if (prog) {
             setFormData({
                 id: prog.id,
-                pump_id: prog.pump_id,
+                pump_id: prog.pump,
                 day_of_week: prog.day_of_week,
                 clock: prog.clock.substring(0, 5),
                 volume: prog.volume,
@@ -45,34 +57,40 @@ export default function UpdateProgrammingPump({ pumpList, programmingList, refre
     }, [selectedProgramming, programmingList]);
 
     const checkConflict = (pumpId, day, time, excludeId) => {
-        const conflict = programmingList.find(p =>
-            p.pump_id === pumpId &&
+        return programmingList.some(p =>
+            p.pump === pumpId &&
             p.day_of_week === day &&
             p.id !== excludeId &&
             p.clock === time
         );
-        return conflict ? { conflicts: true, message: `Ya existe programación a las ${time}` } : { conflicts: false };
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+
         if (!formData.pump_id) return setError("selectPump");
         if (!formData.clock) return setError("selectHour");
-        if (!formData.volume || formData.volume <= 0) return setError("invalidVolume");
+        if (!formData.volume) return setError("invalidVolume");
 
-        const { conflicts, message } = checkConflict(
-            formData.pump_id,
-            formData.day_of_week,
-            `${formData.clock}:00`,
-            formData.id
-        );
-        if (conflicts) return setError(message);
+        let vol = parseFloat(formData.volume);
+        if (unit === "ml") vol = vol / 1000;
+
+        if (vol <= 0) return setError("invalidVolume");
+        if (vol > 999.999999) return setError("volumeTooHigh");
+
+        if (checkConflict(formData.pump_id, formData.day_of_week, `${formData.clock}:00`, formData.id)) {
+            return setError("conflictProgramming");
+        }
 
         try {
             setLoading(true);
+
             const { data: sessionData } = await supabase.auth.getSession();
-            if (!sessionData?.session) return navigate("/dashboard", { replace: true });
+            if (!sessionData?.session) {
+                navigate("/dashboard", { replace: true });
+                return;
+            }
 
             const { error } = await supabase
                 .from("programming_pumps")
@@ -80,73 +98,109 @@ export default function UpdateProgrammingPump({ pumpList, programmingList, refre
                     pump: formData.pump_id,
                     day_of_week: formData.day_of_week,
                     clock: `${formData.clock}:00`,
-                    volume: parseFloat(formData.volume),
+                    volume: vol,
                 })
                 .eq("id", formData.id);
 
             if (error) throw error;
 
-            // Reset
             setSelectedProgramming("");
-            setFormData({ id: null, pump_id: "", day_of_week: "monday", clock: "12:00", volume: 0 });
+            setFormData({
+                id: null,
+                pump_id: "",
+                day_of_week: "monday",
+                clock: "12:00",
+                volume: "",
+            });
+            setUnit("l");
+
             refresh();
+
         } catch (err) {
-            setError(err.message || "Error al actualizar");
+            setError(err.message || "Error");
         } finally {
             setLoading(false);
         }
     };
 
     const getProgrammingLabel = (prog) => {
-        const pump = pumpList.find(p => p.id === prog.pump_id);
+        const pump = pumpList.find(p => p.id === prog.pump);
         const day = DAYS.find(d => d.value === prog.day_of_week);
-        return `${pump?.name || "Bomba"} - ${day?.label || prog.day_of_week} ${prog.clock.substring(0, 5)}`;
+
+        return `${pump?.name || "Pump"} - ${day?.label} ${prog.clock.substring(0, 5)}`;
     };
 
     return (
-        <div className="accordion">
-            <div className="accordion-summary">
-                <h3>{texts.updateProgramming || "Actualizar Programación"}</h3>
-            </div>
-            <div className="accordion-details">
-                {error && <p style={{ color: "red" }}>{texts[error] || error}</p>}
+        <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <h3>{texts.updateProgrammingPump}</h3>
+            </AccordionSummary>
 
-                <form className="form-container" onSubmit={handleSubmit}>
-                    <label>Seleccionar Programación</label>
-                    <select value={selectedProgramming} onChange={e => setSelectedProgramming(Number(e.target.value))}>
+            <AccordionDetails>
+                <form onSubmit={handleSubmit} className="form-container">
+
+                    {error && <p style={{ color: "red" }}>{texts[error] || error}</p>}
+
+                    <label>{texts.selectProgramming}</label>
+                    <select value={selectedProgramming} onChange={(e) => setSelectedProgramming(Number(e.target.value))}>
                         <option value="" disabled>{texts.selectProgramming}</option>
                         {programmingList.map(p => (
-                            <option key={p.id} value={p.id}>{getProgrammingLabel(p)}</option>
+                            <option key={p.id} value={p.id}>
+                                {getProgrammingLabel(p)}
+                            </option>
                         ))}
                     </select>
 
                     {selectedProgramming && <>
-                        <label>Bomba</label>
-                        <select value={formData.pump_id} onChange={e => setFormData({ ...formData, pump_id: Number(e.target.value) })}>
+                        <label>{texts.selectPump}</label>
+                        <select
+                            value={formData.pump_id}
+                            onChange={(e) => setFormData({ ...formData, pump_id: Number(e.target.value) })}
+                        >
                             <option value="" disabled>{texts.selectPump}</option>
                             {pumpList.map(p => (
-                                <option key={p.id} value={p.id}>{p.name} ({p.origin?.name} → {p.destination?.name})</option>
+                                <option key={p.id} value={p.id}>
+                                    {p.name}
+                                </option>
                             ))}
                         </select>
 
-                        <label>Día</label>
-                        <select value={formData.day_of_week} onChange={e => setFormData({ ...formData, day_of_week: e.target.value })}>
-                            {DAYS.map(d => <option key={d.value} value={d.value}>{d.label}</option>)}
+                        <label>{texts.day}</label>
+                        <select
+                            value={formData.day_of_week}
+                            onChange={(e) => setFormData({ ...formData, day_of_week: e.target.value })}
+                        >
+                            {DAYS.map(d => (
+                                <option key={d.value} value={d.value}>{d.label}</option>
+                            ))}
                         </select>
 
-                        <label>Hora</label>
-                        <input type="time" value={formData.clock} onChange={e => setFormData({ ...formData, clock: e.target.value })} />
+                        <label>{texts.hour}</label>
+                        <input
+                            type="time"
+                            value={formData.clock}
+                            onChange={(e) => setFormData({ ...formData, clock: e.target.value })}
+                        />
 
-                        <label>Volumen (m³)</label>
-                        <input type="number" step="0.001" min="0.001" max="999.999999"
-                            value={formData.volume} onChange={e => setFormData({ ...formData, volume: e.target.value })} />
+                        <label>{texts.volume}</label>
+                        <input
+                            type="number"
+                            value={formData.volume}
+                            onChange={(e) => setFormData({ ...formData, volume: e.target.value })}
+                        />
+
+                        <label>{texts.units}</label>
+                        <select value={unit} onChange={(e) => setUnit(e.target.value)}>
+                            <option value="l">L</option>
+                            <option value="ml">ml</option>
+                        </select>
 
                         <button type="submit" disabled={loading}>
                             {loading ? texts.updating : texts.update}
                         </button>
                     </>}
                 </form>
-            </div>
-        </div>
+            </AccordionDetails>
+        </Accordion>
     );
 }
