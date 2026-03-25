@@ -175,8 +175,8 @@ export default function CreateLight({ systemId, lightList, refresh, error, setEr
             refresh();
 
         } catch (err) {
-            console.error("Error creating light:", err);
-            setError(err.message || "Error creating light");
+
+            setError("Error" || err.message);
         } finally {
             setLoading(false);
         }
@@ -190,7 +190,7 @@ export default function CreateLight({ systemId, lightList, refresh, error, setEr
             <AccordionDetails>
                 <form onSubmit={handleCreateLight} className='form-container'>
                     <label>
-                        {texts.nameLight || "Nombre de la luz"}
+                        {texts.nameLight}
                     </label>
                     <input
                         type="text"
@@ -199,7 +199,7 @@ export default function CreateLight({ systemId, lightList, refresh, error, setEr
                         required
                         minLength={3}
                         maxLength={30}
-                        placeholder={texts.nameLight || "Ej: Luz Principal"}
+                        placeholder={texts.nameLight}
                     />
 
                     <label>{texts.esp32 || "ESP32"}</label>
@@ -208,7 +208,7 @@ export default function CreateLight({ systemId, lightList, refresh, error, setEr
                         onChange={(e) => setEsp32Id(e.target.value)}
                         required
                     >
-                        <option value="">{texts.selectESP32 || "Seleccionar ESP32"}</option>
+                        <option value="">{texts.selectESP32}</option>
                         {esp32List.map((esp) => (
                             <option key={esp.id} value={esp.id}>
                                 {esp.name}
@@ -216,13 +216,13 @@ export default function CreateLight({ systemId, lightList, refresh, error, setEr
                         ))}
                     </select>
 
-                    <label>{texts.GPIO || "GPIO"}</label>
+                    <label>{texts.GPIO}</label>
                     <select
                         value={gpio}
                         onChange={(e) => setGpio(e.target.value)}
                         required
                     >
-                        <option value="">{texts.selectGPIO || "Seleccionar GPIO"}</option>
+                        <option value="">{texts.selectGPIO}</option>
                         {availableGpios.map((pin) => (
                             <option key={pin} value={pin}>
                                 {pin}
@@ -231,7 +231,7 @@ export default function CreateLight({ systemId, lightList, refresh, error, setEr
                     </select>
 
                     <button type="submit" disabled={loading}>
-                        {loading ? (texts.creating || "Creando...") : (texts.addLight || "Agregar Luz")}
+                        {loading ? (texts.creating) : (texts.addLight)}
                     </button>
                 </form>
                 {error && <p style={{ color: 'red' }}>{texts[error] || error}</p>}

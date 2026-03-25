@@ -5,6 +5,10 @@ import ListRecordsPump from "../components/PumpComponents/ListRecordsPump";
 
 const texts = {
     es: {
+        nameLight: 'Nombre de la luz',
+        regexNameLight: 'Nombre inválido. Solo letras, números, guiones bajos, mínimo 3 caracteres y máximo 30.',
+        repeatNameLight: 'Ya existe una luz con ese nombre.',
+        maxLightsReached: "No puedes crear más de 6 luces por sistema.",
         updateProgrammingPump: "Actualizar programador de bomba",
         dayMonday: "Lunes",
         dayTuesday: "Martes",
@@ -231,8 +235,8 @@ const texts = {
         addPump: 'Añadir bomba',
         removePump: 'Eliminar bomba',
         lights: 'Luces',
-        addLight: 'Añadir Luz',
-        removeLight: 'Eliminar Luz',
+        addLight: 'Añadir luz',
+        removeLight: 'Eliminar luz',
 
         calendar: 'Calendario',
 
@@ -255,6 +259,12 @@ const texts = {
 
     },
     en: {
+        nameLight: 'Light name',
+        regexNameLight: 'Invalid name. Only letters, numbers, underscores, minimum 3 characters and maximum 30.',
+        repeatNameLight: 'A light with that name already exists.',
+        maxLightsReached: 'You cannot create more than 6 lights per system.',
+
+
         updateProgrammingPump: "Update pump programming",
         dayMonday: "Monday",
         dayTuesday: "Tuesday",
@@ -486,7 +496,7 @@ const texts = {
         viewCalendar: 'View calendar',
         manualRecords: 'Manual records',
         viewManualRecords: 'View manual records',
-        systemSettings: 'System Settings',
+        systemSettings: 'System settings',
 
         export: 'Export data',
         removeData: 'Remove data',

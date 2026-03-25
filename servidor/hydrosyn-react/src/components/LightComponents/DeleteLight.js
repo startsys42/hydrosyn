@@ -119,7 +119,7 @@ export default function DeleteLight({ systemId, lightList, refresh, loading, err
                     onClick={() => handleOpenDialog(params.row)}
                     style={{ padding: "4px 12px", cursor: "pointer" }}
                 >
-                    {texts.delete || "Eliminar"}
+                    {texts.delete}
                 </button>
             ),
         },
@@ -149,8 +149,9 @@ export default function DeleteLight({ systemId, lightList, refresh, loading, err
                             pagination
                             pageSize={pageSize}
                             onPageSizeChange={setPageSize}
-                            rowsPerPageOptions={[5, 10, 25, 50]}
                             sortingMode="client"
+
+
                             disableSelectionOnClick
                         />
                     </div>
@@ -172,7 +173,7 @@ export default function DeleteLight({ systemId, lightList, refresh, loading, err
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseDialog}>
-                        {texts.no || "No"}
+                        {texts.no}
                     </Button>
                     <Button
                         onClick={handleDelete}
@@ -180,7 +181,7 @@ export default function DeleteLight({ systemId, lightList, refresh, loading, err
                         color="error"
                         disabled={loading}
                     >
-                        {texts.yes || "Sí"}
+                        {texts.yes}
                     </Button>
                 </DialogActions>
             </Dialog>

@@ -107,7 +107,7 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <h3>{texts.listProgramming || "Lista de Programaciones"}</h3>
+                <h3>{texts.listProgrammingPumps}</h3>
             </AccordionSummary>
             <AccordionDetails>
 
