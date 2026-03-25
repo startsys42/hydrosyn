@@ -5,7 +5,7 @@ import ListRecordsPump from "../components/PumpComponents/ListRecordsPump";
 
 const texts = {
     es: {
-        onOff: "Encendió/Apagó",
+        onOff: "On/Off",
         lightsHistory: "Historial de luces",
         selectLight: "Selecciona luz",
         updating: "Actualizando...",
