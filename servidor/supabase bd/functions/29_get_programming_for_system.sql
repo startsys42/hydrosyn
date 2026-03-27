@@ -15,7 +15,7 @@ begin
     select pp.id,
            p.id as pump_id,
            p.name as pump_name,
-           pp.day_of_week,
+           pp.day_of_week::text as day_of_week,
            pp.clock,
            pp.volume
     from public.programming_pumps pp
