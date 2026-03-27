@@ -44,7 +44,7 @@ export default function CreateProgrammingPump({
         const utcTime = convertToUTC(timeValue);
 
         return programmingList.some(p =>
-            p.pump === Number(selectedPump) &&
+            p.pump_id === Number(selectedPump) &&
             p.day_of_week === day &&
             p.clock === utcTime
         );
@@ -93,7 +93,7 @@ export default function CreateProgrammingPump({
             const { error } = await supabase
                 .from("programming_pumps")
                 .insert({
-                    pump: parseInt(selectedPump),
+                    pump_id: parseInt(selectedPump),
                     day_of_week: day,
                     clock: utcTime,
                     volume: vol
