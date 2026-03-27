@@ -133,7 +133,7 @@ export default function ListProgrammingLights({
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <h3>{texts.listProgramming || "Programaciones de Luces"}</h3>
+                <h3>{texts.listProgrammingLight}</h3>
             </AccordionSummary>
             <AccordionDetails>
                 {error && (

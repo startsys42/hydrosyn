@@ -5,6 +5,7 @@ import ListRecordsPump from "../components/PumpComponents/ListRecordsPump";
 
 const texts = {
     es: {
+        listProgrammingLight: "Lista de programadores de luces",
         conflictProgrammingLight: "Existe una programación para esta luz este día que se superpone con el horario seleccionado.",
         startAfterEnd: "La hora de inicio debe ser menor que la hora de fin",
         startTime: "Hora de inicio",
@@ -277,6 +278,7 @@ const texts = {
 
     },
     en: {
+        listProgrammingLight: "List of light programmings",
         conflictProgrammingLight: "There is already a programming for this light on this day that overlaps with the selected time.",
         startAfterEnd: "Start time must be before end time",
         startTime: "Start time",
