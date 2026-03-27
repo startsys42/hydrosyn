@@ -145,7 +145,7 @@ export default function CreateProgrammingLight({
                         ))}
                     </select>
 
-                    <label>{texts.day}</label>
+                    <label>{texts.days}</label>
                     <select
                         value={formData.day_of_week}
                         onChange={(e) => setFormData({ ...formData, day_of_week: e.target.value })}
@@ -177,7 +177,7 @@ export default function CreateProgrammingLight({
 
 
                     <button type="submit" disabled={loading}>
-                        {loading ? texts.creating : texts.create}
+                        {loading ? texts.creating : texts.createProgramming}
                     </button>
 
                     {error && <p style={{ color: "red" }}>{texts[error] || error}</p>}
