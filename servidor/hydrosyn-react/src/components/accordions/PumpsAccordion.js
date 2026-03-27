@@ -32,7 +32,7 @@ import InsertPumping from '../PumpComponents/InsertPumping';
 
 import ListCalibrate from '../PumpComponents/ListCalibrate';
 import CreateProgrammingPump from '../PumpComponents/CreateProgrammingPump';
-import UpdateProgrammingPump from '../PumpComponents/UpdateProgrammingPump';
+
 import ListProgrammingPumps from '../PumpComponents/ListProgrammingPumps';
 
 

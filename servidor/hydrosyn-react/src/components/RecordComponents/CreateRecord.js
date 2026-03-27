@@ -120,7 +120,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
             volumeNum = volumeNum / 1000;
         }
 
-        if (volumeNum > 999.999999) {
+        if (volumeNum > 999.999) {
             setError("volumeTooHigh");
             setLoading(false);
             return;

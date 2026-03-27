@@ -67,7 +67,7 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
                 setError("invalidVolume");
                 return;
             }
-            if (vol > 999.999999) {
+            if (vol > 999.999) {
                 setError("volumeTooHigh");
                 return;
             }

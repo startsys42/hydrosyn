@@ -41,24 +41,16 @@ export default function CreateProgrammingPump({
     ];
 
     const checkConflict = () => {
-        const utcTime = convertToUTC(timeValue);
+        if (!timeValue) return false;
+        const timeStr = timeValue.format("HH:mm:ss"); // hora tal cual usuario la ve
 
         return programmingList.some(p =>
             p.pump_id === Number(selectedPump) &&
             p.day_of_week === day &&
-            p.clock === utcTime
+            p.clock === timeStr
         );
     };
-    const convertToUTC = (value) => {
-        if (!value) return null;
 
-        const date = value.toDate();
-
-        const h = date.getUTCHours().toString().padStart(2, "0");
-        const m = date.getUTCMinutes().toString().padStart(2, "0");
-
-        return `${h}:${m}:00`;
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -71,7 +63,7 @@ export default function CreateProgrammingPump({
         let vol = parseFloat(volume);
         if (unit === "ml") vol = vol / 1000;
         if (vol <= 0) return setError("invalidVolume");
-        if (vol > 999.999999) return setError("volumeTooHigh");
+        if (vol > 999.999) return setError("volumeTooHigh");
 
 
         if (checkConflict()) {
@@ -81,7 +73,7 @@ export default function CreateProgrammingPump({
 
         try {
             setLoading(true);
-            const utcTime = convertToUTC(timeValue);
+            const timeStr = timeValue.format("HH:mm:ss");
 
 
             const { data: sessionData } = await supabase.auth.getSession();
@@ -95,7 +87,7 @@ export default function CreateProgrammingPump({
                 .insert({
                     pump: parseInt(selectedPump),
                     day_of_week: day,
-                    clock: utcTime,
+                    clock: timeStr,
                     volume: vol
                 });
 
