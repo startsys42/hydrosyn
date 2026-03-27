@@ -52,13 +52,14 @@ export default function CreateProgrammingLight({
     const [formData, setFormData] = useState({
         light_id: "",
         day_of_week: "Monday",
-        start_time: "08:00",
-        end_time: "18:00",
+        start_time: dayjs().hour(8).minute(0),   // 08:00
+        end_time: dayjs().hour(18).minute(0),    // 18:00
         is_active: true,
     });
     const [loading, setLoading] = useState(false);
 
     const timeToMinutes = (time) => {
+        if (typeof time !== "string") time = time.format("HH:mm"); // <- esto es nuevo
         const [hours, minutes] = time.split(":").map(Number);
         return hours * 60 + minutes;
     };
@@ -73,9 +74,9 @@ export default function CreateProgrammingLight({
             p.light_id === formData.light_id &&
             p.day_of_week === formData.day_of_week &&
             (
-                (start >= timeToMinutes(p.start_time) && start < timeToMinutes(p.end_time)) ||
-                (end > timeToMinutes(p.start_time) && end <= timeToMinutes(p.end_time)) ||
-                (start <= timeToMinutes(p.start_time) && end >= timeToMinutes(p.end_time))
+                (start >= timeToMinutes(dayjs(p.start_time, "HH:mm:ss")) && start < timeToMinutes(dayjs(p.end_time, "HH:mm:ss"))) ||
+                (end > timeToMinutes(dayjs(p.start_time, "HH:mm:ss")) && end <= timeToMinutes(dayjs(p.end_time, "HH:mm:ss"))) ||
+                (start <= timeToMinutes(dayjs(p.start_time, "HH:mm:ss")) && end >= timeToMinutes(dayjs(p.end_time, "HH:mm:ss")))
             )
         );
 
@@ -102,8 +103,8 @@ export default function CreateProgrammingLight({
             const { error } = await supabase.from("programming_lights").insert({
                 light: formData.light_id,
                 day_of_week: formData.day_of_week,
-                start_time: `${formData.start_time}:00`,
-                end_time: `${formData.end_time}:00`,
+                start_time: formData.start_time.format("HH:mm:ss"), // <-- Dayjs a string
+                end_time: formData.end_time.format("HH:mm:ss"),     // <-- Dayjs a string
                 is_active: formData.is_active,
             });
 
@@ -112,8 +113,8 @@ export default function CreateProgrammingLight({
             setFormData({
                 light_id: "",
                 day_of_week: "Monday",
-                start_time: "08:00",
-                end_time: "18:00",
+                start_time: dayjs().hour(8).minute(0),
+                end_time: dayjs().hour(18).minute(0),
                 is_active: true,
             });
 
