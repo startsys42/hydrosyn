@@ -99,11 +99,11 @@ export default function Dashboard() {
         setExporting(true);
 
         try {
-            const response = await supabase.functions.invoke('exportData', { method: 'POST' });
-            const json = await response.json();
+            const { data, error } = await supabase.functions.invoke('exportData', { method: 'POST' });
 
-            if (!response.ok) {
-                setExportError("errorExporting" || json.message);
+
+            if (error) {
+                setExportError("errorExporting" || error.message);
             } else {
                 setExportSuccess("exportSuccess");
             }
