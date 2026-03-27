@@ -24,20 +24,20 @@ export default function CreateProgrammingPump({
     const navigate = useNavigate();
 
     const [selectedPump, setSelectedPump] = useState("");
-    const [day, setDay] = useState("monday");
+    const [day, setDay] = useState("Monday");
     const [timeValue, setTimeValue] = useState(null);
     const [volume, setVolume] = useState("");
     const [loading, setLoading] = useState(false);
     const [unit, setUnit] = useState("l");
 
     const DAYS = [
-        { value: "monday", label: texts.dayMonday },
-        { value: "tuesday", label: texts.dayTuesday },
-        { value: "wednesday", label: texts.dayWednesday },
-        { value: "thursday", label: texts.dayThursday },
-        { value: "friday", label: texts.dayFriday },
-        { value: "saturday", label: texts.daySaturday },
-        { value: "sunday", label: texts.daySunday },
+        { value: "Monday", label: texts.dayMonday },
+        { value: "Tuesday", label: texts.dayTuesday },
+        { value: "Wednesday", label: texts.dayWednesday },
+        { value: "Thursday", label: texts.dayThursday },
+        { value: "Friday", label: texts.dayFriday },
+        { value: "Saturday", label: texts.daySaturday },
+        { value: "Sunday", label: texts.daySunday },
     ];
 
     const checkConflict = () => {
