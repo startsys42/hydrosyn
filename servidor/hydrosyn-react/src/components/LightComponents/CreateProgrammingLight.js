@@ -127,19 +127,19 @@ export default function CreateProgrammingLight({
             </AccordionSummary>
             <AccordionDetails>
                 <form onSubmit={handleSubmit} className="form-container">
-                    <label>Luz</label>
+                    <label>{texts.selectLight}</label>
                     <select
                         value={formData.light_id}
                         onChange={(e) => setFormData({ ...formData, light_id: e.target.value })}
                         disabled={loading}
                     >
-                        <option value="" disabled>Selecciona una luz</option>
+                        <option value="" disabled>{texts.selectLight}</option>
                         {lightList.map(l => (
-                            <option key={l.id} value={l.id}>{l.name} (GPIO {l.gpio})</option>
+                            <option key={l.id} value={l.id}>{l.name}</option>
                         ))}
                     </select>
 
-                    <label>Día</label>
+                    <label>{texts.day}</label>
                     <select
                         value={formData.day_of_week}
                         onChange={(e) => setFormData({ ...formData, day_of_week: e.target.value })}
@@ -150,32 +150,28 @@ export default function CreateProgrammingLight({
                         ))}
                     </select>
 
-                    <label>Hora inicio</label>
-                    <input
-                        type="time"
-                        value={formData.start_time}
-                        onChange={(e) => setFormData({ ...formData, start_time: e.target.value })}
-                        required
-                    />
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <label>{texts.startTime}</label>
+                        <TimePicker
+                            value={formData.start_time}
+                            onChange={(newValue) => setFormData({ ...formData, start_time: newValue })}
+                            ampm={false}
+                            minutesStep={1}
+                            disabled={loading}
+                        />
+                        <label>{texts.endTime}</label>
+                        <TimePicker
+                            value={formData.end_time}
+                            onChange={(newValue) => setFormData({ ...formData, end_time: newValue })}
+                            ampm={false}
+                            minutesStep={1}
+                            disabled={loading}
+                        />
+                    </LocalizationProvider>
 
-                    <label>Hora fin</label>
-                    <input
-                        type="time"
-                        value={formData.end_time}
-                        onChange={(e) => setFormData({ ...formData, end_time: e.target.value })}
-                        required
-                    />
-
-                    <label>
-                        <input
-                            type="checkbox"
-                            checked={formData.is_active}
-                            onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                        /> Activar programación
-                    </label>
 
                     <button type="submit" disabled={loading}>
-                        {loading ? "Guardando..." : "Guardar"}
+                        {loading ? texts.creating : texts.create}
                     </button>
 
                     {error && <p style={{ color: "red" }}>{error}</p>}
