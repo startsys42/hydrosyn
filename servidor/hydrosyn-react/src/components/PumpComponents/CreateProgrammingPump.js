@@ -11,6 +11,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import dayjs from "dayjs";
+import { StyledEngineProvider } from "@mui/material/styles";
 
 export default function CreateProgrammingPump({
     pumpList,
@@ -145,16 +146,18 @@ export default function CreateProgrammingPump({
                     </select>
 
                     <label>{texts.time}</label>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <TimePicker
-                            label={texts.time}
-                            value={timeValue}
-                            onChange={(newValue) => setTimeValue(newValue)}
-                            ampm={false}
-                            minutesStep={1}
-                            disabled={loading}
-                        />
-                    </LocalizationProvider>
+                    <StyledEngineProvider injectFirst>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <TimePicker
+                                label={texts.time}
+                                value={timeValue}
+                                onChange={(newValue) => setTimeValue(newValue)}
+                                ampm={false}
+                                minutesStep={1}
+                                disabled={loading}
+                            />
+                        </LocalizationProvider>
+                    </StyledEngineProvider>
 
                     <label>{texts.volume}</label>
                     <input
