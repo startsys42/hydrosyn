@@ -7,6 +7,10 @@ import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import '../../styles/theme.css';
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import dayjs from "dayjs";
 
 export default function CreateProgrammingPump({
     pumpList,
@@ -21,7 +25,7 @@ export default function CreateProgrammingPump({
 
     const [selectedPump, setSelectedPump] = useState("");
     const [day, setDay] = useState("monday");
-    const [hour, setHour] = useState("");
+    const [timeValue, setTimeValue] = useState(null);
     const [volume, setVolume] = useState("");
     const [loading, setLoading] = useState(false);
     const [unit, setUnit] = useState("l");
@@ -37,11 +41,23 @@ export default function CreateProgrammingPump({
     ];
 
     const checkConflict = () => {
+        const utcTime = convertToUTC(timeValue);
+
         return programmingList.some(p =>
-            p.pump === parseInt(selectedPump) &&
+            p.pump === Number(selectedPump) &&
             p.day_of_week === day &&
-            p.clock === `${hour}:00`
+            p.clock === utcTime
         );
+    };
+    const convertToUTC = (value) => {
+        if (!value) return null;
+
+        const date = value.toDate();
+
+        const h = date.getUTCHours().toString().padStart(2, "0");
+        const m = date.getUTCMinutes().toString().padStart(2, "0");
+
+        return `${h}:${m}:00`;
     };
 
     const handleSubmit = async (e) => {
@@ -49,7 +65,7 @@ export default function CreateProgrammingPump({
         setError("");
 
         if (!selectedPump) return setError("selectPump");
-        if (!hour) return setError("selectHour");
+        if (!timeValue) return setError("selectHour");
         if (!volume) return setError("invalidVolume");
 
         let vol = parseFloat(volume);
@@ -65,6 +81,8 @@ export default function CreateProgrammingPump({
 
         try {
             setLoading(true);
+            const utcTime = convertToUTC(timeValue);
+
 
             const { data: sessionData } = await supabase.auth.getSession();
             if (!sessionData?.session) {
@@ -77,7 +95,7 @@ export default function CreateProgrammingPump({
                 .insert({
                     pump: parseInt(selectedPump),
                     day_of_week: day,
-                    clock: `${hour}:00`,
+                    clock: utcTime,
                     volume: vol
                 });
 
@@ -85,7 +103,7 @@ export default function CreateProgrammingPump({
 
             setSelectedPump("");
             setDay("monday");
-            setHour("");
+            setTimeValue(null);
             setVolume("");
             setUnit("l");
 
@@ -135,13 +153,16 @@ export default function CreateProgrammingPump({
                     </select>
 
                     <label>{texts.time}</label>
-                    <input
-                        type="time"
-                        value={hour}
-                        onChange={(e) => setHour(e.target.value)}
-                        disabled={loading}
-                        required
-                    />
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <TimePicker
+                            label={texts.time}
+                            value={timeValue}
+                            onChange={(newValue) => setTimeValue(newValue)}
+                            ampm={false}
+                            minutesStep={5}
+                            disabled={loading}
+                        />
+                    </LocalizationProvider>
 
                     <label>{texts.volume}</label>
                     <input

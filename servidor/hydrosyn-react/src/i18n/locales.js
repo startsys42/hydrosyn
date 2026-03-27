@@ -5,6 +5,7 @@ import ListRecordsPump from "../components/PumpComponents/ListRecordsPump";
 
 const texts = {
     es: {
+        listProgrammingPumps: "Lista de programadores de bombas",
         onOff: "On/Off",
         lightsHistory: "Historial de luces",
         selectLight: "Selecciona luz",
@@ -267,6 +268,7 @@ const texts = {
 
     },
     en: {
+        listProgrammingPumps: "List of pump programmings",
         onOff: "On/Off",
         lightsHistory: "Lights history",
         selectLight: "Select light",

@@ -113,11 +113,16 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
 
                 <div style={{ height: 500, width: '100%' }}>
                     <DataGrid
+                        className="datagrid"
                         rows={rows}
                         columns={columns}
+                        loading={loading}
+                        pagination
                         pageSize={pageSize}
                         onPageSizeChange={setPageSize}
-                        pagination
+                        sortingMode="client"
+
+
                         disableSelectionOnClick
                     />
                 </div>
