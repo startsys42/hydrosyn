@@ -25,10 +25,19 @@ function AppWithMuiTheme() {
     );
 
 
-
+    const datePickerLocaleText = {
+        cancelButtonLabel: language === 'es' ? 'Cancelar' : 'Cancel',
+        okButtonLabel: language === 'es' ? 'Aceptar' : 'OK',
+    };
     return (
         <MuiThemeProvider theme={muiTheme}>
-            <App />
+            <LocalizationProvider
+                dateAdapter={AdapterDayjs}
+                adapterLocale={language}
+                localeText={datePickerLocaleText}
+            >
+                <App />
+            </LocalizationProvider>
         </MuiThemeProvider>
     );
 }
