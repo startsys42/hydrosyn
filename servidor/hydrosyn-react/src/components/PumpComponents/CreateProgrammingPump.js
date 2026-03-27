@@ -93,7 +93,7 @@ export default function CreateProgrammingPump({
             const { error } = await supabase
                 .from("programming_pumps")
                 .insert({
-                    pump_id: parseInt(selectedPump),
+                    pump: parseInt(selectedPump),
                     day_of_week: day,
                     clock: utcTime,
                     volume: vol
