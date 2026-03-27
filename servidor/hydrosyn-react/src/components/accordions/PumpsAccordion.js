@@ -450,13 +450,7 @@ export default function PumpsAccordion({ systemId }) {
                             setError={(msg) => setComponentError("program", msg)}
                         />
 
-                        <UpdateProgrammingPump
-                            pumpList={pumpList}
-                            programmingList={programmingList}
-                            refresh={fetchProgrammingList}
-                            error={errors.programUpdate}
-                            setError={(msg) => setComponentError("programUpdate", msg)}
-                        />
+
                     </>
                 )}
 

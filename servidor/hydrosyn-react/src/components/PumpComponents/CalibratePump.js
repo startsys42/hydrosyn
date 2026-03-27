@@ -136,9 +136,9 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
                     <input
                         id="calibration-volume"
                         type="number"
-                        step="0.000001"
-                        min="0.000001"
-                        max="999.999999"
+                        step="0.001"
+                        min="0.001"
+                        max="999.999"
                         value={volume}
                         onChange={(e) => setVolume(e.target.value)}
                         placeholder="Ej: 100.5"

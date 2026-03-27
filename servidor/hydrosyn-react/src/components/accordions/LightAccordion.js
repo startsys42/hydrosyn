@@ -188,13 +188,6 @@ export default function LightAccordion({ systemId }) {
                         setError={(msg) => setComponentError("program", msg)}
                     />
 
-                    <UpdateProgrammingLight
-                        lightList={lightList}
-                        programmingList={programmingList}
-                        refresh={fetchProgrammingList}
-                        error={errors.programUpdate}
-                        setError={(msg) => setComponentError("programUpdate", msg)}
-                    />
 
                 </>
             )}

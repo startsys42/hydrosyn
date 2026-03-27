@@ -237,8 +237,10 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
                                     value={editFormData.day_of_week}
                                     onChange={(e) => setEditFormData({ ...editFormData, day_of_week: e.target.value })}
                                 >
-                                    {["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"].map(d => (
-                                        <option key={d} value={d}>{texts[`day${d.charAt(0).toUpperCase() + d.slice(1)}`]}</option>
+                                    {DAYS.map(d => (
+                                        <option key={d.value} value={d.value}>
+                                            {d.label}
+                                        </option>
                                     ))}
                                 </select>
 

@@ -167,9 +167,9 @@ export default function CreateProgrammingPump({
                     <label>{texts.volume}</label>
                     <input
                         type="number"
-                        step="0.000001"
-                        min="0.000001"
-                        max="999.999999"
+                        step="0.001"
+                        min="0.001"
+                        max="999.999"
                         value={volume}
                         onChange={(e) => setVolume(e.target.value)}
                         disabled={loading}

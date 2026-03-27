@@ -136,7 +136,7 @@ CREATE TABLE public.records (
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   tank bigint NOT NULL,
   "user" uuid not null,
-  volume numeric(9,6) CHECK (volume > 0 and volume <= 999.999999) NOT NULL,
+  volume numeric(6,3) CHECK (volume > 0 and volume <= 999.999) NOT NULL,
   CONSTRAINT drainings_pkey PRIMARY KEY (id),
   CONSTRAINT drainings_tank_fkey FOREIGN KEY (tank) REFERENCES public.tanks(id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT drainings_user_fkey FOREIGN KEY ("user") REFERENCES auth.users(id) ON DELETE RESTRICT ON UPDATE CASCADE
@@ -155,7 +155,7 @@ CREATE TABLE public.programming_pumps (
   id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   pump bigint NOT NULL,
-   volume numeric(9,6) NOT NULL CHECK (volume> 0 and volume <= 999.999999),
+   volume numeric(6,3) NOT NULL CHECK (volume> 0 and volume <= 999.999),
     clock time NOT NULL,                  -- Hora del día en que se activa
       day_of_week day_of_week NOT NULL,
     
@@ -192,7 +192,7 @@ CREATE TABLE public.calibrate (
   id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   pump bigint NOT NULL,
-  volume numeric(9,6) CHECK (volume > 0 and volume <= 999.999999) NOT NULL,
+  volume numeric(6,3) CHECK (volume > 0 and volume <= 999.999) NOT NULL,
    "user" uuid NOT NULL,
 
 
@@ -222,7 +222,7 @@ CREATE TABLE public.records_pumps (
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   pump bigint NOT NULL,
 success BOOLEAN DEFAULT false not null,
-  volume numeric(9,6) CHECK (volume > 0 and volume <= 999.999999) NOT NULL,
+  volume numeric(6,3) CHECK (volume > 0 and volume <= 999.999) NOT NULL,
   "user" uuid not null,
   CONSTRAINT records_pumps_pkey PRIMARY KEY (id),
   CONSTRAINT records_pumps_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id) ON DELETE CASCADE  ON UPDATE CASCADE,
