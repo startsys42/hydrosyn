@@ -44,79 +44,53 @@ export default function CreateProgrammingLight({
         { value: "Saturday", label: texts.daySaturday },
         { value: "Sunday", label: texts.daySunday },
     ];
-    const [open, setOpen] = useState(false);
-    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         light_id: "",
-        day_of_week: "monday",
+        day_of_week: "Monday",
         start_time: "08:00",
         end_time: "18:00",
         is_active: true,
     });
+    const [loading, setLoading] = useState(false);
 
     const timeToMinutes = (time) => {
         const [hours, minutes] = time.split(":").map(Number);
         return hours * 60 + minutes;
     };
 
-    const checkOverlap = (lightId, day, start, end) => {
-        const startMinutes = timeToMinutes(start);
-        const endMinutes = timeToMinutes(end);
+    const checkConflict = () => {
+        const start = timeToMinutes(formData.start_time);
+        const end = timeToMinutes(formData.end_time);
 
-        if (startMinutes >= endMinutes) {
-            return {
-                overlaps: true,
-                message: "La hora de inicio debe ser menor que la hora de fin",
-            };
-        }
+        if (start >= end) return "La hora de inicio debe ser menor que la hora de fin";
 
-        const conflicting = programmingList.find((prog) => {
-            if (prog.light_id !== lightId) return false;
-            if (prog.day_of_week !== day) return false;
-
-            const existingStart = timeToMinutes(prog.start_time);
-            const existingEnd = timeToMinutes(prog.end_time);
-
-            return (
-                (startMinutes >= existingStart && startMinutes < existingEnd) ||
-                (endMinutes > existingStart && endMinutes <= existingEnd) ||
-                (startMinutes <= existingStart && endMinutes >= existingEnd)
-            );
-        });
-
-        if (conflicting) {
-            return {
-                overlaps: true,
-                message: `Superposición: ya existe programación de ${conflicting.start_time} a ${conflicting.end_time}`,
-            };
-        }
-
-        return { overlaps: false };
-    };
-
-    const handleSubmit = async () => {
-        if (!formData.light_id) {
-            setError("Selecciona una luz");
-            return;
-        }
-
-        const { overlaps, message } = checkOverlap(
-            formData.light_id,
-            formData.day_of_week,
-            formData.start_time,
-            formData.end_time
+        const conflict = programmingList.find(p =>
+            p.light_id === formData.light_id &&
+            p.day_of_week === formData.day_of_week &&
+            (
+                (start >= timeToMinutes(p.start_time) && start < timeToMinutes(p.end_time)) ||
+                (end > timeToMinutes(p.start_time) && end <= timeToMinutes(p.end_time)) ||
+                (start <= timeToMinutes(p.start_time) && end >= timeToMinutes(p.end_time))
+            )
         );
 
-        if (overlaps) {
-            setError(message);
-            return;
-        }
+        if (conflict) return `Superposición: ya existe programación de ${conflict.start_time} a ${conflict.end_time}`;
+        return null;
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError("");
+
+        if (!formData.light_id) return setError("Selecciona una luz");
+        const conflictMsg = checkConflict();
+        if (conflictMsg) return setError(conflictMsg);
 
         setLoading(true);
         try {
             const { data: sessionData } = await supabase.auth.getSession();
             if (!sessionData?.session) {
-                navigate("/dashboard");
+                navigate("/dashboard", { replace: true });
                 return;
             }
 
@@ -130,26 +104,20 @@ export default function CreateProgrammingLight({
 
             if (error) throw error;
 
+            setFormData({
+                light_id: "",
+                day_of_week: "Monday",
+                start_time: "08:00",
+                end_time: "18:00",
+                is_active: true,
+            });
+
             refresh();
-            handleClose();
-            setError(null);
         } catch (err) {
             setError(err.message || "Error al crear");
         } finally {
             setLoading(false);
         }
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-        setFormData({
-            light_id: lightList[0]?.id || "",
-            day_of_week: "monday",
-            start_time: "08:00",
-            end_time: "18:00",
-            is_active: true,
-        });
-        setError(null);
     };
 
     return (
@@ -158,101 +126,60 @@ export default function CreateProgrammingLight({
                 <h3>{texts.createProgrammingLight}</h3>
             </AccordionSummary>
             <AccordionDetails>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<AddIcon />}
-                    onClick={() => setOpen(true)}
-                    disabled={lightList.length === 0}
-                >
-                    {texts.addProgramming || "Nueva Programación"}
-                </Button>
+                <form onSubmit={handleSubmit} className="form-container">
+                    <label>Luz</label>
+                    <select
+                        value={formData.light_id}
+                        onChange={(e) => setFormData({ ...formData, light_id: e.target.value })}
+                        disabled={loading}
+                    >
+                        <option value="" disabled>Selecciona una luz</option>
+                        {lightList.map(l => (
+                            <option key={l.id} value={l.id}>{l.name} (GPIO {l.gpio})</option>
+                        ))}
+                    </select>
 
-                <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-                    <DialogTitle>Programar Luz</DialogTitle>
-                    <DialogContent>
-                        {error && (
-                            <Alert severity="error" sx={{ mb: 2, mt: 1 }}>
-                                {error}
-                            </Alert>
-                        )}
-                        <Grid container spacing={2} sx={{ mt: 1 }}>
-                            <Grid item xs={12}>
-                                <FormControl fullWidth>
-                                    <InputLabel>Luz</InputLabel>
-                                    <Select
-                                        value={formData.light_id}
-                                        onChange={(e) => setFormData({ ...formData, light_id: e.target.value })}
-                                        label="Luz"
-                                    >
-                                        {lightList.map((light) => (
-                                            <MenuItem key={light.id} value={light.id}>
-                                                {light.name} (GPIO {light.gpio})
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
+                    <label>Día</label>
+                    <select
+                        value={formData.day_of_week}
+                        onChange={(e) => setFormData({ ...formData, day_of_week: e.target.value })}
+                        disabled={loading}
+                    >
+                        {DAYS_OF_WEEK.map(d => (
+                            <option key={d.value} value={d.value}>{d.label}</option>
+                        ))}
+                    </select>
 
-                            <Grid item xs={12}>
-                                <FormControl fullWidth>
-                                    <InputLabel>Día</InputLabel>
-                                    <Select
-                                        value={formData.day_of_week}
-                                        onChange={(e) => setFormData({ ...formData, day_of_week: e.target.value })}
-                                        label="Día"
-                                    >
-                                        {DAYS_OF_WEEK.map((day) => (
-                                            <MenuItem key={day.value} value={day.value}>
-                                                {day.label}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
+                    <label>Hora inicio</label>
+                    <input
+                        type="time"
+                        value={formData.start_time}
+                        onChange={(e) => setFormData({ ...formData, start_time: e.target.value })}
+                        required
+                    />
 
-                            <Grid item xs={6}>
-                                <TextField
-                                    fullWidth
-                                    label="Hora inicio"
-                                    type="time"
-                                    value={formData.start_time}
-                                    onChange={(e) => setFormData({ ...formData, start_time: e.target.value })}
-                                    InputLabelProps={{ shrink: true }}
-                                />
-                            </Grid>
+                    <label>Hora fin</label>
+                    <input
+                        type="time"
+                        value={formData.end_time}
+                        onChange={(e) => setFormData({ ...formData, end_time: e.target.value })}
+                        required
+                    />
 
-                            <Grid item xs={6}>
-                                <TextField
-                                    fullWidth
-                                    label="Hora fin"
-                                    type="time"
-                                    value={formData.end_time}
-                                    onChange={(e) => setFormData({ ...formData, end_time: e.target.value })}
-                                    InputLabelProps={{ shrink: true }}
-                                />
-                            </Grid>
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={formData.is_active}
+                            onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
+                        /> Activar programación
+                    </label>
 
-                            <Grid item xs={12}>
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={formData.is_active}
-                                            onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                                        />
-                                    }
-                                    label="Activar programación"
-                                />
-                            </Grid>
-                        </Grid>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleClose}>Cancelar</Button>
-                        <Button onClick={handleSubmit} variant="contained" disabled={loading}>
-                            {loading ? "Guardando..." : "Guardar"}
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                    <button type="submit" disabled={loading}>
+                        {loading ? "Guardando..." : "Guardar"}
+                    </button>
+
+                    {error && <p style={{ color: "red" }}>{error}</p>}
+                </form>
             </AccordionDetails>
         </Accordion>
     );
