@@ -210,18 +210,10 @@ export default function PumpsAccordion({ systemId }) {
         try {
             const pumpIds = pumpList.map(p => p.id);
 
-            const { data, error } = await supabase
-                .from("programming_pumps")
-                .select(`
-                id,
-                start_time,
-                end_time,
-                pump (
-                    id,
-                    name
-                )
-            `)
-                .in("pump", pumpIds);
+            const { data, error } = await supabase.rpc('get_programming_for_system', {
+                p_system_id: systemId,
+                p_current_user: currentUserId
+            });
 
             if (error) throw error;
 
