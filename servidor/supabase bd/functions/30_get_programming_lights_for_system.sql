@@ -22,7 +22,7 @@ begin
            pl.is_active
     from public.programming_lights pl
     join public.lights l on l.id = pl.light
-    where l.system_id = p_system_id
+    where l.system = p_system_id
       and (
           exists (
               select 1
