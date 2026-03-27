@@ -29,9 +29,6 @@ export default function Dashboard() {
     const [sortModel, setSortModel] = useState([]);
     const [isMember, setIsMember] = useState(false);
 
-    console.log("🔴🔴🔴 DASHBOARD RENDERIZADO 🔴🔴🔴");
-    console.log("isAdmin:", isAdmin, "loadingAdmin:", loadingAdmin);
-    console.log("isOwner:", isOwner, "loadingOwner:", loadingOwner);
 
     const fetchSystems = async () => {
         setLoading(true);
@@ -56,8 +53,7 @@ export default function Dashboard() {
                 .eq('admin', userId)
                 .eq('admin_users.is_active', true);
 
-            console.log('🏢 Owner systems query result:', ownerData);
-            console.log('❌ Owner error:', ownerErr);
+
             if (ownerErr) throw ownerErr;
 
             const ownerSystems = (ownerData || []).map(s => ({
