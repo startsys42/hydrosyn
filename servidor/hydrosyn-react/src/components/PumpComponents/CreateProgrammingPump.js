@@ -146,18 +146,17 @@ export default function CreateProgrammingPump({
                     </select>
 
                     <label>{texts.time}</label>
-                    <StyledEngineProvider injectFirst>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <TimePicker
-                                label={texts.time}
-                                value={timeValue}
-                                onChange={(newValue) => setTimeValue(newValue)}
-                                ampm={false}
-                                minutesStep={1}
-                                disabled={loading}
-                            />
-                        </LocalizationProvider>
-                    </StyledEngineProvider>
+
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <TimePicker
+                            label={texts.time}
+                            value={timeValue}
+                            onChange={(newValue) => setTimeValue(newValue)}
+                            ampm={false}
+                            minutesStep={1}
+                            disabled={loading}
+                        />
+                    </LocalizationProvider>
 
                     <label>{texts.volume}</label>
                     <input

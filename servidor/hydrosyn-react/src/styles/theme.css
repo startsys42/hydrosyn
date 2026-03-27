@@ -523,6 +523,12 @@ div[class*="MuiDataGrid-columnHeader"] {
     color: var(--text-color) !important;
 
 }
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: var(--button-bg) !important; /* El color de tus botones cuando hay foco */
+}
+.MuiOutlinedInput-notchedOutline {
+    border: 2px solid var(--input-border) !important;
+}
 .MuiPickersInputBase-sectionsContainer{
  color: var(--text-color) !important;
 
