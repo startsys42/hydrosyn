@@ -68,7 +68,7 @@ export default function CreateProgrammingLight({
         const start = timeToMinutes(formData.start_time);
         const end = timeToMinutes(formData.end_time);
 
-        if (start >= end) return "La hora de inicio debe ser menor que la hora de fin";
+        if (start >= end) return "startAfterEnd";
 
         const conflict = programmingList.find(p =>
             p.light_id === formData.light_id &&
@@ -80,7 +80,7 @@ export default function CreateProgrammingLight({
             )
         );
 
-        if (conflict) return `Superposición: ya existe programación de ${conflict.start_time} a ${conflict.end_time}`;
+        if (conflict) return "conflictProgrammingLight";
         return null;
     };
 
@@ -88,7 +88,7 @@ export default function CreateProgrammingLight({
         e.preventDefault();
         setError("");
 
-        if (!formData.light_id) return setError("Selecciona una luz");
+        if (!formData.light_id) return setError("selectLight");
         const conflictMsg = checkConflict();
         if (conflictMsg) return setError(conflictMsg);
 
@@ -180,7 +180,7 @@ export default function CreateProgrammingLight({
                         {loading ? texts.creating : texts.create}
                     </button>
 
-                    {error && <p style={{ color: "red" }}>{error}</p>}
+                    {error && <p style={{ color: "red" }}>{texts[error] || error}</p>}
                 </form>
             </AccordionDetails>
         </Accordion>

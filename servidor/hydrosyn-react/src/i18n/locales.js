@@ -5,6 +5,8 @@ import ListRecordsPump from "../components/PumpComponents/ListRecordsPump";
 
 const texts = {
     es: {
+        conflictProgrammingLight: "Existe una programación para esta luz este día que se superpone con el horario seleccionado.",
+        startAfterEnd: "La hora de inicio debe ser menor que la hora de fin",
         startTime: "Hora de inicio",
         endTime: "Hora de fin",
         conflictProgramming: "Ya existe una programación para esta bomba a esta hora y día.",
@@ -15,7 +17,7 @@ const texts = {
         listProgrammingPumps: "Lista de programadores de bombas",
         onOff: "On/Off",
         lightsHistory: "Historial de luces",
-        selectLight: "Selecciona luz",
+        selectLight: "Selecciona una luz",
         updating: "Actualizando...",
         updateLight: "Modificar luz",
         deleteLightQuestion: "¿Está seguro que desea eliminar la luz",
@@ -275,6 +277,10 @@ const texts = {
 
     },
     en: {
+        conflictProgrammingLight: "There is already a programming for this light on this day that overlaps with the selected time.",
+        startAfterEnd: "Start time must be before end time",
+        startTime: "Start time",
+        endTime: "End time",
         conflictProgramming: "There is already a programming for this pump at this time and day.",
         deleteProgrammingQuestion: "Are you sure you want to delete this programming?",
         errorExporting: 'Error exporting data. Please try again.',
@@ -282,7 +288,7 @@ const texts = {
         listProgrammingPumps: "List of pump programmings",
         onOff: "On/Off",
         lightsHistory: "Lights history",
-        selectLight: "Select light",
+        selectLight: "Select a light",
         updating: "Updating...",
         updateLight: "Update light",
         deleteLightQuestion: "Are you sure you want to delete the light",
