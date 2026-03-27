@@ -114,7 +114,7 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
     if (userRole === 'owner') {
         columns.push({
             field: 'actions',
-            headerName: texts.actions,
+            headerName: texts.delete,
             width: 80,
             sortable: false,
             filterable: false,
@@ -127,7 +127,7 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
         if (userRole === 'owner') {
             columns.push({
                 field: 'edit',
-                headerName: texts.edit,
+                headerName: texts.update,
                 width: 80,
                 sortable: false,
                 filterable: false,
