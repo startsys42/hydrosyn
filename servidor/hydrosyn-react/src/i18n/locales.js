@@ -5,6 +5,7 @@ import ListRecordsPump from "../components/PumpComponents/ListRecordsPump";
 
 const texts = {
     es: {
+        deleteProgrammingQuestion: "¿Está seguro que desea eliminar esta programación?",
         errorExporting: 'Error al exportar los datos. Por favor, inténtalo de nuevo.',
         exportSuccess: 'Exportación completada con éxito.',
 
@@ -271,6 +272,7 @@ const texts = {
 
     },
     en: {
+        deleteProgrammingQuestion: "Are you sure you want to delete this programming?",
         errorExporting: 'Error exporting data. Please try again.',
         exportSuccess: 'Export completed successfully.',
         listProgrammingPumps: "List of pump programmings",
