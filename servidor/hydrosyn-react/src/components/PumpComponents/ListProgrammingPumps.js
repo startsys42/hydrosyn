@@ -148,7 +148,7 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
         id: prog.id,
         pumpName: prog.pump?.name || getPumpName(prog.pump_id),
         day: getDayLabel(prog.day_of_week),
-        time: formatTime(prog.clock || prog.start_time),
+        time: formatTime(prog.clock),
         volume: prog.volume,
         originalData: prog
     }));
