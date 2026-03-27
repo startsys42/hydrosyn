@@ -5,6 +5,9 @@ import ListRecordsPump from "../components/PumpComponents/ListRecordsPump";
 
 const texts = {
     es: {
+        errorExporting: 'Error al exportar los datos. Por favor, inténtalo de nuevo.',
+        exportSuccess: 'Exportación completada con éxito.',
+
         listProgrammingPumps: "Lista de programadores de bombas",
         onOff: "On/Off",
         lightsHistory: "Historial de luces",
@@ -268,6 +271,8 @@ const texts = {
 
     },
     en: {
+        errorExporting: 'Error exporting data. Please try again.',
+        exportSuccess: 'Export completed successfully.',
         listProgrammingPumps: "List of pump programmings",
         onOff: "On/Off",
         lightsHistory: "Lights history",
