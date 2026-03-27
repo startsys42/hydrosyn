@@ -37,9 +37,12 @@ function AppWithMuiTheme() {
     };
     return (
         <MuiThemeProvider theme={muiTheme}>
+            <LocalizationProvider
 
-            <App />
-
+                localeText={datePickerLocaleText}
+            >
+                <App />
+            </LocalizationProvider>
         </MuiThemeProvider>
     );
 }
