@@ -141,9 +141,9 @@ export default function UpdateProgrammingPump({
 
 
 
-                    <label>{texts.selectProgrammingPump}</label>
+                    <label>{texts.selectPump}</label>
                     <select value={selectedProgramming} onChange={(e) => setSelectedProgramming(Number(e.target.value))}>
-                        <option value="" disabled>{texts.selectProgrammingPump}</option>
+                        <option value="" disabled>{texts.selectPump}</option>
                         {programmingList.map(p => (
                             <option key={p.id} value={p.id}>
                                 {getProgrammingLabel(p)}
