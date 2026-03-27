@@ -513,7 +513,20 @@ div[class*="MuiDataGrid-columnHeader"] {
 }
 
 
+.MuiInputLabel-root{
+   color: var(--text-color) !important;
 
+}
+
+.MuiPickersOutlinedInput-notchedOutline {
+    border-color: 2px solid var(--text-color) !important;
+    color: var(--text-color) !important;
+
+}
+.MuiPickersInputBase-sectionsContainer{
+ color: var(--text-color) !important;
+
+}
 
 
 
