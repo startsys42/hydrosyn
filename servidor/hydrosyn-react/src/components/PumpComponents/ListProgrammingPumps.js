@@ -22,6 +22,15 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [editFormData, setEditFormData] = useState(null);
 
+    const DAYS = [
+        { value: "Monday", label: texts.dayMonday },
+        { value: "Tuesday", label: texts.dayTuesday },
+        { value: "Wednesday", label: texts.dayWednesday },
+        { value: "Thursday", label: texts.dayThursday },
+        { value: "Friday", label: texts.dayFriday },
+        { value: "Saturday", label: texts.daySaturday },
+        { value: "Sunday", label: texts.daySunday },
+    ];
     const handleEditClick = (programming) => {
         setEditFormData({ ...programming }); // copiamos los datos de la fila
         setEditDialogOpen(true);
@@ -34,13 +43,13 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
 
     const getDayLabel = (dayValue) => {
         const days = {
-            monday: texts.dayMonday,
-            tuesday: texts.dayTuesday,
-            wednesday: texts.dayWednesday,
-            thursday: texts.dayThursday,
-            friday: texts.dayFriday,
-            saturday: texts.daySaturday,
-            sunday: texts.daySunday,
+            Monday: texts.dayMonday,
+            Tuesday: texts.dayTuesday,
+            Wednesday: texts.dayWednesday,
+            Thursday: texts.dayThursday,
+            Friday: texts.dayFriday,
+            Saturday: texts.daySaturday,
+            Sunday: texts.daySunday,
         };
         return days[dayValue] || dayValue;
     };
@@ -108,7 +117,21 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
         { field: 'pumpName', headerName: texts.pumps, flex: 1, minWidth: 150 },
         { field: 'day', headerName: texts.days, flex: 1, minWidth: 120 },
         { field: 'time', headerName: texts.time, flex: 1, minWidth: 100 },
-        { field: 'volume', headerName: texts.volume, flex: 1, minWidth: 100, renderCell: (params) => Number(params.value)?.toFixed(3) || "0.000" },
+        {
+            field: 'volume',
+            headerName: texts.volume,
+            flex: 1,
+            minWidth: 120,
+            renderCell: (params) => {
+                let vol = Number(params.value);
+                let unit = 'L';
+                if (vol < 1) {
+                    vol = vol * 1000;
+                    unit = 'mL';
+                }
+                return `${vol.toFixed(3)} ${unit}`;
+            }
+        },
     ];
 
     if (userRole === 'owner') {

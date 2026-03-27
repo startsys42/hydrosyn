@@ -159,7 +159,7 @@ export default function CreateProgrammingPump({
                             value={timeValue}
                             onChange={(newValue) => setTimeValue(newValue)}
                             ampm={false}
-                            minutesStep={5}
+                            minutesStep={1}
                             disabled={loading}
                         />
                     </LocalizationProvider>
