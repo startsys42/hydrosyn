@@ -145,7 +145,7 @@ export default function CreateProgrammingLight({
                         onChange={(e) => setFormData({ ...formData, day_of_week: e.target.value })}
                         disabled={loading}
                     >
-                        {DAYS_OF_WEEK.map(d => (
+                        {DAYS.map(d => (
                             <option key={d.value} value={d.value}>{d.label}</option>
                         ))}
                     </select>
