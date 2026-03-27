@@ -28,6 +28,9 @@ export default function Dashboard() {
     const [rowCount, setRowCount] = useState(0);
     const [sortModel, setSortModel] = useState([]);
     const [isMember, setIsMember] = useState(false);
+    const [exporting, setExporting] = useState(false);
+    const [exportError, setExportError] = useState('');
+    const [exportSuccess, setExportSuccess] = useState('');
 
 
     const fetchSystems = async () => {
@@ -90,6 +93,28 @@ export default function Dashboard() {
             setLoading(false);
         }
     };
+    const exportData = async () => {
+        setExportError('');
+        setExportSuccess('');
+        setExporting(true);
+
+        try {
+            const response = await supabase.functions.invoke('exportData', { method: 'POST' });
+            const json = await response.json();
+
+            if (!response.ok) {
+                setExportError("errorExporting" || json.message);
+            } else {
+                setExportSuccess("exportSuccess");
+            }
+
+        } catch (err) {
+
+            setExportError("Error" || err.message);
+        } finally {
+            setExporting(false);
+        }
+    };
 
     useEffect(() => {
         if (!loadingAdmin && !loadingOwner) {
@@ -145,15 +170,13 @@ export default function Dashboard() {
 
                     <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
                         {isOwner && (
-                            <>
-
-                                <button onClick={() => navigate('/export')}>{t.export}</button>
-
-                            </>
+                            <button onClick={exportData}>{t.export}</button>
                         )}
 
 
-
+                        {exportError && <p style={{ color: 'red', margin: 0 }}>{t[exportError]}</p>}
+                        {exportSuccess && <p style={{ color: 'green', margin: 0 }}>{t[exportSuccess]}</p>}
+                    )}
                         {/* Puedes agregar más botones según necesidad */}
                     </div>
 
