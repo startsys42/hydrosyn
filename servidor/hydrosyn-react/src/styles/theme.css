@@ -805,3 +805,8 @@ select:not(.topbar select):disabled {
 .MuiDataGrid-scrollbarFiller {
     display: none !important;
 }
+
+.MuiInputBase-root.MuiOutlinedInput-root.Mui-focused {
+    border-color: var(--button-bg) !important;
+    outline: none !important;
+}
