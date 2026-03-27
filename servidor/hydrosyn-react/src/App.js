@@ -27,8 +27,6 @@ import ActivateDeleteUserAdmin from './components/ActivateDeleteUserAdmin';
 
 
 
-import Export from './components/Export';
-
 
 
 
@@ -260,18 +258,7 @@ function App() {
 
 
 
-                    <Route
-                        path="/export"
-                        element={
-                            !user ? (
-                                <Navigate to="/" replace />
-                            ) : user && isOwner ? (
-                                <Export />
-                            ) : user && !loadingOwner ? (
-                                <Navigate to="/dashboard" replace />
-                            ) : null
-                        }
-                    />
+
 
 
 
