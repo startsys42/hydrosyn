@@ -19,6 +19,13 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [selectedProgramming, setSelectedProgramming] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [editDialogOpen, setEditDialogOpen] = useState(false);
+    const [editFormData, setEditFormData] = useState(null);
+
+    const handleEditClick = (programming) => {
+        setEditFormData({ ...programming }); // copiamos los datos de la fila
+        setEditDialogOpen(true);
+    };
 
     const getPumpName = (pumpId) => {
         const pump = pumpList.find(p => p.id === pumpId);
@@ -44,7 +51,31 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
         setSelectedProgramming(programming);
         setDeleteDialogOpen(true);
     };
+    const handleEditConfirm = async () => {
+        if (!editFormData) return;
+        setLoading(true);
+        try {
+            const { error } = await supabase
+                .from("programming_pumps")
+                .update({
+                    pump: editFormData.pump_id,
+                    day_of_week: editFormData.day_of_week,
+                    clock: editFormData.clock,
+                    volume: Number(editFormData.volume),
+                })
+                .eq("id", editFormData.id);
 
+            if (error) throw error;
+
+            refresh(); // recarga la lista
+            setEditDialogOpen(false);
+            setEditFormData(null);
+        } catch (err) {
+            setError(err.message || texts.errorUpdating);
+        } finally {
+            setLoading(false);
+        }
+    };
     const handleDeleteConfirm = async () => {
         if (!selectedProgramming) return;
         setLoading(true);
@@ -75,7 +106,7 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
 
     const columns = [
         { field: 'pumpName', headerName: texts.pumps, flex: 1, minWidth: 150 },
-        { field: 'day', headerName: texts.day, flex: 1, minWidth: 120 },
+        { field: 'day', headerName: texts.days, flex: 1, minWidth: 120 },
         { field: 'time', headerName: texts.time, flex: 1, minWidth: 100 },
         { field: 'volume', headerName: texts.volume, flex: 1, minWidth: 100, renderCell: (params) => Number(params.value)?.toFixed(3) || "0.000" },
     ];
@@ -93,6 +124,24 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
                 </IconButton>
             )
         });
+        if (userRole === 'owner') {
+            columns.push({
+                field: 'edit',
+                headerName: texts.edit,
+                width: 80,
+                sortable: false,
+                filterable: false,
+                renderCell: (params) => (
+                    <Button
+                        size="small"
+                        variant="contained"
+                        onClick={() => handleEditClick(params.row.originalData)}
+                    >
+                        {texts.edit}
+                    </Button>
+                )
+            });
+        }
     }
 
     const rows = programmingList.map(prog => ({
@@ -133,16 +182,10 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
                     <DialogTitle>{texts.confirmation}</DialogTitle>
                     <DialogContent>
                         <Typography>
-                            {texts.deleteProgrammingQuestion || "¿Estás seguro de eliminar esta programación?"}
+                            {`${texts.deleteProgrammingQuestion}  ${texts.actionIrreversible}`}
+
                         </Typography>
-                        {selectedProgramming && (
-                            <Typography variant="body2" color="text.secondary" style={{ marginTop: 8 }}>
-                                <strong>{texts.pumps}:</strong> {getPumpName(selectedProgramming.pump_id)}<br />
-                                <strong>{texts.day}:</strong> {getDayLabel(selectedProgramming.day_of_week)}<br />
-                                <strong>{texts.time}:</strong> {formatTime(selectedProgramming.clock)}<br />
-                                <strong>{texts.volume}:</strong> {selectedProgramming.volume} m³
-                            </Typography>
-                        )}
+
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => setDeleteDialogOpen(false)}>{texts.no}</Button>
@@ -151,7 +194,52 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
                         </Button>
                     </DialogActions>
                 </Dialog>
+                <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
+                    <DialogTitle>{texts.updateProgrammingPump}</DialogTitle>
+                    <DialogContent>
+                        {editFormData && (
+                            <form>
+                                <label>{texts.selectPump}</label>
+                                <select
+                                    value={editFormData.pump_id}
+                                    onChange={(e) => setEditFormData({ ...editFormData, pump_id: Number(e.target.value) })}
+                                >
+                                    {pumpList.map(p => (
+                                        <option key={p.id} value={p.id}>{p.name}</option>
+                                    ))}
+                                </select>
 
+                                <label>{texts.days}</label>
+                                <select
+                                    value={editFormData.day_of_week}
+                                    onChange={(e) => setEditFormData({ ...editFormData, day_of_week: e.target.value })}
+                                >
+                                    {["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"].map(d => (
+                                        <option key={d} value={d}>{texts[`day${d.charAt(0).toUpperCase() + d.slice(1)}`]}</option>
+                                    ))}
+                                </select>
+
+                                <label>{texts.time}</label>
+                                <input
+                                    type="time"
+                                    value={editFormData.clock?.substring(0, 5)}
+                                    onChange={(e) => setEditFormData({ ...editFormData, clock: e.target.value + ":00" })}
+                                />
+
+                                <label>{texts.volume}</label>
+                                <input
+                                    type="number"
+                                    value={editFormData.volume}
+                                    onChange={(e) => setEditFormData({ ...editFormData, volume: e.target.value })}
+                                />
+                            </form>
+                        )}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setEditDialogOpen(false)}>{texts.cancel}</Button>
+                        <Button onClick={handleEditConfirm} variant="contained">{texts.update}</Button>
+                    </DialogActions>
+                </Dialog>
             </AccordionDetails>
         </Accordion>
     );
