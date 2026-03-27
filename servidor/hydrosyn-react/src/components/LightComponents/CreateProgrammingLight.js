@@ -120,7 +120,7 @@ export default function CreateProgrammingLight({
 
             refresh();
         } catch (err) {
-            setError(err.message || "Error al crear");
+            setError("Error" || err.message);
         } finally {
             setLoading(false);
         }
