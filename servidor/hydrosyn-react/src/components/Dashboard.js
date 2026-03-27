@@ -173,11 +173,11 @@ export default function Dashboard() {
                             <button onClick={exportData}>{t.export}</button>
                         )}
 
+                        <div>
+                            {exportError && <p style={{ color: 'red', margin: 0 }}>{t[exportError]}</p>}
+                            {exportSuccess && <p style={{ color: 'green', margin: 0 }}>{t[exportSuccess]}</p>}
 
-                        {exportError && <p style={{ color: 'red', margin: 0 }}>{t[exportError]}</p>}
-                        {exportSuccess && <p style={{ color: 'green', margin: 0 }}>{t[exportSuccess]}</p>}
-
-                        {/* Puedes agregar más botones según necesidad */}
+                        </div>
                     </div>
 
                     <h2>{t.systems}</h2>
