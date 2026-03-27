@@ -24,15 +24,7 @@ import { Add as AddIcon } from "@mui/icons-material";
 import useTexts from "../../utils/UseTexts";
 import { useNavigate } from "react-router-dom";
 
-const DAYS_OF_WEEK = [
-    { value: "monday", label: "Lunes" },
-    { value: "tuesday", label: "Martes" },
-    { value: "wednesday", label: "Miércoles" },
-    { value: "thursday", label: "Jueves" },
-    { value: "friday", label: "Viernes" },
-    { value: "saturday", label: "Sábado" },
-    { value: "sunday", label: "Domingo" },
-];
+
 
 export default function CreateProgrammingLight({
     lightList,
@@ -43,6 +35,15 @@ export default function CreateProgrammingLight({
 }) {
     const texts = useTexts();
     const navigate = useNavigate();
+    const DAYS = [
+        { value: "Monday", label: texts.dayMonday },
+        { value: "Tuesday", label: texts.dayTuesday },
+        { value: "Wednesday", label: texts.dayWednesday },
+        { value: "Thursday", label: texts.dayThursday },
+        { value: "Friday", label: texts.dayFriday },
+        { value: "Saturday", label: texts.daySaturday },
+        { value: "Sunday", label: texts.daySunday },
+    ];
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({

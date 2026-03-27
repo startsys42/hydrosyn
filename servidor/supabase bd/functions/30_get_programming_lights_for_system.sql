@@ -1,26 +1,28 @@
-create or replace function public.get_programming_for_system(
+create or replace function public.get_programming_lights_for_system(
     p_system_id bigint,
     p_current_user uuid
 )
 returns table(
     id bigint,
-    pump_id bigint,
-    pump_name text,
+    light_id bigint,
+    light_name text,
     day_of_week text,
-    clock time,
-    volume numeric
+    start_time time,
+    end_time time,
+    is_active boolean
 ) as $$
 begin
     return query
-    select pp.id,
-           p.id as pump_id,
-           p.name as pump_name,
-           pp.day_of_week::text as day_of_week,
-           pp.clock,
-           pp.volume
-    from public.programming_pumps pp
-    join public.pumps p on p.id = pp.pump
-    where p.system = p_system_id
+    select pl.id,
+           l.id as light_id,
+           l.name as light_name,
+           pl.day_of_week::text as day_of_week,
+           pl.start_time,
+           pl.end_time,
+           pl.is_active
+    from public.programming_lights pl
+    join public.lights l on l.id = pl.light
+    where l.system_id = p_system_id
       and (
           exists (
               select 1
@@ -38,6 +40,6 @@ begin
                 and su.system = p_system_id
           )
       )
-    order by pp.day_of_week, pp.clock;
+    order by pl.day_of_week, pl.start_time;
 end;
 $$ language plpgsql security definer stable;
