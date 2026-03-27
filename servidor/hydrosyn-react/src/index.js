@@ -18,8 +18,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles';
 import { esES } from '@mui/x-data-grid/locales';
 import { enUS } from '@mui/x-data-grid/locales';
-import { esES as esESDatePicker } from '@mui/x-date-pickers/locales/esES';
-import { enUS as enUSDatePicker } from '@mui/x-date-pickers/locales/enUS';
+
 
 //  Componente que usa el idioma para MUI
 function AppWithMuiTheme() {
