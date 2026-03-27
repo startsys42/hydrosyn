@@ -5,6 +5,8 @@ import ListRecordsPump from "../components/PumpComponents/ListRecordsPump";
 
 const texts = {
     es: {
+        startTime: "Hora de inicio",
+        endTime: "Hora de fin",
         conflictProgramming: "Ya existe una programación para esta bomba a esta hora y día.",
         deleteProgrammingQuestion: "¿Está seguro que desea eliminar esta programación?",
         errorExporting: 'Error al exportar los datos. Por favor, inténtalo de nuevo.',
