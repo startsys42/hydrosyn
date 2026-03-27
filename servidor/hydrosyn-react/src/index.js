@@ -38,8 +38,7 @@ function AppWithMuiTheme() {
     return (
         <MuiThemeProvider theme={muiTheme}>
             <LocalizationProvider
-                dateAdapter={AdapterDayjs}
-                adapterLocale={language}
+
                 localeText={datePickerLocaleText}
             >
                 <App />
