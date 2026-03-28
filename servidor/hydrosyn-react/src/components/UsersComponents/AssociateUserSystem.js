@@ -60,28 +60,36 @@ export default function AssociateUserSystem({
 
     const handleOpenDialog = async (user) => {
         setExternalError('');
+        setLoading(true); // 👈 AÑADE ESTO
         try {
             const admin = await checkAdmin();
-            if (!admin) return;
+            if (!admin) {
+                setLoading(false);
+                return;
+            }
             setCurrentAdmin(admin);
-            const { data: associatedUsers, error: associatedErr } = await supabase
+
+            // 👇 CAMBIA ESTO: usa count en lugar de traer todos los datos
+            const { count, error: countErr } = await supabase
                 .from("systems_users")
-                .select("user_id")
+                .select("*", { count: 'exact', head: true })
                 .eq("system", systemId);
 
-            if (associatedErr) throw new Error(associatedErr.message)
+            if (countErr) throw new Error(countErr.message);
 
-            if (associatedUsers.length >= 5) {
+            // 👇 VERIFICAR LÍMITE
+            if (count >= 5) {
                 const { data: rolesData, error: rolesErr } = await supabase
                     .from("roles")
                     .select("user")
-                    .eq("user", admin.id);
+                    .eq("user", admin.id)
+                    .maybeSingle(); // 👈 CAMBIA a maybeSingle
 
                 if (rolesErr) throw new Error(rolesErr.message);
 
-                const isAdminAuthorized = rolesData.length > 0;
-                if (!isAdminAuthorized) {
+                if (!rolesData) { // 👈 SIMPLIFICA
                     setExternalError("limitUsers");
+                    setLoading(false);
                     return;
                 }
             }
@@ -90,6 +98,8 @@ export default function AssociateUserSystem({
             setOpenDialog(true);
         } catch (err) {
             setExternalError("Error" || err.message);
+        } finally {
+            setLoading(false); // 👈 AÑADE ESTO
         }
     };
 
@@ -99,7 +109,7 @@ export default function AssociateUserSystem({
     };
 
     const handleAssociate = async () => {
-        setExternalError(''); // limpia errores del padre antes de ejecutar
+        setExternalError('');
         if (!currentUser || !currentAdmin) return;
         setLoading(true);
 
@@ -112,8 +122,10 @@ export default function AssociateUserSystem({
 
             if (error) throw error;
 
-            refreshUsers();
-            refreshAvailable();
+            // 👇 AÑADE await
+            if (refreshUsers) await refreshUsers();
+            if (refreshAvailable) await refreshAvailable();
+
             handleCloseDialog();
         } catch (err) {
             setExternalError("Error" || err.message);
@@ -135,6 +147,7 @@ export default function AssociateUserSystem({
                 <button
                     onClick={() => handleOpenDialog(params.row)}
                     style={{ padding: "4px 12px" }}
+                    disabled={loading || externalLoading} // 👈 AÑADE disabled
                 >
                     {texts.associate}
                 </button>
