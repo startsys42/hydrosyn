@@ -170,6 +170,7 @@ export default function ActivateUserSystem({
                         pageSize={pageSize}
                         onPageSizeChange={setPageSize}
                         sortingMode="client"
+                        disableRowSelectionOnClick
 
 
                         disableSelectionOnClick

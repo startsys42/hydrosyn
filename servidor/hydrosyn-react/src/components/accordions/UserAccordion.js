@@ -73,7 +73,29 @@ export default function UserAccordion({ systemId }) {
         }
     };
 
+    useEffect(() => {
+        const subscription = supabase
+            .channel('systems_users_changes')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'public',
+                    table: 'systems_users',
+                    filter: `system=eq.${systemId}`
+                },
+                () => {
+                    console.log("Cambio detectado en systems_users, refrescando...");
+                    refreshUsersData();
+                    refreshAvailableData();
+                }
+            )
+            .subscribe();
 
+        return () => {
+            subscription.unsubscribe();
+        };
+    }, [systemId, refreshUsersData, refreshAvailableData]);
     // --- Verificación de admin ---
     const checkAdmin = async () => {
         const { data: { user }, error: authErr } = await supabase.auth.getUser();
