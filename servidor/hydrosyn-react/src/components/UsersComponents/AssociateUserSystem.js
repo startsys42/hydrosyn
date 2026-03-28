@@ -93,8 +93,10 @@ export default function AssociateUserSystem({
                     return;
                 }
             }
-
-            setCurrentUser(user);
+            setCurrentUser({
+                user_id: user.user_id,
+                email: user.email
+            });
             setOpenDialog(true);
         } catch (err) {
             setExternalError("Error" || err.message);
@@ -166,7 +168,11 @@ export default function AssociateUserSystem({
                 </AccordionSummary>
                 <AccordionDetails>
                     <DataGrid
-                        rows={(availableUsers || []).map(u => ({ id: u.user_id, email: u.email }))}
+                        rows={(availableUsers || []).map(u => ({
+                            id: u.user_id,
+                            user_id: u.user_id,  // 👈 AÑADE ESTA LÍNEA
+                            email: u.email
+                        }))}
                         columns={columns}
                         loading={loading || externalLoading}
                         pagination
