@@ -114,6 +114,7 @@ export default function AssociateUserSystem({
         setLoading(true);
 
         try {
+            console.log("📤 Enviando a Supabase:", params);
             const { data, error } = await supabase.rpc("associate_user_to_system", {
                 p_admin_uid: currentAdmin.id,
                 p_system_id: systemId,
