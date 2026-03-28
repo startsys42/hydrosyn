@@ -59,7 +59,10 @@ export default function CreateProgrammingLight({
     const [loading, setLoading] = useState(false);
 
     const timeToMinutes = (time) => {
-        if (typeof time !== "string") time = time.format("HH:mm"); // <- esto es nuevo
+        // Acepta Dayjs o string HH:mm / HH:mm:ss
+        if (dayjs.isDayjs(time)) {
+            return time.hour() * 60 + time.minute();
+        }
         const [hours, minutes] = time.split(":").map(Number);
         return hours * 60 + minutes;
     };
@@ -70,15 +73,16 @@ export default function CreateProgrammingLight({
 
         if (start >= end) return "startAfterEnd";
 
-        const conflict = programmingList.find(p =>
-            p.light_id === formData.light_id &&
-            p.day_of_week === formData.day_of_week &&
-            (
-                (start >= timeToMinutes(dayjs(p.start_time, "HH:mm:ss")) && start < timeToMinutes(dayjs(p.end_time, "HH:mm:ss"))) ||
-                (end > timeToMinutes(dayjs(p.start_time, "HH:mm:ss")) && end <= timeToMinutes(dayjs(p.end_time, "HH:mm:ss"))) ||
-                (start <= timeToMinutes(dayjs(p.start_time, "HH:mm:ss")) && end >= timeToMinutes(dayjs(p.end_time, "HH:mm:ss")))
-            )
-        );
+        const conflict = programmingList.some(p => {
+            if (p.light_id !== formData.light_id) return false;
+            if (p.day_of_week !== formData.day_of_week) return false;
+
+            const existingStart = timeToMinutes(p.start_time);
+            const existingEnd = timeToMinutes(p.end_time);
+
+            // Condición de overlap: (nuevo inicio < existente fin) && (nuevo fin > existente inicio)
+            return start < existingEnd && end > existingStart;
+        });
 
         if (conflict) return "conflictProgrammingLight";
         return null;

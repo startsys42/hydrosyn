@@ -36,6 +36,33 @@ export default function ListProgrammingLights({ lightList, programmingList, refr
         { value: "Sunday", label: texts.daySunday },
     ];
 
+    const timeToMinutes = (time) => {
+        if (dayjs.isDayjs(time)) return time.hour() * 60 + time.minute();
+        const [hours, minutes] = time.split(":").map(Number);
+        return hours * 60 + minutes;
+    };
+
+    const checkConflict = (form) => {
+        const start = timeToMinutes(form.start_time);
+        const end = timeToMinutes(form.end_time);
+
+        if (start >= end) return "startAfterEnd";
+
+        const conflict = programmingList.some(p => {
+            if (p.id === form.id) return false; // ignorar la misma fila
+            if (p.light_id !== form.light_id) return false;
+            if (p.day_of_week !== form.day_of_week) return false;
+
+            const existingStart = timeToMinutes(p.start_time);
+            const existingEnd = timeToMinutes(p.end_time);
+
+            return start < existingEnd && end > existingStart;
+        });
+
+        if (conflict) return "conflictProgrammingLight";
+        return null;
+    };
+
     const getLightName = (id) => {
         const l = lightList.find(light => light.id === id);
         return l ? l.name : "-";
@@ -80,6 +107,27 @@ export default function ListProgrammingLights({ lightList, programmingList, refr
 
     const handleEditConfirm = async () => {
         if (!editFormData) return;
+        setError(null);
+
+        // Validación: luz seleccionada
+        if (!editFormData.light_id) {
+            setError("selectLight");
+            return;
+        }
+
+        // Validación: horarios no vacíos
+        if (!editFormData.start_time || !editFormData.end_time) {
+            setError("selectTime");
+            return;
+        }
+
+        // Validación: conflicto de horarios
+        const conflictMsg = checkConflict(editFormData);
+        if (conflictMsg) {
+            setError(conflictMsg);
+            return;
+        }
+
         setLoading(true);
         try {
             const { error } = await supabase
@@ -155,7 +203,10 @@ export default function ListProgrammingLights({ lightList, programmingList, refr
                 <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
                     <DialogTitle>{texts.confirmation}</DialogTitle>
                     <DialogContent>
-                        {selectedProgramming && `¿Eliminar programación de ${getLightName(selectedProgramming.light_id)} el ${selectedProgramming.day_of_week}?`}
+                        <Typography>
+                            {`${texts.deleteProgrammingQuestion}  ${texts.actionIrreversible}`}
+
+                        </Typography>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => setDeleteDialogOpen(false)}>{texts.no}</Button>
@@ -166,11 +217,11 @@ export default function ListProgrammingLights({ lightList, programmingList, refr
                 </Dialog>
 
                 {/* Dialogo de editar */}
-                <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
+                <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)} className="light-dialog">
                     <DialogTitle>{texts.updateProgrammingLight}</DialogTitle>
                     <DialogContent>
                         {editFormData && (
-                            <form>
+                            <form className="form-container">
                                 <label>{texts.selectLight}</label>
                                 <select value={editFormData.light_id} onChange={(e) => setEditFormData({ ...editFormData, light_id: e.target.value })}>
                                     {lightList.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
@@ -181,11 +232,27 @@ export default function ListProgrammingLights({ lightList, programmingList, refr
                                 </select>
                                 <label>{texts.startTime}</label>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <TimePicker value={dayjs(editFormData.start_time, "HH:mm:ss")} onChange={(v) => setEditFormData({ ...editFormData, start_time: v.format("HH:mm:ss") })} ampm={false} />
+                                    <TimePicker
+                                        value={editFormData.start_time ? dayjs(editFormData.start_time, "HH:mm:ss") : null}
+                                        onChange={(newValue) => {
+                                            if (newValue) {
+                                                setEditFormData({ ...editFormData, start_time: newValue.format("HH:mm:ss") });
+                                            }
+                                        }}
+                                        ampm={false}
+                                    />
                                 </LocalizationProvider>
                                 <label>{texts.endTime}</label>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <TimePicker value={dayjs(editFormData.end_time, "HH:mm:ss")} onChange={(v) => setEditFormData({ ...editFormData, end_time: v.format("HH:mm:ss") })} ampm={false} />
+                                    <TimePicker
+                                        value={editFormData.end_time ? dayjs(editFormData.end_time, "HH:mm:ss") : null}
+                                        onChange={(newValue) => {
+                                            if (newValue) {
+                                                setEditFormData({ ...editFormData, end_time: newValue.format("HH:mm:ss") });
+                                            }
+                                        }}
+                                        ampm={false}
+                                    />
                                 </LocalizationProvider>
                             </form>
                         )}
