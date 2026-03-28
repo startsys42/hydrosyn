@@ -172,7 +172,7 @@ export default function UserAccordion({ systemId }) {
                 return;
             }
 
-
+            console.log("Usuarios disponibles:", data); // 👈 VER ESTO EN CONSOLA
 
             setAvailableUsers(
                 data.map((u) => ({
