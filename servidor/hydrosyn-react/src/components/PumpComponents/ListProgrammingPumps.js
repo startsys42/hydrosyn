@@ -10,6 +10,7 @@ import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import useTexts from "../../utils/UseTexts";
 import '../../styles/theme.css';
+import { Edit as EditIcon } from "@mui/icons-material";
 
 export default function ListProgrammingPumps({ pumpList, programmingList, refresh, error, setError, userRole }) {
     const texts = useTexts();
