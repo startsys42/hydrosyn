@@ -14,7 +14,7 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
 
     const [selectedPump, setSelectedPump] = useState("");
     const [volume, setVolume] = useState("");
-    const [unit, setUnit] = useState("l");
+    const [unit, setUnit] = useState("L");
     const [loading, setLoading] = useState(false);
     const [action, setAction] = useState("");
 
@@ -62,7 +62,7 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
             if (!userId) return navigate("/dashboard", { replace: true });
 
             let vol = parseFloat(volume);
-            if (unit === "ml") vol = vol / 1000;
+            if (unit === "mL") vol = vol / 1000;
             if (vol <= 0) {
                 setError("invalidVolume");
                 return;
@@ -153,8 +153,8 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
                         onChange={(e) => setUnit(e.target.value)}
                         disabled={loading}
                     >
-                        <option value="ml">ml</option>
-                        <option value="l">L</option>
+                        <option value="mL">mL</option>
+                        <option value="L">L</option>
                     </select>
 
 

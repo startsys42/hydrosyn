@@ -288,13 +288,13 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
                                 />
                                 <label>{texts.units}</label>
                                 <select
-                                    value={editFormData.unit || "l"}
+                                    value={editFormData.unit || "L"}
                                     onChange={(e) =>
                                         setEditFormData({ ...editFormData, unit: e.target.value })
                                     }
                                 >
-                                    <option value="l">L</option>
-                                    <option value="ml">ml</option>
+                                    <option value="L">L</option>
+                                    <option value="mL">mL</option>
                                 </select>
 
                                 {error && <p style={{ color: "red" }}>{texts[error] || error}</p>}
@@ -314,7 +314,7 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
                                     return setError("invalidVolume");
 
                                 let vol = Number(editFormData.volume);
-                                if (editFormData.unit === "ml") vol = vol / 1000;
+                                if (editFormData.unit === "mL") vol = vol / 1000;
                                 if (vol > 999.999) return setError("volumeTooHigh");
 
                                 // Conflictos

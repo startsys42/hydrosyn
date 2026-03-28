@@ -116,7 +116,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
         }
         let volumeNum = parseFloat(volume);
 
-        if (unit === "ml") {
+        if (unit === "mL") {
             volumeNum = volumeNum / 1000;
         }
 
@@ -214,7 +214,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
                         disabled={loading}
                     >
                         <option value="liters">L</option>
-                        <option value="ml">mL</option>
+                        <option value="mL">mL</option>
                     </select>
                     <button type="submit" disabled={loading}>
                         {loading ? texts.creating : texts.addRecord}

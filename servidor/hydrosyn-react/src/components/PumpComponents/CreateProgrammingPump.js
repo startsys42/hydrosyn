@@ -29,7 +29,7 @@ export default function CreateProgrammingPump({
     const [timeValue, setTimeValue] = useState(null);
     const [volume, setVolume] = useState("");
     const [loading, setLoading] = useState(false);
-    const [unit, setUnit] = useState("l");
+    const [unit, setUnit] = useState("L");
 
     const DAYS = [
         { value: "Monday", label: texts.dayMonday },
@@ -62,7 +62,7 @@ export default function CreateProgrammingPump({
         if (!volume) return setError("invalidVolume");
 
         let vol = parseFloat(volume);
-        if (unit === "ml") vol = vol / 1000;
+        if (unit === "mL") vol = vol / 1000;
         if (vol <= 0) return setError("invalidVolume");
         if (vol > 999.999) return setError("volumeTooHigh");
 
@@ -98,7 +98,7 @@ export default function CreateProgrammingPump({
             setDay("monday");
             setTimeValue(null);
             setVolume("");
-            setUnit("l");
+            setUnit("L");
 
             refresh();
 
@@ -175,8 +175,8 @@ export default function CreateProgrammingPump({
                         onChange={(e) => setUnit(e.target.value)}
                         disabled={loading}
                     >
-                        <option value="l">L</option>
-                        <option value="ml">ml</option>
+                        <option value="L">L</option>
+                        <option value="mL">mL</option>
                     </select>
 
                     <button type="submit" disabled={loading}>
