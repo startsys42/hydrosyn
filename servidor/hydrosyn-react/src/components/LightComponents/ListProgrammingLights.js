@@ -107,10 +107,10 @@ export default function ListProgrammingLights({ lightList, programmingList, refr
 
     const columns = [
         { field: "lightName", headerName: texts.lights, flex: 1, minWidth: 150 },
-        { field: "day", headerName: texts.days, flex: 1, minWidth: 120 },
+        { field: "day", headerName: texts.day, flex: 1, minWidth: 120 },
         { field: "startTime", headerName: texts.startTime, flex: 1, minWidth: 100 },
         { field: "endTime", headerName: texts.endTime, flex: 1, minWidth: 100 },
-        { field: "is_active", headerName: texts.status, flex: 1, minWidth: 100, renderCell: (p) => p.value ? "Activo" : "Inactivo" },
+        { field: "is_active", headerName: texts.onOff, flex: 1, minWidth: 100, renderCell: (p) => p.value ? "On" : "Off" },
     ];
 
     if (userRole === "owner") {

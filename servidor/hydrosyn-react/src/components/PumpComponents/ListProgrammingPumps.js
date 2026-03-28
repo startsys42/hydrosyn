@@ -120,7 +120,7 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
 
     const columns = [
         { field: 'pumpName', headerName: texts.pumps, flex: 1, minWidth: 150 },
-        { field: 'day', headerName: texts.days, flex: 1, minWidth: 120 },
+        { field: 'day', headerName: texts.day, flex: 1, minWidth: 120 },
         { field: 'time', headerName: texts.time, flex: 1, minWidth: 100 },
         {
             field: 'volume',
