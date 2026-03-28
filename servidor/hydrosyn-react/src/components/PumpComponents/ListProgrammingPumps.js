@@ -81,7 +81,7 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
             setEditDialogOpen(false);
             setEditFormData(null);
         } catch (err) {
-            setError(err.message || texts.errorUpdating);
+            setError("Error" || err.message);
         } finally {
             setLoading(false);
         }
@@ -108,7 +108,7 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
             setSelectedProgramming(null);
             setError(null);
         } catch (err) {
-            setError(err.message || texts.errorDeleting);
+            setError("Error" || err.message);
         } finally {
             setLoading(false);
         }
@@ -222,23 +222,32 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
                     <DialogTitle>{texts.updateProgrammingPump}</DialogTitle>
                     <DialogContent>
                         {editFormData && (
-                            <form>
+                            <form className="form-container">
                                 <label>{texts.selectPump}</label>
                                 <select
                                     value={editFormData.pump_id}
-                                    onChange={(e) => setEditFormData({ ...editFormData, pump_id: Number(e.target.value) })}
+                                    onChange={(e) =>
+                                        setEditFormData({
+                                            ...editFormData,
+                                            pump_id: Number(e.target.value),
+                                        })
+                                    }
                                 >
-                                    {pumpList.map(p => (
-                                        <option key={p.id} value={p.id}>{p.name}</option>
+                                    {pumpList.map((p) => (
+                                        <option key={p.id} value={p.id}>
+                                            {p.name}
+                                        </option>
                                     ))}
                                 </select>
 
                                 <label>{texts.days}</label>
                                 <select
                                     value={editFormData.day_of_week}
-                                    onChange={(e) => setEditFormData({ ...editFormData, day_of_week: e.target.value })}
+                                    onChange={(e) =>
+                                        setEditFormData({ ...editFormData, day_of_week: e.target.value })
+                                    }
                                 >
-                                    {DAYS.map(d => (
+                                    {DAYS.map((d) => (
                                         <option key={d.value} value={d.value}>
                                             {d.label}
                                         </option>
@@ -249,21 +258,92 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
                                 <input
                                     type="time"
                                     value={editFormData.clock?.substring(0, 5)}
-                                    onChange={(e) => setEditFormData({ ...editFormData, clock: e.target.value + ":00" })}
+                                    onChange={(e) =>
+                                        setEditFormData({ ...editFormData, clock: e.target.value + ":00" })
+                                    }
                                 />
 
                                 <label>{texts.volume}</label>
                                 <input
                                     type="number"
                                     value={editFormData.volume}
-                                    onChange={(e) => setEditFormData({ ...editFormData, volume: e.target.value })}
+                                    min="0.001"
+                                    step="0.001"
+                                    max="999.999"
+                                    onChange={(e) =>
+                                        setEditFormData({ ...editFormData, volume: e.target.value })
+                                    }
                                 />
+                                <label>{texts.units}</label>
+                                <select
+                                    value={editFormData.unit || "l"}
+                                    onChange={(e) =>
+                                        setEditFormData({ ...editFormData, unit: e.target.value })
+                                    }
+                                >
+                                    <option value="l">L</option>
+                                    <option value="ml">ml</option>
+                                </select>
+
+                                {error && <p style={{ color: "red" }}>{texts[error] || error}</p>}
                             </form>
                         )}
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => setEditDialogOpen(false)}>{texts.cancel}</Button>
-                        <Button onClick={handleEditConfirm} variant="contained">{texts.update}</Button>
+                        <Button
+                            onClick={async () => {
+                                setError("");
+
+                                // Validaciones
+                                if (!editFormData.pump_id) return setError("selectPump");
+                                if (!editFormData.clock) return setError("selectHour");
+                                if (!editFormData.volume || Number(editFormData.volume) <= 0)
+                                    return setError("invalidVolume");
+
+                                let vol = Number(editFormData.volume);
+                                if (editFormData.unit === "ml") vol = vol / 1000;
+                                if (vol > 999.999) return setError("volumeTooHigh");
+
+                                // Conflictos
+                                const conflict = programmingList.some(
+                                    (p) =>
+                                        p.id !== editFormData.id &&
+                                        p.pump_id === editFormData.pump_id &&
+                                        p.day_of_week === editFormData.day_of_week &&
+                                        p.clock === editFormData.clock
+                                );
+                                if (conflict) return setError("conflictProgramming");
+
+                                // Actualización en supabase
+                                setLoading(true);
+                                try {
+                                    const { error } = await supabase
+                                        .from("programming_pumps")
+                                        .update({
+                                            pump: editFormData.pump_id,
+                                            day_of_week: editFormData.day_of_week,
+                                            clock: editFormData.clock,
+                                            volume: vol,
+                                        })
+                                        .eq("id", editFormData.id);
+
+                                    if (error) throw error;
+
+                                    refresh();
+                                    setEditDialogOpen(false);
+                                    setEditFormData(null);
+                                } catch (err) {
+                                    setError("Error" || err.message);
+                                } finally {
+                                    setLoading(false);
+                                }
+                            }}
+                            variant="contained"
+                            disabled={loading}
+                        >
+                            {loading ? texts.updating : texts.update}
+                        </Button>
                     </DialogActions>
                 </Dialog>
             </AccordionDetails>
