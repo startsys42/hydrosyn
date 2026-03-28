@@ -72,9 +72,9 @@ export default function CreateProgrammingLight({
         const end = timeToMinutes(formData.end_time);
 
         if (start >= end) return "startAfterEnd";
-
+        const lightId = Number(formData.light_id);
         const conflict = programmingList.some(p => {
-            if (p.light_id !== formData.light_id) return false;
+            if (p.light_id !== lightId) return false;
             if (p.day_of_week !== formData.day_of_week) return false;
 
             const existingStart = timeToMinutes(p.start_time);
@@ -105,7 +105,7 @@ export default function CreateProgrammingLight({
             }
 
             const { error } = await supabase.from("programming_lights").insert({
-                light: formData.light_id,
+                light: Number(formData.light_id),
                 day_of_week: formData.day_of_week,
                 start_time: formData.start_time.format("HH:mm:ss"), // <-- Dayjs a string
                 end_time: formData.end_time.format("HH:mm:ss"),     // <-- Dayjs a string
