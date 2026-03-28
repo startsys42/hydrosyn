@@ -6,7 +6,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { DataGrid } from "@mui/x-data-grid";
-import { IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
+import { IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography } from "@mui/material";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import useTexts from "../../utils/UseTexts";
@@ -14,6 +14,10 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import dayjs from "dayjs";
+import '../../styles/theme.css';
+import { useLanguage } from "../../utils/LanguageContext";
+import { useRoleSystem } from "../../utils/RoleSystemContext";
+
 
 export default function ListProgrammingLights({ lightList, programmingList, refresh, error, setError, userRole }) {
     const texts = useTexts();
