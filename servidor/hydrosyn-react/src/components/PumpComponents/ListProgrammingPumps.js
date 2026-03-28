@@ -273,29 +273,31 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
                                         minutesStep={1}
                                         disabled={loading}
                                     />
-                                    <label>{texts.volume}</label>
-                                    <input
-                                        type="number"
-                                        value={editFormData.volume}
-                                        min="0.001"
-                                        step="0.001"
-                                        max="999.999"
-                                        onChange={(e) =>
-                                            setEditFormData({ ...editFormData, volume: e.target.value })
-                                        }
-                                    />
-                                    <label>{texts.units}</label>
-                                    <select
-                                        value={editFormData.unit || "l"}
-                                        onChange={(e) =>
-                                            setEditFormData({ ...editFormData, unit: e.target.value })
-                                        }
-                                    >
-                                        <option value="l">L</option>
-                                        <option value="ml">ml</option>
-                                    </select>
 
-                                    {error && <p style={{ color: "red" }}>{texts[error] || error}</p>}
+                                </LocalizationProvider>
+                                <label>{texts.volume}</label>
+                                <input
+                                    type="number"
+                                    value={editFormData.volume}
+                                    min="0.001"
+                                    step="0.001"
+                                    max="999.999"
+                                    onChange={(e) =>
+                                        setEditFormData({ ...editFormData, volume: e.target.value })
+                                    }
+                                />
+                                <label>{texts.units}</label>
+                                <select
+                                    value={editFormData.unit || "l"}
+                                    onChange={(e) =>
+                                        setEditFormData({ ...editFormData, unit: e.target.value })
+                                    }
+                                >
+                                    <option value="l">L</option>
+                                    <option value="ml">ml</option>
+                                </select>
+
+                                {error && <p style={{ color: "red" }}>{texts[error] || error}</p>}
                             </form>
                         )}
                     </DialogContent>
