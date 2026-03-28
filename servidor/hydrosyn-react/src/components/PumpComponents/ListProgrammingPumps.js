@@ -204,7 +204,7 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
                     />
                 </div>
 
-                {error && <p style={{ color: 'red' }}>{error}</p>}
+
 
                 <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
                     <DialogTitle>{texts.confirmation}</DialogTitle>

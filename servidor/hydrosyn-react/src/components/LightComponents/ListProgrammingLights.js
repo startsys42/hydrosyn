@@ -130,7 +130,7 @@ export default function ListProgrammingLights({ lightList, programmingList, refr
                     />
                 </div>
 
-                {error && <p style={{ color: 'red' }}>{error}</p>}
+
 
                 <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
                     <DialogTitle>{texts.confirmation}</DialogTitle>
