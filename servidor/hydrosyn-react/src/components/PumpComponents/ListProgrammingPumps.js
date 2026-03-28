@@ -11,6 +11,10 @@ import { useNavigate } from "react-router-dom";
 import useTexts from "../../utils/UseTexts";
 import '../../styles/theme.css';
 import { Edit as EditIcon } from "@mui/icons-material";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import dayjs from 'dayjs';
 
 export default function ListProgrammingPumps({ pumpList, programmingList, refresh, error, setError, userRole }) {
     const texts = useTexts();
@@ -255,37 +259,43 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
                                 </select>
 
                                 <label>{texts.time}</label>
-                                <input
-                                    type="time"
-                                    value={editFormData.clock?.substring(0, 5)}
-                                    onChange={(e) =>
-                                        setEditFormData({ ...editFormData, clock: e.target.value + ":00" })
-                                    }
-                                />
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <TimePicker
+                                        label={texts.time}
+                                        value={editFormData.clock ? dayjs(editFormData.clock, "HH:mm:ss") : null}
+                                        onChange={(newValue) =>
+                                            setEditFormData({
+                                                ...editFormData,
+                                                clock: newValue ? newValue.format("HH:mm:ss") : "",
+                                            })
+                                        }
+                                        ampm={false}
+                                        minutesStep={1}
+                                        disabled={loading}
+                                    />
+                                    <label>{texts.volume}</label>
+                                    <input
+                                        type="number"
+                                        value={editFormData.volume}
+                                        min="0.001"
+                                        step="0.001"
+                                        max="999.999"
+                                        onChange={(e) =>
+                                            setEditFormData({ ...editFormData, volume: e.target.value })
+                                        }
+                                    />
+                                    <label>{texts.units}</label>
+                                    <select
+                                        value={editFormData.unit || "l"}
+                                        onChange={(e) =>
+                                            setEditFormData({ ...editFormData, unit: e.target.value })
+                                        }
+                                    >
+                                        <option value="l">L</option>
+                                        <option value="ml">ml</option>
+                                    </select>
 
-                                <label>{texts.volume}</label>
-                                <input
-                                    type="number"
-                                    value={editFormData.volume}
-                                    min="0.001"
-                                    step="0.001"
-                                    max="999.999"
-                                    onChange={(e) =>
-                                        setEditFormData({ ...editFormData, volume: e.target.value })
-                                    }
-                                />
-                                <label>{texts.units}</label>
-                                <select
-                                    value={editFormData.unit || "l"}
-                                    onChange={(e) =>
-                                        setEditFormData({ ...editFormData, unit: e.target.value })
-                                    }
-                                >
-                                    <option value="l">L</option>
-                                    <option value="ml">ml</option>
-                                </select>
-
-                                {error && <p style={{ color: "red" }}>{texts[error] || error}</p>}
+                                    {error && <p style={{ color: "red" }}>{texts[error] || error}</p>}
                             </form>
                         )}
                     </DialogContent>
