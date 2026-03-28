@@ -155,13 +155,13 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
                 sortable: false,
                 filterable: false,
                 renderCell: (params) => (
-                    <Button
+                    <IconButton
                         size="small"
-                        variant="contained"
+                        color="primary"
                         onClick={() => handleEditClick(params.row.originalData)}
                     >
-                        {texts.edit}
-                    </Button>
+                        <EditIcon />
+                    </IconButton>
                 )
             });
         }
@@ -217,7 +217,7 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
                         </Button>
                     </DialogActions>
                 </Dialog>
-                <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
+                <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)} className="light-dialog">
                     <DialogTitle>{texts.updateProgrammingPump}</DialogTitle>
                     <DialogContent>
                         {editFormData && (

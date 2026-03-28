@@ -1,5 +1,5 @@
 /* Tema claro */
-.light-theme {
+.light-theme,.light-dialog {
     --bg-color: #ffffff;
     --text-color: #000000;
     --topbar-bg: #f0f0f0;
