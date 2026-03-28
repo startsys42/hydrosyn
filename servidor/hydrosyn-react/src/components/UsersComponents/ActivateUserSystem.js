@@ -135,7 +135,9 @@ export default function ActivateUserSystem({
                 });
                 if (error) throw error;
             }
-            refreshUsers();
+            if (refreshUsers) {
+                await refreshUsers();
+            }
             handleCloseDialog();
         } catch (err) {
             setExternalError(err.message);

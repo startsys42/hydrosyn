@@ -109,7 +109,7 @@ export default function CreateProgrammingLight({
                 day_of_week: formData.day_of_week,
                 start_time: formData.start_time.format("HH:mm:ss"), // <-- Dayjs a string
                 end_time: formData.end_time.format("HH:mm:ss"),     // <-- Dayjs a string
-                is_active: formData.is_active,
+
             });
 
             if (error) throw error;

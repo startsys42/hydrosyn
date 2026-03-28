@@ -59,6 +59,20 @@ export default function UserAccordion({ systemId }) {
         setCheckedAdmin(true);
         setLoading(false);
     };
+    const refreshUsersData = async () => {
+        const user = await checkAdmin();
+        if (user) {
+            await fetchUsers(user);
+        }
+    };
+
+    const refreshAvailableData = async () => {
+        const user = await checkAdmin();
+        if (user) {
+            await fetchAvailableUsers(user);
+        }
+    };
+
 
     // --- Verificación de admin ---
     const checkAdmin = async () => {
@@ -165,8 +179,8 @@ export default function UserAccordion({ systemId }) {
 
             <CreateUserSystem
                 systemId={systemId}
-                refreshUsers={fetchUsers}
-                refreshAvailable={fetchAvailableUsers}
+                refreshUsers={refreshUsersData}
+                refreshAvailable={refreshAvailableData}
                 error={errors.create}
                 setError={setCreateError}
                 loading={loadingUsers || loadingAvailable} // <-- añadido
@@ -175,8 +189,8 @@ export default function UserAccordion({ systemId }) {
             <DeleteUserSystem
                 systemId={systemId}
                 users={users}
-                refreshUsers={fetchUsers}
-                refreshAvailable={fetchAvailableUsers}
+                refreshUsers={refreshUsersData}
+                refreshAvailable={refreshAvailableData}
                 error={errors.delete}
                 setError={setDeleteError}
                 loading={loadingUsers || loadingAvailable} // porque borrado afecta a ambos
@@ -185,7 +199,7 @@ export default function UserAccordion({ systemId }) {
             <ActivateUserSystem
                 systemId={systemId}
                 users={users}
-                refreshUsers={fetchUsers}
+                refreshUsers={refreshUsersData}
                 error={errors.activate}
                 setError={setActivateError}
                 loading={loadingUsers} // solo afecta users
@@ -194,8 +208,8 @@ export default function UserAccordion({ systemId }) {
             <AssociateUserSystem
                 systemId={systemId}
                 availableUsers={availableUsers}
-                refreshUsers={fetchUsers}
-                refreshAvailable={fetchAvailableUsers}
+                refreshUsers={refreshUsersData}
+                refreshAvailable={refreshAvailableData}
                 error={errors.associate}
                 setError={setAssociateError}
                 loading={loadingUsers || loadingAvailable} // porque asociar afecta a ambos
