@@ -206,10 +206,10 @@ export default function LightAccordion({ systemId }) {
             <ListRecordsLights
                 systemId={systemId}
                 currentUserId={currentUserId}
-                refresh={fetchRecordsLights}  // ✅ Necesitas crear esta función
-                userRole={role}                // ✅ Pasar el rol
-                error={errors.records}         // ✅ Pasar el error
-                setError={(msg) => setComponentError("records", msg)}  // ✅ Pasar setError
+                refresh={fetchRecordsLights}
+                userRole={role}
+                error={errors.records}
+                setError={(msg) => setComponentError("records", msg)}
             />
 
         </div>
