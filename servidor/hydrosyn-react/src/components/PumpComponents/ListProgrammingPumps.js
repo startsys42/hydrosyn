@@ -318,13 +318,17 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
                                 if (vol > 999.999) return setError("volumeTooHigh");
 
                                 // Conflictos
-                                const conflict = programmingList.some(
-                                    (p) =>
-                                        p.id !== editFormData.id &&
-                                        p.pump_id === editFormData.pump_id &&
-                                        p.day_of_week === editFormData.day_of_week &&
-                                        p.clock === editFormData.clock
-                                );
+                                const conflict = programmingList.some((p) => {
+                                    if (p.id === editFormData.id) return false; // ignoramos la misma fila
+                                    if (p.pump_id !== editFormData.pump_id) return false;
+                                    if (p.day_of_week !== editFormData.day_of_week) return false;
+
+                                    // Comparamos solo HH:mm para ignorar segundos
+                                    const existingTime = dayjs(p.clock, "HH:mm:ss").format("HH:mm");
+                                    const newTime = dayjs(editFormData.clock, "HH:mm:ss").format("HH:mm");
+
+                                    return existingTime === newTime;
+                                });
                                 if (conflict) return setError("conflictProgramming");
 
                                 // Actualización en supabase

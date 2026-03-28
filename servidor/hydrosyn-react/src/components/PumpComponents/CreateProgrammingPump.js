@@ -43,15 +43,15 @@ export default function CreateProgrammingPump({
 
     const checkConflict = () => {
         if (!timeValue) return false;
-        const timeStr = timeValue.format("HH:mm:ss"); // hora tal cual usuario la ve
+        const timeStr = timeValue.format("HH:mm"); // solo HH:mm
 
-        return programmingList.some(p =>
-            p.pump_id === Number(selectedPump) &&
-            p.day_of_week === day &&
-            p.clock === timeStr
-        );
+        return programmingList.some(p => {
+            const pTime = dayjs(p.clock, "HH:mm:ss").format("HH:mm"); // igual solo HH:mm
+            return p.pump_id === Number(selectedPump) &&
+                p.day_of_week === day &&
+                pTime === timeStr;
+        });
     };
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
