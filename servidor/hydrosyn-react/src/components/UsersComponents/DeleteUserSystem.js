@@ -49,14 +49,14 @@ export default function DeleteUserSystem({
         { field: "email", headerName: texts.email, width: 250 },
         {
             field: 'thisSystem',
-            headerName: texts.deleteThisSystem,
+            headerName: texts.delete,
             sortable: false,
             disableColumnMenu: true,
             filterable: false,
             width: 150,
             renderCell: (params) => (
                 <button style={{ padding: '4px 16px' }} onClick={() => handleOpenDialog(params.row, false)}>
-                    {texts.ThisSystem}
+                    {texts.delete}
                 </button>
             )
         },
