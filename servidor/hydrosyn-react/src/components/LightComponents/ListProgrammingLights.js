@@ -1,23 +1,19 @@
-
 import { useState } from "react";
-import { supabase } from "../../utils/supabaseClient";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { DataGrid } from "@mui/x-data-grid";
-import { IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography } from "@mui/material";
+import { IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from "@mui/material";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
+import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import useTexts from "../../utils/UseTexts";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import dayjs from "dayjs";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import dayjs from 'dayjs';
 import '../../styles/theme.css';
-import { useLanguage } from "../../utils/LanguageContext";
-import { useRoleSystem } from "../../utils/RoleSystemContext";
-
 
 export default function ListProgrammingLights({ lightList, programmingList, refresh, error, setError, userRole }) {
     const texts = useTexts();
@@ -44,27 +40,6 @@ export default function ListProgrammingLights({ lightList, programmingList, refr
         if (dayjs.isDayjs(time)) return time.hour() * 60 + time.minute();
         const [hours, minutes] = time.split(":").map(Number);
         return hours * 60 + minutes;
-    };
-
-    const checkConflict = (form) => {
-        const start = timeToMinutes(form.start_time);
-        const end = timeToMinutes(form.end_time);
-
-        if (start >= end) return "startAfterEnd";
-
-        const conflict = programmingList.some(p => {
-            if (p.id === form.id) return false; // ignorar la misma fila
-            if (p.light_id !== form.light_id) return false;
-            if (p.day_of_week !== form.day_of_week) return false;
-
-            const existingStart = timeToMinutes(p.start_time);
-            const existingEnd = timeToMinutes(p.end_time);
-
-            return start < existingEnd && end > existingStart;
-        });
-
-        if (conflict) return "conflictProgrammingLight";
-        return null;
     };
 
     const getLightName = (id) => {
@@ -109,54 +84,6 @@ export default function ListProgrammingLights({ lightList, programmingList, refr
         }
     };
 
-    const handleEditConfirm = async () => {
-        if (!editFormData) return;
-        setError(null);
-
-        // Validación: luz seleccionada
-        if (!editFormData.light_id) {
-            setError("selectLight");
-            return;
-        }
-
-        // Validación: horarios no vacíos
-        if (!editFormData.start_time || !editFormData.end_time) {
-            setError("selectTime");
-            return;
-        }
-
-        // Validación: conflicto de horarios
-        const conflictMsg = checkConflict(editFormData);
-        if (conflictMsg) {
-            setError(conflictMsg);
-            return;
-        }
-
-        setLoading(true);
-        try {
-            const { error } = await supabase
-                .from("programming_lights")
-                .update({
-                    light: editFormData.light_id,
-                    day_of_week: editFormData.day_of_week,
-                    start_time: editFormData.start_time,
-                    end_time: editFormData.end_time,
-                    is_active: editFormData.is_active,
-                })
-                .eq("id", editFormData.id);
-
-            if (error) throw error;
-
-            refresh();
-            setEditDialogOpen(false);
-            setEditFormData(null);
-        } catch (err) {
-            setError("Error" || err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const columns = [
         { field: "lightName", headerName: texts.lights, flex: 1, minWidth: 150 },
         { field: "day", headerName: texts.day, flex: 1, minWidth: 120 },
@@ -188,7 +115,9 @@ export default function ListProgrammingLights({ lightList, programmingList, refr
 
     return (
         <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}><h3>{texts.listProgrammingLight}</h3></AccordionSummary>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <h3>{texts.listProgrammingLight}</h3>
+            </AccordionSummary>
             <AccordionDetails>
                 <div style={{ height: 500, width: "100%" }}>
                     <DataGrid
@@ -201,39 +130,48 @@ export default function ListProgrammingLights({ lightList, programmingList, refr
                     />
                 </div>
 
-                {error && <p style={{ color: "red" }}>{error}</p>}
+                {error && <p style={{ color: 'red' }}>{error}</p>}
 
-                {/* Dialogo de borrar */}
                 <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
                     <DialogTitle>{texts.confirmation}</DialogTitle>
                     <DialogContent>
                         <Typography>
                             {`${texts.deleteProgrammingQuestion}  ${texts.actionIrreversible}`}
-
                         </Typography>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => setDeleteDialogOpen(false)}>{texts.no}</Button>
-                        <Button onClick={handleDeleteConfirm} disabled={loading} variant="contained" color="error">
+                        <Button onClick={handleDeleteConfirm} variant="contained" color="error" disabled={loading}>
                             {loading ? texts.deleting : texts.yes}
                         </Button>
                     </DialogActions>
                 </Dialog>
 
-                {/* Dialogo de editar */}
                 <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)} className="light-dialog">
                     <DialogTitle>{texts.updateProgrammingLight}</DialogTitle>
                     <DialogContent>
                         {editFormData && (
                             <form className="form-container">
                                 <label>{texts.selectLight}</label>
-                                <select value={editFormData.light_id} onChange={(e) => setEditFormData({ ...editFormData, light_id: e.target.value })}>
-                                    {lightList.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
+                                <select
+                                    value={editFormData.light_id}
+                                    onChange={(e) => setEditFormData({ ...editFormData, light_id: Number(e.target.value) })}
+                                >
+                                    {lightList.map((l) => (
+                                        <option key={l.id} value={l.id}>{l.name}</option>
+                                    ))}
                                 </select>
+
                                 <label>{texts.days}</label>
-                                <select value={editFormData.day_of_week} onChange={(e) => setEditFormData({ ...editFormData, day_of_week: e.target.value })}>
-                                    {DAYS.map(d => <option key={d.value} value={d.value}>{d.label}</option>)}
+                                <select
+                                    value={editFormData.day_of_week}
+                                    onChange={(e) => setEditFormData({ ...editFormData, day_of_week: e.target.value })}
+                                >
+                                    {DAYS.map((d) => (
+                                        <option key={d.value} value={d.value}>{d.label}</option>
+                                    ))}
                                 </select>
+
                                 <label>{texts.startTime}</label>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <TimePicker
@@ -246,6 +184,7 @@ export default function ListProgrammingLights({ lightList, programmingList, refr
                                         ampm={false}
                                     />
                                 </LocalizationProvider>
+
                                 <label>{texts.endTime}</label>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <TimePicker
@@ -258,12 +197,69 @@ export default function ListProgrammingLights({ lightList, programmingList, refr
                                         ampm={false}
                                     />
                                 </LocalizationProvider>
+
+
+
+                                {error && <p style={{ color: "red" }}>{texts[error] || error}</p>}
                             </form>
                         )}
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => setEditDialogOpen(false)}>{texts.cancel}</Button>
-                        <Button onClick={handleEditConfirm} disabled={loading} variant="contained">{loading ? texts.updating : texts.update}</Button>
+                        <Button
+                            onClick={async () => {
+                                setError("");
+
+                                // Validaciones
+                                if (!editFormData.light_id) return setError("selectLight");
+                                if (!editFormData.start_time || !editFormData.end_time) return setError("selectTime");
+
+                                const start = timeToMinutes(editFormData.start_time);
+                                const end = timeToMinutes(editFormData.end_time);
+                                if (start >= end) return setError("startAfterEnd");
+
+                                // Conflictos
+                                const conflict = programmingList.some((p) => {
+                                    if (p.id === editFormData.id) return false;
+                                    if (Number(p.light_id) !== Number(editFormData.light_id)) return false;
+                                    if (p.day_of_week !== editFormData.day_of_week) return false;
+
+                                    const existingStart = timeToMinutes(p.start_time);
+                                    const existingEnd = timeToMinutes(p.end_time);
+
+                                    return start < existingEnd && end > existingStart;
+                                });
+                                if (conflict) return setError("conflictProgrammingLight");
+
+                                setLoading(true);
+                                try {
+                                    const { error } = await supabase
+                                        .from("programming_lights")
+                                        .update({
+                                            light: Number(editFormData.light_id),
+                                            day_of_week: editFormData.day_of_week,
+                                            start_time: editFormData.start_time,
+                                            end_time: editFormData.end_time,
+                                            is_active: editFormData.is_active,
+                                        })
+                                        .eq("id", editFormData.id);
+
+                                    if (error) throw error;
+
+                                    refresh();
+                                    setEditDialogOpen(false);
+                                    setEditFormData(null);
+                                } catch (err) {
+                                    setError("Error" || err.message);
+                                } finally {
+                                    setLoading(false);
+                                }
+                            }}
+                            variant="contained"
+                            disabled={loading}
+                        >
+                            {loading ? texts.updating : texts.update}
+                        </Button>
                     </DialogActions>
                 </Dialog>
             </AccordionDetails>
