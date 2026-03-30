@@ -102,7 +102,7 @@ export default function ListRecordsPump({ systemId, recordPumpList, refresh, use
                 user_email: c.user_email || '--', // 🔹 usar la columna plana que viene del servidor
                 volume: `${displayVolume.toFixed(3)} ${displayUnit}`,
                 success: c.success ? "✔" : "✘",
-                created_at: new Date(c.created_at).toLocaleString()
+                created_at: c.created_at
             };
         }));
         setLoading(false)
@@ -123,30 +123,13 @@ export default function ListRecordsPump({ systemId, recordPumpList, refresh, use
             minWidth: 150,
             flex: 1,
             renderCell: (params) => {
-                if (!params.value) {
-                    return '--';
-                }
-                try {
-                    //const date = new Date(params.value);
-                    //return dayjs(date).format('DD/MM/YYYY HH:mm:ss');
-                    const date = new Date(params.value);
+                if (!params.value) return '--';
 
-                    if (isNaN(date.getTime())) { return 'Date invalid'; }
+                const date = dayjs(params.value);
 
-                    return date.toLocaleString(undefined, {
-                        //timeZone: 'UTC',
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit'
-                    });
+                if (!date.isValid()) return 'Date invalid';
 
-                } catch (error) {
-
-                    return 'Error date';
-                }
+                return date.format('DD/MM/YYYY HH:mm:ss');
             }
         },
     ];

@@ -100,7 +100,7 @@ export default function ListCalibrate({ systemId, calibrateList, refresh, userRo
                 pump_name: c.pump_name || '--',
                 user_email: c.user_email || '--',
                 volume: `${displayVolume.toFixed(3)} ${displayUnit}`, // mostrar con unidad
-                created_at: new Date(c.created_at).toLocaleString()
+                created_at: c.created_at
             };
         }));
 
@@ -121,30 +121,13 @@ export default function ListCalibrate({ systemId, calibrateList, refresh, userRo
             minWidth: 150,
             flex: 1,
             renderCell: (params) => {
-                if (!params.value) {
-                    return '--';
-                }
-                try {
-                    //const date = new Date(params.value);
-                    //return dayjs(date).format('DD/MM/YYYY HH:mm:ss');
-                    const date = new Date(params.value);
+                if (!params.value) return '--';
 
-                    if (isNaN(date.getTime())) { return 'Date invalid'; }
+                const date = dayjs(params.value);
 
-                    return date.toLocaleString(undefined, {
-                        //timeZone: 'UTC',
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit'
-                    });
+                if (!date.isValid()) return 'Date invalid';
 
-                } catch (error) {
-
-                    return 'Error date';
-                }
+                return date.format('DD/MM/YYYY HH:mm:ss');
             }
         },
     ];
