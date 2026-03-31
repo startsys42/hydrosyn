@@ -249,8 +249,8 @@ CREATE TABLE public.lights (
     esp32 BIGINT NOT NULL,
     gpio INTEGER NOT NULL CHECK (gpio IN (2,4,5,12,13,14,15,18,19,21,22,23,25,26,27,32,33)),
     system BIGINT NOT NULL,
-    CONSTRAINT lights_system_fkey FOREIGN KEY (system) REFERENCES public.systems(id) ON DELETE restrict ON UPDATE CASCADE,
-    CONSTRAINT lights_esp32_fkey FOREIGN KEY (esp32) REFERENCES public.esp32(id) ON DELETE restrict ON UPDATE CASCADE,
+    CONSTRAINT lights_system_fkey FOREIGN KEY (system) REFERENCES public.systems(id) ON DELETE cascade ON UPDATE CASCADE,
+    CONSTRAINT lights_esp32_fkey FOREIGN KEY (esp32) REFERENCES public.esp32(id) ON DELETE cascade ON UPDATE CASCADE,
     CONSTRAINT unique_esp32_gpio_lights UNIQUE (esp32, gpio)
 );
 
@@ -264,7 +264,7 @@ CREATE TABLE public.programming_lights (
     end_time TIME NOT NULL,
     day_of_week day_of_week NOT NULL,
     is_active BOOLEAN DEFAULT false,
-    CONSTRAINT programming_lights_light_fkey FOREIGN KEY (light) REFERENCES public.lights(id) ON DELETE restrict ON UPDATE CASCADE,
+    CONSTRAINT programming_lights_light_fkey FOREIGN KEY (light) REFERENCES public.lights(id) ON DELETE cascade ON UPDATE CASCADE,
     CONSTRAINT valid_time_range CHECK (end_time > start_time)
 );
 
@@ -274,6 +274,6 @@ CREATE TABLE public.lights_history (
     action SMALLINT NOT NULL,                -- 0 = apagado, 1 = encendido
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
     
-    CONSTRAINT lights_history_light_fkey FOREIGN KEY (light_id) REFERENCES public.lights(id) ON DELETE restrict ON UPDATE CASCADE,
+    CONSTRAINT lights_history_light_fkey FOREIGN KEY (light_id) REFERENCES public.lights(id) ON DELETE cascade ON UPDATE CASCADE,
     CONSTRAINT valid_action CHECK (action IN (0, 1))
 );

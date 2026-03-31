@@ -154,7 +154,8 @@ $$;
 CREATE OR REPLACE FUNCTION get_pending_programs(
   p_system_name TEXT,
   p_esp_name TEXT,
-  p_code TEXT
+  p_code TEXT,
+   p_esp_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )
 RETURNS TABLE (
   programming_id BIGINT,
@@ -168,13 +169,13 @@ DECLARE
   v_system_id BIGINT;
   v_admin_id UUID;
   v_esp32_id BIGINT;
-  v_24h_atras TIMESTAMP;
+  v_24h_atras TIMESTAMP := p_esp_time - INTERVAL '24 hours'; 
   v_calib_volume NUMERIC;
   v_calib_time INTEGER;
   v_record RECORD;
   v_fecha_programada TIMESTAMP;
   v_dow INTEGER;
-  v_hoy DATE;
+    v_hoy DATE := p_esp_time::DATE;
   v_dias_atras INTEGER;
 BEGIN
   -- =============================================
@@ -204,12 +205,7 @@ BEGIN
     RAISE EXCEPTION 'ESP32 not found in this system';
   END IF;
   
-  -- =============================================
-  -- DEFINIR VENTANA DE TIEMPO: ÚLTIMAS 24 HORAS
-  -- =============================================
-  v_24h_atras := CURRENT_TIMESTAMP - INTERVAL '24 hours';
-  v_hoy := CURRENT_DATE;
-  
+
   -- =============================================
   -- RECORRER TODAS LAS PROGRAMACIONES DEL ESP32
   -- =============================================
@@ -283,7 +279,7 @@ BEGIN
       -- =============================================
       -- PASO 3: Verificar si esta ocurrencia está en las ÚLTIMAS 24 HORAS
       -- =============================================
-      IF v_fecha_programada BETWEEN v_24h_atras AND CURRENT_TIMESTAMP THEN
+      IF v_fecha_programada BETWEEN v_24h_atras AND p_esp_time  THEN
         
         -- =============================================
         -- PASO 4: Verificar si YA SE EJECUTÓ CON ÉXITO
@@ -434,6 +430,7 @@ DECLARE
   v_admin_id UUID;
   v_esp32_id BIGINT;
   v_pump_id BIGINT;
+   v_volume NUMERIC; 
 BEGIN
   -- Mismas validaciones...
   SELECT e.id, e.system, s.admin INTO v_esp32_id, v_system_id, v_admin_id
@@ -452,7 +449,7 @@ BEGIN
     RAISE EXCEPTION 'System administrator is not active';
   END IF;
   
-  SELECT p.id INTO v_pump_id
+     SELECT p.id, pp.volume INTO v_pump_id, v_volume 
   FROM programming_pumps pp
   JOIN pumps p ON p.id = pp.pump
   WHERE pp.id = p_programming_id AND p.esp32 = v_esp32_id;
@@ -488,120 +485,120 @@ $$;
 
 
 
+
 CREATE OR REPLACE FUNCTION get_pending_light_events(
-  p_system_name TEXT,
-  p_esp_name TEXT,
-  p_code TEXT
+    p_system_name TEXT,
+    p_esp_name TEXT,
+    p_code TEXT,
+    p_esp_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )
 RETURNS TABLE (
-  light_id BIGINT,
-  gpio INTEGER,
-  action SMALLINT,
-  scheduled_at TIMESTAMP
+    light_id BIGINT,
+    gpio INTEGER,
+    action SMALLINT,
+    scheduled_at TIMESTAMP
 )
 LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 DECLARE
-  v_system_id BIGINT;
-  v_admin_id UUID;
-  v_esp32_id BIGINT;
-  v_now TIMESTAMP := CURRENT_TIMESTAMP;
-  v_margin INTERVAL := INTERVAL '30 minutes'; 
-  v_today DATE := CURRENT_DATE;
-  v_event_time TIMESTAMP;
+    v_system_id BIGINT;
+    v_admin_id UUID;
+    v_esp32_id BIGINT;
+    v_esp_time TIMESTAMP := p_esp_time;
+    v_today DATE := p_esp_time::DATE;
+    v_dow INTEGER := EXTRACT(DOW FROM v_esp_time);
+    v_now TIME := v_esp_time::time;
+    v_start_time TIME;
+    v_end_time TIME;
+    v_is_active BOOLEAN;
+    r RECORD;
 BEGIN
-  -- =============================================
-  -- VALIDACIONES
-  -- =============================================
-  SELECT s.id, s.admin INTO v_system_id, v_admin_id
-  FROM systems s
-  JOIN system_secrets ss ON ss.system = s.id
-  WHERE s.name = p_system_name AND ss.code = p_code;
+    -- Validar sistema y código
+    SELECT s.id, s.admin INTO v_system_id, v_admin_id
+    FROM systems s
+    JOIN system_secrets ss ON ss.system = s.id
+    WHERE s.name = p_system_name AND ss.code = p_code;
 
-  IF NOT FOUND THEN
-    RAISE EXCEPTION 'Invalid system or code';
-  END IF;
-
-  IF NOT EXISTS (
-    SELECT 1 FROM admin_users 
-    WHERE "user" = v_admin_id AND is_active = true
-  ) THEN
-    RAISE EXCEPTION 'Admin inactive';
-  END IF;
-
-  SELECT e.id INTO v_esp32_id
-  FROM esp32 e
-  WHERE e.name = p_esp_name AND e.system = v_system_id;
-
-  IF NOT FOUND THEN
-    RAISE EXCEPTION 'ESP32 not found';
-  END IF;
-
-  -- =============================================
-  -- RECORRER PROGRAMACIONES
-  -- =============================================
-  FOR light_id, gpio, v_event_time, action IN
-    SELECT 
-      l.id,
-      l.gpio,
-      -- evento ON
-      (v_today + pl.start_time),
-      1
-    FROM programming_lights pl
-    JOIN lights l ON l.id = pl.light
-    WHERE l.esp32 = v_esp32_id
-      AND pl.is_active = true
-      AND pl.day_of_week::text = TRIM(TO_CHAR(v_today, 'Day'))
-
-    UNION ALL
-
-    SELECT 
-      l.id,
-      l.gpio,
-      -- evento OFF
-      (v_today + pl.end_time),
-      0
-    FROM programming_lights pl
-    JOIN lights l ON l.id = pl.light
-    WHERE l.esp32 = v_esp32_id
-      AND pl.is_active = true
-      AND pl.day_of_week::text = TRIM(TO_CHAR(v_today, 'Day'))
-  LOOP
-
-    -- =============================================
-    -- SOLO EVENTOS DENTRO DEL MARGEN
-    -- =============================================
-    IF v_event_time BETWEEN (v_now - v_margin) AND (v_now + v_margin) THEN
-
-      -- =============================================
-      -- ¿YA SE EJECUTÓ?
-      -- =============================================
-      IF NOT EXISTS (
-        SELECT 1 FROM lights_history lh
-        WHERE lh.light_id = light_id
-          AND lh.action = action
-          AND lh.created_at BETWEEN (v_event_time - v_margin)
-                               AND (v_event_time + v_margin)
-      ) THEN
-        scheduled_at := v_event_time;
-        RETURN NEXT;
-      END IF;
-
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'Invalid system or code';
     END IF;
 
-  END LOOP;
+    -- Validar admin activo
+    IF NOT EXISTS (SELECT 1 FROM admin_users WHERE "user" = v_admin_id AND is_active = true) THEN
+        RAISE EXCEPTION 'Admin inactive';
+    END IF;
 
-  RETURN;
+    -- Validar ESP32
+    SELECT e.id INTO v_esp32_id
+    FROM esp32 e
+    WHERE e.name = p_esp_name AND e.system = v_system_id;
+
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'ESP32 not found';
+    END IF;
+
+    -- Recorrer cada luz
+    FOR r IN 
+        SELECT l.id, l.gpio
+        FROM lights l
+        WHERE l.esp32 = v_esp32_id
+    LOOP
+        light_id := r.id;
+        gpio := r.gpio;
+        
+        -- Buscar la programación activa para hoy
+        SELECT pl.start_time, pl.end_time, pl.is_active 
+        INTO v_start_time, v_end_time, v_is_active
+        FROM programming_lights pl
+        WHERE pl.light = light_id
+          AND pl.day_of_week = (
+              CASE v_dow
+                  WHEN 1 THEN 'Monday'::day_of_week
+                  WHEN 2 THEN 'Tuesday'::day_of_week
+                  WHEN 3 THEN 'Wednesday'::day_of_week
+                  WHEN 4 THEN 'Thursday'::day_of_week
+                  WHEN 5 THEN 'Friday'::day_of_week
+                  WHEN 6 THEN 'Saturday'::day_of_week
+                  WHEN 0 THEN 'Sunday'::day_of_week
+              END
+          )
+        ORDER BY pl.start_time DESC
+        LIMIT 1;
+        
+        -- Si hay programación
+        IF v_start_time IS NOT NULL THEN
+            -- CASO 1: Dentro del rango (debería estar encendida)
+            IF v_now >= v_start_time AND v_now <= v_end_time THEN
+                -- Si está apagada, hay que encenderla
+                IF v_is_active = false THEN
+                    action := 1;
+                    scheduled_at := (v_today::TIMESTAMP + v_start_time);
+                    RETURN NEXT;
+                END IF;
+            -- CASO 2: Fuera del rango (debería estar apagada)
+            ELSE
+                -- Si está encendida, hay que apagarla
+                IF v_is_active = true THEN
+                    action := 0;
+                    scheduled_at := (v_today::TIMESTAMP + v_end_time);
+                    RETURN NEXT;
+                END IF;
+            END IF;
+        END IF;
+    END LOOP;
+    
+    RETURN;
 END;
 $$;
 
+
 CREATE OR REPLACE FUNCTION register_light_event(
     p_light_id BIGINT,
-    p_action SMALLINT,        -- 1 = ON, 0 = OFF
+    p_action SMALLINT,
     p_esp_name TEXT,
     p_code TEXT,
-    p_scheduled_at TIMESTAMP   -- real scheduled time
+    p_scheduled_at TIMESTAMP
 )
 RETURNS BOOLEAN
 LANGUAGE plpgsql
@@ -611,6 +608,8 @@ DECLARE
     v_system_id BIGINT;
     v_admin_id UUID;
     v_esp32_id BIGINT;
+    v_programming_id BIGINT;
+    v_margin INTERVAL := INTERVAL '30 minutes';  -- 👈 Margen de 30 minutos
 BEGIN
     -- 1. Validate action
     IF p_action NOT IN (0,1) THEN
@@ -651,15 +650,23 @@ BEGIN
     INSERT INTO lights_history(light_id, action, created_at)
     VALUES (p_light_id, p_action, p_scheduled_at);
 
-    -- 6. Optionally mark programming as inactive if matches scheduled time
-    UPDATE programming_lights
-    SET is_active = false
+    -- 6. Buscar la programación con margen de tiempo
+    SELECT id INTO v_programming_id
+    FROM programming_lights
     WHERE light = p_light_id
-      AND start_time = (SELECT start_time 
-                        FROM programming_lights 
-                        WHERE light = p_light_id 
-                        ORDER BY created_at DESC LIMIT 1)
-      AND day_of_week::text = TRIM(TO_CHAR(p_scheduled_at, 'Day'));
+      AND day_of_week::text = TRIM(TO_CHAR(p_scheduled_at, 'Day'))
+      AND (
+          (p_action = 1 AND ABS(EXTRACT(EPOCH FROM (start_time - p_scheduled_at::time))) <= 1800) OR  -- 30 minutos = 1800 segundos
+          (p_action = 0 AND ABS(EXTRACT(EPOCH FROM (end_time - p_scheduled_at::time))) <= 1800)
+      )
+    LIMIT 1;
+
+    -- 7. Actualizar el estado
+    IF v_programming_id IS NOT NULL THEN
+        UPDATE programming_lights
+        SET is_active = (p_action = 1)
+        WHERE id = v_programming_id;
+    END IF;
 
     RETURN true;
 END;
