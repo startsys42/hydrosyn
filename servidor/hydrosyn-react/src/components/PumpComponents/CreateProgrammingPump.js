@@ -26,7 +26,7 @@ export default function CreateProgrammingPump({
 
     const [selectedPump, setSelectedPump] = useState("");
     const [day, setDay] = useState("Monday");
-    const [timeValue, setTimeValue] = useState(null);
+    const [timeValue, setTimeValue] = useState(dayjs());
     const [volume, setVolume] = useState("");
     const [loading, setLoading] = useState(false);
     const [unit, setUnit] = useState("L");

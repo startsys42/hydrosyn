@@ -463,9 +463,204 @@ BEGIN
   
   INSERT INTO executions_pumps (programming_id, success)
   VALUES (p_programming_id, p_success);
+
+    -- =============================================
+  -- INSERTAR RECORD (SOLO SI SUCCESS)
+  -- =============================================
+  IF p_success THEN
+    INSERT INTO records_pumps (
+      pump,
+      volume,
+      "user",
+      success
+    )
+    VALUES (
+      v_pump_id,
+      v_volume,
+      v_admin_id,
+      true
+    );
+  END IF;
+
   RETURN true;
 END;
 $$;
 
 
 
+CREATE OR REPLACE FUNCTION get_pending_light_events(
+  p_system_name TEXT,
+  p_esp_name TEXT,
+  p_code TEXT
+)
+RETURNS TABLE (
+  light_id BIGINT,
+  gpio INTEGER,
+  action SMALLINT,
+  scheduled_at TIMESTAMP
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  v_system_id BIGINT;
+  v_admin_id UUID;
+  v_esp32_id BIGINT;
+  v_now TIMESTAMP := CURRENT_TIMESTAMP;
+  v_margin INTERVAL := INTERVAL '30 minutes'; 
+  v_today DATE := CURRENT_DATE;
+  v_event_time TIMESTAMP;
+BEGIN
+  -- =============================================
+  -- VALIDACIONES
+  -- =============================================
+  SELECT s.id, s.admin INTO v_system_id, v_admin_id
+  FROM systems s
+  JOIN system_secrets ss ON ss.system = s.id
+  WHERE s.name = p_system_name AND ss.code = p_code;
+
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'Invalid system or code';
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM admin_users 
+    WHERE "user" = v_admin_id AND is_active = true
+  ) THEN
+    RAISE EXCEPTION 'Admin inactive';
+  END IF;
+
+  SELECT e.id INTO v_esp32_id
+  FROM esp32 e
+  WHERE e.name = p_esp_name AND e.system = v_system_id;
+
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'ESP32 not found';
+  END IF;
+
+  -- =============================================
+  -- RECORRER PROGRAMACIONES
+  -- =============================================
+  FOR light_id, gpio, v_event_time, action IN
+    SELECT 
+      l.id,
+      l.gpio,
+      -- evento ON
+      (v_today + pl.start_time),
+      1
+    FROM programming_lights pl
+    JOIN lights l ON l.id = pl.light
+    WHERE l.esp32 = v_esp32_id
+      AND pl.is_active = true
+      AND pl.day_of_week::text = TRIM(TO_CHAR(v_today, 'Day'))
+
+    UNION ALL
+
+    SELECT 
+      l.id,
+      l.gpio,
+      -- evento OFF
+      (v_today + pl.end_time),
+      0
+    FROM programming_lights pl
+    JOIN lights l ON l.id = pl.light
+    WHERE l.esp32 = v_esp32_id
+      AND pl.is_active = true
+      AND pl.day_of_week::text = TRIM(TO_CHAR(v_today, 'Day'))
+  LOOP
+
+    -- =============================================
+    -- SOLO EVENTOS DENTRO DEL MARGEN
+    -- =============================================
+    IF v_event_time BETWEEN (v_now - v_margin) AND (v_now + v_margin) THEN
+
+      -- =============================================
+      -- ¿YA SE EJECUTÓ?
+      -- =============================================
+      IF NOT EXISTS (
+        SELECT 1 FROM lights_history lh
+        WHERE lh.light_id = light_id
+          AND lh.action = action
+          AND lh.created_at BETWEEN (v_event_time - v_margin)
+                               AND (v_event_time + v_margin)
+      ) THEN
+        scheduled_at := v_event_time;
+        RETURN NEXT;
+      END IF;
+
+    END IF;
+
+  END LOOP;
+
+  RETURN;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION register_light_event(
+    p_light_id BIGINT,
+    p_action SMALLINT,        -- 1 = ON, 0 = OFF
+    p_esp_name TEXT,
+    p_code TEXT,
+    p_scheduled_at TIMESTAMP   -- real scheduled time
+)
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+    v_system_id BIGINT;
+    v_admin_id UUID;
+    v_esp32_id BIGINT;
+BEGIN
+    -- 1. Validate action
+    IF p_action NOT IN (0,1) THEN
+        RAISE EXCEPTION 'Invalid action: must be 0 (OFF) or 1 (ON)';
+    END IF;
+
+    -- 2. Validate ESP32 and system
+    SELECT s.id, s.admin INTO v_system_id, v_admin_id
+    FROM systems s
+    JOIN system_secrets ss ON ss.system = s.id
+    JOIN esp32 e ON e.system = s.id
+    WHERE e.name = p_esp_name
+      AND ss.code = p_code;
+
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'ESP32 not authorized or invalid code';
+    END IF;
+
+    -- 3. Validate admin active
+    IF NOT EXISTS (
+        SELECT 1 FROM admin_users 
+        WHERE "user" = v_admin_id AND is_active = true
+    ) THEN
+        RAISE EXCEPTION 'System administrator is not active';
+    END IF;
+
+    -- 4. Validate light belongs to this ESP32/system
+    SELECT id INTO v_esp32_id
+    FROM lights
+    WHERE id = p_light_id
+      AND system = v_system_id;
+
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'Light does not belong to this system';
+    END IF;
+
+    -- 5. Insert event into lights_history
+    INSERT INTO lights_history(light_id, action, created_at)
+    VALUES (p_light_id, p_action, p_scheduled_at);
+
+    -- 6. Optionally mark programming as inactive if matches scheduled time
+    UPDATE programming_lights
+    SET is_active = false
+    WHERE light = p_light_id
+      AND start_time = (SELECT start_time 
+                        FROM programming_lights 
+                        WHERE light = p_light_id 
+                        ORDER BY created_at DESC LIMIT 1)
+      AND day_of_week::text = TRIM(TO_CHAR(p_scheduled_at, 'Day'));
+
+    RETURN true;
+END;
+$$;
