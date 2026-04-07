@@ -7,7 +7,7 @@ language plpgsql
 security definer
 as $$
 begin
-  -- check that the user is in roles
+  
   if not exists (
     select 1
     from public.roles

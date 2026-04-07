@@ -19,7 +19,7 @@ import { useLanguage } from '../../utils/LanguageContext';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 
-// Extiende dayjs con los plugins
+
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -42,7 +42,7 @@ export default function ListCalibrate({ systemId, calibrateList, refresh, userRo
     const [deleting, setDeleting] = useState(false);
 
     useEffect(() => {
-        dayjs.locale(language); // 'es' o 'en' según tu contexto
+        dayjs.locale(language);
     }, [language]);
     const handleDelete = async () => {
         if (!fromDate || !toDate) {
@@ -54,8 +54,8 @@ export default function ListCalibrate({ systemId, calibrateList, refresh, userRo
             setDeleting(true);
             setError(null);
 
-            const fromUTC = dayjs(fromDate).utc().format(); // Asegura UTC
-            const toUTC = dayjs(toDate).utc().format(); // Asegura UTC
+            const fromUTC = dayjs(fromDate).utc().format();
+            const toUTC = dayjs(toDate).utc().format();
 
             const session = await supabase.auth.getSession();
             const userId = session?.data?.session?.user?.id;
@@ -75,7 +75,7 @@ export default function ListCalibrate({ systemId, calibrateList, refresh, userRo
             setOpenDialog(false);
 
 
-            // ✅ Refresca la lista de calibraciones desde el componente padre
+
             refresh();
 
         } catch (e) {
@@ -85,13 +85,13 @@ export default function ListCalibrate({ systemId, calibrateList, refresh, userRo
         }
     };
     useEffect(() => {
-        // Mapear los datos para DataGrid
+
         setRows(calibrateList.map((c) => {
             let displayVolume = c.volume;
             let displayUnit = 'L';
 
             if (c.volume < 1) {
-                displayVolume = c.volume * 1000; // convertir a mL
+                displayVolume = c.volume * 1000;
                 displayUnit = 'mL';
             }
 
@@ -99,7 +99,7 @@ export default function ListCalibrate({ systemId, calibrateList, refresh, userRo
                 id: c.id,
                 pump_name: c.pump_name || '--',
                 user_email: c.user_email || '--',
-                volume: `${displayVolume.toFixed(3)} ${displayUnit}`, // mostrar con unidad
+                volume: `${displayVolume.toFixed(3)} ${displayUnit}`,
                 created_at: c.created_at
             };
         }));

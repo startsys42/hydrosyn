@@ -28,7 +28,7 @@ export default function ActivateUserSystem({
     const [pageSize, setPageSize] = useState(10);
     const navigate = useNavigate();
 
-    // --- Estados para diálogos ---
+
     const [openDialog, setOpenDialog] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
     const [actionType, setActionType] = useState(null);
@@ -76,7 +76,7 @@ export default function ActivateUserSystem({
     };
 
 
-    // --- Verificación de admin ---
+
     const checkAdmin = async () => {
         const { data: { user }, error: authErr } = await supabase.auth.getUser();
         if (authErr || !user) {
@@ -110,7 +110,7 @@ export default function ActivateUserSystem({
 
         return user;
     };
-    // --- Ejecutar acción ---
+
     const handleConfirm = async () => {
         if (!currentUser || !actionType) return;
         setLoading(true);
@@ -119,7 +119,7 @@ export default function ActivateUserSystem({
         if (!admin) return;
         try {
             if (actionType === "toggle") {
-                // Activar/desactivar en este sistema
+
                 const { data, error } = await supabase.rpc("active_user_associate_system", {
                     p_admin_uid: admin.id,
                     p_system_id: systemId,
@@ -127,7 +127,7 @@ export default function ActivateUserSystem({
                 });
                 if (error) throw error;
             } else if (actionType === "deactivateAll") {
-                // Desactivar en todos los sistemas
+
                 const { data, error } = await supabase.rpc("deactivate_user_all_systems", {
                     p_admin_uid: admin.id,
                     p_system_id: systemId,
@@ -159,7 +159,7 @@ export default function ActivateUserSystem({
 
                     <DataGrid className="datagrid"
                         rows={users.map(u => ({
-                            id: u.user_id,   // único para DataGrid
+                            id: u.user_id,
                             user_id: u.user_id,
                             email: u.email,
                             is_active: u.is_active

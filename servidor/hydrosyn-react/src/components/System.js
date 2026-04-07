@@ -46,8 +46,8 @@ export default function System() {
     const texts = useTexts();
     const { systemId } = useParams();
     const { role, loading: roleLoading } = useRoleSystem();
-    // const [selected, setSelected] = useState("");
-    const [selectedTab, setSelectedTab] = useState(0); // Cambiado a índice numérico
+
+    const [selectedTab, setSelectedTab] = useState(0);
 
 
     const [system, setSystem] = useState(null);
@@ -76,7 +76,7 @@ export default function System() {
     };
       const options = roleOptions[role] || [];
 */
-    // Configuración de tabs con iconos y valores
+
     const tabConfig = {
         owner: [
             { value: "tanks", label: texts.tanks, icon: <WaterIcon />, component: TanksAccordion },
@@ -109,7 +109,7 @@ export default function System() {
 
             if (error) {
 
-                setSystem(null); // Indica que no hay sistema
+                setSystem(null);
             } else if (data) {
                 setSystem(data);
             }
@@ -126,7 +126,7 @@ export default function System() {
         setSelectedTab(newValue);
     };
 
-    // Redirigir si no hay acceso
+
     useEffect(() => {
         if (!loadingSystem && !roleLoading) {
             if (!system || role === "none") {
@@ -135,7 +135,7 @@ export default function System() {
         }
     }, [system, role, loadingSystem, roleLoading, navigate]);
 
-    // Esperar a que cargue el sistema y rol
+
     if (loadingSystem || roleLoading || !system || role === "none") return null;
 
     const renderTabContent = () => {

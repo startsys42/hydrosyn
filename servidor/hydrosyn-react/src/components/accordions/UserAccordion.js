@@ -85,7 +85,7 @@ export default function UserAccordion({ systemId }) {
                     filter: `system=eq.${systemId}`
                 },
                 () => {
-                    console.log("Cambio detectado en systems_users, refrescando...");
+
                     refreshUsersData();
                     refreshAvailableData();
                 }
@@ -96,7 +96,7 @@ export default function UserAccordion({ systemId }) {
             subscription.unsubscribe();
         };
     }, [systemId, refreshUsersData, refreshAvailableData]);
-    // --- Verificación de admin ---
+
     const checkAdmin = async () => {
         const { data: { user }, error: authErr } = await supabase.auth.getUser();
         if (authErr || !user) {
@@ -172,7 +172,7 @@ export default function UserAccordion({ systemId }) {
                 return;
             }
 
-            console.log("Usuarios disponibles:", data); // 👈 VER ESTO EN CONSOLA
+
 
             setAvailableUsers(
                 data.map((u) => ({

@@ -93,9 +93,7 @@ export default function NotificationsAccordion({ systemId }) {
                 }
                 try {
                     const date = new Date(params.value);
-                    console.log('JS Date object:', date);
-                    console.log('ISO String:', date.toISOString());
-                    console.log('UTC Hours:', date.getUTCHours(), 'UTC Minutes:', date.getUTCMinutes());
+
                     if (isNaN(date.getTime())) {
                         return 'Date invalid';
                     }

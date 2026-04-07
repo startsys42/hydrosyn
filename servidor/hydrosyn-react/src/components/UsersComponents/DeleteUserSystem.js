@@ -104,7 +104,7 @@ export default function DeleteUserSystem({
 
     const handleDelete = async () => {
         const admin = await checkAdmin();
-        if (!admin) return; // ya navegó a dashboard si no es admin
+        if (!admin) return;
         if (!currentUser) return;
         setLoading(true);
         setExternalError("");
@@ -114,7 +114,7 @@ export default function DeleteUserSystem({
             const { data, error } = await supabase.rpc("delete_user_system", {
                 p_admin_uid: admin.id,
                 p_system_id: systemId,
-                p_user_id: currentUser.userId, // UID real del usuario
+                p_user_id: currentUser.userId,
                 p_delete_all: deleteAllSystems
             });
 
@@ -143,8 +143,8 @@ export default function DeleteUserSystem({
                 <AccordionDetails>
                     <DataGrid className="datagrid"
                         rows={users.map(u => ({
-                            id: u.id,         // ID de systems_users, único para DataGrid
-                            userId: u.user_id, // UID real del usuario
+                            id: u.id,
+                            userId: u.user_id,
                             email: u.email,
                             is_active: u.is_active
                         }))}

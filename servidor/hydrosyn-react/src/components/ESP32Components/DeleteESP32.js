@@ -27,7 +27,7 @@ export default function DeleteESP32({ systemId, espList, refresh, loading, error
     const handleOpenDialog = (esp) => {
         setSelectedEsp(esp);
         setOpenDialog(true);
-        setError(""); // limpiar error antes de abrir
+        setError("");
     };
 
     const handleCloseDialog = () => {
@@ -68,7 +68,7 @@ export default function DeleteESP32({ systemId, espList, refresh, loading, error
                 return;
             }
 
-            // Verificar que el usuario es admin del sistema correspondiente
+
             const { data: systemData, error: systemError } = await supabase
                 .from("systems")
                 .select("*")
@@ -95,7 +95,7 @@ export default function DeleteESP32({ systemId, espList, refresh, loading, error
 
             if (error) throw error;
 
-            refresh(); // refresca la lista en el padre
+            refresh();
             handleCloseDialog();
         } catch (err) {
 
@@ -123,7 +123,7 @@ export default function DeleteESP32({ systemId, espList, refresh, loading, error
         },
     ];
 
-    // DataGrid necesita que cada fila tenga id único
+
     const rows = espList.map((esp) => ({ id: esp.id, name: esp.name }));
     return (
         <>

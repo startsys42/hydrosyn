@@ -307,7 +307,7 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
                             onClick={async () => {
                                 setError("");
 
-                                // Validaciones
+
                                 if (!editFormData.pump_id) return setError("selectPump");
                                 if (!editFormData.clock) return setError("selectHour");
                                 if (!editFormData.volume || Number(editFormData.volume) <= 0)
@@ -317,13 +317,13 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
                                 if (editFormData.unit === "mL") vol = vol / 1000;
                                 if (vol > 999.999) return setError("volumeTooHigh");
 
-                                // Conflictos
+
                                 const conflict = programmingList.some((p) => {
                                     if (p.id === editFormData.id) return false; // ignoramos la misma fila
                                     if (p.pump_id !== editFormData.pump_id) return false;
                                     if (p.day_of_week !== editFormData.day_of_week) return false;
 
-                                    // Comparamos solo HH:mm para ignorar segundos
+
                                     const existingTime = dayjs(p.clock, "HH:mm:ss").format("HH:mm");
                                     const newTime = dayjs(editFormData.clock, "HH:mm:ss").format("HH:mm");
 
@@ -331,7 +331,7 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
                                 });
                                 if (conflict) return setError("conflictProgramming");
 
-                                // Actualización en supabase
+
                                 setLoading(true);
                                 try {
                                     const { error } = await supabase

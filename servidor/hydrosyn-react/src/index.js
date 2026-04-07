@@ -20,11 +20,11 @@ import { esES } from '@mui/x-data-grid/locales';
 import { enUS } from '@mui/x-data-grid/locales';
 
 
-//  Componente que usa el idioma para MUI
+
 function AppWithMuiTheme() {
     const { language } = useLanguage();
 
-    //  useMemo hace que se re-calcule CADA VEZ que language cambie
+
     const muiTheme = React.useMemo(
         () => createTheme({}, language === 'es' ? esES : enUS),
         [language]

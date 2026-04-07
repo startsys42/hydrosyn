@@ -5,7 +5,7 @@ create or replace function deactivate_user_all_systems(
 )
 returns void as $$
 begin
-    -- Verificar que el que llama es admin activo
+    
     if not exists (
         select 1
         from admin_users
@@ -15,7 +15,7 @@ begin
         raise exception 'Unauthorized: not an admin';
     end if;
 
-    -- Verificar que el admin pertenece al sistema especificado
+    
     if not exists (
         select 1
         from systems
@@ -25,7 +25,7 @@ begin
         raise exception 'Unauthorized: admin does not belong to this system';
     end if;
 
-    -- Desactivar al usuario en todos los sistemas que pertenezcan a este admin
+    
     update systems_users su
     set is_active = false
     from systems s

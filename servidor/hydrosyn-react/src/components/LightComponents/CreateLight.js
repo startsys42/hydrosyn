@@ -1,4 +1,4 @@
-// CreateLight.jsx
+
 import { useState, useEffect } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -22,7 +22,7 @@ export default function CreateLight({ systemId, lightList, refresh, error, setEr
     const [usedGpiosByPumps, setUsedGpiosByPumps] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    // Obtener ESP32 del sistema
+
     useEffect(() => {
         const fetchEsp32List = async () => {
             const { data } = await supabase
@@ -34,7 +34,7 @@ export default function CreateLight({ systemId, lightList, refresh, error, setEr
         fetchEsp32List();
     }, [systemId]);
 
-    // Obtener GPIOs ya usados por luces en este ESP32
+
     useEffect(() => {
         if (!esp32Id) {
             setUsedGpios([]);
@@ -52,7 +52,7 @@ export default function CreateLight({ systemId, lightList, refresh, error, setEr
         fetchUsedGpiosByLights();
     }, [esp32Id, lightList]);
 
-    // Obtener GPIOs ya usados por bombas en este ESP32
+
     useEffect(() => {
         if (!esp32Id) {
             setUsedGpiosByPumps([]);
@@ -70,7 +70,7 @@ export default function CreateLight({ systemId, lightList, refresh, error, setEr
         fetchUsedGpiosByPumps();
     }, [esp32Id]);
 
-    // GPIOs disponibles (todos los GPIOs válidos menos los usados por luces y bombas)
+
     const allGpios = [2, 4, 5, 12, 13, 14, 15, 18, 19, 21, 22, 23, 25, 26, 27, 32, 33];
     const availableGpios = allGpios.filter(pin =>
         !usedGpios.includes(pin) && !usedGpiosByPumps.includes(pin)
@@ -82,12 +82,12 @@ export default function CreateLight({ systemId, lightList, refresh, error, setEr
         setLoading(true);
 
         try {
-            // 1. Verificar autenticación
+
             const { data: sessionData } = await supabase.auth.getSession();
             const user = sessionData?.session?.user;
             if (!user) throw new Error("No authenticated");
 
-            // 2. Verificar que el sistema existe y el usuario es admin
+
             const { data: systemData, error: systemError } = await supabase
                 .from("systems")
                 .select("id, admin")
@@ -100,7 +100,7 @@ export default function CreateLight({ systemId, lightList, refresh, error, setEr
                 return;
             }
 
-            // 3. Verificar que el usuario es admin activo
+
             const { data: adminData, error: adminError } = await supabase
                 .from("admin_users")
                 .select("*")
@@ -114,21 +114,21 @@ export default function CreateLight({ systemId, lightList, refresh, error, setEr
                 return;
             }
 
-            // 4. Validar campos completos
+
             if (!lightName || !esp32Id || !gpio) {
                 setError("incompleteFields");
                 setLoading(false);
                 return;
             }
 
-            // 5. Validar regex del nombre
+
             const nameRegex = /^[A-Za-z0-9][A-Za-z0-9_]{1,28}[A-Za-z0-9]$/;
             if (!nameRegex.test(lightName)) {
                 setError("regexNameLights");
                 return;
             }
 
-            // 6. Comprobar nombre repetido en este sistema
+
             const { data: existing, error: existError } = await supabase
                 .from("lights")
                 .select("*")
@@ -141,7 +141,7 @@ export default function CreateLight({ systemId, lightList, refresh, error, setEr
                 return;
             }
 
-            // 7. Verificar límite de 6 luces por sistema
+
             const { data: lightCount, error: countError } = await supabase
                 .from("lights")
                 .select("id", { count: "exact", head: true })
@@ -153,7 +153,7 @@ export default function CreateLight({ systemId, lightList, refresh, error, setEr
                 return;
             }
 
-            // 8. Insertar luz
+
             const { data: insertData, error: insertError } = await supabase
                 .from("lights")
                 .insert({
@@ -166,12 +166,12 @@ export default function CreateLight({ systemId, lightList, refresh, error, setEr
 
             if (insertError) throw insertError;
 
-            // 9. Limpiar formulario
+
             setLightName("");
             setEsp32Id("");
             setGpio("");
 
-            // 10. Refrescar lista
+
             refresh();
 
         } catch (err) {

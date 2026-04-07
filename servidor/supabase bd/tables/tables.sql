@@ -102,8 +102,8 @@ CREATE TABLE public.tanks (
 
 
 
--- no ams d e20 tanques si no es admin, no insertar con nombre duplicado, no cmabair a nomber duplicado
--- coments
+
+
 
 
 
@@ -156,20 +156,20 @@ CREATE TABLE public.programming_pumps (
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   pump bigint NOT NULL,
    volume numeric(6,3) NOT NULL CHECK (volume> 0 and volume <= 999.999),
-    clock time NOT NULL,                  -- Hora del día en que se activa
+    clock time NOT NULL,                  
       day_of_week day_of_week NOT NULL,
     
      
   CONSTRAINT programming_pumps_pkey PRIMARY KEY (id),
   CONSTRAINT programming_pumps_pump_fkey FOREIGN KEY (pump) REFERENCES public.pumps(id) ON DELETE CASCADE
   ON UPDATE CASCADE
-  -- desd que momento
+  
 );
 
 
 
 
--- que pasa en las bmbas al borrar algo oa ctualizar algo
+
 
 
 CREATE TABLE public.calibration (
@@ -209,7 +209,7 @@ CREATE TABLE public.calibrate (
 
 
 
--- tbaal ultimov olumne tabla tanque limpio tabla gastos beneficios
+
 
 
 
@@ -238,10 +238,9 @@ CREATE TABLE public.executions_pumps (
     success BOOLEAN DEFAULT false
 );
 
--- luces
 
 
--- 1. Tabla de luces (sin is_active, con límite de 6 luces por sistema)
+
 CREATE TABLE public.lights (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
@@ -255,7 +254,7 @@ CREATE TABLE public.lights (
 );
 
 
--- 2. Crear la tabla con las restricciones necesarias
+
 CREATE TABLE public.programming_lights (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
@@ -271,7 +270,7 @@ CREATE TABLE public.programming_lights (
 CREATE TABLE public.lights_history (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     light_id BIGINT NOT NULL,
-    action SMALLINT NOT NULL,                -- 0 = apagado, 1 = encendido
+    action SMALLINT NOT NULL,                
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
     
     CONSTRAINT lights_history_light_fkey FOREIGN KEY (light_id) REFERENCES public.lights(id) ON DELETE cascade ON UPDATE CASCADE,

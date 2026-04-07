@@ -1,4 +1,4 @@
-// ListRecordsLights.jsx
+
 import '../../styles/theme.css';
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../utils/supabaseClient';
@@ -38,7 +38,7 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
         dayjs.locale(language);
     }, [language]);
 
-    // Función para obtener el historial
+
     const fetchRecords = async () => {
         setLoading(true);
         try {
@@ -74,14 +74,14 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
         }
     };
 
-    // Cargar datos al montar y cuando cambia systemId
+
     useEffect(() => {
         if (systemId) {
             fetchRecords();
         }
     }, [systemId]);
 
-    // Eliminar registros entre fechas
+
     const handleDelete = async () => {
         if (!fromDate || !toDate) {
             if (setError) setError(texts.bothDates);
@@ -114,7 +114,7 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
             setFromDate(null);
             setToDate(null);
 
-            // Refrescar la lista
+
             fetchRecords();
             if (refresh) refresh();
 
@@ -126,7 +126,7 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
         }
     };
 
-    // Columnas para el DataGrid
+
     const columns = [
         {
             field: 'light_name',

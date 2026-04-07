@@ -17,7 +17,7 @@ USING (
 
 
 
--- INSERT
+
 CREATE POLICY "Only active system admins can insert esp32"
 ON public.esp32
 FOR INSERT
@@ -34,7 +34,7 @@ WITH CHECK (
   )
 );
 
--- UPDATE
+
 CREATE POLICY "Only active system admins can update esp32"
 ON public.esp32
 FOR UPDATE
@@ -62,7 +62,7 @@ WITH CHECK (
   )
 );
 
--- DELETE
+
 CREATE POLICY "Only active system admins can delete esp32"
 ON public.esp32
 FOR DELETE

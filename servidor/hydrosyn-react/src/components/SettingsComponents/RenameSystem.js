@@ -26,7 +26,7 @@ export default function RenameSystem({ systemId, systemName, refresh, error, set
             }
             const uid = session.user.id;
 
-            // Verificar que el usuario es admin activo
+
             const { data: adminData, error: adminErr } = await supabase
                 .from('admin_users')
                 .select('id')
@@ -39,7 +39,7 @@ export default function RenameSystem({ systemId, systemName, refresh, error, set
                 return;
             }
 
-            // Verificar que el sistema existe y admin coincide
+
             const { data: systemData, error: systemErr } = await supabase
                 .from('systems')
                 .select('id')
@@ -61,9 +61,9 @@ export default function RenameSystem({ systemId, systemName, refresh, error, set
             const { data: existingSystem, error: duplicateErr } = await supabase
                 .from('systems')
                 .select('id')
-                .eq('admin', uid)            // sistemas del mismo usuario
-                .eq('name', name)            // mismo nombre
-                .neq('id', systemId)         // excluir el sistema actual
+                .eq('admin', uid)
+                .eq('name', name)
+                .neq('id', systemId)
                 .maybeSingle();
 
             if (duplicateErr) throw duplicateErr;
@@ -73,7 +73,7 @@ export default function RenameSystem({ systemId, systemName, refresh, error, set
                 setLoading(false);
                 return;
             }
-            // Actualizar en la base de datos
+
             const { error: updateErr } = await supabase
                 .from('systems')
                 .update({ name })
@@ -109,7 +109,7 @@ export default function RenameSystem({ systemId, systemName, refresh, error, set
                         required
                         minLength={3}
                         maxLength={30}
-                        placeholder={texts.newName} // placeholder más coherente
+                        placeholder={texts.newName}
                     />
                     <button type="submit">{texts.renameSystem}</button>
                 </form>

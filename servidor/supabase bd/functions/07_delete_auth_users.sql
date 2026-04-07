@@ -1,4 +1,4 @@
--- Función para eliminar usuarios huérfanos de Supabase
+
 CREATE EXTENSION IF NOT EXISTS http;
 
 CREATE OR REPLACE FUNCTION delete_auth_users(secret_key text) 
@@ -16,18 +16,18 @@ DECLARE
     deleted_count INT := 0;
     error_count INT := 0;
 BEGIN
-    -- 1️⃣ Validar la llamada usando el parámetro secreto
+    
     IF secret_key IS NULL OR secret_key <> 'chsdrosHADSKADKAujy3746dff' THEN
         RAISE EXCEPTION 'Unauthorized call';
     END IF;
 
   
 
-    -- 3️⃣ Configuración directa
+   
     supabase_url := 'https://iolzdktanpnlofgfjorw.supabase.co';
     service_key := 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlvbHpka3RhbnBubG9mZ2Zqb3J3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDIxMzc1NCwiZXhwIjoyMDY5Nzg5NzU0fQ.WkCG_yk-NHjMh1dtPcLvwPnFtDAy-vNxFNPDeT4WrhA';
 
-    -- 4️⃣ Buscar y eliminar usuarios huérfanos
+  
     FOR orphaned_user IN 
         SELECT au.id, au.email
         FROM auth.users au
@@ -37,7 +37,7 @@ BEGIN
    
     LOOP
         BEGIN
-            -- Llamar a la API de Auth para eliminar el usuario huérfano
+          
             SELECT status
             INTO response_status
             FROM http((
@@ -66,7 +66,7 @@ BEGIN
         END;
     END LOOP;
 
-    -- 5️⃣ Reporte final
+   
     RAISE NOTICE 'Operation completed. Deleted: %, Errors: %', deleted_count, error_count;
 
 END;

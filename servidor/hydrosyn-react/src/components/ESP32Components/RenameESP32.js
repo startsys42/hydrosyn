@@ -28,7 +28,7 @@ export default function RenameESP32({ systemId, espList, refresh, error, setErro
         }
 
         try {
-            // ✅ Sesión activa
+
             const { data: sessionData } = await supabase.auth.getSession();
             if (!sessionData?.session) {
                 navigate("/dashboard", { replace: true });
@@ -36,7 +36,7 @@ export default function RenameESP32({ systemId, espList, refresh, error, setErro
             }
             const uid = sessionData.session.user.id;
 
-            // ✅ Usuario activo en admin_users
+
             const { data: adminData } = await supabase
                 .from("admin_users")
                 .select("*")
@@ -49,7 +49,7 @@ export default function RenameESP32({ systemId, espList, refresh, error, setErro
                 return;
             }
 
-            // ✅ Usuario admin del sistema
+
             const { data: systemData } = await supabase
                 .from("systems")
                 .select("*")
@@ -62,14 +62,14 @@ export default function RenameESP32({ systemId, espList, refresh, error, setErro
                 return;
             }
 
-            // ✅ Validar regex
+
             const nameRegex = /^[A-Za-z0-9][A-Za-z0-9_]{1,28}[A-Za-z0-9]$/;
             if (!nameRegex.test(newName)) {
                 setError("regexNameESP32");
                 return;
             }
 
-            // ✅ Comprobar nombre repetido
+
             const { data: existing } = await supabase
                 .from("esp32")
                 .select("*")
@@ -81,7 +81,7 @@ export default function RenameESP32({ systemId, espList, refresh, error, setErro
                 return;
             }
 
-            // ✅ Actualizar nombre
+
             const { error: updateError } = await supabase
                 .from("esp32")
                 .update({ name: newName })
@@ -90,7 +90,7 @@ export default function RenameESP32({ systemId, espList, refresh, error, setErro
 
             if (updateError) throw updateError;
 
-            // ✅ Reset y refrescar datos
+
             setSelectedEsp("");
             setNewName("");
             refresh();

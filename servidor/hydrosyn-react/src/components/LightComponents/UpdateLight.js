@@ -1,4 +1,4 @@
-// UpdateLight.jsx
+
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -23,7 +23,7 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
     const [usedGpiosByPumps, setUsedGpiosByPumps] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    // Obtener ESP32 del sistema
+
     useEffect(() => {
         const fetchEsp32List = async () => {
             const { data } = await supabase
@@ -35,7 +35,7 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
         fetchEsp32List();
     }, [systemId]);
 
-    // Cargar datos de la luz seleccionada
+
     useEffect(() => {
         if (!selectedLight) return;
         const light = lightList.find(l => l.id === selectedLight);
@@ -46,7 +46,7 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
         }
     }, [selectedLight, lightList]);
 
-    // Obtener GPIOs usados por otras luces en el ESP32 seleccionado
+
     useEffect(() => {
         if (!newEsp32) {
             setUsedGpios([]);
@@ -58,14 +58,14 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
                 .from("lights")
                 .select("gpio")
                 .eq("esp32", newEsp32)
-                .neq("id", selectedLight || 0); // Excluir la luz actual
+                .neq("id", selectedLight || 0);
             setUsedGpios((data || []).map(d => d.gpio));
         };
 
         fetchUsedGpiosByLights();
     }, [newEsp32, selectedLight]);
 
-    // Obtener GPIOs usados por bombas en el ESP32 seleccionado
+
     useEffect(() => {
         if (!newEsp32) {
             setUsedGpiosByPumps([]);
@@ -83,7 +83,7 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
         fetchUsedGpiosByPumps();
     }, [newEsp32]);
 
-    // GPIOs disponibles (todos los GPIOs válidos menos los usados)
+
     const allGpios = [2, 4, 5, 12, 13, 14, 15, 18, 19, 21, 22, 23, 25, 26, 27, 32, 33];
     const availableGpios = allGpios.filter(pin =>
         !usedGpios.includes(pin) && !usedGpiosByPumps.includes(pin)
@@ -107,7 +107,7 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
             return;
         }
 
-        // Verificar si hay cambios
+
         const hasNameChange = newName && newName !== originalLight.name;
         const hasEsp32Change = newEsp32 && newEsp32 !== originalLight.esp32?.id;
         const hasGpioChange = newGpio && newGpio !== originalLight.gpio;
@@ -119,7 +119,7 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
         }
 
         try {
-            // 1. Verificar autenticación
+
             const { data: sessionData } = await supabase.auth.getSession();
             if (!sessionData?.session) {
                 navigate("/dashboard", { replace: true });
@@ -127,7 +127,7 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
             }
             const uid = sessionData.session.user.id;
 
-            // 2. Verificar admin activo
+
             const { data: adminData } = await supabase
                 .from("admin_users")
                 .select("*")
@@ -140,7 +140,7 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
                 return;
             }
 
-            // 3. Verificar admin del sistema
+
             const { data: systemData } = await supabase
                 .from("systems")
                 .select("*")
@@ -155,7 +155,7 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
 
             const updates = {};
 
-            // Validar y actualizar nombre
+
             if (hasNameChange) {
                 const nameRegex = /^[A-Za-z0-9][A-Za-z0-9_]{1,28}[A-Za-z0-9]$/;
                 if (!nameRegex.test(newName)) {
@@ -164,7 +164,7 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
                     return;
                 }
 
-                // Verificar nombre duplicado
+
                 const { data: existing } = await supabase
                     .from("lights")
                     .select("*")
@@ -182,7 +182,7 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
             }
 
 
-            // Actualizar luz
+
             const { error: updateError } = await supabase
                 .from("lights")
                 .update(updates)
@@ -191,7 +191,7 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
 
             if (updateError) throw updateError;
 
-            // Resetear campos
+
             setSelectedLight("");
             setNewName("");
             setNewEsp32("");

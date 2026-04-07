@@ -210,7 +210,7 @@ export default function ListProgrammingLights({ lightList, programmingList, refr
                             onClick={async () => {
                                 setError("");
 
-                                // Validaciones
+
                                 if (!editFormData.light_id) return setError("selectLight");
                                 if (!editFormData.start_time || !editFormData.end_time) return setError("selectTime");
 
@@ -218,7 +218,7 @@ export default function ListProgrammingLights({ lightList, programmingList, refr
                                 const end = timeToMinutes(editFormData.end_time);
                                 if (start >= end) return setError("startAfterEnd");
 
-                                // Conflictos
+
                                 const conflict = programmingList.some((p) => {
                                     if (p.id === editFormData.id) return false;
                                     if (Number(p.light_id) !== Number(editFormData.light_id)) return false;

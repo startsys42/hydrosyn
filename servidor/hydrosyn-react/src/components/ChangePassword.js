@@ -16,22 +16,21 @@ export default function ChangePassword() {
     const navigate = useNavigate();
 
     function validarPassword(password) {
-        // Extraer letras y números
+
         const letters = password.match(/[a-zA-Z]/g) || [];
         const numbers = password.match(/[0-9]/g) || [];
 
-        // Longitud mínima
+
         if (password.length < 10) return false;
 
-        // Letras distintas
+
         const distinctLetters = [...new Set(letters)];
         if (distinctLetters.length < 3) return false;
 
-        // Números distintos
+
         const distinctNumbers = [...new Set(numbers)];
         if (distinctNumbers.length < 2) return false;
 
-        // Solo letras y números
         if (!/^[a-zA-Z0-9]+$/.test(password)) return false;
 
         return true;
@@ -57,7 +56,7 @@ export default function ChangePassword() {
             return;
         }
         if (!validarPassword(newPassword)) {
-            setMessageKey('invalidPassword'); // mensaje nuevo en texts
+            setMessageKey('invalidPassword');
             setLoading(false);
             return;
         }
@@ -67,16 +66,16 @@ export default function ChangePassword() {
         try {
 
             const { error: updateError } = await supabase.auth.updateUser({
-                // Actualizar la contraseña del usuario
+
                 password: newPassword,
             });
 
             if (updateError) throw updateError;
 
-            // ÉXITO: Contraseña cambiada
+
             setMessageKey('messagePassword');
 
-            // Limpiar formulario
+
             setNewPassword('');
             setConfirmPassword('');
 

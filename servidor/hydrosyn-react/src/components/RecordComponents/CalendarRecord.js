@@ -14,15 +14,15 @@ import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import 'moment/locale/es';
 
-// se recargue,..., añadir datos, los colores de eventos,...
+
 
 const localizer = momentLocalizer(moment);
 
-// se recargue,..., añadir datos, los colores de eventos,...
+
 export default function CalendarRecord() {
 
     const navigate = useNavigate();
-    const texts = useTexts(); // ✅ ya no lo pasamos como prop
+    const texts = useTexts();
 
     const [events, setEvents] = useState([]);
     const [date, setDate] = useState(new Date());
@@ -30,7 +30,7 @@ export default function CalendarRecord() {
 
 
 
-    // traducciones del calendario
+
     const messages = texts.language === "es"
         ? {
             today: "Hoy",
@@ -44,7 +44,7 @@ export default function CalendarRecord() {
             previous: "Back",
             month: "Month"
         };
-    // Función para recargar los eventos desde Supabase
+
     const fetchEvents = async () => {
         const { data, error } = await supabase.from('events').select('*');
         if (!error) {
@@ -69,9 +69,9 @@ export default function CalendarRecord() {
         fetchEvents();
     }, []);
 
-    // Añadir evento al seleccionar un rango en el calendario
 
-    // Estilo de eventos por color
+
+
     const eventStyleGetter = (event) => ({
         style: {
             backgroundColor: event.color,
@@ -96,9 +96,9 @@ export default function CalendarRecord() {
                         endAccessor="end"
                         style={{ height: 500 }}
                         toolbar={true}
-                        eventPropGetter={eventStyleGetter} // colorear eventos
+                        eventPropGetter={eventStyleGetter}
 
-                        messages={messages} // ← esto hace que aparezca Hoy, Siguiente, Anterior
+                        messages={messages}
                     />
 
                 </div>

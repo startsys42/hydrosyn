@@ -21,7 +21,7 @@ export default function DeleteSystem({ systemId, refresh, error, setError }) {
     const [loading, setLoading] = useState(false);
 
     const handleOpenDialog = () => {
-        setError(""); // limpiar errores anteriores
+        setError("");
         setOpenDialog(true);
     };
 
@@ -33,7 +33,7 @@ export default function DeleteSystem({ systemId, refresh, error, setError }) {
         setLoading(true);
 
         try {
-            // Obtener sesión
+
             const { data: { session }, error: sessionErr } = await supabase.auth.getSession();
             if (sessionErr || !session || !session.user) {
                 navigate("/dashboard");
@@ -41,7 +41,7 @@ export default function DeleteSystem({ systemId, refresh, error, setError }) {
             }
             const uid = session.user.id;
 
-            // Comprobar que el usuario está activo en admin_users
+
             const { data: adminData, error: adminErr } = await supabase
                 .from('admin_users')
                 .select('id')
@@ -54,16 +54,16 @@ export default function DeleteSystem({ systemId, refresh, error, setError }) {
                 return;
             }
 
-            // COMPROBACIÓN DIRECTA: Obtener sistema solo si admin = uid
+
             const { data: systemData, error: systemErr } = await supabase
                 .from('systems')
-                .select('id') // o cualquier otro campo que necesites
+                .select('id')
                 .eq('id', systemId)
-                .eq('admin', uid)  // <- aquí filtramos por admin = uid
+                .eq('admin', uid)
                 .single();
 
             if (systemErr || !systemData) {
-                // Si no existe o el admin no coincide, redirigir
+
                 navigate("/dashboard");
                 return;
             }
@@ -74,7 +74,7 @@ export default function DeleteSystem({ systemId, refresh, error, setError }) {
 
             if (rpcError) throw rpcError;
 
-            refresh(); // si quieres recargar algo antes de redirigir
+            refresh();
             navigate("/dashboard");
 
         } catch (err) {

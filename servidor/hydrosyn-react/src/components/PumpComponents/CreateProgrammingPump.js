@@ -43,10 +43,10 @@ export default function CreateProgrammingPump({
 
     const checkConflict = () => {
         if (!timeValue) return false;
-        const timeStr = timeValue.format("HH:mm"); // solo HH:mm
+        const timeStr = timeValue.format("HH:mm");
 
         return programmingList.some(p => {
-            const pTime = dayjs(p.clock, "HH:mm:ss").format("HH:mm"); // igual solo HH:mm
+            const pTime = dayjs(p.clock, "HH:mm:ss").format("HH:mm");
             return p.pump_id === Number(selectedPump) &&
                 p.day_of_week === day &&
                 pTime === timeStr;

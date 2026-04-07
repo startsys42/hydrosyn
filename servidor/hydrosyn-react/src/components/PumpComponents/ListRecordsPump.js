@@ -19,7 +19,7 @@ import { useLanguage } from '../../utils/LanguageContext';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 
-// Extiende dayjs con los plugins
+
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -42,7 +42,7 @@ export default function ListRecordsPump({ systemId, recordPumpList, refresh, use
     const [deleting, setDeleting] = useState(false);
 
     useEffect(() => {
-        dayjs.locale(language); // 'es' o 'en' según tu contexto
+        dayjs.locale(language);
     }, [language]);
     const handleDelete = async () => {
         if (!fromDate || !toDate) {
@@ -54,8 +54,8 @@ export default function ListRecordsPump({ systemId, recordPumpList, refresh, use
             setDeleting(true);
             setError(null);
 
-            const fromUTC = dayjs(fromDate).utc().format(); // Asegura UTC
-            const toUTC = dayjs(toDate).utc().format(); // Asegura UTC
+            const fromUTC = dayjs(fromDate).utc().format();
+            const toUTC = dayjs(toDate).utc().format();
 
             const session = await supabase.auth.getSession();
             const userId = session?.data?.session?.user?.id;
@@ -75,7 +75,7 @@ export default function ListRecordsPump({ systemId, recordPumpList, refresh, use
             setOpenDialog(false);
 
 
-            // ✅ Refresca la lista de calibraciones desde el componente padre
+
             refresh();
 
         } catch (e) {
@@ -85,21 +85,21 @@ export default function ListRecordsPump({ systemId, recordPumpList, refresh, use
         }
     };
     useEffect(() => {
-        // Mapear los datos para DataGrid
+
 
         setRows(recordPumpList.map((c, index) => {
             let displayVolume = c.volume;
             let displayUnit = 'L';
 
             if (c.volume < 1) {
-                displayVolume = c.volume * 1000; // convertir a mL
+                displayVolume = c.volume * 1000;
                 displayUnit = 'mL';
             }
 
             return {
                 id: c.id,
-                pump_name: c.pump_name || '--',   // 🔹 usar la columna plana que viene del servidor
-                user_email: c.user_email || '--', // 🔹 usar la columna plana que viene del servidor
+                pump_name: c.pump_name || '--',
+                user_email: c.user_email || '--',
                 volume: `${displayVolume.toFixed(3)} ${displayUnit}`,
                 success: c.success ? "✔" : "✘",
                 created_at: c.created_at

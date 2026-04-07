@@ -1,7 +1,7 @@
 import { useParams, Navigate } from "react-router-dom";
 import { RoleSystemProvider, useRoleSystem } from "./RoleSystemContext";
 
-// Componente que valida el rol
+
 function ProtectedSystem({ children }) {
     const { role, loading } = useRoleSystem();
 
@@ -9,10 +9,9 @@ function ProtectedSystem({ children }) {
 
     if (role === "none") return <Navigate to="/dashboard" replace />;
 
-    return children; // owner o member
+    return children;
 }
 
-// Wrapper que envuelve provider + validación
 export function SystemRouteWrapper({ children }) {
     const { systemId } = useParams();
 

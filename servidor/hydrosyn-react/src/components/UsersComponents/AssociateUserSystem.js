@@ -60,7 +60,7 @@ export default function AssociateUserSystem({
 
     const handleOpenDialog = async (user) => {
         setExternalError('');
-        setLoading(true); // 👈 AÑADE ESTO
+        setLoading(true);
         try {
             const admin = await checkAdmin();
             if (!admin) {
@@ -69,7 +69,7 @@ export default function AssociateUserSystem({
             }
             setCurrentAdmin(admin);
 
-            // 👇 CAMBIA ESTO: usa count en lugar de traer todos los datos
+
             const { count, error: countErr } = await supabase
                 .from("systems_users")
                 .select("*", { count: 'exact', head: true })
@@ -77,17 +77,17 @@ export default function AssociateUserSystem({
 
             if (countErr) throw new Error(countErr.message);
 
-            // 👇 VERIFICAR LÍMITE
+
             if (count >= 5) {
                 const { data: rolesData, error: rolesErr } = await supabase
                     .from("roles")
                     .select("user")
                     .eq("user", admin.id)
-                    .maybeSingle(); // 👈 CAMBIA a maybeSingle
+                    .maybeSingle();
 
                 if (rolesErr) throw new Error(rolesErr.message);
 
-                if (!rolesData) { // 👈 SIMPLIFICA
+                if (!rolesData) {
                     setExternalError("limitUsers");
                     setLoading(false);
                     return;
@@ -101,7 +101,7 @@ export default function AssociateUserSystem({
         } catch (err) {
             setExternalError("Error" || err.message);
         } finally {
-            setLoading(false); // 👈 AÑADE ESTO
+            setLoading(false);
         }
     };
 
@@ -125,7 +125,7 @@ export default function AssociateUserSystem({
 
             if (error) throw error;
 
-            // 👇 AÑADE await
+
             if (refreshUsers) await refreshUsers();
             if (refreshAvailable) await refreshAvailable();
 
@@ -150,7 +150,7 @@ export default function AssociateUserSystem({
                 <button
                     onClick={() => handleOpenDialog(params.row)}
                     style={{ padding: "4px 12px" }}
-                    disabled={loading || externalLoading} // 👈 AÑADE disabled
+                    disabled={loading || externalLoading}
                 >
                     {texts.associate}
                 </button>
@@ -170,7 +170,7 @@ export default function AssociateUserSystem({
                     <DataGrid
                         rows={(availableUsers || []).map(u => ({
                             id: u.user_id,
-                            user_id: u.user_id,  // 👈 AÑADE ESTA LÍNEA
+                            user_id: u.user_id,
                             email: u.email
                         }))}
                         columns={columns}

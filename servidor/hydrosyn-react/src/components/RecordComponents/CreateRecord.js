@@ -49,14 +49,14 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
         init();
     }, [systemId]);
 
-    // ✅ COMPROBAR ACCESO
+
     const checkAccess = async () => {
 
         const { data: sessionData } = await supabase.auth.getSession();
         const user = sessionData?.session?.user;
         if (!user) return false;
 
-        // 1️⃣ Obtener sistema
+
         const { data: system } = await supabase
             .from("systems")
             .select("id, admin")
@@ -65,7 +65,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
 
         if (!system) return false;
 
-        // 2️⃣ Comprobar admin activo
+
         const { data: adminData } = await supabase
             .from("admin_users")
             .select("is_active")
@@ -74,10 +74,10 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
 
         if (!adminData?.is_active) return false;
 
-        // 3️⃣ Si soy admin → OK
+
         if (system.admin === user.id) return true;
 
-        // 4️⃣ Si soy usuario activo → OK
+
         const { data: userRelation } = await supabase
             .from("systems_users")
             .select("is_active")
@@ -111,7 +111,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
         const allowed = await checkAccess();
         if (!allowed) {
 
-            navigate("/dashboard"); // redirigir
+            navigate("/dashboard");
             return;
         }
         let volumeNum = parseFloat(volume);
@@ -135,7 +135,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
             }
             const recordDate = customDate ? customDate.utc().toISOString() : null;
 
-            // Llamada RPC
+
             const { error: rpcError } = await supabase.rpc('insert_record_for_system', {
                 p_system_id: systemId,
                 p_tank_id: parseInt(selectedTank),

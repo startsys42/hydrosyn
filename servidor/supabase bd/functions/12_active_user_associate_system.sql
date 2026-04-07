@@ -5,7 +5,7 @@ create or replace function active_user_associate_system(
 )
 returns void as $$
 begin
-    -- Verificar que el que llama es admin activo
+    
     if not exists (
         select 1
         from admin_users
@@ -15,7 +15,7 @@ begin
         raise exception 'Unauthorized: not an admin';
     end if;
 
-    -- Verificar que admin pertenece al sistema
+    
     if not exists (
         select 1
         from systems
@@ -25,7 +25,7 @@ begin
         raise exception 'Unauthorized: admin does not belong to this system';
     end if;
 
-    -- Alternar estado del usuario en el sistema
+    
     update systems_users
     set is_active = not is_active
     where system = p_system_id

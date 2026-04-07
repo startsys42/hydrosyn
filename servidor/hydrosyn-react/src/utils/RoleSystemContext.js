@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 const RoleSystemContext = createContext();
 
 export function RoleSystemProvider({ children, systemId }) {
-    const [role, setRole] = useState("loading"); // "owner" | "member" | "none" | "loading"
+    const [role, setRole] = useState("loading");
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

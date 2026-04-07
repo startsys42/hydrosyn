@@ -116,13 +116,12 @@ export default function LightAccordion({ systemId }) {
         }
     };
     const fetchRecordsLights = async () => {
-        // Esta función se llama cuando se eliminan registros
-        // ListRecordsLights ya se refresca solo con su propio fetch
+
         console.log("Historial actualizado");
         // Si quieres que se refresque automáticamente, no necesitas hacer nada
         // Porque ListRecordsLights ya tiene su propio fetch
     };
-    // Suscripciones en tiempo real
+
     useEffect(() => {
         if (!currentUserId || !systemId) return;
 
@@ -142,10 +141,7 @@ export default function LightAccordion({ systemId }) {
         };
     }, [currentUserId, systemId]);
 
-    console.log("DEBUG:", {
-        systemId,
-        currentUserId
-    });
+
 
     return (
         <div style={{ maxWidth: 800 }}>

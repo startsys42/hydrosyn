@@ -56,7 +56,7 @@ export default function UpdatePump({ systemId, pumpList, refresh, error, setErro
         }
 
         if (!newName && !newOrigin && !newDestination) {
-            setError(texts.nothingToUpdate); // Mensaje: "Debes cambiar al menos un campo"
+            setError(texts.nothingToUpdate);
             setLoading(false);
             return;
         }
@@ -76,7 +76,7 @@ export default function UpdatePump({ systemId, pumpList, refresh, error, setErro
         }
 
         try {
-            // ✅ Sesión activa
+
             const { data: sessionData } = await supabase.auth.getSession();
             if (!sessionData?.session) {
                 navigate("/dashboard", { replace: true });
@@ -84,7 +84,7 @@ export default function UpdatePump({ systemId, pumpList, refresh, error, setErro
             }
             const uid = sessionData.session.user.id;
 
-            // ✅ Usuario activo en admin_users
+
             const { data: adminData } = await supabase
                 .from("admin_users")
                 .select("*")
@@ -97,7 +97,7 @@ export default function UpdatePump({ systemId, pumpList, refresh, error, setErro
                 return;
             }
 
-            // ✅ Usuario admin del sistema
+
             const { data: systemData } = await supabase
                 .from("systems")
                 .select("*")
@@ -120,13 +120,13 @@ export default function UpdatePump({ systemId, pumpList, refresh, error, setErro
                     return;
                 }
 
-                // Comprobar si el nombre ya existe en otra bomba del sistema
+
                 const { data: existing } = await supabase
                     .from("pumps")
                     .select("*")
                     .eq("system", systemId)
                     .eq("name", newName)
-                    .neq("id", selectedPump); // 💡 excluir la bomba actual
+                    .neq("id", selectedPump);
 
                 if (existing && existing?.length > 0) {
                     setError("repeatNamePumps");
@@ -134,7 +134,7 @@ export default function UpdatePump({ systemId, pumpList, refresh, error, setErro
                     return;
                 }
 
-                updates.name = newName; // 💡 solo actualizar si cambió
+                updates.name = newName;
             }
             if (newOrigin && newOrigin !== originalPump.origin.id)
                 updates.origin = newOrigin;
@@ -142,14 +142,14 @@ export default function UpdatePump({ systemId, pumpList, refresh, error, setErro
             if (newDestination && newDestination !== originalPump.destination.id)
                 updates.destination = newDestination;
 
-            // 💡 CAMBIO AQUÍ: Si no hay cambios, no hacer nada
+
             if (Object.keys(updates).length === 0) {
                 setError("nothingToUpdate");
                 setLoading(false);
                 return;
             }
 
-            // 💡 CAMBIO AQUÍ: actualizar bomba en supabase
+
             const { error: updateError } = await supabase
                 .from("pumps")
                 .update(updates)
@@ -158,7 +158,7 @@ export default function UpdatePump({ systemId, pumpList, refresh, error, setErro
 
             if (updateError) throw updateError;
 
-            // 💡 CAMBIO AQUÍ: reset de campos
+
             setSelectedPump("");
             setNewName("");
             setNewOrigin("");

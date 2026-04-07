@@ -27,7 +27,7 @@ export default function DeleteTank({ systemId, tankList, refresh, loading, error
     const handleOpenDialog = (tank) => {
         setSelectedTank(tank);
         setOpenDialog(true);
-        setError(""); // limpiar error antes de abrir
+        setError("");
     };
 
     const handleCloseDialog = () => {
@@ -48,7 +48,7 @@ export default function DeleteTank({ systemId, tankList, refresh, loading, error
 
             const uid = sessionData.session.user.id;
 
-            // Verificar que el usuario está activo en admin_users
+
             const { data: adminUser, error: adminError } = await supabase
                 .from("admin_users")
                 .select("*")
@@ -68,7 +68,7 @@ export default function DeleteTank({ systemId, tankList, refresh, loading, error
                 return;
             }
 
-            // Verificar que el usuario es admin del sistema correspondiente
+
             const { data: systemData, error: systemError } = await supabase
                 .from("systems")
                 .select("*")
@@ -95,7 +95,7 @@ export default function DeleteTank({ systemId, tankList, refresh, loading, error
 
             if (error) throw error;
 
-            refresh(); // refresca la lista en el padre
+            refresh();
             handleCloseDialog();
         } catch (err) {
 
@@ -110,7 +110,7 @@ export default function DeleteTank({ systemId, tankList, refresh, loading, error
             headerName: texts.type,
             width: 200,
             renderCell: (params) => {
-                // params.value es el valor del campo type
+
                 switch (params.value) {
                     case "water":
                         return texts.water;
@@ -125,7 +125,7 @@ export default function DeleteTank({ systemId, tankList, refresh, loading, error
                     case "nutrients":
                         return texts.nutrients;
                     default:
-                        return params.value; // fallback por si hay un valor nuevo
+                        return params.value;
                 }
             }
         },
@@ -147,11 +147,11 @@ export default function DeleteTank({ systemId, tankList, refresh, loading, error
         },
     ];
 
-    // DataGrid necesita que cada fila tenga id único
+
     const rows = tankList.map((tank) => ({
         id: tank.id,
         name: tank.name,
-        type: tank.type, // esto es necesario para que la columna 'type' funcione
+        type: tank.type,
     }));
     return (
         <>

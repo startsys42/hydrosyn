@@ -14,30 +14,30 @@ import { supabase } from '../../utils/supabaseClient';
 import CreateESP32 from "../ESP32Components/CreateESP32";
 import RenameESP32 from "../ESP32Components/RenameESP32.js";
 import DeleteESP32 from "../ESP32Components/DeleteESP32";
-// crear, borrar, cambiar nombre
+
 //limite 2 esp32 sin rol
 
 
 //registra esp32, 
-// //eliminar 
-// cambiar nombre, borrar con bombas y tanuqes, borra con estadistics sine stadistcas
+
+
 export default function ESP32Accordion({ systemId }) {
 
 
     const navigate = useNavigate();
     const texts = useTexts();
 
-    // Lista de ESP32
+
     const [espList, setEspList] = useState([]);
     const [loading, setLoading] = useState(false);
-    // Errores locales por accordion
+
     const [errors, setErrors] = useState({
         create: '',
         rename: '',
         delete: ''
     });
 
-    // Funciones para setear error de un accordion y limpiar los demás
+
     const setCreateError = (msg) => setErrors({ create: msg, rename: '', delete: '' });
     const setRenameError = (msg) => setErrors({ create: '', rename: msg, delete: '' });
     const setDeleteError = (msg) => setErrors({ create: '', rename: '', delete: msg });

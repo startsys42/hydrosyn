@@ -4,12 +4,12 @@ CREATE OR REPLACE VIEW public.user_emails AS
 SELECT id, email
 FROM auth.users;
 
--- Revocar acceso directo
+
 REVOKE ALL ON public.user_emails FROM public;
 REVOKE ALL ON public.user_emails FROM authenticated;
 REVOKE ALL ON public.user_emails FROM anon;
 
--- Crear función que usa la vista
+
 create or replace function public.get_admin_login_attempts_with_user_email(p_user_id uuid)
 returns table (
     user_email varchar,
@@ -20,7 +20,7 @@ language plpgsql
 security definer
 as $$
 begin
-    -- Verificar que el usuario tenga rol "admin"
+    
     if not exists (
         select 1
         from public.roles r
@@ -29,7 +29,7 @@ begin
         raise exception 'Permission denied for this function';
     end if;
 
-    -- Retornar los intentos de login
+    
     return query
     select
         ue.email,

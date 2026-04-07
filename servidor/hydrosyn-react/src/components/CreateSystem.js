@@ -17,7 +17,7 @@ export default function CreateSystem() {
         setLoading(true);
         setError('');
 
-        // Regex: solo letras, números, guiones bajos, espacios intermedios, max 30 chars
+
         const nameRegex = /^[A-Za-z0-9][A-Za-z0-9_ ]{1,28}[A-Za-z0-9]$/;
         if (!nameRegex.test(systemName)) {
             setError("regexNameSystem");
@@ -34,16 +34,13 @@ export default function CreateSystem() {
         }
 
         try {
-            // 1️⃣ Obtener usuario logueado
-            //const { data: { user }, error: userErr } = await supabase.auth.getUser();
-            //  if (userErr || !user) throw new Error('Usuario no autenticado');
 
-            //  const userId = user.id;
+
             const { data: { session }, error: sessionErr } = await supabase.auth.getSession();
             if (sessionErr || !session || !session.user) throw new Error('User not authenticated');
 
             const userId = session.user.id;
-            // 2️⃣ Verificar roles
+
             const { data: roles } = await supabase
                 .from('roles')
                 .select('user')
@@ -69,7 +66,7 @@ export default function CreateSystem() {
                 return;
             }
 
-            // 3️⃣ Contar sistemas existentes de este usuario
+
             const { data: existingSystems } = await supabase
                 .from('systems')
                 .select('id')
@@ -115,7 +112,7 @@ export default function CreateSystem() {
                 }
             }
 
-            // 5️⃣ Insertar nuevo sistema
+
             const { data, error } = await supabase
                 .rpc('insert_system_with_secret', {
                     system_name: systemName,
@@ -124,11 +121,11 @@ export default function CreateSystem() {
                 });
 
             if (error) throw error;
-            // ✅ Éxito: limpiar campo y redirigir
+
             setSystemName('');
             setSystemCode('');
             setError('');
-            // ✅ Redirigir si existe ID
+
             const insertedSystemId = data[0]?.system_id;
             if (insertedSystemId) navigate(`/system/${insertedSystemId}`);
 

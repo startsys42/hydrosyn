@@ -95,7 +95,7 @@ export default function CreatePump({ systemId, pumpList, refresh, error, setErro
                 return;
             }
 
-            // Verificar si el usuario es admin activo
+
             const { data: adminData, error: adminError } = await supabase
                 .from("admin_users")
                 .select("*")
@@ -120,14 +120,14 @@ export default function CreatePump({ systemId, pumpList, refresh, error, setErro
             }
 
 
-            // 3️⃣ Validar regex del nombre
+
             const nameRegex = /^[A-Za-z0-9][A-Za-z0-9_]{1,28}[A-Za-z0-9]$/;
             if (!nameRegex.test(pumpName)) {
                 setError("regexNamePumps");
                 return;
             }
 
-            // 4️⃣ Comprobar nombre repetido en este sistema
+
             const { data: existing, error: existError } = await supabase
                 .from("pumps")
                 .select("*")
@@ -141,7 +141,7 @@ export default function CreatePump({ systemId, pumpList, refresh, error, setErro
                 return;
             }
 
-            // 5️⃣ Insertar Tanque
+
             const { data: insertData, error: insertError } = await supabase
                 .from("pumps")
                 .insert({
@@ -162,7 +162,7 @@ export default function CreatePump({ systemId, pumpList, refresh, error, setErro
             setOriginTank("");
             setDestinationTank("");
 
-            refresh(); // refresca la lista en el padre
+            refresh();
 
         } catch (err) {
 
@@ -191,7 +191,7 @@ export default function CreatePump({ systemId, pumpList, refresh, error, setErro
                         required
                         minLength={3} maxLength={30}
 
-                        placeholder={texts.namePump} // placeholder más coherente
+                        placeholder={texts.namePump}
                     />
 
 

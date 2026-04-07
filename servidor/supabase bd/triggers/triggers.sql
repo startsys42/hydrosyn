@@ -1,10 +1,10 @@
--- borrar usuario admin, borrar sistema,  inactivar admin activar
+
 
 CREATE OR REPLACE FUNCTION prevent_multiple_roles()
 RETURNS TRIGGER AS $$
 BEGIN
   IF (TG_OP = 'INSERT') THEN
-    -- if there is already at least one record, block
+    
     IF (SELECT COUNT(*) FROM public.roles) >= 1 THEN
       RAISE EXCEPTION 'Only one user is allowed in roles';
     END IF;
@@ -28,13 +28,13 @@ DECLARE
   has_role BOOLEAN;
   existing_count INT;
 BEGIN
-  -- check if the user is in roles
+  
   SELECT EXISTS (
     SELECT 1 FROM public.roles r WHERE r.user = NEW.admin
   ) INTO has_role;
 
   IF NOT has_role THEN
-    -- count how many systems the user already has
+    
     SELECT COUNT(*)
     FROM public.systems s
     WHERE s.admin = NEW.admin
@@ -49,7 +49,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- trigger only for INSERT
+
 CREATE TRIGGER trg_check_systems_limit
 BEFORE INSERT ON public.systems
 FOR EACH ROW
@@ -72,7 +72,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Trigger independiente para INSERT
+
 CREATE TRIGGER trg_prevent_insert_duplicate_name
 BEFORE INSERT ON public.systems
 FOR EACH ROW
@@ -82,14 +82,14 @@ EXECUTE FUNCTION prevent_insert_duplicate_name();
 CREATE OR REPLACE FUNCTION prevent_update_duplicate_name()
 RETURNS TRIGGER AS $$
 BEGIN
-  -- Solo bloquear si se está cambiando el nombre
+  
   IF NEW.name IS DISTINCT FROM OLD.name THEN
     IF EXISTS (
       SELECT 1
       FROM public.systems s
       WHERE s.admin = NEW.admin
         AND s.name= NEW.name
-        AND s.id <> OLD.id -- excluye la propia fila
+        AND s.id <> OLD.id 
     ) THEN
       RAISE EXCEPTION 'Cannot update: this admin already has another system with this name';
     END IF;
@@ -99,7 +99,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Trigger independiente para UPDATE
+
 CREATE TRIGGER trg_prevent_update_duplicate_name
 BEFORE UPDATE ON public.systems
 FOR EACH ROW
@@ -112,21 +112,21 @@ DECLARE
   admin_user uuid;
   total_users int;
 BEGIN
-  -- Obtener el admin del sistema actual
+  
   SELECT s.admin INTO admin_user
   FROM public.systems s
   WHERE s.id = NEW.system;
 
-  -- Verificar si el admin está en roles
+ 
   IF NOT EXISTS (SELECT 1 FROM public.roles r WHERE r.user = admin_user) THEN
-    -- Contar usuarios distintos asociados a TODOS los sistemas de ese admin
+    
     SELECT COUNT(DISTINCT su.user_id)
     INTO total_users
     FROM public.systems_users su
     JOIN public.systems s2 ON su.system = s2.id
     WHERE s2.admin = admin_user;
 
-    -- Si ya tiene 5 o más, bloquear
+    
     IF total_users >= 5 THEN
       RAISE EXCEPTION 'This admin cannot have more than 5 distinct users across all their systems';
     END IF;
@@ -168,7 +168,7 @@ EXECUTE FUNCTION prevent_duplicate_esp32_name_insert();
 CREATE OR REPLACE FUNCTION prevent_duplicate_esp32_name_update()
 RETURNS TRIGGER AS $$
 BEGIN
-  -- Solo si cambia el nombre
+  
   IF NEW.name IS DISTINCT FROM OLD.name THEN
     IF EXISTS (
       SELECT 1
@@ -198,7 +198,7 @@ DECLARE
   has_role BOOLEAN;
   existing_count INT;
 BEGIN
-  -- Obtener el admin del sistema relacionado
+ 
   SELECT s.admin INTO admin_user
   FROM public.systems s
   WHERE s.id = NEW.system;
@@ -208,9 +208,9 @@ BEGIN
     SELECT 1 FROM public.roles r WHERE r.user = admin_user
   ) INTO has_role;
 
-  -- Si el admin NO está en roles
+ 
   IF NOT has_role THEN
-    -- Contar cuántos ESP32 ya existen en este sistema
+   
     SELECT COUNT(*)
     FROM public.esp32 e
     WHERE e.system = NEW.system
@@ -226,7 +226,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Trigger solo para INSERT
+
 CREATE TRIGGER trg_check_esp32_limit
 BEFORE INSERT ON public.esp32
 FOR EACH ROW
@@ -236,7 +236,7 @@ EXECUTE FUNCTION check_esp32_limit();
 CREATE OR REPLACE FUNCTION prevent_multiple_secrets_insert()
 RETURNS TRIGGER AS $$
 BEGIN
-  -- Verificar si ya existe un secreto para ese system
+
   IF EXISTS (
     SELECT 1
     FROM public.system_secrets ss
@@ -258,17 +258,17 @@ EXECUTE FUNCTION prevent_multiple_secrets_insert();
 CREATE OR REPLACE FUNCTION validate_secret_update()
 RETURNS TRIGGER AS $$
 BEGIN
-  -- No permitir cambiar el system
+  
   IF NEW.system IS DISTINCT FROM OLD.system THEN
     RAISE EXCEPTION 'Cannot change system for an existing secret';
   END IF;
 
-  -- Validar longitud del code
+  
   IF length(NEW.code) < 10 OR length(NEW.code) > 30 THEN
     RAISE EXCEPTION 'Code must be between 10 and 30 characters long';
   END IF;
 
-  -- Validar formato alfanumérico
+  
   IF NEW.code !~ '^[A-Za-z0-9]+$' THEN
     RAISE EXCEPTION 'Code must contain only alphanumeric characters';
   END IF;
@@ -404,7 +404,7 @@ EXECUTE FUNCTION prevent_duplicate_tank_name_update();
 CREATE OR REPLACE FUNCTION prevent_manual_secret_delete()
 RETURNS trigger AS $$
 BEGIN
-    -- Si el sistema asociado sigue existiendo, no permitir borrar
+
     IF EXISTS (SELECT 1 FROM systems WHERE id = OLD.system) THEN
         RAISE EXCEPTION 'Cannot delete a secret manually while its system exists';
     END IF;
@@ -421,9 +421,9 @@ EXECUTE FUNCTION prevent_manual_secret_delete();
 CREATE OR REPLACE FUNCTION deactivate_system_users()
 RETURNS trigger AS $$
 BEGIN
-    -- Verifica si se desactivó el admin
+    
     IF OLD.is_active = TRUE AND NEW.is_active = FALSE THEN
-        -- Desactiva todos los users de los sistemas de este admin
+        
         UPDATE systems_users su
         SET is_active = FALSE
         FROM systems s
@@ -434,7 +434,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Trigger sobre admin_users
+
 CREATE TRIGGER trigger_deactivate_system_users
 AFTER UPDATE ON admin_users
 FOR EACH ROW
@@ -499,7 +499,7 @@ RETURNS TRIGGER AS $$
 DECLARE
     esp_system bigint;
 BEGIN
-    -- obtener system del ESP32
+  
     SELECT system INTO esp_system FROM esp32 WHERE id = NEW.esp32;
 
     IF esp_system IS NULL THEN
@@ -514,7 +514,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Trigger
+
 CREATE TRIGGER check_pump_esp32_system
 BEFORE INSERT OR UPDATE ON pumps
 FOR EACH ROW
@@ -556,7 +556,7 @@ CREATE TRIGGER trigger_records_user
 BEFORE INSERT OR UPDATE ON public.records
 FOR EACH ROW EXECUTE FUNCTION check_records_user();
 
--- 1.1 Función para verificar límite de 6 luces por sistema
+
 CREATE OR REPLACE FUNCTION check_lights_limit()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -579,7 +579,7 @@ CREATE TRIGGER trg_check_lights_limit
     FOR EACH ROW
     EXECUTE FUNCTION check_lights_limit();
 
--- 1.2 Verificar que el GPIO no esté usado por una bomba (para luces)
+
 CREATE OR REPLACE FUNCTION check_gpio_not_used_by_pump()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -604,7 +604,7 @@ CREATE TRIGGER trg_check_gpio_not_used_by_pump
     FOR EACH ROW
     EXECUTE FUNCTION check_gpio_not_used_by_pump();
 
--- 1.3 Verificar que el GPIO no esté usado por una luz (para bombas - ya tienes, pero asegurar)
+
 CREATE OR REPLACE FUNCTION check_gpio_not_used_by_light()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -624,14 +624,14 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Agregar trigger a pumps si no existe
+
 DROP TRIGGER IF EXISTS trg_check_gpio_not_used_by_light ON public.pumps;
 CREATE TRIGGER trg_check_gpio_not_used_by_light
     BEFORE INSERT OR UPDATE ON public.pumps
     FOR EACH ROW
     EXECUTE FUNCTION check_gpio_not_used_by_light();
 
--- 1.4 Validar que la luz pertenezca al mismo sistema que el ESP32
+
 CREATE OR REPLACE FUNCTION validate_light_esp32_system()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -656,7 +656,7 @@ CREATE TRIGGER trg_validate_light_esp32_system
     FOR EACH ROW
     EXECUTE FUNCTION validate_light_esp32_system();
 
--- 1.5 Prevenir nombre duplicado para luces (INSERT)
+
 CREATE OR REPLACE FUNCTION prevent_duplicate_light_name_insert()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -678,7 +678,7 @@ CREATE TRIGGER trg_prevent_duplicate_light_name_insert
     FOR EACH ROW
     EXECUTE FUNCTION prevent_duplicate_light_name_insert();
 
--- 1.6 Prevenir nombre duplicado para luces (UPDATE)
+
 CREATE OR REPLACE FUNCTION prevent_duplicate_light_name_update()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -705,30 +705,30 @@ CREATE TRIGGER trg_prevent_duplicate_light_name_update
 
 
     
--- 4. FUNCIÓN para verificar que no hay superposición de horarios
+
 CREATE OR REPLACE FUNCTION check_light_schedule_overlap()
 RETURNS TRIGGER AS $$
 DECLARE
     overlapping_schedule RECORD;
 BEGIN
-    -- Buscar si existe alguna programación que se superponga
+    
     SELECT * INTO overlapping_schedule
     FROM public.programming_lights
     WHERE light = NEW.light
       AND day_of_week = NEW.day_of_week
-      AND id IS DISTINCT FROM NEW.id  -- Excluir la misma programación en caso de UPDATE
+      AND id IS DISTINCT FROM NEW.id  
       AND (
-          -- Caso 1: El nuevo horario empieza dentro de otro existente
+          
           (NEW.start_time >= start_time AND NEW.start_time < end_time)
           OR
-          -- Caso 2: El nuevo horario termina dentro de otro existente
+          
           (NEW.end_time > start_time AND NEW.end_time <= end_time)
           OR
-          -- Caso 3: El nuevo horario envuelve a otro existente
+          
           (NEW.start_time <= start_time AND NEW.end_time >= end_time)
       );
     
-    -- Si encontró superposición, lanzar error
+    
     IF FOUND THEN
         RAISE EXCEPTION 'Cannot create/update schedule: Overlaps with existing schedule from % to % on %', 
             overlapping_schedule.start_time, 
@@ -740,7 +740,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- 5. TRIGGER para INSERT y UPDATE
+
 CREATE TRIGGER trg_check_light_schedule_overlap
     BEFORE INSERT OR UPDATE ON public.programming_lights
     FOR EACH ROW
@@ -752,7 +752,7 @@ CREATE TRIGGER trg_check_light_schedule_overlap
 CREATE OR REPLACE FUNCTION record_light_history()
 RETURNS TRIGGER AS $$
 BEGIN
-    -- Solo registrar si realmente cambió el estado de la luz
+    
     IF NEW.is_active IS DISTINCT FROM OLD.is_active THEN
         INSERT INTO public.lights_history (light_id, action)
         VALUES (
@@ -764,7 +764,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Trigger que se activa cuando se actualiza programming_lights
+
 CREATE TRIGGER trigger_record_light_history
     AFTER UPDATE OF is_active ON public.programming_lights
     FOR EACH ROW
@@ -775,7 +775,7 @@ RETURNS TRIGGER AS $$
 DECLARE
     light_count INTEGER;
 BEGIN
-    -- Si cambia el sistema, verificar límite en el nuevo sistema
+    
     IF NEW.system IS DISTINCT FROM OLD.system THEN
         SELECT COUNT(*) INTO light_count
         FROM public.lights
@@ -802,9 +802,9 @@ DECLARE
     origin_system BIGINT;
     dest_system BIGINT;
 BEGIN
-    -- Obtener sistema del tanque origen
+    
     SELECT system INTO origin_system FROM tanks WHERE id = NEW.origin;
-    -- Obtener sistema del tanque destino
+    
     SELECT system INTO dest_system FROM tanks WHERE id = NEW.destination;
     
     IF origin_system IS NULL OR dest_system IS NULL THEN

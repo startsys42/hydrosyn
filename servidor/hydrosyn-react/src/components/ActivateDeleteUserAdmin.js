@@ -58,10 +58,7 @@ const ActivateDeleteUserAdmin = () => {
     const handleToggleConfirm = async () => {
         if (!currentUser) return;
         try {
-            console.log('📝 Datos:', {
-                currentUserId: currentUser.id,
-                currentUserEmail: currentUser.email
-            });
+
             const { error } = await supabase.rpc('change_admin_user_status', {
                 target_user_id: currentUser.id
             })
@@ -69,11 +66,11 @@ const ActivateDeleteUserAdmin = () => {
             if (error) throw new Error(error.message);
 
 
-            // Actualiza la tabla local
+
             setUsers(prev =>
                 prev.map(u =>
-                    u.user === currentUser.id  // Comparar con u.user (no u.id)
-                        ? { ...u, is_active: !u.is_active }  // Usar el valor actual, no toggleValue
+                    u.user === currentUser.id
+                        ? { ...u, is_active: !u.is_active }
                         : u
                 )
             );

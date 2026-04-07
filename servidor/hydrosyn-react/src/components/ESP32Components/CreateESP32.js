@@ -40,7 +40,7 @@ export default function CreateESP32({ systemId, espList, refresh, error, setErro
                 return;
             }
 
-            // Verificar si el usuario es admin activo
+
             const { data: adminData, error: adminError } = await supabase
                 .from("admin_users")
                 .select("*")
@@ -55,7 +55,7 @@ export default function CreateESP32({ systemId, espList, refresh, error, setErro
             }
 
 
-            // 2️⃣ Comprobar límite de 2 ESP32 si no tiene rol
+
             const { data: espCount, error: espError } = await supabase
                 .from("esp32")
                 .select("*", { count: "exact" })
@@ -63,7 +63,7 @@ export default function CreateESP32({ systemId, espList, refresh, error, setErro
 
             if (espError) throw espError;
 
-            // 2️⃣ Si hay 2 o más ESP32, comprobar si el usuario tiene rol
+
             if (espCount?.length >= 2) {
                 const { data: roleData, error: roleError } = await supabase
                     .from("roles")
@@ -74,19 +74,19 @@ export default function CreateESP32({ systemId, espList, refresh, error, setErro
                 if (roleError) throw roleError;
 
                 if (!roleData) {
-                    setError(texts.limitESP32); // no tiene rol y hay 2 ESP32 → error
+                    setError(texts.limitESP32);
                     return;
                 }
             }
 
-            // 3️⃣ Validar regex del nombre
+
             const nameRegex = /^[A-Za-z0-9][A-Za-z0-9_]{1,28}[A-Za-z0-9]$/;
             if (!nameRegex.test(ESP32Name)) {
                 setError("regexNameESP32");
                 return;
             }
 
-            // 4️⃣ Comprobar nombre repetido en este sistema
+
             const { data: existing, error: existError } = await supabase
                 .from("esp32")
                 .select("*")
@@ -100,7 +100,7 @@ export default function CreateESP32({ systemId, espList, refresh, error, setErro
                 return;
             }
 
-            // 5️⃣ Insertar ESP32
+
             const { data: insertData, error: insertError } = await supabase
                 .from("esp32")
                 .insert({ name: ESP32Name, system: systemId })
@@ -109,7 +109,7 @@ export default function CreateESP32({ systemId, espList, refresh, error, setErro
             if (insertError) throw insertError;
 
             setESP32Name("");
-            refresh(); // refresca la lista en el padre
+            refresh();
 
         } catch (err) {
 
@@ -138,7 +138,7 @@ export default function CreateESP32({ systemId, espList, refresh, error, setErro
                         required
                         minLength={3} maxLength={30}
 
-                        placeholder={texts.nameESP32} // placeholder más coherente
+                        placeholder={texts.nameESP32}
                     />
                     <button type="submit">{texts.addESP32}</button>
                 </form>

@@ -11,19 +11,19 @@ RETURNS TABLE(
     system_id BIGINT
 ) AS $$
 BEGIN
-    -- Verificar que el usuario tiene acceso al sistema
+    
     IF NOT EXISTS (
         SELECT 1 FROM public.systems s
         WHERE s.id = p_system_id
         AND (
-            -- Es admin activo
+            
             s.admin = p_current_user
             AND EXISTS (
                 SELECT 1 FROM public.admin_users au
                 WHERE au.user = p_current_user AND au.is_active = true
             )
             OR
-            -- O es usuario activo del sistema
+            
             EXISTS (
                 SELECT 1 FROM public.systems_users su
                 WHERE su.system = p_system_id

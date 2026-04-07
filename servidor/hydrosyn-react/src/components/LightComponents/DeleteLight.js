@@ -1,4 +1,4 @@
-// DeleteLight.jsx
+
 import { useState } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -22,7 +22,7 @@ export default function DeleteLight({ systemId, lightList, refresh, loading, err
     const handleOpenDialog = (light) => {
         setSelectedLight(light);
         setOpenDialog(true);
-        setError(""); // limpiar error antes de abrir
+        setError("");
     };
 
     const handleCloseDialog = () => {
@@ -34,7 +34,7 @@ export default function DeleteLight({ systemId, lightList, refresh, loading, err
         if (!selectedLight) return;
 
         try {
-            // 1. Verificar autenticación
+
             const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
             if (sessionError || !sessionData?.session) {
                 navigate("/dashboard", { replace: true });
@@ -43,7 +43,7 @@ export default function DeleteLight({ systemId, lightList, refresh, loading, err
 
             const uid = sessionData.session.user.id;
 
-            // 2. Verificar que el usuario está activo en admin_users
+
             const { data: adminUser, error: adminError } = await supabase
                 .from("admin_users")
                 .select("*")
@@ -56,7 +56,7 @@ export default function DeleteLight({ systemId, lightList, refresh, loading, err
                 return;
             }
 
-            // 3. Verificar que el usuario es admin del sistema correspondiente
+
             const { data: systemData, error: systemError } = await supabase
                 .from("systems")
                 .select("*")
@@ -71,7 +71,7 @@ export default function DeleteLight({ systemId, lightList, refresh, loading, err
 
 
 
-            // 5. Eliminar la luz
+
             const { error } = await supabase
                 .from("lights")
                 .delete()
@@ -80,7 +80,7 @@ export default function DeleteLight({ systemId, lightList, refresh, loading, err
 
             if (error) throw error;
 
-            // 6. Refrescar lista y cerrar diálogo
+
             refresh();
             handleCloseDialog();
 
@@ -125,7 +125,7 @@ export default function DeleteLight({ systemId, lightList, refresh, loading, err
         },
     ];
 
-    // DataGrid necesita que cada fila tenga id único
+
     const rows = (lightList || []).map((light) => ({
         id: light.id,
         name: light.name,

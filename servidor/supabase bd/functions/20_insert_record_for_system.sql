@@ -9,7 +9,7 @@ returns void as $$
 declare
     record_date timestamptz;
 begin
-    -- Verificar permisos
+    
     if not exists (
         select 1
         from public.admin_users a
@@ -29,10 +29,10 @@ begin
         end if;
     end if;
 
-    -- Determinar fecha
+    
     record_date := coalesce(p_created_at, now());
 
-    -- Insertar registro
+    
     insert into public.records (tank, "user", volume, created_at)
     values (p_tank_id, p_user, p_volume, record_date);
 end;

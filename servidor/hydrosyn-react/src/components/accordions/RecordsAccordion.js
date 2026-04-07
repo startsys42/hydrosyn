@@ -1,4 +1,4 @@
-// agau y vaciados, editarlos, insertar, borara actualizar calendario
+
 
 
 
@@ -80,7 +80,7 @@ export default function RecordsAccordion({ systemId }) {
     };
 
     useEffect(() => {
-        // Canal para escuchar cambios en 'records'
+
         const recordsChannel = supabase
             .channel('records-changes')
             .on(
@@ -91,15 +91,15 @@ export default function RecordsAccordion({ systemId }) {
                 }
             )
             .subscribe();
-        // Canal para escuchar cambios en 'tanks'
+
         const tanksChannel = supabase
             .channel('public:tanks')
             .on(
                 'postgres_changes',
                 { event: '*', schema: 'public', table: 'tanks', filter: `system=eq.${systemId}` },
                 payload => {
-                    console.log('Cambio detectado en tanks:', payload);
-                    fetchTanks(); // actualiza tankList automáticamente
+
+                    fetchTanks();
                 }
             )
             .subscribe();
@@ -111,7 +111,7 @@ export default function RecordsAccordion({ systemId }) {
     }, [systemId]);
     useEffect(() => {
         fetchRecords();
-        fetchTanks(); // <-- Traemos también los tanques al cargar
+        fetchTanks();
     }, [systemId]);
     return (
         <>

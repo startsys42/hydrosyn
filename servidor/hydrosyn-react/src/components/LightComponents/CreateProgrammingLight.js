@@ -52,14 +52,14 @@ export default function CreateProgrammingLight({
     const [formData, setFormData] = useState({
         light_id: "",
         day_of_week: "Monday",
-        start_time: dayjs().hour(8).minute(0),   // 08:00
-        end_time: dayjs().hour(18).minute(0),    // 18:00
+        start_time: dayjs().hour(8).minute(0),
+        end_time: dayjs().hour(18).minute(0),
         is_active: true,
     });
     const [loading, setLoading] = useState(false);
 
     const timeToMinutes = (time) => {
-        // Acepta Dayjs o string HH:mm / HH:mm:ss
+
         if (dayjs.isDayjs(time)) {
             return time.hour() * 60 + time.minute();
         }
@@ -80,7 +80,7 @@ export default function CreateProgrammingLight({
             const existingStart = timeToMinutes(p.start_time);
             const existingEnd = timeToMinutes(p.end_time);
 
-            // Condición de overlap: (nuevo inicio < existente fin) && (nuevo fin > existente inicio)
+
             return start < existingEnd && end > existingStart;
         });
 
@@ -107,8 +107,8 @@ export default function CreateProgrammingLight({
             const { error } = await supabase.from("programming_lights").insert({
                 light: Number(formData.light_id),
                 day_of_week: formData.day_of_week,
-                start_time: formData.start_time.format("HH:mm:ss"), // <-- Dayjs a string
-                end_time: formData.end_time.format("HH:mm:ss"),     // <-- Dayjs a string
+                start_time: formData.start_time.format("HH:mm:ss"),
+                end_time: formData.end_time.format("HH:mm:ss"),
 
             });
 

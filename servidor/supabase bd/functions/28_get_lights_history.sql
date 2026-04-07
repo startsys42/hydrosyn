@@ -12,7 +12,7 @@ RETURNS TABLE(
 DECLARE
     v_admin_active BOOLEAN;
 BEGIN
-    -- Verificar si el admin del sistema está activo
+    
     SELECT EXISTS (
         SELECT 1 FROM public.systems s
         JOIN public.admin_users au ON au.user = s.admin
@@ -20,20 +20,20 @@ BEGIN
         AND au.is_active = true
     ) INTO v_admin_active;
 
-    -- Si el admin no está activo, nadie tiene acceso
+    
     IF NOT v_admin_active THEN
         RAISE EXCEPTION 'System admin is inactive';
     END IF;
 
-    -- Verificar que el usuario tiene acceso al sistema
+    
     IF NOT EXISTS (
         SELECT 1 FROM public.systems s
         WHERE s.id = p_system_id
         AND (
-            -- Es el admin
+            
             s.admin = p_current_user
             OR
-            -- Es usuario activo del sistema
+            
             EXISTS (
                 SELECT 1 FROM public.systems_users su
                 WHERE su.system = p_system_id

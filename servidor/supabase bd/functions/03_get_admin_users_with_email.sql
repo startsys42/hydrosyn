@@ -8,7 +8,7 @@ returns table (
 language sql
 security definer
 as $$
-    -- Reemplaza 'SUPER_ADMIN_USER_ID' por el UUID del super-admin
+    
     select 
         au.id,
         au.user,

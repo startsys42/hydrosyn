@@ -4,7 +4,7 @@ ON public.systems
 FOR SELECT
 TO authenticated
 USING (
-  -- Caso 1: usuario activo en systems_users
+  
   EXISTS (
     SELECT 1
     FROM public.systems_users su
@@ -12,7 +12,7 @@ USING (
       AND su.user_id = auth.uid()
       AND su.is_active = true
   )
-  -- Caso 2: admin activo en admin_users y dueño del sistema
+  
   OR EXISTS (
     SELECT 1
     FROM public.admin_users au
@@ -28,7 +28,7 @@ ON public.systems
 FOR UPDATE
 TO authenticated
 USING (
-  -- Solo puede tocar el sistema si es admin activo
+  
   EXISTS (
     SELECT 1
     FROM public.admin_users au
@@ -38,7 +38,7 @@ USING (
   )
 )
 WITH CHECK (
-  -- Solo puede dejar el sistema en un estado donde sigue siendo admin activo
+  
   EXISTS (
     SELECT 1
     FROM public.admin_users au
@@ -46,6 +46,6 @@ WITH CHECK (
       AND au.is_active = true
       AND au.user = systems.admin
   )
-  -- Y solo puede modificar el campo name
+  
   AND (systems.name IS NOT NULL)
 );

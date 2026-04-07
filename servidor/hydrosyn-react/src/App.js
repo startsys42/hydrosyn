@@ -69,12 +69,12 @@ function App() {
     }, [user]);
 
     useEffect(() => {
-        // Limpia todas las clases del body para evitar conflictos
+
         document.body.className = '';
 
-        // Añade la clase correspondiente al tema actual
+
         document.body.classList.add(theme === 'light' ? 'light-theme' : 'dark-theme');
-    }, [theme]); // Se ejecuta cuando cambia 'theme'
+    }, [theme]);
     {/*
     useEffect(() => {
         // Revisa si hay sesión activa
@@ -93,11 +93,11 @@ function App() {
 
     useEffect(() => {
         const checkUser = async () => {
-            setLoadingAuth(true); // Empezar la carga
+            setLoadingAuth(true);
             const { data, error } = await supabase.auth.getSession();
             const session = data?.session;
             if (session) {
-                // Si hay una sesión, verificar el perfil del usuario
+
                 const { data: roleData, error: roleErr } = await supabase
                     .from('roles')
                     .select('user')
@@ -120,24 +120,24 @@ function App() {
                     .eq('is_active', true)
                     .maybeSingle();
 
-                // Si hay un error con el perfil o el usuario está inactivo, desloguearlo
+
                 if (!roleData && !adminData?.is_active && !systemData) {
                     await supabase.auth.signOut();
                     setUser(null);
                 } else {
-                    // Si todo está bien, establecer el usuario
+
                     setUser(session.user);
                 }
             } else {
-                // Si no hay sesión, el usuario es nulo
+
                 setUser(null);
             }
-            setLoadingAuth(false); // Terminar la carga
+            setLoadingAuth(false);
         };
 
         checkUser();
 
-        // Listener para cambios de sesión
+
         const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
             if (_event === 'SIGNED_OUT') {
                 setUser(null);

@@ -59,7 +59,7 @@ export default function CreateUserSystem({ systemId, refreshUsers, refreshAvaila
     const handleSubmit = async (e) => {
         e.preventDefault();
         const admin = await checkAdmin();
-        if (!admin) return; // ya navegó a dashboard si no es admin
+        if (!admin) return;
 
         setLoading(true);
         setMessage("");
@@ -88,9 +88,9 @@ export default function CreateUserSystem({ systemId, refreshUsers, refreshAvaila
                     return;
                 }
             }
-            // Llamada correcta a Supabase Edge Function
+
             const { data, error: funcError } = await supabase.functions.invoke(
-                "createUserSystem", // nombre de tu Edge Function
+                "createUserSystem",
                 {
                     body: { system_id: systemId, email }
                 }
@@ -98,7 +98,7 @@ export default function CreateUserSystem({ systemId, refreshUsers, refreshAvaila
 
             if (funcError) throw funcError;
 
-            // setMessage("userCreated");
+
             setEmail("");
             refreshUsers();
             refreshAvailable();

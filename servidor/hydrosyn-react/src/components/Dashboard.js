@@ -41,7 +41,7 @@ export default function Dashboard() {
 
             const userId = session.user.id;
 
-            // Sistemas donde es owner/admin
+
             const { data: ownerData, error: ownerErr } = await supabase
                 .from('systems')
                 .select(`
@@ -65,8 +65,8 @@ export default function Dashboard() {
                 created_at: new Date(s.created_at).toLocaleDateString(),
                 owner: true
             }));
-            console.log('✅ Owner systems processed:', ownerSystems);
-            // Sistemas donde es miembro
+
+
             const { data: memberData, error: memberErr } = await supabase
                 .from('systems_users')
                 .select('system(id, name, created_at)')
@@ -83,7 +83,7 @@ export default function Dashboard() {
                     owner: false
                 }));
             setIsMember(memberSystems.length > 0);
-            console.log(ownerData, memberData);
+
             setRows([...ownerSystems, ...memberSystems]);
             setRowCount(ownerSystems.length + memberSystems.length);
 
@@ -123,7 +123,7 @@ export default function Dashboard() {
     }, [loadingAdmin, loadingOwner]);
 
     const columns = [
-        // { field: 'id', headerName: 'ID', hide: true },
+
         { field: 'name', headerName: t.system, flex: 1, minWidth: 200, headerClassName: 'data-grid-header' },
         { field: 'created_at', headerName: t.date, flex: 1, minWidth: 120, headerClassName: 'data-grid-header' },
         {
@@ -198,16 +198,13 @@ export default function Dashboard() {
                             rows={rows}
                             columns={columns}
                             pagination
-                            //page={page}
+
                             pageSize={pageSize}
 
-                            // rowCount={rowCount}
-                            // paginationMode="client" // CAMBIADO de "server" a "client"
-                            // onPageChange={(newPage) => setPage(newPage)}
+
                             onPageSizeChange={(newSize) => { setPageSize(newSize); setPage(0); }}
-                            sortingMode="client" // CAMBIADO de "server" a "client"
-                            //sortModel={sortModel}
-                            //onSortModelChange={setSortModel}
+                            sortingMode="client"
+
                             disableSelectionOnClick
 
                         />

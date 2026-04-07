@@ -1,6 +1,6 @@
 create or replace function public.get_records_for_system(
     p_system_id bigint,
-    p_current_user uuid  -- uid del usuario que consulta
+    p_current_user uuid  
 )
 returns table(
     id bigint,
@@ -13,7 +13,7 @@ returns table(
     user_email text
 ) as $$
 begin
-    -- Verifica si el usuario es admin activo del sistema
+    
     if not exists (
         select 1
         from public.admin_users a
@@ -22,7 +22,7 @@ begin
           and a.is_active = true
           and s.id = p_system_id
     ) then
-        -- Si no es admin activo, verifica si es usuario activo del sistema
+        
         if not exists (
             select 1
             from public.systems_users su
@@ -34,7 +34,7 @@ begin
         end if;
     end if;
 
-    -- Devuelve los registros del sistema
+    
     return query
     select 
         r.id,

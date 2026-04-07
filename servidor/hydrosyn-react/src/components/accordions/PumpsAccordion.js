@@ -87,41 +87,41 @@ export default function PumpsAccordion({ systemId }) {
 
     useEffect(() => {
         const fetchUser = async () => {
-            console.log("🔍 Obteniendo usuario...");
+
             const { data } = await supabase.auth.getUser();
-            console.log("✅ Usuario obtenido:", data?.user?.id);
+
             setCurrentUserId(data?.user?.id);
-            setInitialLoading(false); // Marcamos que ya sabemos quién es (o no) el usuario
+            setInitialLoading(false);
         };
         fetchUser();
-    }, []); // Solo se ejecuta una vez al montar
+    }, []);
 
-    // 🔴 2. SEGUNDO: Una vez que tenemos el userId, cargar bombas
+
     useEffect(() => {
         if (!currentUserId) {
-            console.log("⏳ Esperando currentUserId...");
+
             return;
         }
 
-        console.log("🚀 Cargando bombas para usuario:", currentUserId);
-        fetchPumps();
-    }, [currentUserId]); // Solo cuando cambia currentUserId
 
-    // 🔴 3. TERCERO: Una vez que tenemos bombas, cargar todo lo demás
+        fetchPumps();
+    }, [currentUserId]);
+
+
     useEffect(() => {
         if (!currentUserId || !systemId) return;
 
-        console.log("📊 Cargando datos adicionales (haya o no bombas)");
+
         fetchCalibrateList();
         fetchCalibrationList();
         fetchRecordsPump();
         fetchProgrammingList();
-    }, [currentUserId, systemId]); // Solo cuando cambia usuario o systemId
+    }, [currentUserId, systemId]);
 
 
     const refreshCalibrations = async () => {
-        await fetchCalibrateList();     // refresca la lista de Calibrate
-        await fetchCalibrationList();   // refresca la lista de Calibration
+        await fetchCalibrateList();
+        await fetchCalibrationList();
     };
     const fetchPumps = async () => {
         setLoading(true);
@@ -274,7 +274,7 @@ export default function PumpsAccordion({ systemId }) {
     useEffect(() => {
         if (!currentUserId || !systemId) return;
 
-        console.log("📡 Configurando suscripciones secundarias...");
+
 
         // Calibrates
         const calibrateSub = supabase
@@ -288,7 +288,7 @@ export default function PumpsAccordion({ systemId }) {
                     filter: `system_id=eq.${systemId}`
                 },
                 (payload) => {
-                    console.log("🔄 Cambio en calibrates:", payload);
+
                     fetchCalibrateList();
                 }
             )
@@ -340,7 +340,7 @@ export default function PumpsAccordion({ systemId }) {
                     table: 'programming_pumps'
                 },
                 (payload) => {
-                    console.log("🔄 Cambio en programming:", payload);
+
                     fetchProgrammingList();
                 }
             )
@@ -349,7 +349,7 @@ export default function PumpsAccordion({ systemId }) {
 
 
         return () => {
-            console.log("🧹 Limpiando suscripciones secundarias");
+
             supabase.removeChannel(calibrateSub);
             supabase.removeChannel(calibrationSub);
             supabase.removeChannel(recordsSub);

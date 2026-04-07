@@ -27,7 +27,7 @@ export default function DeletePump({ systemId, pumpList, refresh, loading, error
     const handleOpenDialog = (pump) => {
         setSelectedPump(pump);
         setOpenDialog(true);
-        setError(""); // limpiar error antes de abrir
+        setError("");
     };
 
     const handleCloseDialog = () => {
@@ -48,7 +48,7 @@ export default function DeletePump({ systemId, pumpList, refresh, loading, error
 
             const uid = sessionData.session.user.id;
 
-            // Verificar que el usuario está activo en admin_users
+
             const { data: adminUser, error: adminError } = await supabase
                 .from("admin_users")
                 .select("*")
@@ -68,7 +68,7 @@ export default function DeletePump({ systemId, pumpList, refresh, loading, error
                 return;
             }
 
-            // Verificar que el usuario es admin del sistema correspondiente
+
             const { data: systemData, error: systemError } = await supabase
                 .from("systems")
                 .select("*")
@@ -95,7 +95,7 @@ export default function DeletePump({ systemId, pumpList, refresh, loading, error
 
             if (error) throw error;
 
-            refresh(); // refresca la lista en el padre
+            refresh();
             handleCloseDialog();
         } catch (err) {
 
@@ -126,7 +126,7 @@ export default function DeletePump({ systemId, pumpList, refresh, loading, error
         },
     ];
 
-    // DataGrid necesita que cada fila tenga id único
+
     const rows = pumpList.map((pump) => ({
         id: pump.id,
         name: pump.name,

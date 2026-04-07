@@ -10,7 +10,7 @@ security definer
 as $$
 begin
 
-  -- verificar acceso al sistema
+  
   if not exists (
     select 1
     from public.admin_users a

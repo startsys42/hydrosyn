@@ -16,7 +16,7 @@ USING (
 );
 
 
--- INSERT
+
 CREATE POLICY "Only active system admins can insert tanks"
 ON public.tanks
 FOR INSERT
@@ -33,7 +33,7 @@ WITH CHECK (
   )
 );
 
--- UPDATE
+
 CREATE POLICY "Only active system admins can update tanks"
 ON public.tanks
 FOR UPDATE
@@ -61,7 +61,7 @@ WITH CHECK (
   )
 );
 
--- DELETE
+
 CREATE POLICY "Only active system admins can delete tanks"
 ON public.tanks
 FOR DELETE

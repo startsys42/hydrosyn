@@ -21,7 +21,7 @@ ON public.system_secrets
 FOR UPDATE
 TO authenticated
 USING (
-  -- Puede tocar el secreto si es admin activo del sistema
+
   EXISTS (
     SELECT 1
     FROM public.systems s
@@ -33,7 +33,7 @@ USING (
   )
 )
 WITH CHECK (
-  -- Después de la actualización sigue teniendo que ser admin activo
+ 
   EXISTS (
     SELECT 1
     FROM public.systems s
@@ -43,6 +43,6 @@ WITH CHECK (
       AND au.user = auth.uid()
       AND au.is_active = true
   )
-  -- Y que no modifique nada más que el campo code
+ 
   AND (system_secrets.code IS NOT NULL)
 );

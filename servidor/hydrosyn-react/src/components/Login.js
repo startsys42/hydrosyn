@@ -48,9 +48,9 @@ export default function Login() {
 
 
             if (authError) throw authError;
-            // 2. Verificar si el usuario está activo
+
             const { data: { user } } = await supabase.auth.getUser();
-            console.log('Usuario recibido:', user);
+
             const { data: adminActive, error: adminActiveError } = await supabase
                 .from('admin_users')
                 .select('is_active')

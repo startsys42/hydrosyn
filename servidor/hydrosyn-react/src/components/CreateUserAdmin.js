@@ -41,7 +41,7 @@ export default function CreateUserAdmin() {
             }
 
             setMessage("messageCreateUser");
-            setEmail(''); // Limpiar input
+            setEmail('');
         } catch (error) {
             setError(error.message);
         } finally {

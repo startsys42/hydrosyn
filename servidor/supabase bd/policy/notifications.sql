@@ -4,7 +4,7 @@ ON public.login_attempts
 FOR INSERT
 TO authenticated
 WITH CHECK (
-    -- Solo pueden insertar su propio UID
+  
     "user" = auth.uid()
     AND NOT EXISTS (
         SELECT 1

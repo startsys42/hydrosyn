@@ -50,7 +50,7 @@ export default function CreateTank({ systemId, tankList, refresh, error, setErro
                 return;
             }
 
-            // Verificar si el usuario es admin activo
+
             const { data: adminData, error: adminError } = await supabase
                 .from("admin_users")
                 .select("*")
@@ -64,7 +64,7 @@ export default function CreateTank({ systemId, tankList, refresh, error, setErro
                 return;
             }
 
-            // 2️⃣ Comprobar límite de 2 ESP32 si no tiene rol
+
             const { data: tankCount, count, error: tankError } = await supabase
                 .from("tanks")
                 .select("*", { count: "exact" })
@@ -72,7 +72,7 @@ export default function CreateTank({ systemId, tankList, refresh, error, setErro
 
             if (tankError) throw tankError;
 
-            // 2️⃣ Si hay 2 o más ESP32, comprobar si el usuario tiene rol
+
             if (count >= 20) {
                 const { data: roleData, error: roleError } = await supabase
                     .from("roles")
@@ -83,19 +83,19 @@ export default function CreateTank({ systemId, tankList, refresh, error, setErro
                 if (roleError) throw roleError;
 
                 if (!roleData) {
-                    setError(texts.limitTanks); // no tiene rol y hay 20 Tanks → error
+                    setError(texts.limitTanks);
                     return;
                 }
             }
 
-            // 3️⃣ Validar regex del nombre
+
             const nameRegex = /^[A-Za-z0-9][A-Za-z0-9_]{1,28}[A-Za-z0-9]$/;
             if (!nameRegex.test(tankName)) {
                 setError("regexNameTanks");
                 return;
             }
 
-            // 4️⃣ Comprobar nombre repetido en este sistema
+
             const { data: existing, error: existError } = await supabase
                 .from("tanks")
                 .select("*")
@@ -109,7 +109,7 @@ export default function CreateTank({ systemId, tankList, refresh, error, setErro
                 return;
             }
 
-            // 5️⃣ Insertar Tanque
+
             const { data: insertData, error: insertError } = await supabase
                 .from("tanks")
                 .insert({ name: tankName, system: systemId, type: tankType })
@@ -120,7 +120,7 @@ export default function CreateTank({ systemId, tankList, refresh, error, setErro
             setTankName("");
             setTankType("");
 
-            refresh(); // refresca la lista en el padre
+            refresh();
 
         } catch (err) {
 
@@ -149,7 +149,7 @@ export default function CreateTank({ systemId, tankList, refresh, error, setErro
                         required
                         minLength={3} maxLength={30}
 
-                        placeholder={texts.nameTank} // placeholder más coherente
+                        placeholder={texts.nameTank}
                     />
                     <label>{texts.selectTankType}</label>
                     <select

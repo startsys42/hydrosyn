@@ -6,7 +6,7 @@ create or replace function delete_user_system(
 )
 returns void as $$
 begin
-    -- Verifica que el que llama es un admin activo
+   
     if not exists (
         select 1
         from admin_users
@@ -16,7 +16,7 @@ begin
         raise exception 'Unauthorized: not an admin';
     end if;
 
-    -- Verifica que el admin pertenece al sistema actual
+   
     if not exists (
         select 1
         from systems
@@ -26,7 +26,7 @@ begin
         raise exception 'Unauthorized: admin does not belong to this system';
     end if;
 
-    -- Si deleteAll = true, elimina al usuario de todos los sistemas del admin
+  
     if p_delete_all then
         delete from systems_users su
         using systems s
@@ -34,7 +34,7 @@ begin
           and s.admin = p_admin_uid
           and su.user_id = p_user_id;
     else
-        -- Solo elimina del sistema actual
+        
         delete from systems_users
         where system = p_system_id
           and user_id = p_user_id;

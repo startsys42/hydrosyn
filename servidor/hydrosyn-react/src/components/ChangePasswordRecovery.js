@@ -21,7 +21,7 @@ export default function ChangePasswordRecovery() {
         // Supabase detecta automáticamente el token en la URL y crea una sesión
         const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
             if (event === "PASSWORD_RECOVERY") {
-                console.log("Evento de recuperación detectado, el usuario ya tiene sesión temporal.");
+
             }
         });
 
@@ -50,7 +50,7 @@ export default function ChangePasswordRecovery() {
         setLoading(true);
         setMessage({ text: '', type: '' });
 
-        // Validaciones básicas
+
         if (newPassword !== confirmPassword) {
             setMessage({ text: 'noEquals', type: 'error' });
             setLoading(false);
@@ -64,8 +64,7 @@ export default function ChangePasswordRecovery() {
         }
 
         try {
-            // 2. Actualizar la contraseña
-            // Como el usuario ya entró con el enlace, ya tiene una sesión activa
+
             const { error } = await supabase.auth.updateUser({
                 password: newPassword
             });
@@ -73,16 +72,16 @@ export default function ChangePasswordRecovery() {
             if (error) throw error;
 
             setMessage({
-                text: 'messagePassword', // Asegúrate que esta clave exista en tu useTexts
+                text: 'messagePassword',
                 type: 'success',
             });
 
-            // Limpiar y redirigir
+
             setNewPassword('');
             setConfirmPassword('');
 
             setTimeout(() => {
-                navigate('/'); // O a la página que prefieras
+                navigate('/');
             }, 3000);
 
         } catch (error) {
