@@ -55,7 +55,7 @@ export default function ESP32Accordion({ systemId }) {
 
             setEspList(data || []);
         } catch (err) {
-            console.error(err);
+
             setErrors(err.message || "Error");
         } finally {
             setLoading(false);

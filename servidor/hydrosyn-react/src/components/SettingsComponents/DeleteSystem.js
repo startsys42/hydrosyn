@@ -78,7 +78,7 @@ export default function DeleteSystem({ systemId, refresh, error, setError }) {
             navigate("/dashboard");
 
         } catch (err) {
-            console.error(err);
+
             setError("Error" || err.message);
         } finally {
             setLoading(false);

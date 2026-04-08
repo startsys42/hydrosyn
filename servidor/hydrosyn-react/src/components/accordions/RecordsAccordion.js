@@ -52,7 +52,7 @@ export default function RecordsAccordion({ systemId }) {
 
             setTankList(data || []);
         } catch (err) {
-            console.error(err);
+
         }
     };
 
@@ -73,7 +73,7 @@ export default function RecordsAccordion({ systemId }) {
 
             setRecordList(data || []);
         } catch (err) {
-            console.error(err);
+
         } finally {
             setLoading(false);
         }

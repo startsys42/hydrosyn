@@ -88,7 +88,7 @@ export default function Dashboard() {
             setRowCount(ownerSystems.length + memberSystems.length);
 
         } catch (err) {
-            console.error(err);
+
         } finally {
             setLoading(false);
         }

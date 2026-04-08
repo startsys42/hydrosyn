@@ -39,7 +39,7 @@ export default function SettingsAccordion({ systemId }) {
             setSecret(secretData.code);
 
         } catch (err) {
-            console.error(err);
+
             setErrors(prev => ({ ...prev, rename: 'Error loading system data', secret: 'Error loading system data' }));
         }
     };

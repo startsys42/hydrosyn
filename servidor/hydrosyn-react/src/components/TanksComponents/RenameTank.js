@@ -96,7 +96,7 @@ export default function RenameTank({ systemId, tankList, refresh, error, setErro
             refresh();
 
         } catch (err) {
-            console.error(err);
+
             setError("Error" || err.message);
         } finally {
             setLoading(false);

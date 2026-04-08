@@ -169,7 +169,7 @@ export default function UpdatePump({ systemId, pumpList, refresh, error, setErro
 
 
         } catch (err) {
-            console.error(err);
+
             setError("Error" || err.message);
         } finally {
             setLoading(false);

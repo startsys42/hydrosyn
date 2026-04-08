@@ -199,7 +199,7 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
             refresh();
 
         } catch (err) {
-            console.error(err);
+
             setError("Error" || err.message);
         } finally {
             setLoading(false);

@@ -92,7 +92,7 @@ export default function LightAccordion({ systemId }) {
 
             setLightList(formatted);
         } catch (err) {
-            console.error(err);
+
             setComponentError("create", err.message);
         } finally {
             setLoading(false);
