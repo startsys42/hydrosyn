@@ -146,7 +146,7 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
                         required
                     />
 
-                    {/* SELECTOR DE UNIDAD */}
+
                     <label>{texts.units}</label>
                     <select
                         value={unit}

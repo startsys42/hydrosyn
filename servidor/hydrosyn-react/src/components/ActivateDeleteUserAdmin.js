@@ -195,7 +195,7 @@ const ActivateDeleteUserAdmin = () => {
             </div>
 
 
-            {/* Confirmación para toggle */}
+
             <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
                 <DialogTitle>{texts.confirmation}</DialogTitle>
                 <DialogContent>
@@ -211,7 +211,7 @@ const ActivateDeleteUserAdmin = () => {
                 </DialogActions>
             </Dialog>
 
-            {/* Confirmación para borrar */}
+
             <Dialog open={deleteOpen} onClose={() => setDeleteOpen(false)}>
                 <DialogTitle>{texts.confirmation}</DialogTitle>
                 <DialogContent>

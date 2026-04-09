@@ -119,7 +119,7 @@ export default function NotificationsAccordion({ systemId }) {
             <h2>{texts.notifications}</h2>
 
 
-            {/* <div style={{ height: 500, width: '100%' }}> */}
+
             <DataGrid className="datagrid"
                 rows={attempts.map((a, index) => ({ id: index, ...a }))}
                 columns={columns}

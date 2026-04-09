@@ -199,7 +199,7 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
                     </LocalizationProvider>
                 )}
 
-                {/* Tabla con el historial */}
+
                 <div style={{ height: 500, width: '100%' }}>
                     <DataGrid
                         className="datagrid"

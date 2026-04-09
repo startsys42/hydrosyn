@@ -140,14 +140,7 @@ export default function RecordsAccordion({ systemId }) {
 
 
             />
-            {/*
-            <CalendarRecord
-                systemId={systemId}
-                recordList={recordList}
-                refresh={fetchRecords}
-                loading={loading}
-            />
-            */}
+
         </>
     );
 }

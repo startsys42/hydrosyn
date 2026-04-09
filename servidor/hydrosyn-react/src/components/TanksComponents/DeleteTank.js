@@ -180,7 +180,7 @@ export default function DeleteTank({ systemId, tankList, refresh, loading, error
                     {error && <p style={{ color: 'red' }}>{error}</p>}
                 </AccordionDetails>
             </Accordion>
-            {/* Dialogo de confirmación */}
+
             <Dialog open={openDialog} onClose={handleCloseDialog}>
                 <DialogTitle>{texts.confirmation}</DialogTitle>
                 <DialogContent>

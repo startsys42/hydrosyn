@@ -166,7 +166,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
             <AccordionDetails>
                 <form onSubmit={handleCreateRecord} className='form-container'>
 
-                    {/* SELECTOR DE TANQUES */}
+
                     <label>{texts.selectTank}</label>
                     <select
                         value={selectedTank}
@@ -193,7 +193,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
                         />
                     </LocalizationProvider>
 
-                    {/* CAMPO DE VOLUMEN */}
+
                     <label>{texts.volume}</label>
                     <input
                         type="number"
@@ -221,7 +221,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
                     </button>
                 </form>
 
-                {/* MENSAJE DE ERROR */}
+
                 {error && <p style={{ color: 'red', marginTop: '10px' }}>{texts[error] || error}</p>}
             </AccordionDetails>
         </Accordion>

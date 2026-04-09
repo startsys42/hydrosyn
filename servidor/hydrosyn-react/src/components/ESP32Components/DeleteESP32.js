@@ -152,7 +152,7 @@ export default function DeleteESP32({ systemId, espList, refresh, loading, error
                     {error && <p style={{ color: 'red' }}>{error}</p>}
                 </AccordionDetails>
             </Accordion>
-            {/* Dialogo de confirmación */}
+
             <Dialog open={openDialog} onClose={handleCloseDialog}>
                 <DialogTitle>{texts.confirmation}</DialogTitle>
                 <DialogContent>
