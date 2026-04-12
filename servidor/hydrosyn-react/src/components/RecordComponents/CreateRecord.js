@@ -38,6 +38,8 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
     useEffect(() => {
         const init = async () => {
             const allowed = await checkAccess();
+            console.log("=== DEBUG CreateRecord init ===");
+            console.log("1. allowed:", allowed);
 
             if (!allowed) {
                 navigate("/dashboard");
