@@ -42,12 +42,12 @@ import LightbulbIcon from '@mui/icons-material/Lightbulb';
 
 
 export default function System() {
-    console.info("=== DEBUG SYSTEM ===");
+
     const navigate = useNavigate();
     const texts = useTexts();
     const { systemId } = useParams();
     const { role, loading: roleLoading } = useRoleSystem();
-    console.log("2. role:", role);
+
     const [selectedTab, setSelectedTab] = useState(0);
 
 
@@ -130,16 +130,10 @@ export default function System() {
 
     useEffect(() => {
         if (!loadingSystem && !roleLoading) {
-            console.log("=== DEBUG SYSTEM ===");
-            console.log("3. system:", system);
-            console.log("4. role:", role);
-            console.log("5. loadingSystem:", loadingSystem);
-            console.log("6. roleLoading:", roleLoading);
+
 
             if (!system || role === "none") {
-                console.log("=== DEBUG SYSTEM ===");
-                console.log("7. Redirecting to dashboard due to missing system or no access role");
-                console.log("8. system:", system);
+
                 navigate('/dashboard', { replace: true });
             }
         }
