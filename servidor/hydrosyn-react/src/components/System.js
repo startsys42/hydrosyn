@@ -130,7 +130,7 @@ export default function System() {
 
 
     useEffect(() => {
-        if (loadingSystem && roleLoading) {
+        if (!loadingSystem && !roleLoading) {
             console.log("=== DEBUG SYSTEM ===");
             console.log("3. system:", system);
             console.log("4. role:", role);
