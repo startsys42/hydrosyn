@@ -97,8 +97,7 @@ export default function System() {
     };
 
     const tabs = tabConfig[role] || [];
-    console.log("=== DEBUG SYSTEM ===");
-    console.log("1. systemId:", systemId);
+
 
     useEffect(() => {
         const fetchSystem = async () => {
@@ -110,7 +109,7 @@ export default function System() {
                 .single();
 
             if (error) {
-                console.log("5. ERROR fetching system:");
+
                 setSystem(null);
             } else if (data) {
                 setSystem(data);
