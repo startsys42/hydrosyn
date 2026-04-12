@@ -57,6 +57,8 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
         const { data: sessionData } = await supabase.auth.getSession();
         const user = sessionData?.session?.user;
         if (!user) return false;
+        console.log("=== DEBUG CreateRecord checkAccess ===");
+        console.log("1. user:", user);
 
 
         const { data: system } = await supabase
@@ -64,7 +66,8 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
             .select("id, admin")
             .eq("id", systemId)
             .maybeSingle();
-
+        console.log("=== DEBUG CreateRecord checkAccess ===");
+        console.log("2. system:", system);
         if (!system) return false;
 
 

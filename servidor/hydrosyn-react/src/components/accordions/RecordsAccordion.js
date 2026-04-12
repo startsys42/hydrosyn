@@ -52,7 +52,7 @@ export default function RecordsAccordion({ systemId }) {
 
             setTankList(data || []);
         } catch (err) {
-            console.log("Error fetching tanks:", err.message);
+
         }
     };
 
