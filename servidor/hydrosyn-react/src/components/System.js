@@ -42,7 +42,7 @@ import LightbulbIcon from '@mui/icons-material/Lightbulb';
 
 
 export default function System() {
-    console.log("=== DEBUG SYSTEM ===");
+    console.info("=== DEBUG SYSTEM ===");
     const navigate = useNavigate();
     const texts = useTexts();
     const { systemId } = useParams();
