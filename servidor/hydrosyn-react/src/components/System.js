@@ -47,7 +47,7 @@ export default function System() {
     const texts = useTexts();
     const { systemId } = useParams();
     const { role, loading: roleLoading } = useRoleSystem();
-
+    console.log("2. role:", role);
     const [selectedTab, setSelectedTab] = useState(0);
 
 
