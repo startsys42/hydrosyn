@@ -110,7 +110,7 @@ export default function System() {
                 .single();
 
             if (error) {
-                console.error("5. ERROR fetching system:", error.message);
+                console.log("5. ERROR fetching system:");
                 setSystem(null);
             } else if (data) {
                 setSystem(data);

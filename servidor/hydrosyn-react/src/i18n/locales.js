@@ -151,7 +151,7 @@ const texts = {
         changing: 'Cambiando...',
         creating: 'Creando...',
         active: 'Activo',
-        messageEmail: 'Revisa el nuevo email para confirmar el cambio',
+        messageEmail: 'Email cambiado con éxito.',
         messagePassword: '¡Contraseña cambiada con éxito!',
         noEquals: 'No coinciden',
 
@@ -426,7 +426,7 @@ const texts = {
         changing: 'Changing...',
         creating: 'Creating...',
         active: 'Active',
-        messageEmail: 'Check your new email to confirm the change',
+        messageEmail: 'Email changed successfully.',
         messagePassword: 'Password changed successfully',
         noEquals: 'Do not match',
 
