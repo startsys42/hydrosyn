@@ -76,6 +76,8 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
             .select("is_active")
             .eq("user", system.admin)
             .maybeSingle();
+        console.log("=== DEBUG CreateRecord checkAccess ===");
+        console.log("3. adminData:", adminData);
 
         if (!adminData?.is_active) return false;
 
