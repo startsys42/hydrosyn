@@ -92,7 +92,7 @@ export default function System() {
         member: [
             // { value: "records", label: texts.records, icon: <HistoryIcon />, component: RecordsAccordion },
             { value: "pumps", label: texts.pumps, icon: <BuildIcon />, component: PumpsAccordion },
-            //  { value: "lights", label: texts.lights, icon: <LightbulbIcon />, component: LightAccordion }
+            { value: "lights", label: texts.lights, icon: <LightbulbIcon />, component: LightAccordion }
         ]
     };
 
