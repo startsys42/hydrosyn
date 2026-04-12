@@ -131,6 +131,12 @@ export default function System() {
 
     useEffect(() => {
         if (!loadingSystem && !roleLoading) {
+            console.log("=== DEBUG SYSTEM ===");
+            console.log("3. system:", system);
+            console.log("4. role:", role);
+            console.log("5. loadingSystem:", loadingSystem);
+            console.log("6. roleLoading:", roleLoading);
+
             if (!system || role === "none") {
                 navigate('/dashboard', { replace: true });
             }
