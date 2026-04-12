@@ -130,7 +130,7 @@ export default function System() {
 
 
     useEffect(() => {
-        if (!loadingSystem && !roleLoading) {
+        if (loadingSystem && roleLoading) {
             console.log("=== DEBUG SYSTEM ===");
             console.log("3. system:", system);
             console.log("4. role:", role);
@@ -138,6 +138,9 @@ export default function System() {
             console.log("6. roleLoading:", roleLoading);
 
             if (!system || role === "none") {
+                console.log("=== DEBUG SYSTEM ===");
+                console.log("7. Redirecting to dashboard due to missing system or no access role");
+                console.log("8. system:", system);
                 navigate('/dashboard', { replace: true });
             }
         }
