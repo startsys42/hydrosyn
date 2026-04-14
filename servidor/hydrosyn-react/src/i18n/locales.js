@@ -57,7 +57,7 @@ const texts = {
         success: 'Éxito',
         listCalibrate: "Lista de calibraciones",
         listCalibrations: "Ejecución de las calibraciones",
-        listRecordsPump: "Lista de registros",
+        listRecordsPump: "Lista de bombeos",
         insertPump: "Añadir bombeo manual",
 
         updatePump: "Modificar bomba",
@@ -335,7 +335,7 @@ const texts = {
         success: 'Success',
         listCalibrate: "List of calibrations",
         listCalibrations: "Execution of calibrations",
-        listRecordsPump: "List of records",
+        listRecordsPump: "List of pumpings",
         insertPump: "Add manual pumping",
         updatePump: "Update pump",
         listRecords: "List of records",
