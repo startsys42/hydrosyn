@@ -17,7 +17,7 @@ export function AdminProvider({ children }) {
             } = await supabase.auth.getUser();
 
             if (authError || !user) {
-                console.error('Error obteniendo usuario:', authError);
+
                 setLoading(false);
                 return;
             }

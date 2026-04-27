@@ -55,7 +55,7 @@ export function RoleSystemProvider({ children, systemId }) {
             if (memberData && !memberErr) {
                 setRole("member");
             } else {
-                console.log("=== DEBUG RoleSystemProvider ===");
+
                 setRole("none");
             }
 

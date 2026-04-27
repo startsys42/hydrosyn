@@ -1,0 +1,13 @@
+@startuml
+!include ../../common.puml
+
+actor ESP32 <<device>>
+entity PB
+
+ESP32 -> PB : solicitarProgramacionBombas()
+
+PB --> ESP32 : programacionBombas
+ESP32 -> ESP32 : ejecutarProgramacionBombas()
+ESP32 --> PB : resultadoEjecucionProgramacionBombas()
+
+@enduml

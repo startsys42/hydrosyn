@@ -1,0 +1,38 @@
+@startuml
+title UC-004 cambiar email
+!include ../../common.puml
+
+' Definimos los participantes para este caso
+
+actor U
+boundary VO
+control CU
+entity UP
+
+
+
+U -> VO: Introduce nuevo email y confirma
+activate VO
+
+VO -> VO: validarEmailsCoinciden()
+
+alt Emails no coinciden
+    VO --> U: mostrarMensaje(emails no coinciden)
+else Emails coinciden
+    VO -> CU: solicitarCambioEmail(nuevoEmail)
+    activate CU
+    
+  
+    activate UP
+    CU -> UP: actualizarEmailPendiente()
+    UP --> CU: ok
+    deactivate UP
+    
+    CU --> VO: confirmarSolicitud()
+    deactivate CU
+    
+    VO --> U: mostrarMensajeExito()
+end
+
+deactivate VO
+@enduml

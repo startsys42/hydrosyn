@@ -1,0 +1,47 @@
+@startuml
+title UC-017 renombrar sistema
+!include ../../common.puml
+
+actor P
+boundary VS 
+control CS 
+entity S 
+
+P -> VS: Ingresa nuevo nombre y clic en "Renombrar"
+activate VS
+
+' Validación sintáctica (Regex)
+VS -> VS: validarFormato(nombre)
+
+alt formato inválido
+    VS --> P: mostrarError()
+else formato válido
+    VS -> CS: renombrarSistema(nuevoNombre)
+    activate CS
+
+    
+        CS -> S: verificarNombreDuplicado(adminId, nuevoNombre)
+        activate S
+        S --> CS: nombre_repetido
+        deactivate S
+
+        alt nombre ya existe
+            CS --> VS: error()
+            VS --> P: Mostrar error de duplicidad
+        else nombre disponible
+            ' Actualización efectiva
+            CS -> S: actualizarNombre(nuevoNombre)
+            activate S
+            S --> CS: ok
+            deactivate S
+
+            CS --> VS: confirmarRenombrado()
+            deactivate CS
+
+            VS -> VS: refresh()
+            VS --> P: Mostrar éxito y actualizar vista
+        end
+    end
+
+
+@enduml

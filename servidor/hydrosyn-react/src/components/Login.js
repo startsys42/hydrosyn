@@ -38,7 +38,7 @@ export default function Login() {
         setError('');
 
         try {
-            // 1. Autenticación con Supabase
+
             const { error: authError } = await supabase.auth.signInWithPassword({
 
                 email,
@@ -80,7 +80,7 @@ export default function Login() {
                 navigate('/dashboard');
             }
 
-            // 3. Redirigir al dashboard si está activo
+
 
         } catch (err) {
             setError(err.message);

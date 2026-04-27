@@ -1,0 +1,52 @@
+@startuml
+autonumber
+
+actor "Usuario" as A
+participant "ChangeEmail (React)" as UI
+participant "Aplicacion (Logica Cliente)" as APP
+participant "Supabase JS Client" as SB
+participant "Supabase Edge Function" as FN
+database "PostgreSQL" as DB
+
+A -> UI: iniciarCasoUso()
+activate UI
+UI -> APP: validarEntradaYContexto()
+activate APP
+alt validacion incorrecta
+  APP --> UI: errorValidacion
+  UI --> A: mostrarError()
+else validacion correcta
+  APP -> SB: auth.getUser()
+  activate SB
+  SB -> DB: query/rpc
+  activate DB
+  DB --> SB: datos/estado
+  deactivate DB
+  SB --> APP: respuesta
+  deactivate SB
+  APP -> SB: auth.getSession()
+  activate SB
+  SB -> DB: query/rpc
+  activate DB
+  DB --> SB: datos/estado
+  deactivate DB
+  SB --> APP: respuesta
+  deactivate SB
+  APP -> SB: functions.invoke('changeEmail')
+  activate SB
+  SB -> FN: ejecutarEdgeFunction()
+  activate FN
+  FN -> DB: query/transaction
+  activate DB
+  DB --> FN: resultado
+  deactivate DB
+  FN --> SB: payload
+  deactivate FN
+  SB --> APP: respuesta
+  deactivate SB
+  APP --> UI: respuestaOK
+  UI --> A: mostrarConfirmacion()
+end
+deactivate APP
+deactivate UI
+@enduml

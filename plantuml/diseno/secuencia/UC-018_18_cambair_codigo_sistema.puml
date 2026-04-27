@@ -1,0 +1,50 @@
+@startuml
+title UC-018 cambair codigo sistema
+!include ../../common.puml
+
+actor P 
+boundary VS 
+control CS 
+entity S
+
+P -> VS: Ingresa nuevo secreto y clic en "Cambiar Secreto"
+activate VS
+
+' Validación de formato (Regex)
+VS -> VS: validarFormatoSecreto(nuevoSecreto)
+
+alt formato inválido
+    VS --> P: mostrarError()
+else formato válido
+    VS -> CS: solicitarCambioSecreto(nuevoSecreto)
+    activate CS
+
+    
+   
+
+
+    CS -> S: verificarSecretoDuplicadoEnSistemasPropios( uevoSecreto)
+    activate S
+    S --> CS: secreto_ya_existe
+    deactivate S
+
+        alt secreto repetido
+            CS --> VS: error()
+            VS --> P: Mostrar error de duplicidad
+        else secreto disponible
+           
+            CS -> S: actualizarSecreto( nuevoSecreto)
+            activate S
+            S --> CS: ok
+            deactivate S
+
+            CS --> VS: confirmarCambio()
+            deactivate CS
+
+            VS -> VS: refreshSecret()
+            VS --> P: Actualiza vista y limpia campos
+        end
+    end
+
+
+@enduml

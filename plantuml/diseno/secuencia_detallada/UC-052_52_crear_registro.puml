@@ -1,0 +1,63 @@
+@startuml
+autonumber
+
+actor "Usuario" as A
+participant "CreateRecord (React)" as UI
+participant "Aplicacion (Logica Cliente)" as APP
+participant "Supabase JS Client" as SB
+database "PostgreSQL" as DB
+
+A -> UI: iniciarCasoUso()
+activate UI
+UI -> APP: validarEntradaYContexto()
+activate APP
+alt validacion incorrecta
+  APP --> UI: errorValidacion
+  UI --> A: mostrarError()
+else validacion correcta
+  APP -> SB: auth.getSession()
+  activate SB
+  SB -> DB: query/rpc
+  activate DB
+  DB --> SB: datos/estado
+  deactivate DB
+  SB --> APP: respuesta
+  deactivate SB
+  APP -> SB: rpc('insert_record_for_system')
+  activate SB
+  SB -> DB: query/rpc
+  activate DB
+  DB --> SB: datos/estado
+  deactivate DB
+  SB --> APP: respuesta
+  deactivate SB
+  APP -> SB: select('systems')
+  activate SB
+  SB -> DB: query/rpc
+  activate DB
+  DB --> SB: datos/estado
+  deactivate DB
+  SB --> APP: respuesta
+  deactivate SB
+  APP -> SB: select('admin_users')
+  activate SB
+  SB -> DB: query/rpc
+  activate DB
+  DB --> SB: datos/estado
+  deactivate DB
+  SB --> APP: respuesta
+  deactivate SB
+  APP -> SB: select('systems_users')
+  activate SB
+  SB -> DB: query/rpc
+  activate DB
+  DB --> SB: datos/estado
+  deactivate DB
+  SB --> APP: respuesta
+  deactivate SB
+  APP --> UI: respuestaOK
+  UI --> A: mostrarConfirmacion()
+end
+deactivate APP
+deactivate UI
+@enduml

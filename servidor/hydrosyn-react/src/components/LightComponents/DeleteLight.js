@@ -159,7 +159,7 @@ export default function DeleteLight({ systemId, lightList, refresh, loading, err
                 </AccordionDetails>
             </Accordion>
 
-            {/* Diálogo de confirmación */}
+
             <Dialog open={openDialog} onClose={handleCloseDialog}>
                 <DialogTitle>{texts.confirmation}</DialogTitle>
                 <DialogContent>

@@ -14,7 +14,7 @@ import { useLanguage } from '../utils/LanguageContext';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 
-// Extiende dayjs con los plugins
+
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -38,7 +38,7 @@ export default function NotificationsAdmin() {
     const [deleting, setDeleting] = useState(false);
 
     useEffect(() => {
-        dayjs.locale(language); // 'es' o 'en' según tu contexto
+        dayjs.locale(language);
     }, [language]);
     const handleDelete = async () => {
         if (!fromDate || !toDate) {
@@ -50,8 +50,8 @@ export default function NotificationsAdmin() {
             setDeleting(true);
             setError(null);
 
-            const fromUTC = dayjs(fromDate).utc().format(); // Asegura UTC
-            const toUTC = dayjs(toDate).utc().format(); // Asegura UTC
+            const fromUTC = dayjs(fromDate).utc().format();
+            const toUTC = dayjs(toDate).utc().format();
 
             const { error } = await supabase.rpc(
                 'delete_login_attempts_between',
@@ -65,12 +65,12 @@ export default function NotificationsAdmin() {
 
             setOpenDialog(false);
 
-            // refrescar datos
+
             setAttempts(prev =>
                 prev.filter(a => {
                     if (!a.attempt_created_at) return true;
                     const d = new Date(a.attempt_created_at);
-                    // Filtrar los que NO están dentro del rango
+
                     return d < new Date(fromUTC) || d > new Date(toUTC);
                 })
             );
@@ -148,14 +148,14 @@ export default function NotificationsAdmin() {
                     return '--';
                 }
                 try {
-                    //const date = new Date(params.value);
-                    //return dayjs(date).format('DD/MM/YYYY HH:mm:ss');
+
+
                     const date = new Date(params.value);
 
                     if (isNaN(date.getTime())) { return 'Date invalid'; }
 
                     return date.toLocaleString(undefined, {
-                        //timeZone: 'UTC',
+
                         year: 'numeric',
                         month: '2-digit',
                         day: '2-digit',

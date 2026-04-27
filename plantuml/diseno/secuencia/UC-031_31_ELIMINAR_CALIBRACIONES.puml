@@ -1,0 +1,29 @@
+@startuml
+title UC-031 ELIMINAR CALIBRACIONES
+!include ../../common.puml
+
+actor P
+boundary VB
+control CB
+entity CBO 
+
+
+
+
+
+
+P -> VB : socilita eliminar calibraciones
+activate VB
+VB -> P : mostrarFormularioEliminarCalibraciones()
+P -> VB : eliminarCalibraciones(fechaDesde, fechaHasta)
+VB -> P : Muestra Diálogo de Confirmación
+P -> VB : Confirma eliminación
+VB -> CB : eliminarCalibraciones(fechaDesde, fechaHasta)
+activate CB
+CB -> CBO : eliminarCalibraciones(fechaDesde, fechaHasta)
+CBO --> CB : ok
+CB -> VB : ok
+VB -> P : mostrarCalibracionesActualizadas()
+deactivate VB
+
+@enduml

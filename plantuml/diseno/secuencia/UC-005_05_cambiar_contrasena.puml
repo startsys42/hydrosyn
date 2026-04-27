@@ -1,0 +1,37 @@
+@startuml
+title UC-005 cambiar contrasena
+
+!include ../../common.puml
+
+actor U
+boundary VO 
+control CU
+entity UP
+
+U -> VO: Introduce nueva contraseña y confirma
+activate VO
+
+' Representación de las validaciones de tu código (coincidencia y complejidad)
+VO -> VO: validarCoincidencia()
+VO -> VO: validarComplejidadContraseña()
+
+alt Datos Inválidos
+    VO --> U: mostrarMensajeError()
+else Validaciones Correctas
+    VO -> CU: solicitarCambioContraseña(nuevaPassword)
+    activate CU
+    
+    ' El control interactúa con la entidad para persistir el cambio
+    CU -> UP: actualizarContraseña(nuevaPassword)
+    activate UP
+    UP --> CU: confirmación_actualización
+    deactivate UP
+    
+    CU --> VO: confirmarExito()
+    deactivate CU
+    
+    VO --> U: mostrarMensajeExito()
+end
+
+deactivate VO
+@enduml

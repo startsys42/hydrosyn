@@ -199,7 +199,7 @@ export default function System() {
 
             </div>
 
-            {/* CONTENIDO SIN BOX - SOLO UN DIV NORMAL */}
+
             <div className="tab-content-container">
                 {renderTabContent()}
             </div>

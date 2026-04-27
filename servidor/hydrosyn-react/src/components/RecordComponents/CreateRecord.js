@@ -38,8 +38,8 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
     useEffect(() => {
         const init = async () => {
             const allowed = await checkAccess();
-            console.log("=== DEBUG CreateRecord init ===");
-            console.log("1. allowed:", allowed);
+
+
 
             if (!allowed) {
                 navigate("/dashboard");
@@ -57,8 +57,8 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
         const { data: sessionData } = await supabase.auth.getSession();
         const user = sessionData?.session?.user;
         if (!user) return false;
-        console.log("=== DEBUG CreateRecord checkAccess ===");
-        console.log("1. user:", user);
+
+
 
 
         const { data: system } = await supabase
@@ -66,8 +66,8 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
             .select("id, admin")
             .eq("id", systemId)
             .maybeSingle();
-        console.log("=== DEBUG CreateRecord checkAccess ===");
-        console.log("2. system:", system);
+
+
         if (!system) return false;
 
 
@@ -76,8 +76,8 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
             .select("is_active")
             .eq("user", system.admin)
             .maybeSingle();
-        console.log("=== DEBUG CreateRecord checkAccess ===");
-        console.log("3. adminData:", adminData);
+
+
 
         if (!adminData?.is_active) return false;
 
@@ -91,11 +91,11 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
             .eq("system", systemId)
             .eq("user_id", user.id)
             .maybeSingle();
-        console.log("=== DEBUG CreateRecord checkAccess ===");
-        console.log("1. user:", user);
-        console.log("2. system:", system);
-        console.log("3. adminData:", adminData);
-        console.log("4. userRelation:", userRelation);
+
+
+
+
+
 
         if (userRelation?.is_active) return true;
 

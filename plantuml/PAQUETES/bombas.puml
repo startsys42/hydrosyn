@@ -1,0 +1,50 @@
+@startuml
+left to right direction
+
+actor Propietario
+actor Usuario
+actor Temporizador <<Device>> 
+
+package "Gestión de Bombas" {
+
+  usecase "Crear Bomba (UC-026)" as UC026
+  usecase "Modificar Bomba (UC-027)" as UC027
+  usecase "Eliminar Bomba (UC-028)" as UC028
+
+  usecase "Calibrar Bomba (UC-029)" as UC029
+  usecase "Listar Calibraciones (UC-030)" as UC030
+  usecase "Eliminar Calibraciones (UC-031)" as UC031
+  usecase "Listar Ejecución Calibraciones (UC-032)" as UC032
+  usecase "Eliminar Ejecución Calibraciones (UC-033)" as UC033
+
+  usecase "Realizar Bombeo (UC-034)" as UC034
+  usecase "Listar Bombeos (UC-035)" as UC035
+  usecase "Eliminar Listado Bombeos (UC-036)" as UC036
+
+  usecase "Crear Programación Bombas (UC-037)" as UC037
+  usecase "Listar Programaciones Bombas (UC-038)" as UC038
+  usecase "Actualizar Programación Bombas (UC-039)" as UC039
+  usecase "Eliminar Programación Bombas (UC-040)" as UC040
+  usecase "Ejecutar Programación Bombas (UC-041)" as UC041
+}
+
+Propietario --> UC026
+Propietario --> UC027
+Propietario --> UC028
+Propietario --> UC031
+Propietario --> UC033
+Propietario --> UC036
+Propietario --> UC037
+Propietario --> UC039
+Propietario --> UC040
+
+Usuario --> UC029
+Usuario --> UC030
+Usuario --> UC032
+Usuario --> UC034
+Usuario --> UC035
+Usuario --> UC038
+
+Temporizador --> UC041
+
+@enduml

@@ -132,7 +132,7 @@ export default function NotificationsAccordion({ systemId }) {
 
                 disableSelectionOnClick
             />
-            {/*   </div>*/}
+
 
             {error && <p style={{ color: 'red' }}>{error}</p>}
 

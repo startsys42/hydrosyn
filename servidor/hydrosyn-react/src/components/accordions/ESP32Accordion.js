@@ -15,10 +15,10 @@ import CreateESP32 from "../ESP32Components/CreateESP32";
 import RenameESP32 from "../ESP32Components/RenameESP32.js";
 import DeleteESP32 from "../ESP32Components/DeleteESP32";
 
-//limite 2 esp32 sin rol
 
 
-//registra esp32, 
+
+
 
 
 export default function ESP32Accordion({ systemId }) {

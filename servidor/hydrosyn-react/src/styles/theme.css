@@ -72,15 +72,25 @@ body, #root {
     height: 100%;
     margin: 0;
     padding: 0;
-    background-image: url('../assets/hydrosyn.png');
-      background-repeat: repeat-y;   
-  background-size: cover;           
-  background-position: center;     
+  
+   
     background-color: var(--bg-color);
     color: var(--text-color);
     font-family: sans-serif;
 }
 
+/* Clase que añade la imagen de fondo */
+body.has-bg, body.has-bg #root {
+    background-image: url('../assets/hydrosyn.png');
+    background-repeat: repeat-y;
+    background-size: cover;
+    background-position: center;
+}
+
+/* Clase que quita la imagen explícitamente (opcional) */
+body.no-bg, body.no-bg #root {
+    background-image: none;
+}
 
 .sidebar svg,
 .sidebar button svg,

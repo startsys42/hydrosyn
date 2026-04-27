@@ -7,8 +7,8 @@ export default function PrivateLayout() {
     const { loading } = useAdminStatus();
 
     if (loading) {
-        // Puedes poner un loader si quieres
-        return null; // o <div>Loading...</div>
+
+        return null;
     }
 
     return (

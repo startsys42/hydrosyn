@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabaseClient';
-import useTexts from '../utils/UseTexts'; // O usa texto hardcodeado si no usás i18n
+import useTexts from '../utils/UseTexts';
 import '../styles/theme.css';
 
 export default function RecoverPassword() {
-    const t = useTexts(); // Opcional, si tenés traducciones
+    const t = useTexts();
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');

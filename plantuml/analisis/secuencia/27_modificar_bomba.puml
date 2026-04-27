@@ -1,0 +1,39 @@
+@startuml
+!include ../../common.puml
+
+
+actor P
+boundary VB
+control CB
+entity B 
+
+P -> VB : Clic en "Modificar Bomba"
+activate VB
+VB -> P : mostrarFormularioModificarBomba()
+P -> VB : Enviar datos modificados de la bomba
+VB -> CB : validarDatos(datos)
+alt Formato Válido
+    CB -> B : comprobarDuplicados(datos)
+    alt No Duplicados
+        B --> CB : noDuplicados()
+        deactivate B
+        CB -> B : modificarBomba(datos)
+        activate B
+        B --> CB : confirmacionModificacion()
+        deactivate B
+        CB -> VB : confirmacionModificacion()
+        deactivate CB
+        VB -> P : mostrarConfirmacionModificacion()
+    else Duplicados
+        B --> CB : duplicadosEncontrados()
+        deactivate B
+        CB -> VB : errorDuplicados()
+        deactivate CB
+        VB -> P : mostrarErrorDuplicados()
+    end
+else Formato Inválido
+    CB -> VB : errorValidacion()
+    deactivate CB
+    VB -> P : mostrarErrorValidacion()
+end
+@enduml

@@ -1,0 +1,14 @@
+@startuml
+title UC-049 ejecutar programacion luces
+!include ../../common.puml
+
+actor ESP32 <<device>>
+entity PL
+
+ESP32 -> PL : solicitarProgramacionLuces()
+
+PL --> ESP32 : programacionLuces
+ESP32 -> ESP32 : ejecutarProgramacionLuces()
+ESP32 --> PL : resultadoEjecucionProgramacionLuces()
+
+@enduml

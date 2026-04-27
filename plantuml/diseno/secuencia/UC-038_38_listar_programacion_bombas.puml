@@ -1,0 +1,27 @@
+@startuml
+title UC-038 listar programacion bombas
+!include ../../common.puml
+
+actor U
+boundary VB
+control CB
+entity PB 
+
+
+
+
+
+
+U -> VB : Accede a "Listar Programación de Bombas"
+activate VB
+VB -> CB : solicitarProgramacionesBombas()
+activate CB
+CB -> PB : obtenerProgramacionesBombas()
+PB --> CB : listaProgramacionesBombas()
+CB --> VB : mostrarProgramacionesBombas()
+deactivate VB
+deactivate CB
+VB --> U : mostrarProgramacionesBombas()
+
+
+@enduml

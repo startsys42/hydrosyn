@@ -1,0 +1,25 @@
+@startuml
+!include ../../common.puml
+
+actor P
+boundary VP 
+control CU 
+entity UP 
+
+
+P -> VP:Asociar Usuario Existente
+activate VP
+
+
+VP -> CU: validarAsociacion()
+activate CU
+
+CU -> UP : asociarUsuario()
+activate UP
+UP --> CU: usuario_asociado
+deactivate UP
+CU --> VP: confirmarAsociacion()
+deactivate CU
+VP --> P: mostrarAsociacionExitosa()
+deactivate VP
+@enduml

@@ -26,7 +26,7 @@ export default function ChangeEmail() {
         setMessage({ text: '', type: '' });
         setMessageKey('');
 
-        // Validaciones
+
         if ((newEmail.trim() !== confirmEmail.trim())) {
             setMessageKey('noEquals');
             setLoading(false);

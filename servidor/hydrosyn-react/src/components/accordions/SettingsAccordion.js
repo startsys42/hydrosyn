@@ -13,7 +13,7 @@ export default function SettingsAccordion({ systemId }) {
     const [systemName, setSystemName] = useState('');
     const [secret, setSecret] = useState('');
 
-    // Errores separados por Accordion
+
     const [errors, setErrors] = useState({
         rename: '',
         secret: '',
@@ -48,7 +48,7 @@ export default function SettingsAccordion({ systemId }) {
         fetchSystem();
     }, [systemId]);
 
-    // Funciones para actualizar errores de cada Accordion y limpiar los demás
+
     const setRenameError = (message) => setErrors({ rename: message, secret: '', delete: '' });
     const setSecretError = (message) => setErrors({ rename: '', secret: message, delete: '' });
     const setDeleteError = (message) => setErrors({ rename: '', secret: '', delete: message });

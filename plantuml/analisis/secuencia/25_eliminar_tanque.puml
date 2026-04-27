@@ -1,0 +1,31 @@
+@startuml
+!include ../../common.puml
+
+
+actor P 
+boundary VT
+control CT
+entity T
+
+P -> VT  : Clic en "Eliminar Tanque"
+activate VT
+VT -> P : mostrarConfirmaciónIrreversible()
+P -> VT : Confirma eliminación
+VT -> CT : solicitarEliminacionTanque()
+activate CT
+    CT -> T : eliminarTanque()
+    activate T
+  
+    T --> CT :  eliminacion_exitosa
+    deactivate T
+
+    CT --> VT : confirmarExito()
+    deactivate CT
+
+    VT -> VT : refresh()
+  
+
+   
+    VT --> P : mostrarTablaTanques()
+deactivate VT   
+@enduml

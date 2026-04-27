@@ -49,7 +49,7 @@ export default function ChangePassword() {
         setMessage({ text: '', type: '' });
         setMessageKey('');
 
-        // Validaciones
+
         if ((newPassword.trim() !== confirmPassword.trim())) {
             setMessageKey('noEquals');
             setLoading(false);

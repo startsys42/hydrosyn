@@ -1,0 +1,42 @@
+@startuml
+title UC-026 crear bomba
+
+!include ../../common.puml
+
+
+actor P
+boundary VB
+control CB
+entity B 
+
+P -> VB : Clic en "Crear Bomba"
+activate VB
+VB -> P : mostrarFormularioCrearBomba()
+P -> VB : Enviar datos de la nueva bomba
+VB -> CB : validarDatos(datos)
+alt Formato Válido
+    CB -> B : comprobarDuplicados(datos)
+    alt No Duplicados
+        B --> CB : noDuplicados()
+        deactivate B
+        CB -> B : crearBomba(datos)
+        activate B
+        B --> CB : confirmacionCreacion()
+        deactivate B
+        CB -> VB : confirmacionCreacion()
+        deactivate CB
+        VB -> P : mostrarConfirmacionCreacion()
+    else Duplicados
+        B --> CB : duplicadosEncontrados()
+        deactivate B
+        CB -> VB : errorDuplicados()
+        deactivate CB
+        VB -> P : mostrarErrorDuplicados()
+    end
+else Formato Inválido
+    CB -> VB : errorValidacion()
+    deactivate CB
+    VB -> P : mostrarErrorValidacion()
+end
+
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+title UC-035 listar bombeos
+!include ../../common.puml
+
+actor U
+boundary VB
+control CB
+entity B 
+
+
+
+
+
+
+U -> VB : Accede a "Listar Bombeos"
+activate VB
+VB -> CB : solicitarBombeos()
+activate CB
+CB -> B : obtenerBombeos()
+B --> CB : listaBombeos
+CB --> VB : mostrarBombeos(listaBombeos)
+deactivate VB
+deactivate CB
+VB -> U : mostrarBombeos(listaBombeos)
+
+
+@enduml

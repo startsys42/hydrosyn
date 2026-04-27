@@ -1,0 +1,42 @@
+@startuml
+!include ../../common.puml
+
+actor UN
+boundary VA
+control CA
+entity UP
+entity NO
+
+
+UN -> VA: Introduce email
+VA -> CA: solicitarRecuperacion(email)
+
+activate CA
+CA -> UP: existeUsuario(email)
+activate UP
+UP --> CA: existe (true), activo (true/false)
+deactivate UP
+
+alt Usuario Existe y está ACTIVO
+    CA -> CA: generarNuevaContraseña()
+    CA -> UP: actualizarContraseña(nuevaPass)
+    activate UP
+    UP --> CA: ok
+    deactivate UP
+    CA -> CA: enviarEmailConNuevaPass(email, nuevaPass)
+
+else Usuario Existe pero está INACTIVO
+    CA -> NO: crearNotificación(email, "Intento recuperación cuenta inactiva")
+    activate NO
+    NO --> CA: ok
+    deactivate NO
+
+
+end
+
+' Respuesta unificada SIEMPRE por seguridad
+CA --> VA: ok
+VA-> UN: mostrarMensaje("Revisar email")
+deactivate CA
+
+@enduml

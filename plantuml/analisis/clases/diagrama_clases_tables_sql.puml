@@ -1,0 +1,191 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty members
+
+package "Modelo" {
+
+' En Postgres: auth.users (Supabase Identity). En el diagrama solo "users".
+class "users" as T_users {
+  -id : uuid
+  -email : text
+  -created_at : timestamptz
+  -last_sign_in_at : timestamptz
+}
+
+class "admin_users" as T_admin_users {
+  -id : bigint
+  -created_at : timestamptz
+  -user : uuid
+  -is_active : boolean
+}
+
+class "systems" as T_systems {
+  -id : bigint
+  -created_at : timestamptz
+  -name : text
+  -admin : uuid
+}
+
+class "roles" as T_roles {
+  -id : smallint
+  -user : uuid
+}
+
+class "systems_users" as T_systems_users {
+  -id : bigint
+  -system : bigint
+  -user_id : uuid
+  -is_active : boolean
+  -associated_at : timestamptz
+}
+
+class "login_attempts" as T_login_attempts {
+  -id : bigint
+  -created_at : timestamptz
+  -reason : text
+  -user : uuid
+}
+
+class "esp32" as T_esp32 {
+  -id : bigint
+  -created_at : timestamptz
+  -system : bigint
+  -name : text
+}
+
+class "system_secrets" as T_system_secrets {
+  -id : bigint
+  -created_at : timestamptz
+  -system : bigint
+  -code : text
+}
+
+class "tanks" as T_tanks {
+  -id : bigint
+  -created_at : timestamptz
+  -type : tank_type
+  -name : text
+  -system : bigint
+}
+
+class "pumps" as T_pumps {
+  -id : bigint
+  -created_at : timestamptz
+  -name : text
+  -esp32 : bigint
+  -gpio : integer
+  -system : bigint
+  -origin : bigint
+  -destination : bigint
+}
+
+class "records" as T_records {
+  -id : bigint
+  -created_at : timestamptz
+  -tank : bigint
+  -user : uuid
+  -volume : numeric(6,3)
+}
+
+class "programming_pumps" as T_programming_pumps {
+  -id : bigint
+  -created_at : timestamptz
+  -pump : bigint
+  -volume : numeric(6,3)
+  -clock : time
+  -day_of_week : day_of_week
+}
+
+class "calibration" as T_calibration {
+  -id : bigint
+  -created_at : timestamptz
+  -pump : bigint
+  -user : uuid
+  -success : boolean
+}
+
+class "calibrate" as T_calibrate {
+  -id : bigint
+  -created_at : timestamptz
+  -pump : bigint
+  -volume : numeric(6,3)
+  -user : uuid
+}
+
+class "records_pumps" as T_records_pumps {
+  -id : bigint
+  -created_at : timestamptz
+  -pump : bigint
+  -success : boolean
+  -volume : numeric(6,3)
+  -user : uuid
+}
+
+class "executions_pumps" as T_executions_pumps {
+  -id : bigint
+  -programming_id : bigint
+  -executed_at : timestamptz
+  -success : boolean
+}
+
+class "lights" as T_lights {
+  -id : bigint
+  -created_at : timestamptz
+  -name : text
+  -esp32 : bigint
+  -gpio : integer
+  -system : bigint
+}
+
+class "programming_lights" as T_programming_lights {
+  -id : bigint
+  -created_at : timestamptz
+  -light : bigint
+  -start_time : time
+  -end_time : time
+  -day_of_week : day_of_week
+  -is_active : boolean
+}
+
+class "lights_history" as T_lights_history {
+  -id : bigint
+  -light_id : bigint
+  -action : smallint
+  -created_at : timestamptz
+}
+
+' Referencias a users (auth.users en BD): user, user_id segun tables.sql
+T_users "1" -- "0..1" T_admin_users : "user"
+T_users "1" -- "0..1" T_roles : "user"
+T_users "1" -- "0..*" T_systems_users : user_id
+T_users "1" -- "0..*" T_login_attempts : "user"
+T_users "1" -- "0..*" T_records : "user"
+T_users "1" -- "0..*" T_calibration : "user"
+T_users "1" -- "0..*" T_calibrate : "user"
+T_users "1" -- "0..*" T_records_pumps : "user"
+
+' systems.admin -> admin_users("user") (no va directo a users)
+T_admin_users "1" -- "0..*" T_systems : admin
+
+T_systems "1" -- "0..*" T_systems_users : system
+T_systems "1" -- "0..*" T_esp32 : system
+T_systems "1" -- "0..1" T_system_secrets : system
+T_systems "1" -- "0..*" T_tanks : system
+T_systems "1" -- "0..*" T_pumps : system
+T_systems "1" -- "0..*" T_lights : system
+T_esp32 "1" -- "0..*" T_pumps : esp32
+T_esp32 "1" -- "0..*" T_lights : esp32
+T_tanks "1" -- "0..*" T_pumps : origin
+T_tanks "1" -- "0..*" T_pumps : destination
+T_tanks "1" -- "0..*" T_records : tank
+T_pumps "1" -- "0..*" T_programming_pumps : pump
+T_pumps "1" -- "1..*" T_calibration : pump
+T_pumps "1" -- "1..*" T_calibrate : pump
+T_pumps "1" -- "0..*" T_records_pumps : pump
+T_programming_pumps "1" -- "0..*" T_executions_pumps : programming_id
+T_lights "1" -- "0..*" T_programming_lights : light
+T_lights "1" -- "0..*" T_lights_history : light_id
+
+}
+
+@enduml

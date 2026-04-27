@@ -48,7 +48,7 @@ export default function DeleteESP32({ systemId, espList, refresh, loading, error
 
             const uid = sessionData.session.user.id;
 
-            // Verificar que el usuario está activo en admin_users
+
             const { data: adminUser, error: adminError } = await supabase
                 .from("admin_users")
                 .select("*")

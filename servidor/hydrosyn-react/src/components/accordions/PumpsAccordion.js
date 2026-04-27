@@ -1,6 +1,6 @@
 
 
-//crear bomba eliminar bomba asociar bomba pines nombre, calibrar programar dar datos
+
 
 
 
@@ -135,7 +135,7 @@ export default function PumpsAccordion({ systemId }) {
 
             if (error) throw error;
 
-            // Convertimos a la misma forma que antes para mantener compatibilidad
+
             const formatted = (data || []).map(p => ({
                 id: p.id,
                 name: p.name,
@@ -238,14 +238,14 @@ export default function PumpsAccordion({ systemId }) {
 
             if (error) throw error;
 
-            // Formatear para que tu componente siga funcionando igual
+
             const formatted = (data || []).map(r => ({
                 id: r.id,
                 volume: r.volume,
                 success: r.success,
                 created_at: r.created_at,
-                pump_name: r.pump_name,   // <-- plano
-                user_email: r.user_email  // <-- plano
+                pump_name: r.pump_name,
+                user_email: r.user_email
             }));
 
             setRecordPumpList(formatted);
@@ -276,7 +276,7 @@ export default function PumpsAccordion({ systemId }) {
 
 
 
-        // Calibrates
+
         const calibrateSub = supabase
             .channel('calibrates-changes')
             .on(
@@ -294,7 +294,7 @@ export default function PumpsAccordion({ systemId }) {
             )
             .subscribe();
 
-        // Calibrations
+
         const calibrationSub = supabase
             .channel('calibrations-changes')
             .on(
@@ -312,7 +312,7 @@ export default function PumpsAccordion({ systemId }) {
             )
             .subscribe();
 
-        // Records
+
         const recordsSub = supabase
             .channel('records-changes')
             .on(
@@ -329,7 +329,7 @@ export default function PumpsAccordion({ systemId }) {
             )
             .subscribe();
 
-        // Programming
+
         const programmingSub = supabase
             .channel('programming-changes')
             .on(
@@ -432,9 +432,9 @@ export default function PumpsAccordion({ systemId }) {
                 <ListRecordsPump
                     systemId={systemId}
                     recordPumpList={recordPumpList}
-                    refresh={fetchRecordsPump}  // Solo para refrescar después de eliminar
+                    refresh={fetchRecordsPump}
                     userRole={role}
-                    error={errors.recordList}  // ← Error específico para registros de bombas
+                    error={errors.recordList}
                     setError={(msg) => setComponentError("recordList", msg)}
 
                 />

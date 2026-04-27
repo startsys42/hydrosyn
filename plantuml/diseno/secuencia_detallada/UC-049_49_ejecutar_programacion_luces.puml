@@ -1,0 +1,39 @@
+@startuml
+autonumber
+
+actor "ESP32" as E <<device>>
+participant "Firmware ESP32 (Arduino)" as FW
+participant "Cliente HTTP/MQTT" as NET
+participant "Supabase API/RPC" as SB
+database "PostgreSQL" as DB
+
+E -> FW: loop()
+activate FW
+FW -> NET: solicitarProgramacionesPendientes()
+activate NET
+NET -> SB: rpc('get_pending_light_events')
+activate SB
+SB -> DB: SELECT programaciones luces pendientes
+activate DB
+DB --> SB: lista_eventos
+deactivate DB
+SB --> NET: payload_eventos
+deactivate SB
+NET --> FW: payload_eventos
+deactivate NET
+
+FW -> FW: ejecutarGPIOluces(on/off)
+FW -> NET: reportarEventoLuz()
+activate NET
+NET -> SB: rpc('register_light_event')
+activate SB
+SB -> DB: INSERT/UPDATE historial ejecucion luces
+activate DB
+DB --> SB: ok
+deactivate DB
+SB --> NET: ack
+deactivate SB
+NET --> FW: ack
+deactivate NET
+deactivate FW
+@enduml

@@ -50,6 +50,29 @@ function App() {
     const [loadingAuth, setLoadingAuth] = useState(true);
     const [isMember, setIsMember] = useState(false);
 
+    const location = useLocation();
+
+    useEffect(() => {
+        // Rutas públicas donde quieres la imagen
+        const publicRoutes = ['/', '/recover-password'];
+        const isPublicRoute = publicRoutes.includes(location.pathname);
+
+        // Mostrar imagen SOLO si es ruta pública Y no hay usuario
+        const showBg = isPublicRoute && !user;
+
+        if (showBg) {
+            document.body.classList.add('has-bg');
+            document.body.classList.remove('no-bg');
+        } else {
+            document.body.classList.remove('has-bg');
+            document.body.classList.add('no-bg');
+        }
+
+        return () => {
+            document.body.classList.remove('has-bg', 'no-bg');
+        };
+    }, [location, user]);
+
     useEffect(() => {
         const checkMembership = async () => {
             if (!user) return setIsMember(false);
@@ -154,7 +177,7 @@ function App() {
     return (
         <div className={theme === 'light' ? 'light-theme' : 'dark-theme'}>
 
-            {/* controles para cambiar tema e idioma */}
+
 
             <Routes>
                 <Route element={<PublicLayout />}>

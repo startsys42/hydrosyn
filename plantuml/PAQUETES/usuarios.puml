@@ -1,0 +1,39 @@
+@startuml
+left to right direction
+
+actor Usuario
+actor Administrador
+actor Propietario
+
+package "Gestión de Usuarios" {
+
+  usecase "Cambiar Email (UC-004)" as UC004
+  usecase "Cambiar Contraseña (UC-005)" as UC005
+  usecase "Crear Propietario (UC-006)" as UC006
+  usecase "Activar/Desactivar Propietario (UC-007)" as UC007
+  usecase "Eliminar Propietario (UC-008)" as UC008
+  usecase "Ver Notificaciones Administrador (UC-009)" as UC009
+  usecase "Eliminar Notificaciones (UC-010)" as UC010
+  usecase "Ver Notificaciones Sistema (UC-011)" as UC011
+  usecase "Crear Usuario (UC-012)" as UC012
+  usecase "Activar/Desactivar Usuario (UC-013)" as UC013
+  usecase "Eliminar Usuario (UC-014)" as UC014
+  usecase "Asociar Usuario (UC-015)" as UC015
+}
+
+Usuario --> UC004
+Usuario --> UC005
+
+Administrador --> UC006
+Administrador --> UC007
+Administrador --> UC008
+Administrador --> UC009
+Administrador --> UC010
+
+Propietario --> UC011
+Propietario --> UC012
+Propietario --> UC013
+Propietario --> UC014
+Propietario --> UC015
+
+@enduml

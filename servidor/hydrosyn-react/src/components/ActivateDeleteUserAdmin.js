@@ -77,7 +77,7 @@ const ActivateDeleteUserAdmin = () => {
             setConfirmOpen(false);
             setCurrentUser(null);
         } catch (err) {
-            console.error(err);
+
 
             setConfirmOpen(false);
             setCurrentUser(null);
@@ -117,7 +117,7 @@ const ActivateDeleteUserAdmin = () => {
             const { data: { session } } = await supabase.auth.getSession();
             const accessToken = session?.access_token;
 
-            // Llamada a la Edge Function de borrado
+
             const { error } = await supabase.rpc('delete_admin_user', {
                 target_user_id: currentUser.id
             });
@@ -126,7 +126,7 @@ const ActivateDeleteUserAdmin = () => {
 
 
 
-            // Actualiza la tabla local
+
             setUsers(prev => prev.filter(u => u.user !== currentUser.id));
             setDeleteOpen(false);
             setCurrentUser(null);

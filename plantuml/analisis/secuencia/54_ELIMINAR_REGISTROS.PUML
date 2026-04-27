@@ -1,0 +1,25 @@
+@startuml
+!include ../../common.puml
+
+actor P
+boundary VR
+control CR
+entity R 
+
+
+
+P -> VR : solicita eliminar registro
+activate VR
+VR -> P : mostrarFormularioEliminarRegistro()
+P -> VR : eliminarRegistro(datos)
+VR -> P : Muestra Diálogo de Confirmación
+P -> VR : Confirma eliminación
+VR -> CR : eliminarRegistro(datos)
+activate CR
+CR -> R : eliminarRegistro(datos)
+R --> CR : ok
+CR -> VR : ok
+VR -> P : mostrarRegistrosActualizados()
+deactivate VR
+
+@enduml

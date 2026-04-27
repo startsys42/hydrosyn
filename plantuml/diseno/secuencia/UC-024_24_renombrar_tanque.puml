@@ -1,0 +1,39 @@
+@startuml
+title UC-024 renombrar tanque
+!include ../../common.puml
+
+
+actor P 
+boundary VT
+control CT
+entity T
+
+P -> VT : solicitudRenombrarTanque()
+activate VT
+VT -> P : mostrarFormularioRenombrarTanque()
+P -> VT : RenombrarTanque(datos)
+VT -> CT : validarDatos(datos)
+alt Formato Válido
+    CT -> T : comprobarDuplicados(datos)
+    alt No Duplicados
+        T --> CT : noDuplicados()
+        deactivate T
+        CT -> T : renombrarTanque(datos)
+        activate T
+        T --> CT : confirmacionRenombrado()
+        deactivate T
+        CT --> VT : confirmacionRenombrado()
+        deactivate CT
+        VT -> P : mostrarConfirmacionRenombrado()
+    else Duplicados
+        T --> CT : duplicadosEncontrados()
+        deactivate T
+        CT -> VT : errorDuplicados()
+        deactivate CT
+        VT -> P : mostrarErrorDuplicados()
+    end
+else Formato Inválido
+    CT -> VT : errorValidacion()
+    deactivate CT
+    VT -> P : mostrarErrorValidacion()
+end

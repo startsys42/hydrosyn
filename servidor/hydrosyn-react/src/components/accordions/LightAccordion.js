@@ -1,4 +1,4 @@
-// LightAccordion.jsx
+
 import { useNavigate } from 'react-router-dom';
 import useTexts from '../../utils/UseTexts';
 import Accordion from '@mui/material/Accordion';
@@ -117,9 +117,9 @@ export default function LightAccordion({ systemId }) {
     };
     const fetchRecordsLights = async () => {
 
-        console.log("Historial actualizado");
-        // Si quieres que se refresque automáticamente, no necesitas hacer nada
-        // Porque ListRecordsLights ya tiene su propio fetch
+
+
+        // Este fetch es para actualizar el historial después de eliminar un registro, no es necesario mostrar errores aquí
     };
 
     useEffect(() => {

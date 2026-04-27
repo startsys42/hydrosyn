@@ -1,0 +1,18 @@
+@startuml
+left to right direction
+
+actor Usuario
+actor Propietario
+
+package "Gestión de Registros" {
+  usecase "Crear Registro (UC-052)" as UC052
+  usecase "Listar Registros (UC-053)" as UC053
+  usecase "Eliminar Registros (UC-054)" as UC054
+}
+
+Usuario --> UC052
+Usuario --> UC053
+
+Propietario --> UC054
+
+@enduml

@@ -1,0 +1,50 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty members
+
+package "RPCs" {
+
+class "rpc" as F_functions {
+  -insert_system_with_secret(system_name text, admin_id uuid, secret_value text)
+  -get_admin_login_attempts_with_user_email(p_user_id uuid)
+  -get_admin_users_with_emails()
+  -get_login_attempts_with_user_email(p_user_id uuid, p_system_id int8)
+  -change_admin_user_status(target_user_id UUID)
+  -delete_admin_user(target_user_id UUID)
+  -delete_auth_users(secret_key text)
+  -delete_system(system_id bigint)
+  -get_users_for_system(p_system bigint, p_user uuid)
+  -get_possible_users_for_system(p_system bigint, p_user uuid)
+  -deactivate_user_all_systems(p_admin_uid uuid, p_system_id bigint, p_user_id uuid)
+  -active_user_associate_system(p_admin_uid uuid, p_system_id bigint, p_user_id uuid)
+  -delete_user_system(p_admin_uid uuid, p_system_id bigint, p_user_id uuid, p_delete_all boolean)
+  -is_admin_of_system(p_user uuid, p_system bigint)
+  -record_failed_login(p_user UUID, p_reason TEXT)
+  -delete_login_attempts_between(p_from timestamptz, p_to timestamptz)
+  -delete_calibrate_between(p_from timestamptz, p_to timestamptz, p_system_id bigint, p_user_id uuid)
+  -delete_calibrations_between(p_from timestamptz, p_to timestamptz, p_system_id bigint, p_user_id uuid)
+  -get_records_for_system(p_system_id bigint, p_current_user uuid)
+  -insert_record_for_system(p_system_id bigint, p_tank_id bigint, p_user uuid, p_volume numeric, p_created_at timestamptz default null)
+  -get_calibrations_for_system(p_system_id bigint, p_current_user uuid)
+  -get_calibrates_for_system(p_system_id bigint, p_current_user uuid)
+  -get_pumps_for_system(p_system_id bigint, p_current_user uuid)
+  -get_records_pumps_for_system(p_system_id bigint, p_current_user uuid)
+  -delete_records_pumps_between(p_from timestamptz, p_to timestamptz, p_system_id bigint, p_user_id uuid)
+  -delete_records_between(p_from timestamptz, p_to timestamptz, p_system_id bigint, p_user_id uuid)
+  -get_lights_for_system(p_system_id BIGINT, p_current_user UUID)
+  -get_lights_history(p_system_id BIGINT, p_current_user UUID)
+  -get_programming_pumps_for_system(p_system_id bigint, p_current_user uuid)
+  -get_programming_lights_for_system(p_system_id bigint, p_current_user uuid)
+  -associate_user_to_system(p_admin_uid UUID, p_system_id BIGINT, p_user_id UUID)
+  -get_pending_calibrations(p_system_name TEXT, p_esp_name TEXT, p_code TEXT)
+  -get_pending_manual_records(p_system_name TEXT, p_esp_name TEXT, p_code TEXT)
+  -get_pending_programs(p_system_name TEXT, p_esp_name TEXT, p_code TEXT, p_esp_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
+  -complete_calibration(p_calibration_id BIGINT, p_esp_name TEXT, p_code TEXT)
+  -complete_manual_record(p_record_id BIGINT, p_esp_name TEXT, p_code TEXT)
+  -register_execution(p_programming_id BIGINT, p_esp_name TEXT, p_code TEXT, p_success BOOLEAN DEFAULT true)
+  -get_pending_light_events(p_system_name TEXT, p_esp_name TEXT, p_code TEXT, p_esp_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
+  -register_light_event(p_light_id BIGINT, p_action SMALLINT, p_esp_name TEXT, p_code TEXT, p_scheduled_at TIMESTAMP)
+}
+}
+
+@enduml

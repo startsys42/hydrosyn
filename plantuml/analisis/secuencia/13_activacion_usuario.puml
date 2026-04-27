@@ -1,0 +1,38 @@
+@startuml
+!include ../../common.puml
+
+actor P
+boundary VP
+control CU
+entity UP
+
+
+P -> VP: Interactúa con Checkbox o Botón "Desactivar"
+activate VP
+
+VP -> VP: mostrarDialogoConfirmacion()  
+
+P -> VP: Confirma acción en el Diálogo
+
+
+
+    VP -> CU: cambiarEstadoUsuario()
+    CU -> UP: actualizarEstadoUsuario()
+    activate UP
+    UP --> CU: estado_actualizado
+    deactivate UP
+    
+
+CU --> VP: confirmarExito()
+deactivate CU
+
+
+
+VP -> VP: refreshUsers()
+
+
+
+VP --> P: mostrarTablaActualizada()
+deactivate VP
+
+@enduml

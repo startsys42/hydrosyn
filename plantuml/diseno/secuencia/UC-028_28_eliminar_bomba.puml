@@ -1,0 +1,31 @@
+@startuml
+title UC-028 eliminar bomba
+!include ../../common.puml
+
+
+actor P
+boundary VB
+control CB
+entity B 
+
+P -> VB : Click en "Eliminar Bomba"
+activate VB
+VB -> P : mostrarConfirmaciónIrreversible()
+P -> VB : Confirma eliminación
+VB -> CB : solicitarEliminacionBomba()
+activate CB
+    CB -> B : eliminarBomba()
+    activate B
+  
+    B --> CB : eliminacion_exitosa
+    deactivate B
+
+    CB --> VB : confirmarExito()
+    deactivate CB
+
+    VB -> VB : refresh()
+  
+   
+    VB --> P : mostrarTablaBombas()
+deactivate VB
+@enduml

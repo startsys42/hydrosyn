@@ -1,0 +1,31 @@
+@startuml
+autonumber
+
+actor "Propietario" as A
+participant "ChangeSecret (React)" as UI
+participant "Aplicacion (Logica Cliente)" as APP
+participant "Supabase JS Client" as SB
+database "PostgreSQL" as DB
+
+A -> UI: iniciarCasoUso()
+activate UI
+UI -> APP: validarEntradaYContexto()
+activate APP
+alt validacion incorrecta
+  APP --> UI: errorValidacion
+  UI --> A: mostrarError()
+else validacion correcta
+  APP -> SB: ejecutarOperacionSupabase()
+  activate SB
+  SB -> DB: query
+  activate DB
+  DB --> SB: resultado
+  deactivate DB
+  SB --> APP: respuesta
+  deactivate SB
+  APP --> UI: respuestaOK
+  UI --> A: mostrarConfirmacion()
+end
+deactivate APP
+deactivate UI
+@enduml

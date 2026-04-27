@@ -1,0 +1,29 @@
+@startuml
+title UC-033 eliminar ejecucion calibraciones
+!include ../../common.puml
+
+actor P
+boundary VB
+control CB
+entity CBO 
+
+
+
+
+
+
+P -> VB : socilita eliminar ejecución calibraciones
+activate VB
+VB -> P : mostrarFormularioEliminarEjecucionCalibraciones()
+P -> VB : eliminarEjecucionCalibraciones(fechaDesde, fechaHasta)
+VB -> P : Muestra Diálogo de Confirmación
+P -> VB : Confirma eliminación
+VB -> CB : eliminarEjecucionCalibraciones(fechaDesde, fechaHasta)
+activate CB
+CB -> CBO : eliminarEjecucionCalibraciones(fechaDesde, fechaHasta)
+CBO --> CB : ok
+CB -> VB : ok
+VB -> P : mostrarEjecucionCalibracionesActualizadas()
+deactivate VB
+
+@enduml

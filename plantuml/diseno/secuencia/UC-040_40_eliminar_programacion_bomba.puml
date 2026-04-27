@@ -1,0 +1,29 @@
+@startuml
+title UC-040 eliminar programacion bomba
+!include ../../common.puml
+
+actor P
+boundary VB
+control CB
+entity PB
+
+
+
+
+
+
+P -> VB : socilita eliminar programación de bombas
+activate VB
+VB -> P : mostrarFormularioEliminarProgramacionesBombas()
+P -> VB : eliminarProgramacionesBombas(datos)
+VB -> P : Muestra Diálogo de Confirmación
+P -> VB : Confirma eliminación
+VB -> CB : eliminarProgramacionesBombas(datos)
+activate CB
+CB -> PB : eliminarProgramacionesBombas(datos)
+PB --> CB : ok
+CB --> VB : ok
+VB --> P : mostrarProgramacionesBombasActualizadas()
+deactivate VB
+
+@enduml

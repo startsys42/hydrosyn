@@ -1,0 +1,20 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty members
+
+package "servidor/supabase bd/rpcs esp32/rpc_esp32.sql" {
+
+class "rpc_esp32.sql" as F_rpc_esp32 {
+  -get_pending_calibrations()
+  -get_pending_manual_records()
+  -get_pending_programs()
+  -complete_calibration()
+  -complete_manual_record()
+  -register_execution()
+  -get_pending_light_events()
+  -register_light_event()
+}
+
+}
+
+@enduml

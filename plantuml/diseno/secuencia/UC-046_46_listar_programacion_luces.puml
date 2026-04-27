@@ -1,0 +1,27 @@
+@startuml
+title UC-046 listar programacion luces
+!include ../../common.puml
+
+actor U
+boundary VL
+control CL
+entity PL 
+
+
+
+
+
+
+U -> VL : Accede a "Listar Programación de Luces"
+activate VL
+VL -> CL : solicitarProgramacionesLuces()
+activate CL
+CL -> PL : obtenerProgramacionesLuces()
+PL --> CL : listaProgramacionesLuces()
+CL --> VL : mostrarProgramacionesLuces()
+deactivate VL
+deactivate CL
+VL --> U : mostrarProgramacionesLuces()
+
+
+@enduml

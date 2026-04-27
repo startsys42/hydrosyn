@@ -34,7 +34,7 @@ export default function ChangeSecretAccordion({ systemId, secret: initialSecret,
             }
             const uid = session.user.id;
 
-            // Comprobar que el usuario está activo en admin_users
+
             const { data: adminData, error: adminErr } = await supabase
                 .from('admin_users')
                 .select('id')
@@ -47,16 +47,16 @@ export default function ChangeSecretAccordion({ systemId, secret: initialSecret,
                 return;
             }
 
-            // COMPROBACIÓN DIRECTA: Obtener sistema solo si admin = uid
+
             const { data: systemData, error: systemErr } = await supabase
                 .from('systems')
-                .select('id') // o cualquier otro campo que necesites
+                .select('id')
                 .eq('id', systemId)
-                .eq('admin', uid)  // <- aquí filtramos por admin = uid
+                .eq('admin', uid)
                 .single();
 
             if (systemErr || !systemData) {
-                // Si no existe o el admin no coincide, redirigir
+
                 navigate("/dashboard");
                 return;
             }
@@ -69,7 +69,7 @@ export default function ChangeSecretAccordion({ systemId, secret: initialSecret,
             }
 
 
-            // Comprobar que otro sistema del mismo usuario no tenga este secret
+
             const { data: userSystems, error: systemsErr } = await supabase
                 .from("systems")
                 .select("id")
@@ -79,7 +79,7 @@ export default function ChangeSecretAccordion({ systemId, secret: initialSecret,
 
             const systemIds = userSystems.map(s => s.id);
 
-            // 2️⃣ Comprobar que otro sistema del mismo usuario no tenga este secret
+
             const { data: existingSecret, error: secretErr } = await supabase
                 .from("system_secrets")
                 .select("system")
@@ -126,7 +126,7 @@ export default function ChangeSecretAccordion({ systemId, secret: initialSecret,
                 <form onSubmit={handleSecretChange} className='form-container'>
                     <label>{texts.currentSecret}</label>
                     <input
-                        type={showSecret ? "text" : "password"}  // cambia dinámicamente
+                        type={showSecret ? "text" : "password"}
                         value={secret}
                         required
                         minLength={10}

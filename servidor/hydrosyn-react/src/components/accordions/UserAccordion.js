@@ -48,9 +48,9 @@ export default function UserAccordion({ systemId }) {
     const fetchAll = async () => {
         setLoading(true);
         const user = await checkAdmin();
-        if (!user) return; // ya navegamos si no pasa
+        if (!user) return;
 
-        // Llamar ambos fetch en paralelo
+
         await Promise.all([
             fetchUsers(user),
             fetchAvailableUsers(user)
@@ -138,14 +138,14 @@ export default function UserAccordion({ systemId }) {
                 .rpc('get_users_for_system', { p_system: systemId, p_user: user.id });
 
             if (error) {
-                // Si hay error al llamar la RPC, navegamos y cortamos
+
                 navigate("/dashboard");
                 return;
             }
 
             setUsers(
                 data.map((u) => ({
-                    id: u.su_id,      // ID de systems_users
+                    id: u.su_id,
                     user_id: u.user_id,
                     email: u.email,
                     is_active: u.su_is_active,
@@ -167,7 +167,7 @@ export default function UserAccordion({ systemId }) {
                 .rpc('get_possible_users_for_system', { p_system: systemId, p_user: user.id });
 
             if (error) {
-                // Si hay error al llamar la RPC, navegamos y cortamos
+
                 navigate("/dashboard");
                 return;
             }
@@ -205,7 +205,7 @@ export default function UserAccordion({ systemId }) {
                 refreshAvailable={refreshAvailableData}
                 error={errors.create}
                 setError={setCreateError}
-                loading={loadingUsers || loadingAvailable} // <-- añadido
+                loading={loadingUsers || loadingAvailable}
             />
 
             <DeleteUserSystem
@@ -215,7 +215,7 @@ export default function UserAccordion({ systemId }) {
                 refreshAvailable={refreshAvailableData}
                 error={errors.delete}
                 setError={setDeleteError}
-                loading={loadingUsers || loadingAvailable} // porque borrado afecta a ambos
+                loading={loadingUsers || loadingAvailable}
             />
 
             <ActivateUserSystem
@@ -224,7 +224,7 @@ export default function UserAccordion({ systemId }) {
                 refreshUsers={refreshUsersData}
                 error={errors.activate}
                 setError={setActivateError}
-                loading={loadingUsers} // solo afecta users
+                loading={loadingUsers}
             />
 
             <AssociateUserSystem
@@ -234,7 +234,7 @@ export default function UserAccordion({ systemId }) {
                 refreshAvailable={refreshAvailableData}
                 error={errors.associate}
                 setError={setAssociateError}
-                loading={loadingUsers || loadingAvailable} // porque asociar afecta a ambos
+                loading={loadingUsers || loadingAvailable}
             />
         </>
     );

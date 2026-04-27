@@ -1,0 +1,37 @@
+@startuml
+left to right direction
+
+actor Propietario
+actor Usuario
+actor Temporizador <<Device>>
+
+package "Gestión de Luces" {
+
+  usecase "Crear Luz (UC-042)" as UC042
+  usecase "Renombrar Luz (UC-043)" as UC043
+  usecase "Eliminar Luz (UC-044)" as UC044
+
+  usecase "Crear Programación Luz (UC-045)" as UC045
+  usecase "Listar Programaciones Luces (UC-046)" as UC046
+  usecase "Actualizar Programación Luces (UC-047)" as UC047
+  usecase "Eliminar Programación Luces (UC-048)" as UC048
+  usecase "Ejecutar Programación Luces (UC-049)" as UC049
+
+  usecase "Listar Historial Luces (UC-050)" as UC050
+  usecase "Eliminar Historial Luces (UC-051)" as UC051
+}
+
+Propietario --> UC042
+Propietario --> UC043
+Propietario --> UC044
+Propietario --> UC045
+Propietario --> UC047
+Propietario --> UC048
+Propietario --> UC051
+
+Usuario --> UC046
+Usuario --> UC050
+
+Temporizador --> UC049
+
+@enduml

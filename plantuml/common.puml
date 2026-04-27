@@ -1,0 +1,48 @@
+@startuml
+
+' ===== ESTILO =====
+skinparam style strictuml
+skinparam backgroundcolor white
+skinparam monochrome true
+
+
+!define U "Usuario"
+!define UN "Usuario No Logueado"
+!define A "Administrador"
+!define P "Propietario"
+!define VA "VistaAutenticación"
+!define CA "ControlAutenticación"
+!define UP "Usuario de la Plataforma"
+!define NO "Notificación"
+!define VO "VistaOperador"
+!define CU "ControlUsuarios"
+!define VP "VistaPropietario"
+!define VSA "VistaSuperAdmin"
+!define ASI "Administrador de Sistema"
+!define RO "Rol de Sistema"
+!define VS "VistaSistemas"
+!define CS "ControlSistemas"
+!define S "Sistema"
+!define VCH "VistaConfiguracionHardware"
+!define CH "ControlHardware"
+!define CESP32 "Controlador (ESP32)" 
+!define VT "VistaTanques"
+!define CT "ControlTanques"
+!define T "Tanque"
+!define  VB "VistaBombas"
+!define CB "ControlBombas"
+!define B "Bomba"
+!define PB "Programación de Bomba"
+!define CBO "Calibración de Bomba"
+!define ESP32 "Temporizador"
+
+!define  VL "VistaLuces"
+!define CL "ControlLuces"
+!define L "Luz"
+!define PL "Programación de Luz"
+
+!define VR "VistaRegistros"
+!define CR "ControlRegistros"
+!define R "Registro de Tanques"
+
+@enduml

@@ -19,7 +19,7 @@ import { useLanguage } from '../../utils/LanguageContext';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 
-// Extiende dayjs con los plugins
+
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -48,7 +48,7 @@ export default function ListRecords({
         dayjs.locale(language);
     }, [language]);
 
-    // Mapear datos
+
 
     useEffect(() => {
         const mapped = recordList.map(r => {
@@ -56,7 +56,7 @@ export default function ListRecords({
             let displayUnit = 'L';
 
             if (r.volume < 1) {
-                displayVolume = r.volume * 1000; // pasamos a mL
+                displayVolume = r.volume * 1000;
                 displayUnit = 'mL';
             }
 
@@ -71,7 +71,7 @@ export default function ListRecords({
         setRows(mapped);
     }, [recordList]);
 
-    // Eliminar entre fechas (solo owner)
+
     const handleDelete = async () => {
 
         if (!fromDate || !toDate) {

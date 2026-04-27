@@ -1,0 +1,27 @@
+@startuml
+title UC-034 realizar bombeo
+!include ../../common.puml
+
+actor U
+boundary VB
+control CB
+entity B
+actor ESP32 <<device>>
+
+
+U -> VB : Accede a "Realizar Bombeo"
+VB -> U : mostrarFormularioRealizarBombeo()
+U -> VB : realizarBombeo(datos)
+VB -> CB : realizarBombeo(datos)
+CB -> B : realizarBombeo(datos)
+B--> CB : ok
+CB --> VB :ok
+VB -> U : ok
+ESP32 -> B : obtenerDatosBombeo()
+activate ESP32
+B --> ESP32 : datosBombeo
+deactivate ESP32
+ESP32 -> ESP32 : procesoBombeo()
+ESP32 --> B : resultadoBombeo()
+
+@enduml

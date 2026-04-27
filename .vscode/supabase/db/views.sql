@@ -11,7 +11,7 @@ WHERE r.user IS NULL;
 
 GRANT EXECUTE ON FUNCTION public.insert_attempts TO authenticated;
 
--- Para usuarios no logueados
+
 GRANT EXECUTE ON FUNCTION public.insert_attempts TO anon;
 
 create or replace function public.insert_attempts(

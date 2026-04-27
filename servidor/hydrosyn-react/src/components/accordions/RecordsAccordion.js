@@ -73,7 +73,7 @@ export default function RecordsAccordion({ systemId }) {
 
             setRecordList(data || []);
         } catch (err) {
-            console.log("Error fetching records:", err.message);
+
 
         } finally {
             setLoading(false);

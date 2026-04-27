@@ -1,0 +1,43 @@
+@startuml
+title UC-001 iniciar sesion
+!include ../../common.puml
+
+actor UN
+boundary VA
+control CA
+entity UP
+entity NO
+
+
+
+UN -> VA: Introduce credenciales
+VA -> CA: enviarDatos(email, pass)
+
+activate CA
+CA -> UP: validarCredenciales()
+activate UP
+UP --> CA: usuario_encontrado (user_id)
+deactivate UP
+
+CA -> UP: verificarEstadoActivo()
+activate UP
+UP --> CA: estadoActivo ()
+deactivate UP
+
+alt Usuario Inactivo
+    CA -> NO: crearNotificación("Inactivo")
+    activate NO
+    NO --> CA: ok
+    deactivate NO
+
+  
+CA-->VA: Error
+    VA --> UN: mostrarError()
+else Usuario Activo
+    CA --> VA: confirmarAcceso()
+    VA --> VA: Redirigir Dashboard
+    VA --> UN: mostrarPantallaDashboard()
+end
+deactivate CA
+
+@enduml

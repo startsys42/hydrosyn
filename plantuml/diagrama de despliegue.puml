@@ -1,0 +1,35 @@
+@startuml
+skinparam componentStyle uml2
+
+node "<<device>>\nServidor" as servidor {
+    node "<<executionEnvironment>>\nNode.js" {
+        artifact "app.js" <<artifact>>
+    }
+  
+    node "<<executionEnvironment>>\nSQL" {
+        artifact "Base de Datos" <<artifact>>
+    }
+}
+
+node "<<device>>\nAplicación Web" as appWeb {
+    node "<<executionEnvironment>>\nJavascript" {
+        artifact "app.js" <<artifact>>
+    }
+}
+
+node "<<device>>\nCliente Web" as clienteWeb {
+    artifact "Navegador Web" <<artifact>>
+}
+
+node "<<device>>\nControlador" as ESP32 {
+    artifact "Arduino" <<artifact>>
+}
+
+
+' Relaciones
+servidor "1" -- "1" appWeb
+appWeb "1" -- "0..*" clienteWeb
+
+servidor "1" -- "0..*" ESP32
+
+@enduml

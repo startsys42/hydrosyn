@@ -1,0 +1,36 @@
+@startuml
+title UC-012 crear usuario
+!include ../../common.puml
+
+actor P
+boundary VP 
+control CU 
+
+entity UP 
+
+P -> VP: Ingresa email y clic en "Crear Usuario"
+activate VP
+
+
+activate CU
+
+
+
+' --- Creación efectiva ---
+VP -> CU: ejecutarCreacionUsuario(email)
+
+CU -> UP: crearUsuario(email)
+activate UP
+
+UP --> CU: usuario_creado_exitosamente
+deactivate UP
+
+CU --> VP: confirmarCreacion()
+deactivate CU
+
+' --- Refresco de interfaz ---
+
+VP --> P: Mostrar éxito y limpiar formulario
+deactivate VP
+
+@enduml

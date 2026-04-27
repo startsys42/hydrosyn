@@ -1,0 +1,27 @@
+@startuml
+title UC-032 listar ejecucion calibraciones
+!include ../../common.puml
+
+actor U
+boundary VB
+control CB
+entity CBO 
+
+
+
+
+
+
+U -> VB : Accede a "Ejecución de Calibraciones"
+activate VB
+VB -> CB : solicitarEjecucionCalibraciones()
+activate CB
+CB -> CBO : obtenerEjecucionCalibraciones()
+CBO --> CB : listaEjecucionCalibraciones
+CB --> VB : mostrarEjecucionCalibraciones(listaEjecucionCalibraciones)
+deactivate VB
+deactivate CB
+VB -> U : mostrarEjecucionCalibraciones(listaEjecucionCalibraciones)
+
+
+@enduml

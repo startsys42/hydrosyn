@@ -1,0 +1,36 @@
+@startuml
+title UC-008 eliminar propietario
+!include ../../common.puml
+
+actor A
+boundary VSA
+control CU 
+entity ASI
+
+A -> VSA: Clic en botón "Eliminar"
+activate VSA
+
+' El diálogo de confirmación es parte de la frontera (Vista)
+VSA -> VSA: mostrarConfirmaciónIrreversible()
+
+A -> VSA: Confirmar eliminación ()
+
+VSA -> CU: eliminarPropietario(email)
+activate CU
+
+
+
+' Acción de borrado
+CU -> ASI: borrarPropietario(email)
+activate ASI
+ASI --> CU: borrado_exitoso
+deactivate ASI
+
+CU --> VSA: confirmarEliminación()
+deactivate CU
+
+VSA -> VSA: eliminarFilaDeTabla()
+VSA --> A: mostrarMensajeExito()
+deactivate VSA
+
+@enduml

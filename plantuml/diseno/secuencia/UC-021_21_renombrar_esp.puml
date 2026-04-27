@@ -1,0 +1,39 @@
+@startuml
+title UC-021 renombrar esp
+!include ../../common.puml
+
+actor P
+boundary VCH
+control CH
+entity ESP32
+
+P -> VCH : solicitudRenombrarESP32()
+activate VCH
+VCH --> P : mostrarFormularioRenombrarESP32()
+P -> VCH : RenombrarESP32(datos)
+VCH -> CH : validarDatos(datos)
+alt Formato Válido
+    CH -> ESP32 : comprobarDuplicados(datos)
+    alt No Duplicados
+        ESP32 --> CH : noDuplicados()
+        deactivate ESP32
+        CH -> ESP32 : renombrarESP32(datos)
+        activate ESP32
+        ESP32 --> CH : confirmacionRenombrado()
+        deactivate ESP32
+        CH --> VCH : confirmacionRenombrado()
+        deactivate CH
+        VCH --> P : mostrarConfirmacionRenombrado()
+    else Duplicados
+        ESP32 --> CH : duplicadosEncontrados()
+        deactivate ESP32
+        CH --> VCH : errorDuplicados()
+        deactivate CH
+        VCH --> P : mostrarErrorDuplicados()
+    end
+else Formato Inválido
+    CH --> VCH : errorValidacion()
+    deactivate CH
+    VCH --> P : mostrarErrorValidacion()
+end
+@enduml

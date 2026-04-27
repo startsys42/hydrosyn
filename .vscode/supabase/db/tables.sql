@@ -38,7 +38,7 @@ CREATE POLICY "Permitir inserción de intentos de login"
 ON public.login_attempts FOR INSERT
 WITH CHECK (true);
 
--- Permitir a administradores ver todos los intentos
+
 CREATE POLICY "Permitir lectura a administradores"
 ON public.login_attempts FOR SELECT
 USING (auth.uid() IN (SELECT user_id FROM admin_users));

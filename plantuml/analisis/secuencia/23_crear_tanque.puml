@@ -1,0 +1,40 @@
+@startuml
+!include  ../../common.puml
+
+actor P 
+boundary VT
+control CT
+entity T
+
+
+
+P -> VT : solicitudCrearTanque()
+VT -> P : mostrarFormularioCrearTanque()
+P -> VT : CrearTanque(datos)
+VT -> CT : validarDatos(datos)
+alt Formato Válido
+    CT -> T : comprobarDuplicados(datos)
+    alt No Duplicados
+        T --> CT : noDuplicados()
+        deactivate T
+        CT -> T : crearTanque(datos)
+        activate T
+        T --> CT : confirmacionCreacion()
+        deactivate T
+        CT -> VT : confirmacionCreacion()
+        deactivate CT
+        VT -> P : mostrarConfirmacionCreacion()
+    else Duplicados
+        T --> CT : duplicadosEncontrados()
+        deactivate T
+        CT -> VT : errorDuplicados()
+        deactivate CT
+        VT -> P : mostrarErrorDuplicados()
+    end
+else Formato Inválido
+    CT -> VT : errorValidacion()
+    deactivate CT
+    VT -> P : mostrarErrorValidacion()
+end
+
+@enduml

@@ -25,7 +25,7 @@ export default function Sidebar() {
             alert('Error al cerrar sesión: ' + error.message);
             return;
         }
-        navigate('/'); // redirige a login tras cerrar sesión
+        navigate('/');
     };
 
     if (loading || isAdmin === null) return null;

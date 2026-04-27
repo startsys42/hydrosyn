@@ -1,11 +1,11 @@
 
--- Primero, eliminar la política si existe
+
 DROP POLICY IF EXISTS "Admin active can select themselves" ON admin_users;
 
--- Activar RLS
+
 ALTER TABLE admin_users ENABLE ROW LEVEL SECURITY;
 
--- Crear política CORRECTA
+
 CREATE POLICY "Admin active can select themselves"
 ON admin_users
 FOR SELECT

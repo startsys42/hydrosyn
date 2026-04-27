@@ -66,7 +66,7 @@ export default function ActivateUserSystem({
         setCurrentUser(user);
         setActionType(type);
         setOpenDialog(true);
-        setExternalError(""); // Limpiar errores de otros acordeones
+        setExternalError("");
     };
 
     const handleCloseDialog = () => {

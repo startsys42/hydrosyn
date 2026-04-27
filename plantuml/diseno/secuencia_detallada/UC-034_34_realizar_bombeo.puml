@@ -1,0 +1,61 @@
+@startuml
+autonumber
+
+actor "Usuario" as A
+actor "ESP32" as E <<device>>
+participant "InsertPumping (React)" as UI
+participant "Aplicacion (Logica Cliente)" as APP
+participant "Supabase JS Client" as SB
+database "PostgreSQL" as DB
+
+A -> UI: solicitarBombeoManual()
+activate UI
+UI -> APP: validarEntradaYContexto()
+activate APP
+alt validacion incorrecta
+  APP --> UI: errorValidacion
+  UI --> A: mostrarError()
+else validacion correcta
+  APP -> SB: insert('records_pumps') // crear orden pendiente
+  activate SB
+  SB -> DB: INSERT records_pumps (pending)
+  activate DB
+  DB --> SB: record_id
+  deactivate DB
+  SB --> APP: record_id
+  deactivate SB
+
+  E -> SB: rpc('get_pending_manual_records')
+  activate SB
+  SB -> DB: SELECT bombeos pendientes
+  activate DB
+  DB --> SB: payload_bombeo
+  deactivate DB
+  SB --> E: parametros(GPIO, volumen)
+  deactivate SB
+
+  E -> E: ejecutarBombeo()
+  E -> SB: rpc('complete_manual_record')
+  activate SB
+  SB -> DB: UPDATE records_pumps status=done
+  activate DB
+  DB --> SB: ok
+  deactivate DB
+  SB --> E: ack
+  deactivate SB
+
+  APP -> SB: select('records_pumps') // refresco estado
+  activate SB
+  SB -> DB: SELECT record actualizado
+  activate DB
+  DB --> SB: estado final
+  deactivate DB
+  SB --> APP: respuestaOK
+  deactivate SB
+
+  APP --> UI: respuestaOK
+  UI --> A: mostrarConfirmacion()
+end
+deactivate APP
+deactivate UI
+@enduml

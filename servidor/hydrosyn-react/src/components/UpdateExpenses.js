@@ -29,7 +29,7 @@ export default function UpdateExpense() {
         tags: []
     });
 
-    // Cargar opciones (sistemas, tanques, tags)
+
     useEffect(() => {
         const fetchOptions = async () => {
             const { data: systemsData } = await supabase.from('systems').select('id, name');

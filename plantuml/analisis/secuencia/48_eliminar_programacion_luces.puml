@@ -1,0 +1,28 @@
+@startuml
+!include ../../common.puml
+
+actor P
+boundary VL
+control CL
+entity PL
+
+
+
+
+
+
+P -> VL : socilita eliminar programación de luces
+activate VL
+VL -> P : mostrarFormularioEliminarProgramacionesLuces()
+P -> VL : eliminarProgramacionesLuces(datos)
+VL -> P : Muestra Diálogo de Confirmación
+P -> VL : Confirma eliminación
+VL -> CL : eliminarProgramacionesLuces(datos)
+activate CL
+CL -> PL : eliminarProgramacionesLuces(datos)
+PL --> CL : ok
+CL --> VL : ok
+VL --> P : mostrarProgramacionesLucesActualizadas()
+deactivate VL
+
+@enduml

@@ -1,0 +1,30 @@
+@startuml
+title UC-011 ver noti sistemas
+!include ../../common.puml
+
+actor P
+boundary VP
+control CU
+entity NO
+
+P -> VP: verNotificaciones
+activate VP
+
+VP -> CU: obtenerNotificaciones
+activate CU
+
+CU -> NO: consultarNotificacionesPropietario()
+activate NO
+NO --> CU: lista_de_intentos_filtrados
+deactivate NO
+
+' Lógica de traducción de motivos que se ve en tu función translateReason
+CU -> CU: traducirMotivos()
+
+CU --> VP: mostrarNotificaciones(datos)
+deactivate CU
+
+VP --> P: visualizarTabla()
+deactivate VP
+
+@enduml

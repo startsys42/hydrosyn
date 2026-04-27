@@ -1,0 +1,410 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty members
+
+package "Web" {
+
+class "App.js" as C_App {
+  -checkMembership()
+  -checkUser()
+}
+
+class "App.test.js" as C_App_test {
+}
+
+class "components/accordions/ESP32Accordion.js" as C_components_accordions_ESP32Accordion {
+  -setCreateError()
+  -setRenameError()
+  -setDeleteError()
+  -fetchESP32()
+}
+
+class "components/accordions/LightAccordion.js" as C_components_accordions_LightAccordion {
+  -setComponentError()
+  -fetchUser()
+  -fetchLights()
+  -fetchProgrammingList()
+  -fetchRecordsLights()
+}
+
+class "components/accordions/NotificationsAccordion.js" as C_components_accordions_NotificationsAccordion {
+  -fetchLoginAttempts()
+  -translateReason()
+}
+
+class "components/accordions/PumpsAccordion.js" as C_components_accordions_PumpsAccordion {
+  -setComponentError()
+  -fetchUser()
+  -refreshCalibrations()
+  -fetchPumps()
+  -fetchCalibrateList()
+  -fetchCalibrationList()
+  -fetchProgrammingList()
+  -fetchRecordsPump()
+}
+
+class "components/accordions/RecordsAccordion.js" as C_components_accordions_RecordsAccordion {
+  -setCreateError()
+  -setDeleteError()
+  -fetchTanks()
+  -fetchRecords()
+}
+
+class "components/accordions/SettingsAccordion.js" as C_components_accordions_SettingsAccordion {
+  -fetchSystem()
+  -setRenameError()
+  -setSecretError()
+  -setDeleteError()
+}
+
+class "components/accordions/TanksAccordion.js" as C_components_accordions_TanksAccordion {
+  -setCreateError()
+  -setRenameError()
+  -setDeleteError()
+  -fetchTanks()
+}
+
+class "components/accordions/UserAccordion.js" as C_components_accordions_UserAccordion {
+  -setCreateError()
+  -setDeleteError()
+  -setActivateError()
+  -setAssociateError()
+  -fetchAll()
+  -refreshUsersData()
+  -refreshAvailableData()
+  -checkAdmin()
+  -fetchUsers()
+  -fetchAvailableUsers()
+}
+
+class "components/ActivateDeleteUserAdmin.js" as C_components_ActivateDeleteUserAdmin {
+  -fetchUsers()
+  -handleToggleClick()
+  -handleToggleConfirm()
+  -handleDeleteClick()
+  -handleDeleteConfirm()
+}
+
+class "components/ActivateUserAdmin.js" as C_components_ActivateUserAdmin {
+  -fetchUsers()
+  -handleToggleClick()
+  -handleToggleConfirm()
+  -handleDeleteClick()
+  -handleDeleteConfirm()
+}
+
+class "components/AddExpenses.js" as C_components_AddExpenses {
+}
+
+class "components/AddProfits.js" as C_components_AddProfits {
+}
+
+class "components/ChangeEmail.js" as C_components_ChangeEmail {
+  -handleSubmit()
+}
+
+class "components/ChangePassword.js" as C_components_ChangePassword {
+  -validarPassword()
+  -handleSubmit()
+}
+
+class "components/ChangePasswordRecovery.js" as C_components_ChangePasswordRecovery {
+  -validatePassword()
+  -handleSubmit()
+}
+
+class "components/CreateSystem.js" as C_components_CreateSystem {
+  -handleCreateSystem()
+}
+
+class "components/CreateUserAdmin.js" as C_components_CreateUserAdmin {
+  -handleSubmit()
+}
+
+class "components/Dashboard.js" as C_components_Dashboard {
+  -fetchSystems()
+  -exportData()
+}
+
+class "components/ESP32Components/CreateESP32.js" as C_components_ESP32Components_CreateESP32 {
+  -handleCreateESP32()
+}
+
+class "components/ESP32Components/DeleteESP32.js" as C_components_ESP32Components_DeleteESP32 {
+  -handleOpenDialog()
+  -handleCloseDialog()
+  -handleDelete()
+}
+
+class "components/ESP32Components/RenameESP32.js" as C_components_ESP32Components_RenameESP32 {
+  -handleRename()
+}
+
+class "components/LightComponents/CreateLight.js" as C_components_LightComponents_CreateLight {
+  -fetchEsp32List()
+  -fetchUsedGpiosByLights()
+  -fetchUsedGpiosByPumps()
+  -handleCreateLight()
+}
+
+class "components/LightComponents/CreateProgrammingLight.js" as C_components_LightComponents_CreateProgrammingLight {
+  -timeToMinutes()
+  -checkConflict()
+  -handleSubmit()
+}
+
+class "components/LightComponents/DeleteLight.js" as C_components_LightComponents_DeleteLight {
+  -handleOpenDialog()
+  -handleCloseDialog()
+  -handleDelete()
+}
+
+class "components/LightComponents/ListProgrammingLights.js" as C_components_LightComponents_ListProgrammingLights {
+  -timeToMinutes()
+  -getLightName()
+  -formatTime()
+  -handleDeleteClick()
+  -handleEditClick()
+  -handleDeleteConfirm()
+}
+
+class "components/LightComponents/ListRecordsLights.js" as C_components_LightComponents_ListRecordsLights {
+  -fetchRecords()
+  -handleDelete()
+}
+
+class "components/LightComponents/UpdateLight.js" as C_components_LightComponents_UpdateLight {
+  -fetchEsp32List()
+  -fetchUsedGpiosByLights()
+  -fetchUsedGpiosByPumps()
+  -handleUpdateLight()
+}
+
+class "components/Login.js" as C_components_Login {
+  -recordFailedAttempt()
+  -handleLogin()
+}
+
+class "components/NotificationsAdmin.js" as C_components_NotificationsAdmin {
+  -handleDelete()
+  -fetchLoginAttempts()
+  -translateReason()
+}
+
+class "components/PrivateLayout.js" as C_components_PrivateLayout {
+}
+
+class "components/Profile.js" as C_components_Profile {
+}
+
+class "components/PublicLayout.js" as C_components_PublicLayout {
+}
+
+class "components/PumpComponents/CalibratePump.js" as C_components_PumpComponents_CalibratePump {
+  -checkUserActive()
+  -handleSubmit()
+  -handleInsertCalibrate()
+  -handleInsertCalibration()
+}
+
+class "components/PumpComponents/CreateProgrammingPump.js" as C_components_PumpComponents_CreateProgrammingPump {
+  -checkConflict()
+  -handleSubmit()
+}
+
+class "components/PumpComponents/CreatePump.js" as C_components_PumpComponents_CreatePump {
+  -fetchUsedGpios()
+  -fetchSystemData()
+  -handleCreatePump()
+}
+
+class "components/PumpComponents/DeletePump.js" as C_components_PumpComponents_DeletePump {
+  -handleOpenDialog()
+  -handleCloseDialog()
+  -handleDelete()
+}
+
+class "components/PumpComponents/InsertPumping.js" as C_components_PumpComponents_InsertPumping {
+  -checkUserActive()
+  -handleSubmit()
+  -handleInsertPump()
+}
+
+class "components/PumpComponents/ListCalibrate.js" as C_components_PumpComponents_ListCalibrate {
+  -handleDelete()
+}
+
+class "components/PumpComponents/ListCalibration.js" as C_components_PumpComponents_ListCalibration {
+  -handleDelete()
+}
+
+class "components/PumpComponents/ListProgrammingPumps.js" as C_components_PumpComponents_ListProgrammingPumps {
+  -handleEditClick()
+  -getPumpName()
+  -getDayLabel()
+  -formatTime()
+  -handleDeleteClick()
+  -handleEditConfirm()
+  -handleDeleteConfirm()
+}
+
+class "components/PumpComponents/ListRecordsPump.js" as C_components_PumpComponents_ListRecordsPump {
+  -handleDelete()
+}
+
+class "components/PumpComponents/UpdatePump.js" as C_components_PumpComponents_UpdatePump {
+  -fetchTanks()
+  -handleUpdatePump()
+}
+
+class "components/RecordComponents/CalendarRecord.js" as C_components_RecordComponents_CalendarRecord {
+  -fetchEvents()
+  -eventStyleGetter()
+}
+
+class "components/RecordComponents/CreateRecord.js" as C_components_RecordComponents_CreateRecord {
+  -init()
+  -checkAccess()
+  -handleCreateRecord()
+}
+
+class "components/RecordComponents/ListRecords.js" as C_components_RecordComponents_ListRecords {
+  -handleDelete()
+}
+
+class "components/RecoverPassword.js" as C_components_RecoverPassword {
+  -handleRecover()
+}
+
+class "components/RemoveData.js" as C_components_RemoveData {
+}
+
+class "components/SettingsComponents/ChangeSecret.js" as C_components_SettingsComponents_ChangeSecret {
+  -toggleShowSecret()
+  -handleSecretChange()
+}
+
+class "components/SettingsComponents/DeleteSystem.js" as C_components_SettingsComponents_DeleteSystem {
+  -handleOpenDialog()
+  -handleCloseDialog()
+  -handleDelete()
+}
+
+class "components/SettingsComponents/RenameSystem.js" as C_components_SettingsComponents_RenameSystem {
+  -handleRename()
+}
+
+class "components/Sidebar.js" as C_components_Sidebar {
+  -handleLogout()
+}
+
+class "components/System.js" as C_components_System {
+  -fetchSystem()
+  -handleChange()
+  -handleTabChange()
+  -renderTabContent()
+}
+
+class "components/TanksComponents/CreateTank.js" as C_components_TanksComponents_CreateTank {
+  -handleCreateTank()
+}
+
+class "components/TanksComponents/DeleteTank.js" as C_components_TanksComponents_DeleteTank {
+  -handleOpenDialog()
+  -handleCloseDialog()
+  -handleDelete()
+}
+
+class "components/TanksComponents/RenameTank.js" as C_components_TanksComponents_RenameTank {
+  -handleRename()
+}
+
+class "components/Topbar.js" as C_components_Topbar {
+}
+
+class "components/UpdateExpenses.js" as C_components_UpdateExpenses {
+  -fetchOptions()
+}
+
+class "components/UpdateProfits.js" as C_components_UpdateProfits {
+}
+
+class "components/UsersAdmin.js" as C_components_UsersAdmin {
+}
+
+class "components/UsersComponents/ActivateUserSystem.js" as C_components_UsersComponents_ActivateUserSystem {
+  -handleOpenDialog()
+  -handleCloseDialog()
+  -checkAdmin()
+  -handleConfirm()
+}
+
+class "components/UsersComponents/AssociateUserSystem.js" as C_components_UsersComponents_AssociateUserSystem {
+  -checkAdmin()
+  -handleOpenDialog()
+  -handleCloseDialog()
+  -handleAssociate()
+}
+
+class "components/UsersComponents/CreateUserSystem.js" as C_components_UsersComponents_CreateUserSystem {
+  -checkAdmin()
+  -handleSubmit()
+}
+
+class "components/UsersComponents/DeleteUserSystem.js" as C_components_UsersComponents_DeleteUserSystem {
+  -handleOpenDialog()
+  -handleCloseDialog()
+  -checkAdmin()
+  -handleDelete()
+}
+
+class "i18n/locales.js" as C_i18n_locales {
+}
+
+class "index.js" as C_index {
+  -AppWithMuiTheme()
+}
+
+class "reportWebVitals.js" as C_reportWebVitals {
+}
+
+class "setupTests.js" as C_setupTests {
+}
+
+class "utils/AdminContext.js" as C_utils_AdminContext {
+  -checkAdmin()
+}
+
+class "utils/LanguageContext.js" as C_utils_LanguageContext {
+  -changeLanguage()
+}
+
+class "utils/OwnerContext.js" as C_utils_OwnerContext {
+  -checkOwner()
+}
+
+class "utils/OwnerSystemContext.js" as C_utils_OwnerSystemContext {
+  -checkOwnerSystem()
+}
+
+class "utils/RoleSystemContext.js" as C_utils_RoleSystemContext {
+  -checkRole()
+}
+
+class "utils/supabaseClient.js" as C_utils_supabaseClient {
+}
+
+class "utils/SystemRouteWrapper.js" as C_utils_SystemRouteWrapper {
+  -ProtectedSystem()
+}
+
+class "utils/ThemeContext.js" as C_utils_ThemeContext {
+  -toggleTheme()
+}
+
+class "utils/UseTexts.js" as C_utils_UseTexts {
+}
+
+}
+
+@enduml

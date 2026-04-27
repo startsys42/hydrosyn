@@ -1,0 +1,42 @@
+@startuml
+title UC-039 actualizar programacion bomba
+
+!include ../../common.puml
+
+
+actor P
+boundary VB
+control CB
+entity PB 
+
+P -> VB : Clic en "Actualizar Programación  Bomba"
+activate VB
+VB -> P : mostrarFormularioActualizarProgramacionBomba()
+P -> VB : Completa formulario con los datos
+VB -> CB : validarDatos(datos)
+alt Formato Válido
+    CB -> PB : comprobarDuplicados(datos)
+    alt No Duplicados
+        PB --> CB : noDuplicados()
+        deactivate PB
+        CB -> PB : actualizarProgramacionBomba(datos)
+        activate PB
+        PB --> CB : confirmacionActualizacion()
+        deactivate PB
+        CB -> VB : confirmacionActualizacion()
+        deactivate CB
+        VB -> P : mostrarConfirmacionActualizacion()
+    else Duplicados
+        PB --> CB : duplicadosEncontrados()
+        deactivate PB
+        CB -> VB : errorDuplicados()
+        deactivate CB
+        VB -> P : mostrarErrorDuplicados()
+    end
+else Formato Inválido
+    CB -> VB : errorValidacion()
+    deactivate CB
+    VB -> P : mostrarErrorValidacion()
+end
+
+@enduml

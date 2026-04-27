@@ -1,0 +1,33 @@
+@startuml
+!include ../../common.puml
+
+actor A
+boundary VSA
+control CU
+entity NO
+
+A -> VSA: Seleccionar fechas y clic en "Eliminar"
+activate VSA
+
+' Diálogo de confirmación (como en tu ejemplo)
+VSA -> VSA: mostrarConfirmación()
+
+A -> VSA: Confirmar acción
+
+VSA -> CU: eliminarNotificaciones(fechaInicio, fechaFin)
+activate CU
+
+' Acción de borrado sobre la entidad
+CU -> NO: borrarRegistros(rango)
+activate NO
+NO --> CU: registros_eliminados_exitosamente
+deactivate NO
+
+CU --> VSA: confirmarEliminación()
+deactivate CU
+
+' Actualización de la UI
+VSA -> VSA: filtrarDatosLocales()
+VSA --> A: mostrarMensajeExito()
+deactivate VSA
+@enduml

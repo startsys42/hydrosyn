@@ -1,0 +1,33 @@
+@startuml
+title UC-014 eliminar usuario
+!include ../../common.puml
+
+actor P
+boundary VP
+control CU
+entity UP
+
+
+
+P -> VP: Clic en "Eliminar" 
+activate VP
+
+VP -> VP: mostrarDialogoConfirmacion()
+P -> VP: Confirma acción en el Diálogo
+
+
+
+VP -> CU: solicitarEliminacion()
+activate CU
+
+CU -> UP: eliminarUsuario()
+activate UP
+UP --> CU: confirmacion_eliminacion
+deactivate UP
+CU --> VP: confirmarExito()
+deactivate CU
+
+VP -> VP: refreshUsers()
+VP --> P: mostrarTablaActualizada()
+deactivate VP
+@enduml

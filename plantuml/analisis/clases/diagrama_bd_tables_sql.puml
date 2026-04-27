@@ -1,0 +1,189 @@
+@startuml
+hide circle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam shadowing false
+
+
+
+entity "users" as users {
+* id : uuid NOT NULL
+  email : text
+  created_at : timestamp with time zone
+  last_sign_in_at : timestamp with time zone
+}
+
+entity "admin_users" as admin_users {
+* id : bigint NOT NULL
+  created_at : timestamp with time zone NOT NULL
+  user : uuid NOT NULL
+  is_active : boolean NOT NULL
+}
+
+entity "systems" as systems {
+* id : bigint NOT NULL
+  created_at : timestamp with time zone NOT NULL
+  name : text NOT NULL
+  admin : uuid NOT NULL
+}
+
+entity "roles" as roles {
+* id : smallint NOT NULL
+  user : uuid NOT NULL
+}
+
+entity "systems_users" as systems_users {
+* id : bigint NOT NULL
+  system : bigint NOT NULL
+  user_id : uuid NOT NULL
+  is_active : boolean NOT NULL
+  associated_at : timestamp with time zone NOT NULL
+}
+
+entity "login_attempts" as login_attempts {
+* id : bigint NOT NULL
+  created_at : timestamp with time zone NOT NULL
+  reason : text NOT NULL
+  user : uuid NOT NULL
+}
+
+entity "esp32" as esp32 {
+* id : bigint NOT NULL
+  created_at : timestamp with time zone NOT NULL
+  system : bigint NOT NULL
+  name : text NOT NULL
+}
+
+entity "system_secrets" as system_secrets {
+* id : bigint NOT NULL
+  created_at : timestamp with time zone NOT NULL
+  system : bigint NOT NULL
+  code : text NOT NULL
+}
+
+entity "tanks" as tanks {
+* id : bigint NOT NULL
+  created_at : timestamp with time zone NOT NULL
+  type : public.tank_type NOT NULL
+  name : text NOT NULL
+  system : bigint NOT NULL
+}
+
+entity "pumps" as pumps {
+* id : bigint NOT NULL
+  created_at : timestamp with time zone NOT NULL
+  name : text NOT NULL
+  esp32 : bigint NOT NULL
+  gpio : integer NOT NULL
+  system : bigint NOT NULL
+  origin : bigint NOT NULL
+  destination : bigint NOT NULL
+}
+
+entity "records" as records {
+* id : bigint NOT NULL
+  created_at : timestamp with time zone NOT NULL
+  tank : bigint NOT NULL
+  user : uuid NOT NULL
+  volume : numeric(6,3) NOT NULL
+}
+
+entity "programming_pumps" as programming_pumps {
+* id : bigint NOT NULL
+  created_at : timestamp with time zone NOT NULL
+  pump : bigint NOT NULL
+  volume : numeric(6,3) NOT NULL
+  clock : time NOT NULL
+  day_of_week : day_of_week NOT NULL
+}
+
+entity "calibration" as calibration {
+* id : bigint NOT NULL
+  created_at : timestamp with time zone NOT NULL
+  pump : bigint NOT NULL
+  user : uuid NOT NULL
+  success : BOOLEAN
+}
+
+entity "calibrate" as calibrate {
+* id : bigint NOT NULL
+  created_at : timestamp with time zone NOT NULL
+  pump : bigint NOT NULL
+  volume : numeric(6,3) NOT NULL
+  user : uuid NOT NULL
+}
+
+entity "records_pumps" as records_pumps {
+* id : bigint NOT NULL
+  created_at : timestamp with time zone NOT NULL
+  pump : bigint NOT NULL
+  success : BOOLEAN NOT NULL
+  volume : numeric(6,3) NOT NULL
+  user : uuid NOT NULL
+}
+
+entity "executions_pumps" as executions_pumps {
+  id : BIGINT
+  programming_id : BIGINT NOT NULL
+  executed_at : TIMESTAMP WITH TIME ZONE
+  success : BOOLEAN
+}
+
+entity "lights" as lights {
+  id : BIGINT
+  created_at : TIMESTAMP WITH TIME ZONE NOT NULL
+  name : TEXT NOT NULL
+  esp32 : BIGINT NOT NULL
+  gpio : INTEGER NOT NULL
+  system : BIGINT NOT NULL
+}
+
+entity "programming_lights" as programming_lights {
+  id : BIGINT
+  created_at : TIMESTAMP WITH TIME ZONE NOT NULL
+  light : BIGINT NOT NULL
+  start_time : TIME NOT NULL
+  end_time : TIME NOT NULL
+  day_of_week : day_of_week NOT NULL
+  is_active : BOOLEAN
+}
+
+entity "lights_history" as lights_history {
+  id : BIGINT
+  light_id : BIGINT NOT NULL
+  action : SMALLINT NOT NULL
+  created_at : TIMESTAMP WITH TIME ZONE NOT NULL
+}
+
+' Referencias a users (en SQL real apuntan a auth.users(id))
+admin_users }o--|| users : "user -> id"
+roles }o--|| users : "user -> id"
+systems_users }o--|| users : "user_id -> id"
+login_attempts }o--|| users : "user -> id"
+records }o--|| users : "user -> id"
+calibration }o--|| users : "user -> id"
+calibrate }o--|| users : "user -> id"
+records_pumps }o--|| users : "user -> id"
+
+' Resto de claves foraneas
+systems }o--|| admin_users : "admin -> user"
+esp32 }o--|| systems : "system -> id"
+systems_users }o--|| systems : "system -> id"
+system_secrets }o--|| systems : "system -> id"
+tanks }o--|| systems : "system -> id"
+pumps }o--|| systems : "system -> id"
+pumps }o--|| esp32 : "esp32 -> id"
+pumps }o--|| tanks : "origin -> id"
+pumps }o--|| tanks : "destination -> id"
+records }o--|| tanks : "tank -> id"
+programming_pumps }o--|| pumps : "pump -> id"
+calibration }o--|| pumps : "pump -> id"
+calibrate }o--|| pumps : "pump -> id"
+records_pumps }o--|| pumps : "pump -> id"
+executions_pumps }o--|| programming_pumps : "programming_id -> id"
+lights }o--|| systems : "system -> id"
+lights }o--|| esp32 : "esp32 -> id"
+programming_lights }o--|| lights : "light -> id"
+lights_history }o--|| lights : "light_id -> id"
+
+@enduml

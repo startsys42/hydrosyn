@@ -1,0 +1,67 @@
+@startuml
+!include ../../common.puml
+
+actor A
+boundary VSA
+control CU 
+entity UP
+entity ASI
+
+
+A -> VSA: Introduce email del nuevo propietario
+activate VSA
+
+VSA -> CU: solicitarCreacionPropietario(email)
+activate CU
+
+CU -> UP: verificarExistenciaUsuario(email)
+activate UP
+UP --> CU: existe / no existe
+deactivate UP
+
+alt Usuario ya existe
+
+    CU -> ASI: verificarUsuarioExistente(email)
+    activate ASI
+    ASI --> CU: existe / no existe
+    deactivate ASI
+
+    alt Ya es propietario
+        CU --> VSA: mostrarMensajeError()
+
+    else No es propietario
+        CU -> ASI: registrarNuevoPropietario(email)
+        activate ASI
+        ASI --> CU: ok/error
+        deactivate ASI
+
+        alt Error en creación
+            CU --> VSA: mostrarMensajeError()
+        else Éxito
+            CU --> VSA: confirmarCreacion()
+        end
+    end
+
+else Usuario no existe
+
+    CU -> UP: crearUsuario(email)
+
+    CU -> ASI: registrarNuevoPropietario(email)
+    activate ASI
+    ASI --> CU: ok/error
+    deactivate ASI
+
+    alt Error en creación
+        CU --> VSA: mostrarMensajeError()
+    else Éxito
+        CU --> VSA: confirmarCreacion()
+    end
+end
+
+CU --> VSA: respuesta final
+deactivate CU
+
+VSA --> A: mostrarMensaje()
+deactivate VSA
+
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+
+!include ../../common.puml
+
+
+actor P
+boundary VL
+control CL
+entity L 
+
+
+P -> VL : Click en "Eliminar Luz"
+activate VL
+VL -> P : mostrarConfirmaciónIrreversible()
+P -> VL : Confirma eliminación
+VL -> CL : solicitarEliminacionLuz()
+activate CL
+    CL -> L : eliminarLuz()
+    activate L
+  
+    L --> CL : eliminacion_exitosa
+    deactivate L
+
+    CL --> VL : confirmarExito()
+    deactivate CL
+
+    VL -> VL : refresh()
+  
+   
+    VL --> P : mostrarTablaLuces()
+deactivate VL
+@enduml

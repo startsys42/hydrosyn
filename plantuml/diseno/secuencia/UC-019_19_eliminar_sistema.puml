@@ -1,0 +1,48 @@
+@startuml
+title UC-019 eliminar sistema
+!include ../../common.puml
+
+actor P 
+boundary VS 
+control CS 
+entity S 
+
+
+P -> VS: Clic en "Eliminar Sistema"
+activate VS
+
+VS -> VS: mostrarConfirmaciónIrreversible()
+
+P -> VS: Confirma eliminación 
+
+
+
+VS -> CS: solicitarEliminacion()
+activate CS
+
+
+
+
+
+
+    CS -> S: eliminarSistema()
+    activate S
+  
+    S --> CS: eliminacion_exitosa
+    deactivate S
+
+    CS --> VS: confirmarExito()
+    deactivate CS
+
+
+
+    VS -> VS: refresh()
+    VS -> VS: redirigirAlDashboard()
+
+   
+    VS --> P: mostrarDashboard()
+
+
+deactivate VS
+
+@enduml

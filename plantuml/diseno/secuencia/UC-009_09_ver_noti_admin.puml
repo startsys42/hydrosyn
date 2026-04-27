@@ -1,0 +1,29 @@
+@startuml
+title UC-009 ver noti admin
+!include ../../common.puml
+
+actor A
+boundary VSA
+control CU
+entity NO
+
+A -> VSA: Acceder a vista de Notificaciones
+activate VSA
+
+VSA -> CU: obtenerNotificaciones()
+activate CU
+
+CU -> NO: consultarIntentosLogin()
+activate NO
+NO --> CU: lista_de_intentos
+deactivate NO
+
+' Lógica de traducción/formateo que hace tu código
+CU -> CU: traducirMotivos()
+
+CU --> VSA: mostrarNotificaciones(datos)
+deactivate CU
+
+VSA --> A: visualizarTabla()
+deactivate VSA
+@enduml

@@ -1,0 +1,42 @@
+
+@startuml
+
+!include ../../common.puml
+
+
+actor P
+boundary VL
+control CL
+entity PL
+
+P -> VL : Clic en "Crear Programación  Luz"
+activate VL
+VL -> P : mostrarFormularioCrearProgramacionLuz()
+P -> VL : Completa formulario con los datos
+VL -> CL : validarDatos(datos)
+alt Formato Válido
+    CL -> PL : comprobarDuplicados(datos)
+    alt No Duplicados
+        PL --> CL : noDuplicados()
+        deactivate PL
+        CL -> PL : crearProgramacionLuz(datos)
+        activate PL
+        PL --> CL : confirmacionCreacion()
+        deactivate PL
+        CL -> VL : confirmacionCreacion()
+        deactivate CL
+        VL -> P : mostrarConfirmacionCreacion()
+    else Duplicados
+        PL --> CL : duplicadosEncontrados()
+        deactivate PL
+        CL -> VL : errorDuplicados()
+        deactivate CL
+        VL -> P : mostrarErrorDuplicados()
+    end
+else Formato Inválido
+    CL -> VL : errorValidacion()
+    deactivate CL
+    VL -> P : mostrarErrorValidacion()
+end
+
+@enduml

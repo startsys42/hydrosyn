@@ -1,0 +1,34 @@
+@startuml
+title UC-052 crear registro
+
+!include ../../common.puml
+
+
+actor P
+boundary VR
+control CR
+entity R 
+
+P -> VR : Clic en "Crear Registro"
+activate VR
+VR -> P : mostrarFormularioCrearRegistro()
+P -> VR : Enviar datos del nuevo registro
+VR -> CR : validarDatos(datos)
+alt Formato Válido
+   
+        CR -> R : crearRegistro(datos)
+        activate R
+        R --> CR : confirmacionCreacion()
+        deactivate R
+        CR -> VR : confirmacionCreacion()
+        deactivate CR
+        VR -> P : mostrarConfirmacionCreacion()
+    
+    
+else Formato Inválido
+    CR -> VR : errorValidacion()
+    deactivate CR
+    VR -> P : mostrarErrorValidacion()
+end
+
+@enduml

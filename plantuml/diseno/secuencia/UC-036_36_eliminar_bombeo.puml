@@ -1,0 +1,29 @@
+@startuml
+title UC-036 eliminar bombeo
+!include ../../common.puml
+
+actor P
+boundary VB
+control CB
+entity B
+
+
+
+
+
+
+P -> VB : solicita eliminar bombeos
+activate VB
+VB -> P : mostrarFormularioEliminarBombeos()
+P -> VB : eliminarBombeos(datos)
+VB -> P : Muestra Diálogo de Confirmación
+P -> VB : Confirma eliminación
+VB -> CB : eliminarBombeos(datos)
+activate CB
+CB -> B : eliminarBombeos(datos)
+B --> CB : ok
+CB -> VB : ok
+VB -> P : mostrarBombeosActualizados()
+deactivate VB
+
+@enduml

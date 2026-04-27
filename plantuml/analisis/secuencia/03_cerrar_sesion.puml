@@ -1,0 +1,30 @@
+@startuml
+!include ../../common.puml
+
+' Invocamos la macro
+
+actor U
+boundary VA
+control CA
+entity UP
+
+
+U -> VA: Click en "Cerrar Sesión"
+activate VA
+
+VA -> CA: solicitarCierreSesion()
+activate CA
+
+CA -> UP: invalidarSesión()
+activate UP
+UP --> CA: sesión_finalizada
+deactivate UP
+
+CA --> VA: confirmarSalida()
+deactivate CA
+VA --> VA: Redirigir a Login
+
+VA --> U: mostrarPantallaLogin()
+deactivate VA
+
+@enduml

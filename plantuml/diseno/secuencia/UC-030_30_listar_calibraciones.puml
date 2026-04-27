@@ -1,0 +1,27 @@
+@startuml
+title UC-030 listar calibraciones
+!include ../../common.puml
+
+actor U
+boundary VB
+control CB
+entity CBO 
+
+
+
+
+
+
+U -> VB : Accede a "Calibraciones"
+activate VB
+VB -> CB : solicitarCalibraciones()
+activate CB
+CB -> CBO : obtenerCalibraciones()
+CBO --> CB : listaCalibraciones
+CB --> VB : mostrarCalibraciones(listaCalibraciones)
+deactivate VB
+deactivate CB
+VB -> U : mostrarCalibraciones(listaCalibraciones)
+
+
+@enduml

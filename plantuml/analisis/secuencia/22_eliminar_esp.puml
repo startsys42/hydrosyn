@@ -1,0 +1,32 @@
+@startuml
+!include ../../common.puml
+
+actor P
+boundary VCH
+control CH
+entity ESP32
+
+P -> VCH : Presiona "Eliminar" en el ESP32
+activate VCH
+VCH -> P : mostrarConfirmaciónIrreversible()
+P -> VCH : Confirma eliminación
+VCH-> CH : solicitarEliminacionESP32()
+activate CH
+    CH -> ESP32 : eliminarESP32()
+    activate ESP32
+  
+    ESP32 --> CH : eliminacion_exitosa
+    deactivate ESP32
+
+    CH --> VCH : confirmarExito()
+    deactivate CH
+
+    VCH -> VCH : refresh()
+
+
+   
+    VCH --> P : mostrarTablaESP32()
+deactivate VCH  
+
+
+@enduml

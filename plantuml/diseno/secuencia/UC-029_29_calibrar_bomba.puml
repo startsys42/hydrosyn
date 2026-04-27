@@ -1,0 +1,36 @@
+@startuml
+title UC-029 calibrar bomba
+!include ../../common.puml
+
+
+actor U
+boundary VB
+control CB
+entity CBO 
+entity B
+actor ESP32 <<device>>
+
+
+U-> VB : Calibrar Bomba
+VB -> U : mostrarFormularioCalibrarBomba()
+U -> VB : calibrarBomba(datos)
+VB -> CB : calibrarBomba(datos)
+CB -> CBO : calibrarBomba(datos)
+ESP32 -> CBO : solicitarDatosCalibracion()
+activate ESP32
+CBO --> ESP32 : datosCalibracion
+deactivate ESP32
+
+ESP32->ESP32 : procesoCalibracion()
+ESP32 --> CBO : resultadoCalibracion()
+U ->VB : guardarCalibracion(datos)
+VB -> CB : guardarCalibracion(datos)
+CB -> B : guardarCalibracion(datos)
+B --> CB : confirmacionGuardado()
+CB --> VB : mostrarConfirmacionGuardado()
+VB --> U : mostrarConfirmacionGuardado()
+
+
+
+
+@enduml

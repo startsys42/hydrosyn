@@ -113,7 +113,7 @@ const ActivateUserAdmin = () => {
             />
 
 
-            {/* Confirmación para toggle */}
+
             <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
                 <DialogTitle>Confirmar acción</DialogTitle>
                 <DialogContent>
@@ -127,7 +127,7 @@ const ActivateUserAdmin = () => {
                 </DialogActions>
             </Dialog>
 
-            {/* Confirmación para borrar */}
+
             <Dialog open={deleteOpen} onClose={() => setDeleteOpen(false)}>
                 <DialogTitle>Confirmar eliminación</DialogTitle>
                 <DialogContent>

@@ -18,7 +18,7 @@ export default function ChangePasswordRecovery() {
 
 
     useEffect(() => {
-        // Supabase detecta automáticamente el token en la URL y crea una sesión
+
         const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
             if (event === "PASSWORD_RECOVERY") {
 

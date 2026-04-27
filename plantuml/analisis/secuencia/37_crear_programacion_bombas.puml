@@ -1,0 +1,41 @@
+@startuml
+
+!include ../../common.puml
+
+
+actor P
+boundary VB
+control CB
+entity PB 
+
+P -> VB : Clic en "Crear Programación  Bomba"
+activate VB
+VB -> P : mostrarFormularioCrearProgramacionBomba()
+P -> VB : Completa formulario con los datos
+VB -> CB : validarDatos(datos)
+alt Formato Válido
+    CB -> PB : comprobarDuplicados(datos)
+    alt No Duplicados
+        PB --> CB : noDuplicados()
+        deactivate PB
+        CB -> PB : crearProgramacionBomba(datos)
+        activate PB
+        PB --> CB : confirmacionCreacion()
+        deactivate PB
+        CB -> VB : confirmacionCreacion()
+        deactivate CB
+        VB -> P : mostrarConfirmacionCreacion()
+    else Duplicados
+        PB --> CB : duplicadosEncontrados()
+        deactivate PB
+        CB -> VB : errorDuplicados()
+        deactivate CB
+        VB -> P : mostrarErrorDuplicados()
+    end
+else Formato Inválido
+    CB -> VB : errorValidacion()
+    deactivate CB
+    VB -> P : mostrarErrorValidacion()
+end
+
+@enduml

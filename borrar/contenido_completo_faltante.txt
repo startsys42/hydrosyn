@@ -1,0 +1,64 @@
+CONTENIDO COMPLETO FALTANTE PARA DOCUMENTO TFG HYDROSYN
+====================================================
+
+5.2.3.4. Gestión de Bombas
+--------------------------
+El paquete de Gestión de Bombas administra los dispositivos de bombeo que son el corazón del sistema de riego Hydrosyn. Estas bombas son responsables de mover el agua desde los tanques de almacenamiento hasta los diferentes puntos de riego, garantizando un suministro constante y eficiente para los cultivos.
+
+Este módulo permite controlar la operación de las bombas, programar su funcionamiento, realizar mantenimientos preventivos y calibrar su rendimiento. Incluye funcionalidades para monitorizar el estado operativo, detectar fallos y optimizar el consumo energético.
+
+La gestión adecuada de las bombas es esencial para garantizar un riego eficiente, prevenir daños por operación incorrecta y mantener la fiabilidad del sistema. Las bombas pueden operar manualmente o de forma automática según las programaciones establecidas, adaptándose a las necesidades específicas de cada zona de cultivo.
+
+[IMAGEN: Figura X - Diagrama de casos de uso - Gestión de Bombas]
+
+5.2.3.5. Gestión de ESP32
+--------------------------
+El paquete de Gestión de ESP32 se encarga de administrar los dispositivos microcontroladores que forman la base del sistema Hydrosyn. Los ESP32 son los nodos inteligentes que se conectan directamente con los sensores y actuadores del sistema de riego, actuando como intermediarios entre el mundo físico y la plataforma central.
+
+Este módulo permite dar de alta nuevos dispositivos ESP32 en el sistema, configurar sus parámetros de comunicación, actualizar su firmware y monitorizar su estado operativo. Cada ESP32 puede gestionar múltiples sensores (humedad, temperatura, nivel de agua) y actuadores (bombas, válvulas, luces).
+
+La gestión adecuada de estos dispositivos es crucial para garantizar la fiabilidad del sistema, ya que son responsables de ejecutar las programaciones de riego y recopilar datos en tiempo real de las condiciones ambientales y del sistema.
+
+[IMAGEN: Figura X - Diagrama de casos de uso - Gestión de ESP32]
+
+5.2.3.6. Gestión de Luces
+-------------------------
+El paquete de Gestión de Luces permite administrar los sistemas de iluminación artificial que complementan el sistema de riego Hydrosyn. Estas luces son especialmente importantes en invernaderos o cultivos bajo techo donde se necesita controlar el fotoperíodo y la intensidad lumínica para optimizar el crecimiento de las plantas.
+
+Este módulo facilita la programación de los ciclos de iluminación, el control de la intensidad, la gestión de diferentes tipos de luces (crecimiento, floración) y el mantenimiento histórico de su funcionamiento. Permite optimizar el consumo energético y coordinar la iluminación con los ciclos de riego.
+
+La gestión inteligente de las luces contribuye a optimizar el crecimiento de las plantas, mejorar los rendimientos de los cultivos y reducir los costos operativos mediante programaciones automatizadas basadas en las necesidades específicas de cada tipo de cultivo.
+
+[IMAGEN: Figura X - Diagrama de casos de uso - Gestión de Luces]
+
+5.2.3.7. Gestión de Tanques
+---------------------------
+El paquete de Gestión de Tanques permite administrar los depósitos de agua que forman parte del sistema de riego Hydrosyn. Estos tanques pueden ser de diferentes capacidades y tipos (almacenamiento principal, tanques de reserva, depósitos de fertilizantes, etc.), constituyendo la infraestructura básica para el suministro de recursos.
+
+Este módulo facilita el control de los niveles de agua, la gestión de llenado y vaciado, y el mantenimiento de los tanques. Permite configurar alarmas por niveles bajos, programar llenados automáticos y llevar un registro histórico del consumo y los niveles.
+
+La gestión eficiente de los tanques es fundamental para garantizar un suministro continuo de agua para el riego, optimizar el uso de recursos y prevenir situaciones de escasez que podrían afectar negativamente a los cultivos.
+
+[IMAGEN: Figura X - Diagrama de casos de uso - Gestión de Tanques]
+
+5.2.3.8. Gestión de Registros
+------------------------------
+El paquete de Gestión de Registros se encarga de administrar toda la información histórica generada por el sistema Hydrosyn. Esto incluye datos de sensores, operaciones de riego, eventos del sistema, mantenimientos realizados y cualquier otra información relevante para el análisis y la toma de decisiones.
+
+Este módulo permite consultar, analizar y gestionar grandes volúmenes de datos históricos, facilitando el seguimiento del rendimiento del sistema, la detección de tendencias y la optimización de las operaciones. Incluye herramientas para filtrado, exportación de datos y generación de informes.
+
+La gestión adecuada de los registros es fundamental para el análisis predictivo, la auditoría de operaciones, el cumplimiento normativo y la mejora continua del sistema de riego inteligente. Estos datos también pueden utilizarse para entrenar modelos de machine learning que optimicen las futuras operaciones de riego.
+
+[IMAGEN: Figura X - Diagrama de casos de uso - Gestión de Registros]
+
+REFERENCIAS DE IMÁGENES PARA PAQUETES EXISTENTES:
+================================================
+
+5.2.3.1. Gestión de Autenticación
+[IMAGEN: Figura X - Diagrama de casos de uso - Gestión de Autenticación]
+
+5.2.3.2. Gestión de Usuarios  
+[IMAGEN: Figura X - Diagrama de casos de uso - Gestión de Usuarios]
+
+5.2.3.3. Gestión de Sistemas
+[IMAGEN: Figura X - Diagrama de casos de uso - Gestión de Sistemas]

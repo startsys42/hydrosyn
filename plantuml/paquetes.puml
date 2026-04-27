@@ -1,0 +1,40 @@
+@startuml
+skinparam packageStyle folder
+
+package "Sistema de Control de Fitoplacton y Zooplacton" {
+    
+    ' Fila 1: Superior
+    package "Autenticación de Usuarios" as auth {
+    }
+    package "Gestión de Usuarios" as users {
+    }
+    package "Gestión de Sistemas" as sys {
+    }
+    
+    ' Conexión para crear la segunda fila
+     package "Gestión de Controladores" as ctrl {
+    }
+
+    
+    ' Fila 2: Inferior
+   
+    package "Gestión de Tanques" as tanques {
+    }
+        ctrl -[hidden]down- tanques
+    package "Gestión de Bombas" as bombas {
+    }
+    package "Gestión de Luces" as luces {
+    }
+    package "Gestión de Registros" as logs {
+    }
+
+    ' Alineación horizontal
+    auth -[hidden]right- users
+    users -[hidden]right- sys
+    
+    sys -[hidden]right- ctrl
+    tanques -[hidden]right- bombas
+    bombas -[hidden]right- luces
+    luces -[hidden]right- logs
+}
+@enduml

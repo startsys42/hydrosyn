@@ -1,0 +1,27 @@
+@startuml
+title UC-053 listar registros
+!include ../../common.puml
+
+actor U
+boundary VR
+control CR
+entity R 
+
+
+
+
+
+
+U -> VR : Accede a "Listar Registros"
+activate VR
+VR -> CR : solicitarRegistros()
+activate CR
+CR -> R : obtenerRegistros()
+R --> CR : listaRegistros()
+CR --> VR : mostrarRegistros()
+deactivate VR
+deactivate CR
+VR --> U : mostrarRegistros()
+
+
+@enduml

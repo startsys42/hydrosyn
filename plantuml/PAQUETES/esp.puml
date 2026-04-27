@@ -1,0 +1,16 @@
+@startuml
+left to right direction
+
+actor Propietario
+
+package "Gestión de Controladores" {
+  usecase "Crear Controlador (UC-020)" as UC020
+  usecase "Renombrar Controlador (UC-021)" as UC021
+  usecase "Eliminar Controlador (UC-022)" as UC022
+}
+
+Propietario --> UC020
+Propietario --> UC021
+Propietario --> UC022
+
+@enduml

@@ -37,7 +37,7 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
         { value: "Sunday", label: texts.daySunday },
     ];
     const handleEditClick = (programming) => {
-        setEditFormData({ ...programming }); // copiamos los datos de la fila
+        setEditFormData({ ...programming });
         setEditDialogOpen(true);
     };
 
@@ -81,7 +81,7 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
 
             if (error) throw error;
 
-            refresh(); // recarga la lista
+            refresh();
             setEditDialogOpen(false);
             setEditFormData(null);
         } catch (err) {
@@ -319,7 +319,7 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
 
 
                                 const conflict = programmingList.some((p) => {
-                                    if (p.id === editFormData.id) return false; // ignoramos la misma fila
+                                    if (p.id === editFormData.id) return false;
                                     if (p.pump_id !== editFormData.pump_id) return false;
                                     if (p.day_of_week !== editFormData.day_of_week) return false;
 

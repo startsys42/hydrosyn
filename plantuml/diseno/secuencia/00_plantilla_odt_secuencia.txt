@@ -1,0 +1,222 @@
+SECCION PARA ODT - DIAGRAMAS DE SECUENCIA
+
+Formato sugerido por bloque:
+UC-XXX Nombre del caso de uso
+[Insertar imagen del diagrama aquí]
+Figura N: Diagrama de Secuencia UC-XXX Nombre del caso de uso
+
+UC-001 iniciar sesion
+[Imagen: UC-001_01_iniciar_sesion.png]
+Figura 1: Diagrama de Secuencia UC-001 iniciar sesion
+
+UC-002 recuerar contrasena
+[Imagen: UC-002_02_recuerar_contrasena.png]
+Figura 2: Diagrama de Secuencia UC-002 recuerar contrasena
+
+UC-003 cerrar sesion
+[Imagen: UC-003_03_cerrar_sesion.png]
+Figura 3: Diagrama de Secuencia UC-003 cerrar sesion
+
+UC-004 cambiar email
+[Imagen: UC-004_04_cambiar_email.png]
+Figura 4: Diagrama de Secuencia UC-004 cambiar email
+
+UC-005 cambiar contrasena
+[Imagen: UC-005_05_cambiar_contrasena.png]
+Figura 5: Diagrama de Secuencia UC-005 cambiar contrasena
+
+UC-006 crear propietario
+[Imagen: UC-006_06_crear_propietario.png]
+Figura 6: Diagrama de Secuencia UC-006 crear propietario
+
+UC-007 activacion propietarios
+[Imagen: UC-007_07_activacion_propietarios.png]
+Figura 7: Diagrama de Secuencia UC-007 activacion propietarios
+
+UC-008 eliminar propietario
+[Imagen: UC-008_08_eliminar_propietario.png]
+Figura 8: Diagrama de Secuencia UC-008 eliminar propietario
+
+UC-009 ver noti admin
+[Imagen: UC-009_09_ver_noti_admin.png]
+Figura 9: Diagrama de Secuencia UC-009 ver noti admin
+
+UC-010 eliminar noti
+[Imagen: UC-010_10_eliminar_noti.png]
+Figura 10: Diagrama de Secuencia UC-010 eliminar noti
+
+UC-011 ver noti sistemas
+[Imagen: UC-011_11_ver_noti_sistemas.png]
+Figura 11: Diagrama de Secuencia UC-011 ver noti sistemas
+
+UC-012 crear usuario
+[Imagen: UC-012_12_crear_usuario.png]
+Figura 12: Diagrama de Secuencia UC-012 crear usuario
+
+UC-013 activacion usuario
+[Imagen: UC-013_13_activacion_usuario.png]
+Figura 13: Diagrama de Secuencia UC-013 activacion usuario
+
+UC-014 eliminar usuario
+[Imagen: UC-014_14_eliminar_usuario.png]
+Figura 14: Diagrama de Secuencia UC-014 eliminar usuario
+
+UC-015 asociar usuario
+[Imagen: UC-015_15_asociar_usuario.png]
+Figura 15: Diagrama de Secuencia UC-015 asociar usuario
+
+UC-016 crear sistema
+[Imagen: UC-016_16_crear_sistema.png]
+Figura 16: Diagrama de Secuencia UC-016 crear sistema
+
+UC-017 renombrar sistema
+[Imagen: UC-017_17_renombrar_sistema.png]
+Figura 17: Diagrama de Secuencia UC-017 renombrar sistema
+
+UC-018 cambair codigo sistema
+[Imagen: UC-018_18_cambair_codigo_sistema.png]
+Figura 18: Diagrama de Secuencia UC-018 cambair codigo sistema
+
+UC-019 eliminar sistema
+[Imagen: UC-019_19_eliminar_sistema.png]
+Figura 19: Diagrama de Secuencia UC-019 eliminar sistema
+
+UC-020 crear esp
+[Imagen: UC-020_20_crear_esp.png]
+Figura 20: Diagrama de Secuencia UC-020 crear esp
+
+UC-021 renombrar esp
+[Imagen: UC-021_21_renombrar_esp.png]
+Figura 21: Diagrama de Secuencia UC-021 renombrar esp
+
+UC-022 eliminar esp
+[Imagen: UC-022_22_eliminar_esp.png]
+Figura 22: Diagrama de Secuencia UC-022 eliminar esp
+
+UC-023 crear tanque
+[Imagen: UC-023_23_crear_tanque.png]
+Figura 23: Diagrama de Secuencia UC-023 crear tanque
+
+UC-024 renombrar tanque
+[Imagen: UC-024_24_renombrar_tanque.png]
+Figura 24: Diagrama de Secuencia UC-024 renombrar tanque
+
+UC-025 eliminar tanque
+[Imagen: UC-025_25_eliminar_tanque.png]
+Figura 25: Diagrama de Secuencia UC-025 eliminar tanque
+
+UC-026 crear bomba
+[Imagen: UC-026_26_crear_bomba.png]
+Figura 26: Diagrama de Secuencia UC-026 crear bomba
+
+UC-027 modificar bomba
+[Imagen: UC-027_27_modificar_bomba.png]
+Figura 27: Diagrama de Secuencia UC-027 modificar bomba
+
+UC-028 eliminar bomba
+[Imagen: UC-028_28_eliminar_bomba.png]
+Figura 28: Diagrama de Secuencia UC-028 eliminar bomba
+
+UC-029 calibrar bomba
+[Imagen: UC-029_29_calibrar_bomba.png]
+Figura 29: Diagrama de Secuencia UC-029 calibrar bomba
+
+UC-030 listar calibraciones
+[Imagen: UC-030_30_listar_calibraciones.png]
+Figura 30: Diagrama de Secuencia UC-030 listar calibraciones
+
+UC-031 ELIMINAR CALIBRACIONES
+[Imagen: UC-031_31_ELIMINAR_CALIBRACIONES.png]
+Figura 31: Diagrama de Secuencia UC-031 ELIMINAR CALIBRACIONES
+
+UC-032 listar ejecucion calibraciones
+[Imagen: UC-032_32_listar_ejecucion_calibraciones.png]
+Figura 32: Diagrama de Secuencia UC-032 listar ejecucion calibraciones
+
+UC-033 eliminar ejecucion calibraciones
+[Imagen: UC-033_33_eliminar_ejecucion_calibraciones.png]
+Figura 33: Diagrama de Secuencia UC-033 eliminar ejecucion calibraciones
+
+UC-034 realizar bombeo
+[Imagen: UC-034_34_realizar_bombeo.png]
+Figura 34: Diagrama de Secuencia UC-034 realizar bombeo
+
+UC-035 listar bombeos
+[Imagen: UC-035_35_listar_bombeos.png]
+Figura 35: Diagrama de Secuencia UC-035 listar bombeos
+
+UC-036 eliminar bombeo
+[Imagen: UC-036_36_eliminar_bombeo.png]
+Figura 36: Diagrama de Secuencia UC-036 eliminar bombeo
+
+UC-037 crear programacion bombas
+[Imagen: UC-037_37_crear_programacion_bombas.png]
+Figura 37: Diagrama de Secuencia UC-037 crear programacion bombas
+
+UC-038 listar programacion bombas
+[Imagen: UC-038_38_listar_programacion_bombas.png]
+Figura 38: Diagrama de Secuencia UC-038 listar programacion bombas
+
+UC-039 actualizar programacion bomba
+[Imagen: UC-039_39_actualizar_programacion_bomba.png]
+Figura 39: Diagrama de Secuencia UC-039 actualizar programacion bomba
+
+UC-040 eliminar programacion bomba
+[Imagen: UC-040_40_eliminar_programacion_bomba.png]
+Figura 40: Diagrama de Secuencia UC-040 eliminar programacion bomba
+
+UC-041 ejecutar programacion bombas
+[Imagen: UC-041_41_ejecutar_programacion_bombas.png]
+Figura 41: Diagrama de Secuencia UC-041 ejecutar programacion bombas
+
+UC-042 crear luz
+[Imagen: UC-042_42_crear_luz.png]
+Figura 42: Diagrama de Secuencia UC-042 crear luz
+
+UC-043 renombrar luz
+[Imagen: UC-043_43_renombrar_luz.png]
+Figura 43: Diagrama de Secuencia UC-043 renombrar luz
+
+UC-044 eliminar luz
+[Imagen: UC-044_44_eliminar_luz.png]
+Figura 44: Diagrama de Secuencia UC-044 eliminar luz
+
+UC-045 CREAR PROGRAMACION LUZ
+[Imagen: UC-045_45_CREAR_PROGRAMACION_LUZ.png]
+Figura 45: Diagrama de Secuencia UC-045 CREAR PROGRAMACION LUZ
+
+UC-046 listar programacion luces
+[Imagen: UC-046_46_listar_programacion_luces.png]
+Figura 46: Diagrama de Secuencia UC-046 listar programacion luces
+
+UC-047 actualizar programacion luces
+[Imagen: UC-047_47_actualizar_programacion_luces.png]
+Figura 47: Diagrama de Secuencia UC-047 actualizar programacion luces
+
+UC-048 eliminar programacion luces
+[Imagen: UC-048_48_eliminar_programacion_luces.png]
+Figura 48: Diagrama de Secuencia UC-048 eliminar programacion luces
+
+UC-049 ejecutar programacion luces
+[Imagen: UC-049_49_ejecutar_programacion_luces.png]
+Figura 49: Diagrama de Secuencia UC-049 ejecutar programacion luces
+
+UC-050 listar historial luces
+[Imagen: UC-050_50_listar_historial_luces.png]
+Figura 50: Diagrama de Secuencia UC-050 listar historial luces
+
+UC-051 eliminar historial luces
+[Imagen: UC-051_51_eliminar_historial_luces.png]
+Figura 51: Diagrama de Secuencia UC-051 eliminar historial luces
+
+UC-052 crear registro
+[Imagen: UC-052_52_crear_registro.png]
+Figura 52: Diagrama de Secuencia UC-052 crear registro
+
+UC-053 listar registros
+[Imagen: UC-053_53_listar_registros.png]
+Figura 53: Diagrama de Secuencia UC-053 listar registros
+
+UC-054 ELIMINAR REGISTROS
+[Imagen: UC-054_54_ELIMINAR_REGISTROS.png]
+Figura 54: Diagrama de Secuencia UC-054 ELIMINAR REGISTROS

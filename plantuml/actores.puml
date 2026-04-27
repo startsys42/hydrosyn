@@ -1,0 +1,20 @@
+@startuml
+' Estilo de monigote
+skinparam actorStyle stickman
+
+' Fila superior
+actor "Usuario No Logueado" as unlog
+actor "Usuario" as user
+actor "Propietario" as owner
+
+' Fila inferior
+actor "Administrador" as admin
+actor Temporizador <<Device>> as timer
+
+' Alineación para mantener las dos filas de la foto
+unlog -[hidden]right- user
+user -[hidden]right- owner
+
+unlog -[hidden]down- admin
+admin -[hidden]right- timer
+@enduml

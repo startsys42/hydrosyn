@@ -171,7 +171,7 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
                 <h3>{texts.lightsHistory}</h3>
             </AccordionSummary>
             <AccordionDetails>
-                {/* Solo los owners pueden eliminar registros */}
+
                 {userRole === 'owner' && (
                     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={language}>
                         <div style={{ display: 'flex', gap: 16, marginBottom: 16, alignItems: 'center' }}>
@@ -218,7 +218,6 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
 
                 {error && <p style={{ color: 'red', marginTop: 16 }}>{error}</p>}
 
-                {/* Diálogo de confirmación para eliminar */}
                 <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
                     <DialogTitle>{texts.confirmation}</DialogTitle>
                     <DialogContent>

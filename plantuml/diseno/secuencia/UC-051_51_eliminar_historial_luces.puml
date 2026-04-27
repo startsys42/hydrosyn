@@ -1,0 +1,26 @@
+@startuml
+title UC-051 eliminar historial luces
+!include ../../common.puml
+
+actor P
+boundary VL
+control CL
+entity L 
+
+
+
+P -> VL : solicita eliminar historial de luces
+activate VL
+VL -> P : mostrarFormularioEliminarHistorialLuces()
+P -> VL : eliminarHistorialLuces(datos)
+VL -> P : Muestra Diálogo de Confirmación
+P -> VL : Confirma eliminación
+VL -> CL : eliminarHistorialLuces(datos)
+activate CL
+CL -> L : eliminarHistorialLuces(datos)
+L --> CL : ok
+CL -> VL : ok
+VL -> P : mostrarHistorialLucesActualizado()
+deactivate VL
+
+@enduml

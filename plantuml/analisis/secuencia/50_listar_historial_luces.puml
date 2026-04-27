@@ -1,0 +1,26 @@
+@startuml
+!include ../../common.puml
+
+actor U
+boundary VL
+control CL
+entity L 
+
+
+
+
+
+
+U -> VL : Accede a "Listar Historial de Luces"
+activate VL
+VL -> CL : solicitarHistorialLuces()
+activate CL
+CL -> L : obtenerHistorialLuces()
+L --> CL : listaHistorialLuces
+CL --> VL : mostrarHistorialLuces()
+deactivate VL
+deactivate CL
+VL -> U : mostrarHistorialLuces()
+
+
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+left to right direction
+
+actor Propietario
+
+package "Gestión de Sistemas" {
+  usecase "Crear Sistema (UC-016)" as UC016
+  usecase "Renombrar Sistema (UC-017)" as UC017
+  usecase "Cambiar Código Sistema (UC-018)" as UC018
+  usecase "Eliminar Sistema (UC-019)" as UC019
+}
+
+Propietario --> UC016
+Propietario --> UC017
+Propietario --> UC018
+Propietario --> UC019
+
+@enduml

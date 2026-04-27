@@ -102,13 +102,13 @@ export default function CreateSystem() {
                     .from('system_secrets')
                     .select('id')
                     .in('system', systemIds)
-                    .eq('code', systemCode) // <-- aquí comparas con el code que pasaste en el form
+                    .eq('code', systemCode)
                     .maybeSingle();
 
                 if (secretErr) throw secretErr;
 
                 if (secretConflict) {
-                    throw new Error("repeatSecretSystem"); // define este texto en tu UseTexts
+                    throw new Error("repeatSecretSystem");
                 }
             }
 

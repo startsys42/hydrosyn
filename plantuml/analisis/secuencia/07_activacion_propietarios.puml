@@ -1,0 +1,30 @@
+@startuml
+!include ../../common.puml
+
+actor A
+boundary VSA
+control CU 
+
+entity ASI
+
+A -> VSA: Clic en Checkbox (Activar/Desactivar)
+activate VSA
+
+VSA -> CU: solicitarCambioEstado(email)
+activate CU
+
+
+
+CU -> ASI: cambiarEstadoUsuario(email)
+activate ASI
+ASI --> CU: estado_actualizado
+deactivate ASI
+
+CU --> VSA: confirmarCambio()
+deactivate CU
+
+VSA -> VSA: actualizarFilaTabla()
+VSA --> A: mostrarEstadoActualizado()
+deactivate VSA
+
+@enduml

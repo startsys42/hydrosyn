@@ -1,0 +1,16 @@
+@startuml
+left to right direction
+
+actor Propietario
+
+package "Gestión de Tanques" {
+  usecase "Crear Tanque (UC-023)" as UC023
+  usecase "Renombrar Tanque (UC-024)" as UC024
+  usecase "Eliminar Tanque (UC-025)" as UC025
+}
+
+Propietario --> UC023
+Propietario --> UC024
+Propietario --> UC025
+
+@enduml

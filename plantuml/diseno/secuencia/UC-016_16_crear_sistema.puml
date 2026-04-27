@@ -1,0 +1,46 @@
+@startuml
+title UC-016 crear sistema
+!include ../../common.puml
+
+actor P 
+boundary VS
+control CS
+entity S
+
+P -> VS: solicitarCreacionSistema()
+
+VS -> P: mostrarFormulario()
+P -> VS: Completa formulario (nombre, código) y clic en "Crear"
+VS -> VS: validarCampos(nombre, código)
+alt campos inválidos
+    VS --> P: mostrarErroresValidacion()
+else campos válidos
+    VS -> CS: solicitarCreacionSistema(nombre, código)
+    activate CS
+
+    CS -> S: verificarDisponibilidad(nombre, código)
+    activate S
+    S --> CS: nombre_o_codigo_repetido
+    deactivate S
+
+    alt duplicado detectado
+        CS --> VS: error()
+        VS --> P: Mostrar error de duplicidad
+        deactivate CS
+    else sin duplicados
+        CS -> S: insertarSistema(nombre, código)
+        activate S
+    
+        S --> CS: ok
+        deactivate S
+
+        CS --> VS: confirmarCreacion()
+        deactivate CS
+
+        VS -> VS: redireccionarSistema()
+        VS --> P: Redirige al detalle del nuevo sistema
+    end
+end
+
+
+@enduml

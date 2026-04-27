@@ -1,0 +1,56 @@
+@startuml
+
+
+' Estilo de carpetas (packages)
+skinparam style strictuml
+skinparam packageStyle folder
+skinparam monochrome true
+skinparam shadowing false
+
+package "Hydrosyn" as Hydrosyn {
+
+package "Gestión de Autenticación" as auth {
+}
+
+package "Gestión de Usuarios " as users {
+}
+
+package "Gestión de Sistemas " as systems {
+}
+
+package "Gestión de ESP32 " as esp32 {
+}
+
+package "Gestión de Tanques " as tanks {
+}
+
+package "Gestión de Bombas " as pumps {
+}
+
+package "Gestión de Luces " as lights {
+}
+
+package "Gestión de Registros " as logs {
+}
+
+' --- RELACIONES ---
+
+' Autenticación es la base para Usuarios
+auth ..> users  
+
+' Los Sistemas vinculan Usuarios con Hardware
+
+esp32 ..> systems 
+
+' El hardware depende del controlador ESP32
+tanks ..> esp32
+pumps ..> esp32
+lights ..> esp32
+
+
+
+logs ..> systems 
+
+}
+
+@enduml
