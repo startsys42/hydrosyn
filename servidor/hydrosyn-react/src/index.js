@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { ThemeProvider } from './utils/ThemeContext';
+//import { ThemeProvider } from './utils/ThemeContext';
 import { LanguageProvider, useLanguage } from './utils/LanguageContext';
 import { AdminProvider } from './utils/AdminContext';
 import { BrowserRouter as Router } from 'react-router-dom';
