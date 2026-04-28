@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
-import '../styles/theme.css';
+//import '../styles/theme.css';
 import { Container, Box, Typography, TextField, Button, Stack, CircularProgress, Alert } from '@mui/material';
 
 
