@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
 //import '../styles/theme.css';
-import { Container, Box, Typography, TextField, Button, Stack } from '@mui/material';
+import { Container, Paper, Box, Typography, TextField, Button, Stack, CircularProgress, Alert } from '@mui/material';
 
 export default function RecoverPassword() {
     const t = useTexts();
