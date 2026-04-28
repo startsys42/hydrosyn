@@ -13,7 +13,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs from 'dayjs';
-//import '../../styles/theme.css';
+//import '../../styles/themeo.css';
 
 export default function ListProgrammingLights({ lightList, programmingList, refresh, error, setError, userRole }) {
     const texts = useTexts();

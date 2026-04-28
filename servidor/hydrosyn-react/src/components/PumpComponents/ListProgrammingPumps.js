@@ -9,7 +9,7 @@ import { Delete as DeleteIcon } from "@mui/icons-material";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import useTexts from "../../utils/UseTexts";
-//import '../../styles/theme.css';
+//import '../../styles/themeo.css';
 import { Edit as EditIcon } from "@mui/icons-material";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';

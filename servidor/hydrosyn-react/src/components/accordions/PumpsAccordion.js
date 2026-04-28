@@ -13,7 +13,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-//import '../../styles/theme.css';
+//import '../../styles/themeo.css';
 import CreatePump from '../PumpComponents/CreatePump';
 import UpdatePump from '../PumpComponents/UpdatePump';
 import DeletePump from '../PumpComponents/DeletePump';

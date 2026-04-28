@@ -6,7 +6,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-//import '../../styles/theme.css';
+//import '../../styles/themeo.css';
 import { supabase } from "../../utils/supabaseClient";
 import { useState, useEffect } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
