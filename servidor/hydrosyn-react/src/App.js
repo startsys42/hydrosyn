@@ -28,7 +28,7 @@ import CreateSystem from './components/CreateSystem';
 import { RoleSystemProvider } from './utils/RoleSystemContext';
 import { SystemRouteWrapper } from "./utils/SystemRouteWrapper";
 import { Box } from '@mui/material';
-import assets from './assets';
+import bgImage from './assets/hydrosyn.png';
 
 
 function App() {
@@ -41,28 +41,9 @@ function App() {
     const [loadingAuth, setLoadingAuth] = useState(true);
     const [isMember, setIsMember] = useState(false);
 
-    const location = useLocation();
 
-    useEffect(() => {
 
-        const publicRoutes = ['/', '/recover-password'];
-        const isPublicRoute = publicRoutes.includes(location.pathname);
 
-        // Mostrar imagen SOLO si es ruta pública Y no hay usuario
-        const showBg = isPublicRoute && !user;
-
-        if (showBg) {
-            document.body.classList.add('has-bg');
-            document.body.classList.remove('no-bg');
-        } else {
-            document.body.classList.remove('has-bg');
-            document.body.classList.add('no-bg');
-        }
-
-        return () => {
-            document.body.classList.remove('has-bg', 'no-bg');
-        };
-    }, [location, user]);
 
     useEffect(() => {
         const checkMembership = async () => {
@@ -141,7 +122,7 @@ function App() {
     return (
         <Box
             sx={{
-                backgroundImage: `url(${assets / hydrosyn.png})`,
+                backgroundImage: `url(${bgImage})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
