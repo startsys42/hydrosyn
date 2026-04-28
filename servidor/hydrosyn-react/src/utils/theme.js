@@ -44,15 +44,15 @@ export const darkTheme = createTheme({
                 root: {
                     // 1. Borde normal -> BLANCO/GRIS CLARO (para que se vea en fondo oscuro)
                     '& .MuiOutlinedInput-notchedOutline': {
-                        borderColor: 'rgba(255, 255, 255, 0.5)',
+                        borderColor: 'rgb(255, 255, 255)',
                     },
                     // 2. Borde al pasar el ratón (hover) -> MORADO
                     '&:hover .MuiOutlinedInput-notchedOutline': {
-                        borderColor: '#6402c0',
+                        borderColor: '#ffffff',
                     },
                     // 3. Borde al hacer clic (focus) -> MORADO
                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderColor: '#6402c0',
+                        borderColor: '#ffffff',
                     },
                 },
             },
