@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
 import '../styles/theme.css';
-
+import { Container, Box, Typography, TextField, Button, Stack, CircularProgress, Alert } from '@mui/material';
 
 
 
@@ -92,6 +92,7 @@ export default function Login() {
 
 
     return (
+        /*
         <div className="div-main">
             <h1>{t.login}</h1>
 
@@ -133,5 +134,73 @@ export default function Login() {
             {error && <p style={{ color: 'red' }}>Error</p>}
 
         </div>
+
+        */
+        <Container maxWidth="sm">
+            <Box
+                sx={{
+                    mt: 8,          // margin-top: theme.spacing(8)
+                    mb: 4,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+            >
+                <Typography variant="h4" component="h1" gutterBottom>
+                    {t.login}
+                </Typography>
+
+                <Box component="form" onSubmit={handleLogin} sx={{ mt: 2, width: '100%' }}>
+                    <TextField
+                        fullWidth
+                        margin="normal"
+                        label={t.email}
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder={t.email}
+                        required
+                        disabled={loading}
+                    />
+
+                    <TextField
+                        fullWidth
+                        margin="normal"
+                        label={t.password}
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder={t.password}
+                        required
+                        disabled={loading}
+                    />
+
+                    <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            disabled={loading}
+                            fullWidth
+                        >
+                            {loading ? <CircularProgress size={24} /> : t.login}
+                        </Button>
+
+                        <Button
+                            variant="outlined"
+                            onClick={() => navigate('/recover-password')}
+                            fullWidth
+                        >
+                            {t.recoverPassword}
+                        </Button>
+                    </Stack>
+
+                    {error && (
+                        <Alert severity="error" sx={{ mt: 2 }}>
+                            {error}
+                        </Alert>
+                    )}
+                </Box>
+            </Box>
+        </Container>
     );
 }
