@@ -1,17 +1,17 @@
 import React from 'react';
-import { useThemeMode } from '../utils/ThemeContext';   // ← cambiar import
+import { useThemeMode } from '../utils/ThemeContext';
 import { useLanguage } from '../utils/LanguageContext';
 import useTexts from '../utils/UseTexts';
 
 export default function Topbar() {
-    const { mode, toggleTheme } = useThemeMode();      // ← cambiar a mode
+    const { mode, toggleTheme } = useThemeMode();
     const { language, changeLanguage } = useLanguage();
     const t = useTexts();
 
     return (
         <div className="topbar">
             <button onClick={toggleTheme}>
-                {mode === 'light' ? t.dark : t.light}   // ← usar mode
+                {mode === 'light' ? t.dark : t.light}
             </button>
 
             <select
