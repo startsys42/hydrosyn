@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material';
+import { CssBaseline } from '@mui/material';
 import { esES, enUS } from '@mui/x-data-grid/locales';
 import { lightTheme, darkTheme } from './theme';
 
@@ -27,7 +28,7 @@ export const ThemeProvider = ({ children, language = 'es' }) => {
 
     return (
         <ThemeContext.Provider value={{ mode, toggleTheme }}>
-            <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>
+            <MuiThemeProvider theme={theme}><CssBaseline />{children}</MuiThemeProvider>
         </ThemeContext.Provider>
     );
 };
