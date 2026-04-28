@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import useTexts from '../utils/UseTexts';
-//import '../styles/theme.css';
+//import '../styles/themeo.css';
 
 import { Container, Box, Typography, Button } from '@mui/material';
 

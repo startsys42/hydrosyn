@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
-//import '../styles/theme.css';
+//import '../styles/themeo.css';
 import { useAdminStatus } from '../utils/AdminContext';
 import { useOwnerStatus } from '../utils/OwnerContext';
 import { useNavigate } from 'react-router-dom';

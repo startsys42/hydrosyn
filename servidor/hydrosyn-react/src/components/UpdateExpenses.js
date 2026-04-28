@@ -4,7 +4,7 @@ import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
 import { TextField, Button, Autocomplete, Box, CircularProgress } from '@mui/material';
 import dayjs from 'dayjs';
-//import '../styles/theme.css';
+//import '../styles/themeo.css';
 
 export default function UpdateExpense() {
     const t = useTexts();

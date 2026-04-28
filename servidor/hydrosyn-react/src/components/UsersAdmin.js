@@ -1,4 +1,4 @@
-//import '../styles/theme.css';
+//import '../styles/themeo.css';
 import { useNavigate } from 'react-router-dom';
 import useTexts from '../utils/UseTexts';
 
