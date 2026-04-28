@@ -115,7 +115,7 @@ export default function RecoverPassword() {
                         <Button type="submit" variant="contained" disabled={loading} fullWidth>
                             {loading ? t.sending : t?.recoverPassword}
                         </Button>
-                        <Button variant="outlined" onClick={() => navigate('/')} fullWidth>
+                        <Button variant="contained" onClick={() => navigate('/')} fullWidth>
                             {t?.backToLogin}
                         </Button>
                     </Stack>

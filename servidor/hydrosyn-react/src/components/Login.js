@@ -186,7 +186,7 @@ export default function Login() {
                         </Button>
 
                         <Button
-                            variant="outlined"
+                            variant="contained"
                             onClick={() => navigate('/recover-password')}
                             fullWidth
                         >
