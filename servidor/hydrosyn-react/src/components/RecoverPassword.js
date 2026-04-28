@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
-import '../styles/theme.css';
+//import '../styles/theme.css';
+import { Container, Box, Typography, TextField, Button, Stack } from '@mui/material';
 
 export default function RecoverPassword() {
     const t = useTexts();
@@ -46,6 +47,7 @@ export default function RecoverPassword() {
     };
 
     return (
+        /*
         <div className="div-main">
             <h1>{t?.recoverPassword}</h1>
 
@@ -76,8 +78,58 @@ export default function RecoverPassword() {
 
             </form>
             {message && <div className="success-message" style={{ color: 'green', marginTop: '10px' }}>{t.messageRecover}</div>}
-            {/* {error && <p style={{ color: 'red' }}>Error</p>} */}
+            {/* {error && <p style={{ color: 'red' }}>Error</p>} */
+        /*}
 
         </div>
+        */
+
+        <Container maxWidth="sm">
+            <Box
+                sx={{
+                    mt: 8,
+                    mb: 4,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+            >
+                <Typography variant="h4" component="h1" gutterBottom>
+                    {t?.recoverPassword}
+                </Typography>
+
+                <Box component="form" onSubmit={handleRecover} sx={{ mt: 2, width: '100%' }}>
+                    <TextField
+                        fullWidth
+                        margin="normal"
+                        label={t?.email}
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder={t?.email}
+                        required
+                        disabled={loading}
+                    />
+
+                    <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
+                        <Button type="submit" variant="contained" disabled={loading} fullWidth>
+                            {loading ? t.sending : t?.recoverPassword}
+                        </Button>
+                        <Button variant="outlined" onClick={() => navigate('/')} fullWidth>
+                            {t?.backToLogin}
+                        </Button>
+                    </Stack>
+                </Box>
+
+                {message && (
+                    <div style={{ color: 'green', marginTop: '10px' }}>
+                        {t.messageRecover}
+                    </div>
+                )}
+
+                {/* Error sigue comentado exactamente como en el original */}
+                {/* {error && <p style={{ color: 'red' }}>Error</p>} */}
+            </Box>
+        </Container>
     );
 }
