@@ -7,7 +7,7 @@ import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
 
-import '../../styles/theme.css';
+//import '../../styles/theme.css';
 
 export default function CreatePump({ systemId, pumpList, refresh, error, setError }) {
 

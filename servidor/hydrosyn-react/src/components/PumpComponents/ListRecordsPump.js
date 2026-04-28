@@ -1,5 +1,5 @@
 
-import '../../styles/theme.css';
+//import '../../styles/theme.css';
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../utils/supabaseClient';
 import useTexts from '../../utils/UseTexts';

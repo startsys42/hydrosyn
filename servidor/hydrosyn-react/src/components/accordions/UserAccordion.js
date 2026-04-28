@@ -6,7 +6,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import '../../styles/theme.css';
+//import '../../styles/theme.css';
 import { DataGrid } from '@mui/x-data-grid';
 import { useState, useEffect } from 'react';
 import { supabase } from '../../utils/supabaseClient';

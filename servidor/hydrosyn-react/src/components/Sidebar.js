@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAdminStatus } from '../utils/AdminContext';
 import useTexts from '../utils/UseTexts';
-import '../styles/theme.css';
+//import '../styles/theme.css';
 import { Link } from 'react-router-dom';
 import { supabase } from '../utils/supabaseClient';
 import { useNavigate } from 'react-router-dom';

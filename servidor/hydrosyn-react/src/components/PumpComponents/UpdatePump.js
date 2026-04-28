@@ -6,7 +6,7 @@ import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import '../../styles/theme.css';
+//import '../../styles/theme.css';
 
 
 

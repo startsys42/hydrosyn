@@ -7,7 +7,7 @@ import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
-import '../../styles/theme.css';
+//import '../../styles/theme.css';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from "@mui/material";
 
 

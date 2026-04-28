@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../utils/supabaseClient';
-import '../styles/theme.css';
+//import '../styles/theme.css';
 import useTexts from '../utils/UseTexts';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';

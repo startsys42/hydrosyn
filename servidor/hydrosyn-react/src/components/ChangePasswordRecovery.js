@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../utils/supabaseClient';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import useTexts from '../utils/UseTexts';
-import '../styles/theme.css';
+//import '../styles/theme.css';
 import { useLocation } from 'react-router-dom';
 
 export default function ChangePasswordRecovery() {

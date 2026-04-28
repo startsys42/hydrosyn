@@ -6,7 +6,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
-import '../../styles/theme.css';
+//import '../../styles/theme.css';
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
