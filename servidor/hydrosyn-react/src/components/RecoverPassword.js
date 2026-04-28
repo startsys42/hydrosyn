@@ -89,7 +89,7 @@ export default function RecoverPassword() {
                 sx={{
                     mt: 8,
                     p: 4,
-                    mb: 4,
+                    //  mb: 4,
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
