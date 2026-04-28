@@ -27,6 +27,9 @@ import System from './components/System';
 import CreateSystem from './components/CreateSystem';
 import { RoleSystemProvider } from './utils/RoleSystemContext';
 import { SystemRouteWrapper } from "./utils/SystemRouteWrapper";
+import { Box } from '@mui/material';
+import assets from './assets';
+
 
 function App() {
     const { mode, toggleTheme } = useThemeMode();
