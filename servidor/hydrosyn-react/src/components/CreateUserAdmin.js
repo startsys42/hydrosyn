@@ -1,4 +1,4 @@
-import '../styles/theme.css';
+//import '../styles/themeo.css';
 
 import { useState } from 'react';
 import { supabase } from '../utils/supabaseClient';
