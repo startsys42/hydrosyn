@@ -52,7 +52,7 @@ export const darkTheme = createTheme({
                     },
                     // 3. Borde al hacer clic (focus) -> MORADO
                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderColor: '#ffffff',
+                        borderColor: '#6402c0',
                     },
                 },
             },

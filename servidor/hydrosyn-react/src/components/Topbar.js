@@ -13,7 +13,7 @@ export default function Topbar() {
 
     return (
         // AppBar es el contenedor clásico para barras de navegación en MUI
-        <AppBar position="static" color="default" elevation={1}>
+        <AppBar position="static" color="transparent" elevation={0}>
             <Toolbar>
 
                 {/* Este Box vacío con flexGrow empuja los botones hacia la derecha. 
