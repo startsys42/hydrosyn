@@ -136,7 +136,17 @@ function App() {
     }, []);
 
     return (
-        <div>
+        <Box
+            sx={{
+                backgroundImage: `url(${assets / hydrosyn.png})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                backgroundAttachment: 'fixed', // <-- CLAVE: Esto hace que el fondo no se mueva al hacer scroll
+                minHeight: '100vh',
+                width: '100%',
+            }}
+        >
             <Routes>
                 <Route element={<PublicLayout />}>
                     <Route
@@ -259,7 +269,7 @@ function App() {
                     />
                 </Route>
             </Routes>
-        </div>
+        </Box>
     );
 }
 
