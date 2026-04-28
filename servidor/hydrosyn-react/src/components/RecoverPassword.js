@@ -85,7 +85,7 @@ export default function RecoverPassword() {
         */
 
         <Container maxWidth="sm">
-            <Box
+            <Paper
                 sx={{
                     mt: 8,
                     mb: 4,
@@ -129,7 +129,7 @@ export default function RecoverPassword() {
 
                 {/* Error sigue comentado exactamente como en el original */}
                 {/* {error && <p style={{ color: 'red' }}>Error</p>} */}
-            </Box>
+            </Paper>
         </Container>
     );
 }

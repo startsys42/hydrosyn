@@ -137,15 +137,15 @@ export default function Login() {
 
         */
         <Container maxWidth="sm">
-            <Box
+            <Paper
+                elevation={3}
                 sx={{
-                    mt: 8,          // margin-top: theme.spacing(8)
-                    mb: 4,
+                    mt: 8,
+                    p: 4,
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center',
-                }}
-            >
+                    alignItems: 'center'
+                }}>
                 <Typography variant="h4" component="h1" gutterBottom>
                     {t.login}
                 </Typography>
@@ -200,7 +200,8 @@ export default function Login() {
                         </Alert>
                     )}
                 </Box>
-            </Box>
+
+            </Paper>
         </Container>
     );
 }
