@@ -144,7 +144,8 @@ export default function Login() {
                     p: 4,
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center'
+                    alignItems: 'center',
+                    minHeight: 400,
                 }}>
                 <Typography variant="h4" component="h1" gutterBottom>
                     {t.login}

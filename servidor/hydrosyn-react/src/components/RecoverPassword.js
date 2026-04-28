@@ -88,10 +88,12 @@ export default function RecoverPassword() {
             <Paper
                 sx={{
                     mt: 8,
+                    p: 4,
                     mb: 4,
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
+                    minHeight: 400,
                 }}
             >
                 <Typography variant="h4" component="h1" gutterBottom>
