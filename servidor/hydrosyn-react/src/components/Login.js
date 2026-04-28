@@ -152,6 +152,8 @@ export default function Login() {
 
                 <Box component="form" onSubmit={handleLogin} sx={{ mt: 2, width: '100%' }}>
                     <TextField
+                        id="outlined-basic"
+                        variant="outlined"
                         fullWidth
                         margin="normal"
                         label={t.email}
@@ -164,6 +166,8 @@ export default function Login() {
                     />
 
                     <TextField
+                        id="outlined-basic"
+                        variant="outlined"
                         fullWidth
                         margin="normal"
                         label={t.password}

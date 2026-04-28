@@ -100,6 +100,8 @@ export default function RecoverPassword() {
 
                 <Box component="form" onSubmit={handleRecover} sx={{ mt: 2, width: '100%' }}>
                     <TextField
+                        id="outlined-basic"
+                        variant="outlined"
                         fullWidth
                         margin="normal"
                         label={t?.email}
