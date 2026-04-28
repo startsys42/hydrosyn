@@ -98,7 +98,7 @@ const texts = {
 
         dark: 'Modo oscuro',
         light: 'Modo claro',
-        adminManage: 'Gestión de administradores',
+        adminManage: 'Propietarios',
 
 
         profile: 'Perfil de usuario',
@@ -373,7 +373,7 @@ const texts = {
 
         dark: 'Dark mode',
         light: 'Light mode',
-        adminManage: 'Admin management',
+        adminManage: 'Owners',
 
         profile: 'User profile',
         systems: 'Systems',
