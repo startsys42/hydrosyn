@@ -7,6 +7,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
+import { Box, TextField, Button, Alert, MenuItem } from "@mui/material";
+
 
 
 export default function CreateLight({ systemId, lightList, refresh, error, setError }) {
@@ -185,6 +187,99 @@ export default function CreateLight({ systemId, lightList, refresh, error, setEr
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6" component="h3">
+                    {texts.addLight || "Agregar Luz"}
+                </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <Box
+                    component="form"
+                    onSubmit={handleCreateLight}
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                        maxWidth: 400,
+                        width: '100%'
+                    }}
+                >
+
+                    <TextField
+                        label={texts.nameLight}
+                        placeholder={texts.nameLight}
+                        variant="outlined"
+                        value={lightName}
+                        onChange={(e) => setLightName(e.target.value)}
+                        required
+                        fullWidth
+                        inputProps={{
+                            minLength: 3,
+                            maxLength: 30
+                        }}
+                    />
+
+
+                    <TextField
+                        select
+                        label={texts.esp32 || "ESP32"}
+                        value={esp32Id}
+                        onChange={(e) => setEsp32Id(e.target.value)}
+                        required
+                        fullWidth
+                        variant="outlined"
+                    >
+                        <MenuItem value="" disabled>
+                            {texts.selectESP32}
+                        </MenuItem>
+                        {esp32List.map((esp) => (
+                            <MenuItem key={esp.id} value={esp.id}>
+                                {esp.name}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+
+
+                    <TextField
+                        select
+                        label={texts.GPIO}
+                        value={gpio}
+                        onChange={(e) => setGpio(e.target.value)}
+                        required
+                        fullWidth
+                        variant="outlined"
+                    >
+                        <MenuItem value="" disabled>
+                            {texts.selectGPIO}
+                        </MenuItem>
+                        {availableGpios.map((pin) => (
+                            <MenuItem key={pin} value={pin}>
+                                {pin}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={loading}
+                    >
+                        {loading ? (texts.creating || "Creando...") : (texts.addLight || "Agregar Luz")}
+                    </Button>
+
+
+                    {error && (
+                        <Alert severity="error">
+                            {texts[error] || error}
+                        </Alert>
+                    )}
+                </Box>
+            </AccordionDetails>
+        </Accordion>
+        /*
+        <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <h3>{texts.addLight || "Agregar Luz"}</h3>
             </AccordionSummary>
             <AccordionDetails>
@@ -237,5 +332,6 @@ export default function CreateLight({ systemId, lightList, refresh, error, setEr
                 {error && <p style={{ color: 'red' }}>{texts[error] || error}</p>}
             </AccordionDetails>
         </Accordion>
+        */
     );
 }

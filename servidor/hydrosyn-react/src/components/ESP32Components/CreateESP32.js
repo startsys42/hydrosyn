@@ -6,7 +6,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
-import { Box, TextField, Button, Alert } from "@mui/material";
+import { Box, TextField, Button, Alert, Typography } from "@mui/material";
+
 
 
 
