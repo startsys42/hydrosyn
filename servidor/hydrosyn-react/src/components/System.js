@@ -212,63 +212,63 @@ export default function System() {
             <h1>{texts.system}: {system.name}</h1>
 
             */
-            {/*}
-            <label htmlFor="options">{texts.options}</label>
-            <br />
-            <br />
-            <select id="options" value={selected} onChange={handleChange}>
-                <option value="">--  --</option>
-                {options.map(opt => (
-                    <option key={opt.value} value={opt.value}>{opt.label}</option>
-                ))}
-            </select>
+        /*
+        <label htmlFor="options">{texts.options}</label>
+        <br />
+        <br />
+        <select id="options" value={selected} onChange={handleChange}>
+            <option value="">--  --</option>
+            {options.map(opt => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+        </select>
 
-            {selected === "tanks" && role === "owner" && <TanksAccordion systemId={systemId} />}
-            {selected === "notifications" && role === "owner" && <NotificationsAccordion systemId={systemId} />}
-            {selected === "users" && role === "owner" && <UserAccordion systemId={systemId} />}
-            {selected === "esp32" && role === "owner" && <ESP32Accordion systemId={systemId} />}
-            {selected === "pumps" && <PumpsAccordion systemId={systemId} />}
-            {selected === "settings" && role === "owner" && <SettingsAccordion systemId={systemId} />}
-            {selected === "records" && <RecordsAccordion systemId={systemId} />}
-
-
-
-*/}
-    /*
-            <div className="tabs-container">
-                <Tabs
-                    value={selectedTab}
-                    onChange={handleTabChange}
-                    variant="scrollable"
-                    scrollButtons="auto"
-                    allowScrollButtonsMobile
-
-
-                >
-                    {tabs.map((tab, index) => (
-                        <Tab
-                            key={tab.value}
-                            icon={tab.icon}
-                            label={tab.label}
-                            iconPosition="start"
-
-                        />
-                    ))}
-                </Tabs>
-
-            </div>
-
-
-            <div className="tab-content-container">
-                {renderTabContent()}
-            </div>
+        {selected === "tanks" && role === "owner" && <TanksAccordion systemId={systemId} />}
+        {selected === "notifications" && role === "owner" && <NotificationsAccordion systemId={systemId} />}
+        {selected === "users" && role === "owner" && <UserAccordion systemId={systemId} />}
+        {selected === "esp32" && role === "owner" && <ESP32Accordion systemId={systemId} />}
+        {selected === "pumps" && <PumpsAccordion systemId={systemId} />}
+        {selected === "settings" && role === "owner" && <SettingsAccordion systemId={systemId} />}
+        {selected === "records" && <RecordsAccordion systemId={systemId} />}
 
 
 
-
-
-
-        </div>
-        */
+    */
+        /*
+               <div className="tabs-container">
+                   <Tabs
+                       value={selectedTab}
+                       onChange={handleTabChange}
+                       variant="scrollable"
+                       scrollButtons="auto"
+                       allowScrollButtonsMobile
+   
+   
+                   >
+                       {tabs.map((tab, index) => (
+                           <Tab
+                               key={tab.value}
+                               icon={tab.icon}
+                               label={tab.label}
+                               iconPosition="start"
+   
+                           />
+                       ))}
+                   </Tabs>
+   
+               </div>
+   
+   
+               <div className="tab-content-container">
+                   {renderTabContent()}
+               </div>
+   
+   
+   
+   
+   
+   
+           </div>
+           */
     );
 }
