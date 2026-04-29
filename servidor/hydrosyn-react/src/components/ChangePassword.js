@@ -134,11 +134,11 @@ export default function ChangePassword() {
                         fullWidth
                         margin="normal"
 
-                        label={texts.confirmPassword}
+                        label={texts.newPassword}
                         type="password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        placeholder={texts.confirmPassword}
+                        placeholder={texts.newPassword}
                         required
                         disabled={loading}
                         inputProps={{ minLength: 10 }}
