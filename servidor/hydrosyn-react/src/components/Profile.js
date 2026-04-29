@@ -32,7 +32,7 @@ export default function Profile() {
                     alignItems: 'center',
                     width: '100%',
                     minHeight: 400,
-                    justifyContent: 'center'
+
                 }}
             >
                 <Typography variant="h4" component="h1" gutterBottom align="center">
