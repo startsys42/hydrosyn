@@ -22,39 +22,46 @@ export default function Profile() {
             </button>
         </div>
         */
-
         <Container maxWidth="sm">
-            <Box
+            <Paper
+                elevation={3}
                 sx={{
                     mt: 8,
+                    p: 4,
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    gap: 2, // espacio entre elementos (alternativa a Stack)
+                    width: '100%',
+                    minHeight: 400,
+                    justifyContent: 'center'
                 }}
             >
-                <Typography variant="h4" component="h1" gutterBottom>
+                <Typography variant="h4" component="h1" gutterBottom align="center">
                     {texts.profile}
                 </Typography>
 
-                <Button
-                    variant="contained"
-                    fullWidth
-                    onClick={() => navigate('/change-password')}
-                    sx={{ py: 1.2 }}
-                >
-                    {texts.changePassword}
-                </Button>
 
-                <Button
-                    variant="contained"
-                    fullWidth
-                    onClick={() => navigate('/change-email')}
-                    sx={{ py: 1.2 }}
-                >
-                    {texts.changeEmail}
-                </Button>
-            </Box>
+                <Stack spacing={3} sx={{ mt: 4, width: '100%' }}>
+                    <Button
+                        variant="contained"
+                        fullWidth
+                        size="large"
+                        onClick={() => navigate('/change-password')}
+                    >
+                        {texts.changePassword}
+                    </Button>
+
+                    <Button
+                        variant="contained"
+                        fullWidth
+                        size="large"
+                        onClick={() => navigate('/change-email')}
+                    >
+                        {texts.changeEmail}
+                    </Button>
+                </Stack>
+
+            </Paper>
         </Container>
     );
 }
