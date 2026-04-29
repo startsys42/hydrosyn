@@ -86,6 +86,7 @@ export default function RecoverPassword() {
 
         <Container maxWidth="sm">
             <Paper
+                elevation={3}
                 sx={{
                     mt: 8,
                     p: 4,

@@ -92,6 +92,98 @@ export default function ChangePassword() {
     };
 
     return (
+
+        <Container maxWidth="sm">
+            <Paper
+                elevation={3} // Misma sombra
+                sx={{
+                    mt: 8,
+                    p: 4,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    width: '100%',
+                    minHeight: 400,
+                    justifyContent: 'center'
+                }}
+            >
+                <Typography variant="h4" component="h1" gutterBottom align="center">
+                    {texts.changePassword}
+                </Typography>
+
+                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2, width: '100%' }}>
+
+                    <TextField
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        label={texts.newPassword}
+                        type="password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        placeholder={texts.newPassword}
+                        required
+                        disabled={loading}
+
+                        inputProps={{ minLength: 10 }}
+                    />
+
+                    <TextField
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+
+                        label={texts.newPassword}
+                        type="password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder={texts.newPassword}
+                        required
+                        disabled={loading}
+                        inputProps={{ minLength: 10 }}
+                    />
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        fullWidth
+                        disabled={loading}
+                        sx={{ mt: 3, mb: 2 }}
+                    >
+                        {loading ? <CircularProgress size={24} /> : texts.changePassword}
+                    </Button>
+
+
+                    <Box sx={{ minHeight: 60, width: '100%' }}>
+
+                        {messageKey === 'noEquals' && (
+                            <Alert severity="error">
+                                {texts[messageKey]}
+                            </Alert>
+                        )}
+
+
+                        {messageKey === 'messagePassword' && (
+                            <Alert severity="success">
+                                {texts[messageKey]}
+                            </Alert>
+                        )}
+
+                        {/* (Opcional) Si en tu JS tienes un catch(error) que setea un message.text */}
+                        {/* {message.text && (
+                            <Alert severity={message.type === 'error' ? 'error' : 'info'}>
+                                {message.text}
+                            </Alert>
+                        )} */}
+
+                    </Box>
+
+                </Box>
+            </Paper>
+        </Container>
+
+
+        /*
         <div className="div-main-login">
             <h1>{texts.changePassword}</h1>
             <form onSubmit={handleSubmit} className="form-container">
@@ -143,5 +235,6 @@ export default function ChangePassword() {
                 )}
             </form>
         </div>
+        */
     );
 }

@@ -1,7 +1,7 @@
 @startuml
 autonumber
 
-actor "ESP32" as E <<device>>
+actor "Temporizador" as E <<device>>
 participant "Firmware ESP32 (Arduino)" as FW
 participant "Cliente HTTP/MQTT" as NET
 participant "Supabase API/RPC" as SB

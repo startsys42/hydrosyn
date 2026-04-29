@@ -4,6 +4,7 @@ import { supabase } from '../utils/supabaseClient';
 //import '../styles/themeo.css';
 import useTexts from '../utils/UseTexts';
 import { useEffect } from 'react';
+import { Container, Paper, Box, Typography, TextField, Button, CircularProgress, Alert } from '@mui/material';
 
 export default function ChangeEmail() {
     const [newEmail, setNewEmail] = useState('');
@@ -64,6 +65,7 @@ export default function ChangeEmail() {
     };
 
     return (
+        /*
         <div className="div-main-login">
             <h1>{texts.changeEmail}</h1>
             <form onSubmit={handleSubmit} className="form-container">
@@ -113,5 +115,91 @@ export default function ChangeEmail() {
                 )}
             </form>
         </div>
+        */
+
+        <Container maxWidth="sm">
+            <Paper
+                elevation={3}
+                sx={{
+                    mt: 8,
+                    p: 4,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    width: '100%',
+                    minHeight: 400,
+                    justifyContent: 'center'
+                }}
+            >
+                <Typography variant="h4" component="h1" gutterBottom align="center">
+                    {texts.changeEmail}
+                </Typography>
+
+                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2, width: '100%' }}>
+
+                    <TextField
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        label={texts.newEmail}
+                        type="email"
+                        value={newEmail}
+                        onChange={(e) => setNewEmail(e.target.value)}
+                        placeholder={texts.newEmail}
+                        required
+                        disabled={loading}
+                    />
+
+                    <TextField
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+
+                        label={texts.confirmEmail}
+                        type="email"
+                        value={confirmEmail}
+                        onChange={(e) => setConfirmEmail(e.target.value)}
+                        placeholder={texts.confirmEmail}
+                        required
+                        disabled={loading}
+                    />
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        fullWidth
+                        disabled={loading}
+                        sx={{ mt: 3, mb: 2 }}
+                    >
+                        {loading ? <CircularProgress size={24} /> : texts.changeEmail}
+                    </Button>
+
+
+                    <Box sx={{ minHeight: 60, width: '100%' }}>
+
+                        {(messageKey === 'noEquals' || messageKey === 'invalidPassword') && (
+                            <Alert severity="error">
+                                {texts[messageKey]}
+                            </Alert>
+                        )}
+
+                        {messageKey === 'messageEmail' && (
+                            <Alert severity="success">
+                                {texts[messageKey]}
+                            </Alert>
+                        )}
+
+                        {/* Error genérico del servidor */}
+                        {message.text && (
+                            <Alert severity={message.type === 'error' ? 'error' : 'info'}>
+                                {message.text}
+                            </Alert>
+                        )}
+
+                    </Box>
+
+                </Box>
+            </Paper>
+        </Container>
     );
 }

@@ -2,7 +2,7 @@
 autonumber
 
 actor "Usuario" as A
-actor "ESP32" as E <<device>>
+actor "Temporizador" as E <<device>>
 participant "InsertPumping (React)" as UI
 participant "Aplicacion (Logica Cliente)" as APP
 participant "Supabase JS Client" as SB

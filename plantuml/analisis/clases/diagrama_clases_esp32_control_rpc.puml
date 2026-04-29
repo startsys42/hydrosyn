@@ -4,7 +4,7 @@ hide empty members
 
 package "Hardware" {
 
-class "ESP32_control" as C_esp32_control {
+class "Hardware" as C_esp32_control {
   -setup()
   -loop()
   -callSupabaseRPC()
