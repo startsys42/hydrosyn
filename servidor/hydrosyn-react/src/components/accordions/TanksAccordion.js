@@ -9,7 +9,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-//import '../../styles/themeo.css';
+
 import DeleteTank from '../TanksComponents/DeleteTank';
 import CreateTank from '../TanksComponents/CreateTank';
 import RenameTank from '../TanksComponents/RenameTank';

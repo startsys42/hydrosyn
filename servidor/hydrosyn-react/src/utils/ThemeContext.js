@@ -21,9 +21,9 @@ export const ThemeProvider = ({ children, language = 'es' }) => {
         setMode((prev) => (prev === 'light' ? 'dark' : 'light'));
     };
 
-    // Base theme según modo claro/oscuro
+
     const baseTheme = mode === 'light' ? lightTheme : darkTheme;
-    // Combina con el locale del data grid según idioma
+
     const theme = createTheme(baseTheme, language === 'es' ? esES : enUS);
 
     return (

@@ -6,7 +6,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
-//import '../../styles/themeo.css';
+
 export default function InsertPumping({ systemId, pumpList, refresh, error, setError }) {
     const texts = useTexts();
     const navigate = useNavigate();

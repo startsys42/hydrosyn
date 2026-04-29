@@ -7,7 +7,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
-//import '../../styles/themeo.css';
+
 
 export default function CreateLight({ systemId, lightList, refresh, error, setError }) {
     const navigate = useNavigate();

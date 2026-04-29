@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { supabase } from '../utils/supabaseClient';
-//import '../styles/themeo.css';
+
 import useTexts from '../utils/UseTexts';
 import { useEffect } from 'react';
 import { Container, Paper, Box, Typography, TextField, Button, CircularProgress, Alert } from '@mui/material';

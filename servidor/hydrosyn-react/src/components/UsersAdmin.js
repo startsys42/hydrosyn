@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import useTexts from '../utils/UseTexts';
 
-// 1. Importamos los componentes de Material UI
+
 import { Container, Paper, Typography, Button, Stack } from '@mui/material';
 
 export default function UsersAdmin() {
@@ -11,7 +11,7 @@ export default function UsersAdmin() {
     return (
         <Container maxWidth="sm">
             <Paper
-                elevation={3} // El mismo nivel de sombra que en las demás pantallas
+                elevation={3}
                 sx={{
                     mt: 8,
                     p: 4,
@@ -19,21 +19,20 @@ export default function UsersAdmin() {
                     flexDirection: 'column',
                     alignItems: 'center',
 
-                    minHeight: 400, // Mantenemos la misma altura para que no de saltos raros al navegar
-                    justifyContent: 'center'
+                    minHeight: 400,
+
                 }}
             >
                 <Typography variant="h4" component="h1" gutterBottom align="center">
                     {t.adminManage}
                 </Typography>
 
-                {/* Stack es perfecto para apilar elementos. 
-                    spacing={3} añade exactamente 24px de separación entre cada botón automáticamente */}
+
                 <Stack spacing={3} sx={{ mt: 4, width: '100%' }}>
                     <Button
                         variant="contained"
                         fullWidth
-                        size="large" // Los hacemos un poco más grandes al ser un menú principal
+                        size="large"
                         onClick={() => navigate('/create-user-admin')}
                     >
                         {t.createAdmin}
@@ -54,7 +53,7 @@ export default function UsersAdmin() {
     );
 }
 
-//import '../styles/themeo.css';
+
 /*
 import { useNavigate } from 'react-router-dom';
 import useTexts from '../utils/UseTexts';

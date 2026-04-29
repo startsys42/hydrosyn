@@ -11,10 +11,10 @@ import { OwnerProvider } from './utils/OwnerContext';
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
-// Componente que conecta el idioma con el tema
+
 function ThemedApp() {
     const { language } = useLanguage();
-    // Opcional: configurar textos del DatePicker según idioma
+
     const datePickerLocaleText = {
         cancelButtonLabel: language === 'es' ? 'Cancelar' : 'Cancel',
         okButtonLabel: language === 'es' ? 'Aceptar' : 'OK',

@@ -1,8 +1,9 @@
-//import '../styles/themeo.css';
+
 
 import { useState } from 'react';
 import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
+import { Container, Paper, Box, Typography, TextField, Button, Stack, CircularProgress, Alert } from '@mui/material';
 
 export default function CreateUserAdmin() {
     const [email, setEmail] = useState('');
@@ -55,6 +56,71 @@ export default function CreateUserAdmin() {
     };
 
     return (
+        <Container maxWidth="sm">
+            <Paper
+                elevation={3}
+                sx={{
+                    mt: 8,
+                    p: 4,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    width: '100%',
+                    minHeight: 400
+
+                }}
+            >
+                <Typography variant="h4" component="h1" gutterBottom align="center">
+                    {texts.createAdmin}
+                </Typography>
+
+                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2, width: '100%' }}>
+
+                    <TextField
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        label={texts.email}
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder={texts.email}
+                        required
+                        disabled={loading}
+                    />
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        fullWidth
+                        disabled={loading}
+                        sx={{ mt: 3, mb: 2 }}
+                    >
+                        {loading ? <CircularProgress size={24} /> : texts.createAdmin}
+                    </Button>
+
+                    <Box sx={{ minHeight: 60, width: '100%' }}>
+
+
+                        {error && (
+                            <Alert severity="error">
+                                {texts[error]}
+                            </Alert>
+                        )}
+
+
+                        {message && (
+                            <Alert severity="success">
+                                {texts[message]}
+                            </Alert>
+                        )}
+
+                    </Box>
+
+                </Box>
+            </Paper>
+        </Container>
+        /*
         <div className='div-main-login'>
             <h1>{texts.createAdmin}</h1>
             <form onSubmit={handleSubmit} className='form-container'>
@@ -76,5 +142,7 @@ export default function CreateUserAdmin() {
             {message && <p style={{ color: 'green' }}>{texts[message]}</p>}
             {error && <p style={{ color: 'red' }}>{texts[error]}</p>}
         </div>
+        */
     );
+
 }

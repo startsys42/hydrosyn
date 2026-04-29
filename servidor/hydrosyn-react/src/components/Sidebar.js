@@ -4,7 +4,7 @@ import useTexts from '../utils/UseTexts';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabaseClient';
 
-// 1. Importamos los componentes de Material UI
+
 import {
     Drawer,
     List,
@@ -17,7 +17,7 @@ import {
     Box
 } from '@mui/material';
 
-// Iconos
+
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -43,40 +43,40 @@ export default function Sidebar() {
 
     if (loading || isAdmin === null) return null;
 
-    // Definimos los anchos de la barra
+
     const drawerWidth = 240;
     const collapsedWidth = 65;
 
     return (
         <Drawer
-            variant="permanent" // Indica que la barra siempre está visible en pantalla
+            variant="permanent"
             sx={{
                 width: collapsed ? collapsedWidth : drawerWidth,
                 flexShrink: 0,
                 whiteSpace: 'nowrap',
-                // Estilos internos del "cajón"
+
                 '& .MuiDrawer-paper': {
                     width: collapsed ? collapsedWidth : drawerWidth,
-                    transition: 'width 0.3s ease', // Animación suave al expandir/contraer
-                    overflowX: 'hidden',           // Oculta el texto al contraer
-                    backgroundColor: 'background.paper', // Usa el color de tu tema
+                    transition: 'width 0.3s ease',
+                    overflowX: 'hidden',
+                    backgroundColor: 'background.paper',
                 },
             }}
         >
-            {/* Botón superior para colapsar/expandir */}
+
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'flex-end', p: 1 }}>
                 <IconButton onClick={() => setCollapsed(!collapsed)}>
                     {collapsed ? <ArrowForwardIcon /> : <ArrowBackIcon />}
                 </IconButton>
             </Box>
 
-            <Divider /> {/* Una línea separadora elegante */}
+            <Divider />
 
-            {/* Lista de enlaces */}
+
             <List>
-                {/* PERFIL */}
+
                 <ListItem disablePadding>
-                    {/* ListItemButton actúa como un Link de React Router automáticamente */}
+
                     <ListItemButton component={Link} to="/profile">
                         <ListItemIcon sx={{ minWidth: 40, justifyContent: 'center' }}>
                             <PersonIcon color="primary" />
@@ -85,7 +85,7 @@ export default function Sidebar() {
                     </ListItemButton>
                 </ListItem>
 
-                {/* SISTEMAS */}
+
                 <ListItem disablePadding>
                     <ListItemButton component={Link} to="/dashboard">
                         <ListItemIcon sx={{ minWidth: 40, justifyContent: 'center' }}>
@@ -95,7 +95,7 @@ export default function Sidebar() {
                     </ListItemButton>
                 </ListItem>
 
-                {/* OPCIONES DE ADMINISTRADOR */}
+
                 {isAdmin && (
                     <>
                         <ListItem disablePadding>
@@ -119,16 +119,15 @@ export default function Sidebar() {
                 )}
             </List>
 
-            {/* Empuja el botón de cerrar sesión hacia abajo del todo (Opcional pero recomendado) */}
+
             <Box sx={{ flexGrow: 1 }} />
             <Divider />
 
-            {/* CERRAR SESIÓN */}
             <List>
                 <ListItem disablePadding>
                     <ListItemButton onClick={handleLogout}>
                         <ListItemIcon sx={{ minWidth: 40, justifyContent: 'center' }}>
-                            <LogoutIcon color="error" /> {/* Color rojo para el icono de salir */}
+                            <LogoutIcon color="error" />
                         </ListItemIcon>
                         {!collapsed && <ListItemText primary={t.logout} sx={{ color: 'error.main' }} />}
                     </ListItemButton>
@@ -145,7 +144,7 @@ export default function Sidebar() {
 import { useState } from 'react';
 import { useAdminStatus } from '../utils/AdminContext';
 import useTexts from '../utils/UseTexts';
-//import '../styles/themeo.css';
+
 import { Link } from 'react-router-dom';
 import { supabase } from '../utils/supabaseClient';
 import { useNavigate } from 'react-router-dom';

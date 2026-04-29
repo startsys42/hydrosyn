@@ -3,7 +3,6 @@ import { useThemeMode } from '../utils/ThemeContext';
 import { useLanguage } from '../utils/LanguageContext';
 import useTexts from '../utils/UseTexts';
 
-// 1. Importamos los componentes necesarios de Material UI
 import { AppBar, Toolbar, Box, Button, Select, MenuItem, FormControl } from '@mui/material';
 
 export default function Topbar() {
@@ -12,25 +11,24 @@ export default function Topbar() {
     const t = useTexts();
 
     return (
-        // AppBar es el contenedor clásico para barras de navegación en MUI
+
         <AppBar position="static" color="transparent" elevation={0}>
             <Toolbar>
 
-                {/* Este Box vacío con flexGrow empuja los botones hacia la derecha. 
-                    Si prefieres que estén a la izquierda, puedes borrar esta línea */}
+
                 <Box sx={{ flexGrow: 1 }} />
 
-                {/* Reemplazo del botón HTML */}
+
                 <Button
                     variant="outlined"
                     color="inherit"
                     onClick={toggleTheme}
-                    sx={{ mr: 2 }} // mr = margin-right (equivale a margin-right: 16px)
+                    sx={{ mr: 2 }}
                 >
                     {mode === 'light' ? t.dark : t.light}
                 </Button>
 
-                {/* Reemplazo del select HTML */}
+
                 <FormControl size="small">
                     <Select
                         value={language}

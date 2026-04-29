@@ -7,7 +7,7 @@ import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-//import '../../styles/themeo.css';
+
 
 export default function UpdateLight({ systemId, lightList, refresh, error, setError }) {
     const texts = useTexts();

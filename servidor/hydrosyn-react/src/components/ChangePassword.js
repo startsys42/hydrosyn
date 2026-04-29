@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../utils/supabaseClient';
-//import '../styles/themeo.css';
+
 import useTexts from '../utils/UseTexts';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -96,7 +96,7 @@ export default function ChangePassword() {
 
         <Container maxWidth="sm">
             <Paper
-                elevation={3} // Misma sombra
+                elevation={3}
                 sx={{
                     mt: 8,
                     p: 4,
@@ -170,12 +170,7 @@ export default function ChangePassword() {
                             </Alert>
                         )}
 
-                        {/* (Opcional) Si en tu JS tienes un catch(error) que setea un message.text */}
-                        {/* {message.text && (
-                            <Alert severity={message.type === 'error' ? 'error' : 'info'}>
-                                {message.text}
-                            </Alert>
-                        )} */}
+
 
                     </Box>
 

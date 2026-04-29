@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import useTexts from '../utils/UseTexts';
-//import '../styles/themeo.css';
+
 import { Container, Paper, Box, Typography, Button, Stack } from '@mui/material';
 
 export default function Profile() {

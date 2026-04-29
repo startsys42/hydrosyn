@@ -126,7 +126,7 @@ function App() {
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
-                backgroundAttachment: 'fixed', // <-- CLAVE: Esto hace que el fondo no se mueva al hacer scroll
+                backgroundAttachment: 'fixed',
                 minHeight: '100vh',
                 width: '100%',
             }}

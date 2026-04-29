@@ -1,4 +1,4 @@
-//import '../styles/themeo.css';
+
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
@@ -13,6 +13,7 @@ import { useLanguage } from '../utils/LanguageContext';
 
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import { Container, Paper, Typography, Stack, Alert } from '@mui/material';
 
 
 dayjs.extend(utc);
@@ -173,6 +174,103 @@ export default function NotificationsAdmin() {
     ];
 
     return (
+
+        <Container maxWidth="lg">
+            <Paper
+                elevation={3}
+                sx={{
+                    mt: 8,
+                    p: 4,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '100%',
+                    minHeight: 400
+                }}
+            >
+                <Typography variant="h4" component="h1" gutterBottom align="center">
+                    {texts.notifications}
+                </Typography>
+
+                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={language}>
+
+                    <Stack
+                        direction={{ xs: 'column', sm: 'row' }}
+                        spacing={2}
+                        sx={{ mt: 2, mb: 3, alignItems: 'center', justifyContent: 'center' }}
+                    >
+                        <DateTimePicker
+                            label={texts.fromDate ?? 'From'}
+                            value={fromDate}
+                            onChange={setFromDate}
+                            renderInput={(params) => <TextField {...params} size="small" />}
+                        />
+
+                        <DateTimePicker
+                            label={texts.toDate ?? 'To'}
+                            value={toDate}
+                            onChange={setToDate}
+                            renderInput={(params) => <TextField {...params} size="small" />}
+                        />
+
+                        <Button
+                            variant="contained"
+                            color="error"
+                            disabled={!fromDate || !toDate}
+                            onClick={() => setOpenDialog(true)}
+                            sx={{ minWidth: 120, height: 40 }}
+                        >
+                            {texts.delete ?? 'Delete'}
+                        </Button>
+                    </Stack>
+                </LocalizationProvider>
+
+
+                <Box sx={{ minHeight: 60, width: '100%' }}>
+                    {error && (
+                        <Alert severity="error">
+                            {error}
+                        </Alert>
+                    )}
+                </Box>
+
+
+                <Box sx={{ height: 500, width: '100%' }}>
+                    <DataGrid
+                        className="datagrid"
+                        rows={attempts.map((a, index) => ({ id: index, ...a }))}
+                        columns={columns}
+                        loading={loading}
+                        pagination
+                        pageSize={pageSize}
+                        onPageSizeChange={setPageSize}
+                        sortingMode="client"
+                        disableSelectionOnClick
+                    />
+                </Box>
+
+            </Paper>
+
+
+            <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+                <DialogTitle>
+                    {texts.confirmation}
+                </DialogTitle>
+                <DialogContent>
+                    {texts.deleteBetweenDates}
+                </DialogContent>
+                <DialogActions>
+
+                    <Button onClick={() => setOpenDialog(false)}>
+                        {texts.no}
+                    </Button>
+                    <Button onClick={handleDelete} variant="contained" color="error" disabled={loading}>
+                        {texts.yes}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </Container>
+
+        /*
         <div className='div-main-login'>
             <h1>{texts.notifications}</h1>
 
@@ -235,6 +333,8 @@ export default function NotificationsAdmin() {
 
             </Dialog>
         </div>
+
+        */
 
 
     );

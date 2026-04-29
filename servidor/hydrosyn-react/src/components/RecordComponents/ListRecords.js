@@ -1,5 +1,5 @@
 
-//import '../../styles/themeo.css';
+
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../utils/supabaseClient';
 import useTexts from '../../utils/UseTexts';
