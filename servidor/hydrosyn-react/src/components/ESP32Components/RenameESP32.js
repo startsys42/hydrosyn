@@ -6,6 +6,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
+import { Box, TextField, Button, Alert, MenuItem, Typography } from "@mui/material";
 
 
 export default function RenameESP32({ systemId, espList, refresh, error, setError }) {
@@ -108,6 +109,80 @@ export default function RenameESP32({ systemId, espList, refresh, error, setErro
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6" component="h3">
+                    {texts.renameESP32}
+                </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <Box
+                    component="form"
+                    onSubmit={handleRename}
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                        maxWidth: 400,
+                        width: '100%'
+                    }}
+                >
+
+                    <TextField
+                        select
+                        id="select-esp32"
+                        label={texts.selectESP32}
+                        value={selectedEsp || ''}
+                        onChange={(e) => setSelectedEsp(e.target.value)}
+                        required
+                        fullWidth
+                        disabled={loading}
+                    >
+                        <MenuItem value="" disabled>
+                            {texts.selectESP32}
+                        </MenuItem>
+                        {espList.map((esp) => (
+                            <MenuItem key={esp.id} value={esp.id}>
+                                {esp.name}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+
+
+                    <TextField
+                        label={texts.newName}
+                        placeholder={texts.newName}
+                        value={newName}
+                        onChange={(e) => setNewName(e.target.value)}
+                        required
+                        fullWidth
+                        disabled={loading}
+                        inputProps={{
+                            minLength: 3,
+                            maxLength: 30
+                        }}
+                    />
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={loading || !selectedEsp || !newName}
+                    >
+                        {loading ? texts.renaming : texts.rename}
+                    </Button>
+
+
+                    {error && (
+                        <Alert severity="error">
+                            {texts[error] || error}
+                        </Alert>
+                    )}
+                </Box>
+            </AccordionDetails>
+        </Accordion>
+
+        /*
+        <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <h3>{texts.renameESP32}</h3>
             </AccordionSummary>
             <AccordionDetails>
@@ -142,5 +217,6 @@ export default function RenameESP32({ systemId, espList, refresh, error, setErro
 
             </AccordionDetails>
         </Accordion>
+        */
     );
 }
