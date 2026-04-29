@@ -152,8 +152,63 @@ export default function System() {
     };
 
     return (
+        <Container maxWidth="lg">
+            <Paper
+                elevation={3}
+                sx={{
+                    mt: 8,
+                    p: 4,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '100%',
+                    minHeight: 400
+                }}
+            >
+
+                <Typography variant="h4" component="h1" gutterBottom align="center">
+                    {texts.system}: {system.name}
+                </Typography>
+
+
+                <Box
+                    sx={{
+                        width: '100%',
+                        borderBottom: 1,
+                        borderColor: 'divider',
+                        mt: 2,
+                        mb: 3
+                    }}
+                >
+                    <Tabs
+                        value={selectedTab}
+                        onChange={handleTabChange}
+                        variant="scrollable"
+                        scrollButtons="auto"
+                        allowScrollButtonsMobile
+                    >
+                        {tabs.map((tab) => (
+                            <Tab
+                                key={tab.value}
+                                icon={tab.icon}
+                                label={tab.label}
+                                iconPosition="start"
+                            />
+                        ))}
+                    </Tabs>
+                </Box>
+
+
+                <Box sx={{ width: '100%', flexGrow: 1 }}>
+                    {renderTabContent()}
+                </Box>
+
+            </Paper>
+        </Container>
+        /*
         <div className='div-main-login'>
             <h1>{texts.system}: {system.name}</h1>
+
+            */
             {/*}
             <label htmlFor="options">{texts.options}</label>
             <br />
@@ -176,6 +231,7 @@ export default function System() {
 
 
 */}
+    /*
             <div className="tabs-container">
                 <Tabs
                     value={selectedTab}
@@ -210,5 +266,6 @@ export default function System() {
 
 
         </div>
+        */
     );
 }
