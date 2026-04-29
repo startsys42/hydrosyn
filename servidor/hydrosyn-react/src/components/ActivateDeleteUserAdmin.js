@@ -6,7 +6,7 @@ import useTexts from '../utils/UseTexts';
 import { Checkbox, Button, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
-
+import { Container, Paper, Box } from '@mui/material';
 
 const ActivateDeleteUserAdmin = () => {
 
