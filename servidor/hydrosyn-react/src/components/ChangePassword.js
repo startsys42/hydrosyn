@@ -4,6 +4,7 @@ import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Container, Paper, Box, Typography, TextField, Button, CircularProgress, Alert } from '@mui/material';
 
 export default function ChangePassword() {
     const [newPassword, setNewPassword] = useState('');
