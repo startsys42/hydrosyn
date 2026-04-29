@@ -44,7 +44,7 @@ export default function Sidebar() {
     if (loading || isAdmin === null) return null;
 
 
-    const drawerWidth = 220;
+    const drawerWidth = 210;
     const collapsedWidth = 65;
 
     return (
