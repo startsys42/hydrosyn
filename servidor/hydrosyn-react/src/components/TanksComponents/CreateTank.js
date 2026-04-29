@@ -131,7 +131,83 @@ export default function CreateTank({ systemId, tankList, refresh, error, setErro
     };
     return (
 
+        <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6" component="h3">
+                    {texts.addTank}
+                </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <Box
+                    component="form"
+                    onSubmit={handleCreateTank}
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                        maxWidth: 400,
+                        width: '100%'
+                    }}
+                >
 
+                    <TextField
+                        label={texts.nameTank}
+                        placeholder={texts.nameTank}
+                        variant="outlined"
+                        value={tankName}
+                        onChange={(e) => setTankName(e.target.value)}
+                        required
+                        fullWidth
+                        inputProps={{
+                            minLength: 3,
+                            maxLength: 30
+                        }}
+                    />
+
+
+                    <TextField
+                        select
+                        label={texts.selectTankType}
+                        value={tankType}
+                        onChange={(e) => setTankType(e.target.value)}
+                        required
+                        fullWidth
+                        variant="outlined"
+                    >
+
+                        <MenuItem value="" disabled>
+                            {texts.selectTankType}
+                        </MenuItem>
+
+                        {/* Las opciones de tu select */}
+                        <MenuItem value="water">{texts.water}</MenuItem>
+                        <MenuItem value="rotifers">{texts.rotifers}</MenuItem>
+                        <MenuItem value="copepods">{texts.copepods}</MenuItem>
+                        <MenuItem value="artemias">{texts.artemias}</MenuItem>
+                        <MenuItem value="microalga">{texts.microalga}</MenuItem>
+                        <MenuItem value="nutrients">{texts.nutrients}</MenuItem>
+                    </TextField>
+
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={loading}
+                    >
+                        {texts.addTank}
+                    </Button>
+
+
+                    {error && (
+                        <Alert severity="error">
+                            {texts[error] || error}
+                        </Alert>
+                    )}
+                </Box>
+            </AccordionDetails>
+        </Accordion>
+        /*
 
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -171,7 +247,7 @@ export default function CreateTank({ systemId, tankList, refresh, error, setErro
                 {error && <p style={{ color: 'red' }}>{texts[error] || error}</p>}
             </AccordionDetails>
         </Accordion>
-
+*/
     );
 
 
