@@ -6,6 +6,7 @@ import useTexts from '../utils/UseTexts';
 import { useEffect } from 'react';
 import { Container, Paper, Box, Typography, TextField, Button, CircularProgress, Alert } from '@mui/material';
 
+
 export default function ChangeEmail() {
     const [newEmail, setNewEmail] = useState('');
     const [confirmEmail, setConfirmEmail] = useState('');
