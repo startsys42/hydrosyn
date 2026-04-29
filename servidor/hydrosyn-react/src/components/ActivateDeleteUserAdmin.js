@@ -174,6 +174,74 @@ const ActivateDeleteUserAdmin = () => {
     if (loading) return <p> </p>;
 
     return (
+        <Container maxWidth="lg">
+            <Paper
+                elevation={3}
+                sx={{
+                    mt: 8,
+                    p: 4,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '100%',
+                    minHeight: 400
+                }}
+            >
+                <Typography variant="h4" component="h1" gutterBottom align="center">
+                    {texts.adminManage}
+                </Typography>
+
+
+                <Box sx={{ height: 500, width: '100%', mt: 2 }}>
+                    <DataGrid
+                        className="datagrid"
+                        rows={users.map(u => ({ id: u.user, email: u.email, is_active: u.is_active }))}
+                        columns={columns}
+                        loading={loading}
+                        pagination
+                        pageSize={pageSize}
+                        onPageSizeChange={setPageSize}
+                        sortingMode="client"
+                        disableSelectionOnClick
+                    />
+                </Box>
+            </Paper>
+
+
+
+
+            <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+                <DialogTitle>{texts.confirmation}</DialogTitle>
+                <DialogContent>
+                    <Typography>
+                        {toggleValue
+                            ? `${texts.deactivateUserQuestion} ${currentUser?.email}?`
+                            : `${texts.activateUser} ${currentUser?.email}?`}
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setConfirmOpen(false)}>{texts.no}</Button>
+
+                    <Button onClick={handleToggleConfirm} variant="contained">{texts.yes}</Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Dialog de Borrar Usuario */}
+            <Dialog open={deleteOpen} onClose={() => setDeleteOpen(false)}>
+                <DialogTitle>{texts.confirmation}</DialogTitle>
+                <DialogContent>
+                    <Typography>
+                        {`${texts.deleteUserQuestion} ${currentUser?.email}? ${texts.actionIrreversible}`}
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setDeleteOpen(false)}>{texts.no}</Button>
+
+                    <Button onClick={handleDeleteConfirm} variant="contained" color="error">{texts.yes}</Button>
+                </DialogActions>
+            </Dialog>
+
+        </Container>
+        /*
         <div className='div-main-login'>
             <h1>{texts.adminManage}</h1>
 
@@ -225,6 +293,7 @@ const ActivateDeleteUserAdmin = () => {
                 </DialogActions>
             </Dialog>
         </div>
+        */
     )
 }
 
