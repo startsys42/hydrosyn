@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import { useLanguage } from "../../utils/LanguageContext";
 import 'dayjs/locale/es';
 import 'dayjs/locale/en';
+import { Box, TextField, Button, Alert, MenuItem, Typography } from "@mui/material";
 
 export default function CreateRecord({ systemId, tankList, refresh, error, setError }) {
 
@@ -173,6 +174,107 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6" component="h3">
+                    {texts.addRecord}
+                </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <Box
+                    component="form"
+                    onSubmit={handleCreateRecord}
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                        maxWidth: 400,
+                        width: '100%'
+                    }}
+                >
+
+                    <TextField
+                        select
+                        label={texts.selectTank}
+                        value={selectedTank}
+                        onChange={(e) => setSelectedTank(e.target.value)}
+                        required
+                        fullWidth
+                        disabled={loading}
+                    >
+                        <MenuItem value="" disabled>
+                            {texts.selectTank}
+                        </MenuItem>
+                        {tankList.map((tank) => (
+                            <MenuItem key={tank.id} value={tank.id}>
+                                {tank.name} ({tank.type})
+                            </MenuItem>
+                        ))}
+                    </TextField>
+
+
+                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={language}>
+                        <DateTimePicker
+                            label={texts.dateOptional}
+                            value={customDate}
+                            onChange={(newValue) => setCustomDate(newValue)}
+                            disabled={loading}
+
+                            slotProps={{ textField: { fullWidth: true } }}
+                        />
+                    </LocalizationProvider>
+
+
+                    <Box sx={{ display: 'flex', gap: 2 }}>
+                        <TextField
+                            type="number"
+                            label={texts.volume}
+                            placeholder="Ej: 100.5"
+                            value={volume}
+                            onChange={(e) => setVolume(e.target.value)}
+                            required
+                            fullWidth
+                            disabled={loading}
+                            inputProps={{
+                                step: "0.001",
+                                min: "0.001",
+                                max: "999.999"
+                            }}
+                        />
+
+                        <TextField
+                            select
+                            label={texts.units}
+                            value={unit}
+                            onChange={(e) => setUnit(e.target.value)}
+                            disabled={loading}
+                            sx={{ width: '120px', flexShrink: 0 }}
+                        >
+                            <MenuItem value="liters">L</MenuItem>
+                            <MenuItem value="mL">mL</MenuItem>
+                        </TextField>
+                    </Box>
+
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={loading}
+                    >
+                        {loading ? texts.creating : texts.addRecord}
+                    </Button>
+
+
+                    {error && (
+                        <Alert severity="error">
+                            {texts[error] || error}
+                        </Alert>
+                    )}
+                </Box>
+            </AccordionDetails>
+        </Accordion>
+        /*
+        <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <h3>{texts.addRecord}</h3>
             </AccordionSummary>
             <AccordionDetails>
@@ -237,6 +339,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
                 {error && <p style={{ color: 'red', marginTop: '10px' }}>{texts[error] || error}</p>}
             </AccordionDetails>
         </Accordion>
+        */
     );
 }
 
