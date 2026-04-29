@@ -155,7 +155,7 @@ export default function System() {
     };
 
     return (
-        <Container maxWidth="lg">
+        <Container maxWidth="xl">
             <Paper
                 elevation={3}
                 sx={{
