@@ -120,7 +120,61 @@ export default function CreateESP32({ systemId, espList, refresh, error, setErro
     };
     return (
 
+        <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
 
+                <Typography variant="h6" component="h3">
+                    {texts.addESP32}
+                </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+
+                <Box
+                    component="form"
+                    onSubmit={handleCreateESP32}
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                        maxWidth: 400,
+                        width: '100%'
+                    }}
+                >
+
+                    <TextField
+                        label={texts.nameESP32}
+                        placeholder={texts.nameESP32}
+                        variant="outlined"
+                        value={ESP32Name}
+                        onChange={(e) => setESP32Name(e.target.value)}
+                        required
+                        fullWidth
+
+                        inputProps={{
+                            minLength: 3,
+                            maxLength: 30
+                        }}
+                    />
+
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                    >
+                        {texts.addESP32}
+                    </Button>
+
+
+                    {error && (
+                        <Alert severity="error">
+                            {texts[error] || error}
+                        </Alert>
+                    )}
+                </Box>
+            </AccordionDetails>
+        </Accordion>
+        /*
 
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -145,6 +199,6 @@ export default function CreateESP32({ systemId, espList, refresh, error, setErro
                 {error && <p style={{ color: 'red' }}>{texts[error] || error}</p>}
             </AccordionDetails>
         </Accordion>
-
+*/
     );
 }
