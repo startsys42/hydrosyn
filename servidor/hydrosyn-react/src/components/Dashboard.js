@@ -163,7 +163,7 @@ export default function Dashboard() {
 
     return (
 
-        <Container maxWidth="lg">
+        <Container maxWidth="xl">
             <Paper
                 elevation={3}
                 sx={{
