@@ -7,6 +7,8 @@ import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { Box, TextField, Button, Alert, MenuItem, Typography } from "@mui/material";
+
 
 
 export default function UpdateLight({ systemId, lightList, refresh, error, setError }) {
@@ -209,6 +211,80 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6" component="h3">
+                    {texts.updateLight || "Actualizar Luz"}
+                </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <Box
+                    component="form"
+                    onSubmit={handleUpdateLight}
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                        maxWidth: 400,
+                        width: '100%'
+                    }}
+                >
+
+                    <TextField
+                        select
+                        id="select-light"
+                        label={texts.selectLight}
+                        value={selectedLight || ''}
+
+                        onChange={(e) => setSelectedLight(Number(e.target.value))}
+                        fullWidth
+                        disabled={loading}
+                    >
+                        <MenuItem value="" disabled>
+                            {texts.selectLight}
+                        </MenuItem>
+                        {lightList.map((l) => (
+                            <MenuItem key={l.id} value={l.id}>
+                                {l.name}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+
+
+                    <TextField
+                        label={texts.newName}
+                        placeholder={texts.newName}
+                        value={newName}
+                        onChange={(e) => setNewName(e.target.value)}
+                        fullWidth
+                        disabled={loading}
+                        inputProps={{
+                            minLength: 3,
+                            maxLength: 30
+                        }}
+                    />
+
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={loading || !selectedLight}
+                    >
+                        {loading ? (texts.updating) : (texts.update)}
+                    </Button>
+
+
+                    {error && (
+                        <Alert severity="error">
+                            {texts[error] || error}
+                        </Alert>
+                    )}
+                </Box>
+            </AccordionDetails>
+        </Accordion>
+
+        /*
+        <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <h3>{texts.updateLight || "Actualizar Luz"}</h3>
             </AccordionSummary>
             <AccordionDetails>
@@ -248,5 +324,7 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
                 {error && <p style={{ color: 'red' }}>{texts[error] || error}</p>}
             </AccordionDetails>
         </Accordion>
+
+        */
     );
 }
