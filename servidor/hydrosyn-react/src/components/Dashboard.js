@@ -160,6 +160,92 @@ export default function Dashboard() {
     ];
 
     return (
+
+        <Container maxWidth="lg">
+            <Paper
+                elevation={3}
+                sx={{
+                    mt: 8,
+                    p: 4,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '100%',
+                    minHeight: 400
+
+                }}
+            >
+                {loading ? (
+
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexGrow: 1 }}>
+                        <CircularProgress />
+                    </Box>
+                ) : (
+                    <>
+
+                        <Typography variant="h4" component="h1" gutterBottom align="center">
+                            {t.welcome}
+                        </Typography>
+
+
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 3, mb: 1 }}>
+
+
+                            <Typography variant="h5" component="h2">
+                                {t.systems}
+                            </Typography>
+
+
+                            {isOwner && (
+                                <Box sx={{ display: 'flex', gap: 2 }}>
+                                    <Button
+                                        variant="outlined"
+                                        onClick={exportData}
+                                    >
+                                        {t.export}
+                                    </Button>
+
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => navigate('/create-system')}
+                                    >
+                                        {t.newSystem}
+                                    </Button>
+                                </Box>
+                            )}
+                        </Box>
+
+
+                        <Box sx={{ minHeight: 60, width: '100%' }}>
+                            {exportError && (
+                                <Alert severity="error">
+                                    {t[exportError]}
+                                </Alert>
+                            )}
+                            {exportSuccess && (
+                                <Alert severity="success">
+                                    {t[exportSuccess]}
+                                </Alert>
+                            )}
+                        </Box>
+
+
+                        <Box sx={{ height: 500, width: '100%' }}>
+                            <DataGrid
+                                className='datagrid'
+                                rows={rows}
+                                columns={columns}
+                                pagination
+                                pageSize={pageSize}
+                                onPageSizeChange={(newSize) => { setPageSize(newSize); setPage(0); }}
+                                sortingMode="client"
+                                disableSelectionOnClick
+                            />
+                        </Box>
+                    </>
+                )}
+            </Paper>
+        </Container>
+        /*
         <div className='div-main-login'>
             {loading ? (
                 <p><CircularProgress /></p>
@@ -212,5 +298,6 @@ export default function Dashboard() {
                 </>
             )}
         </div>
+        */
     );
 }
