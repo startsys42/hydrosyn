@@ -156,11 +156,11 @@ export default function ChangeEmail() {
                         fullWidth
                         margin="normal"
 
-                        label={texts.confirmEmail}
+                        label={texts.newEmail}
                         type="email"
                         value={confirmEmail}
                         onChange={(e) => setConfirmEmail(e.target.value)}
-                        placeholder={texts.confirmEmail}
+                        placeholder={texts.newEmail}
                         required
                         disabled={loading}
                     />
