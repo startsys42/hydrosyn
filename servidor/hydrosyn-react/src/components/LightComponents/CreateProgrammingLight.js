@@ -133,6 +133,90 @@ export default function CreateProgrammingLight({
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6" component="h3">
+                    {texts.createProgrammingLight}
+                </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 1 }}>
+
+                    <FormControl fullWidth disabled={loading}>
+                        <InputLabel id="light-select-label">{texts.selectLight}</InputLabel>
+                        <Select
+                            labelId="light-select-label"
+                            value={formData.light_id}
+                            label={texts.selectLight}
+                            onChange={(e) => setFormData({ ...formData, light_id: e.target.value })}
+                        >
+                            {lightList.map(l => (
+                                <MenuItem key={l.id} value={l.id}>
+                                    {l.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    <FormControl fullWidth disabled={loading}>
+                        <InputLabel id="day-select-label">{texts.days}</InputLabel>
+                        <Select
+                            labelId="day-select-label"
+                            value={formData.day_of_week}
+                            label={texts.days}
+                            onChange={(e) => setFormData({ ...formData, day_of_week: e.target.value })}
+                        >
+                            {DAYS.map(d => (
+                                <MenuItem key={d.value} value={d.value}>
+                                    {d.label}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
+                            <TimePicker
+                                label={texts.startTime}
+                                value={formData.start_time}
+                                onChange={(newValue) => setFormData({ ...formData, start_time: newValue })}
+                                ampm={false}
+                                minutesStep={1}
+                                disabled={loading}
+                                sx={{ flex: 1 }}
+                            />
+                            <TimePicker
+                                label={texts.endTime}
+                                value={formData.end_time}
+                                onChange={(newValue) => setFormData({ ...formData, end_time: newValue })}
+                                ampm={false}
+                                minutesStep={1}
+                                disabled={loading}
+                                sx={{ flex: 1 }}
+                            />
+                        </Stack>
+                    </LocalizationProvider>
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={loading}
+                        fullWidth
+                    >
+                        {loading ? texts.creating : texts.createProgramming}
+                    </Button>
+
+                    {error && (
+                        <Typography color="error" variant="body2" align="center">
+                            {texts[error] || error}
+                        </Typography>
+                    )}
+                </Box>
+            </AccordionDetails>
+        </Accordion>
+
+        /*
+        <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <h3>{texts.createProgrammingLight}</h3>
             </AccordionSummary>
             <AccordionDetails>
@@ -188,5 +272,6 @@ export default function CreateProgrammingLight({
                 </form>
             </AccordionDetails>
         </Accordion>
+        */
     );
 }

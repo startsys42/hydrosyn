@@ -16,6 +16,7 @@ import { Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 
+
 export default function DeleteESP32({ systemId, espList, refresh, loading, error, setError }) {
     const texts = useTexts();
     const [pageSize, setPageSize] = useState(10);
@@ -113,12 +114,14 @@ export default function DeleteESP32({ systemId, espList, refresh, loading, error
             disableColumnMenu: true,
             filterable: false,
             renderCell: (params) => (
-                <button
+                <Button
+                    variant="outlined"
+                    color="error"
+                    size="small"
                     onClick={() => handleOpenDialog(params.row)}
-                    style={{ padding: "4px 12px" }}
                 >
                     {texts.delete}
-                </button>
+                </Button>
             ),
         },
     ];
@@ -126,6 +129,50 @@ export default function DeleteESP32({ systemId, espList, refresh, loading, error
 
     const rows = espList.map((esp) => ({ id: esp.id, name: esp.name }));
     return (
+        <>
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography variant="h6" component="h3">
+                        {texts.removeESP32}
+                    </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <div style={{ height: 500, width: '100%' }}>
+                        <DataGrid className="datagrid"
+                            rows={rows}
+                            columns={columns}
+                            loading={loading}
+                            pagination
+                            pageSize={pageSize}
+                            onPageSizeChange={setPageSize}
+                            sortingMode="client"
+                            disableSelectionOnClick
+                        />
+                    </div>
+
+                    {error && (
+                        <Typography color="error" variant="body2" sx={{ mt: 2 }}>
+                            {error}
+                        </Typography>
+                    )}
+                </AccordionDetails>
+            </Accordion>
+
+            <Dialog open={openDialog} onClose={handleCloseDialog}>
+                <DialogTitle>{texts.confirmation}</DialogTitle>
+                <DialogContent>
+                    <Typography>
+                        {`${texts.deleteESP32Question} ${selectedEsp?.name}? ${texts.actionIrreversible}`}
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog}>{texts.no}</Button>
+                    <Button onClick={handleDelete} variant="contained" color="error">{texts.yes}</Button>
+                </DialogActions>
+            </Dialog>
+        </>
+
+        /*
         <>
             <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -168,5 +215,6 @@ export default function DeleteESP32({ systemId, espList, refresh, loading, error
                 </DialogActions>
             </Dialog>
         </>
+        */
     );
 }

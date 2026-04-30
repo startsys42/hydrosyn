@@ -4,7 +4,7 @@
 actor P
 boundary VCH
 control CH
-entity ESP32
+entity CESP32
 
 P -> VCH : Presiona "Eliminar" en el ESP32
 activate VCH
@@ -12,11 +12,11 @@ VCH -> P : mostrarConfirmaciónIrreversible()
 P -> VCH : Confirma eliminación
 VCH-> CH : solicitarEliminacionESP32()
 activate CH
-    CH -> ESP32 : eliminarESP32()
-    activate ESP32
+    CH -> CESP32 : eliminarESP32()
+    activate CESP32
   
-    ESP32 --> CH : eliminacion_exitosa
-    deactivate ESP32
+    CESP32 --> CH : eliminacion_exitosa
+    deactivate CESP32
 
     CH --> VCH : confirmarExito()
     deactivate CH

@@ -5,7 +5,7 @@
 actor P
 boundary VCH
 control CH
-entity ESP32
+entity CESP32
 
 P -> VCH : solicitudCrearESP32()
 activate VCH
@@ -13,20 +13,20 @@ VCH--> P : mostrarFormularioCrearESP32()
 P -> VCH : CrearESP32(datos)
 VCH-> CH : validarDatos(datos)
 alt Formato Válido
-    CH -> ESP32 : comprobarDuplicados(datos)
+    CH -> CESP32 : comprobarDuplicados(datos)
     alt No Duplicados
-    ESP32 --> CH : noDuplicados()
-    deactivate ESP32
-        CH -> ESP32 : crearESP32(datos)
-    activate ESP32
-    ESP32 --> CH : confirmacionCreacion()
-    deactivate ESP32
+    CESP32 --> CH : noDuplicados()
+    deactivate CESP32
+        CH -> CESP32 : crearESP32(datos)
+    activate CESP32
+    CESP32 --> CH : confirmacionCreacion()
+    deactivate CESP32
     CH --> VCH : confirmacionCreacion()
     deactivate CH
     VCH --> P : mostrarConfirmacionCreacion()
     else Duplicados
-    ESP32 --> CH : duplicadosEncontrados()
-    deactivate ESP32
+    CESP32 --> CH : duplicadosEncontrados()
+    deactivate CESP32
     CH --> VCH : errorDuplicados()
     deactivate CH
     VCH --> P : mostrarErrorDuplicados()

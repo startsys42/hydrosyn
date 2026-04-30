@@ -25,7 +25,7 @@ skinparam monochrome true
 !define S "Sistema"
 !define VCH "VistaConfiguracionHardware"
 !define CH "ControlHardware"
-!define CESP32 "Controlador (ESP32)" 
+!define CESP32 "Controlador" 
 !define VT "VistaTanques"
 !define CT "ControlTanques"
 !define T "Tanque"

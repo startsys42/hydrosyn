@@ -18,7 +18,7 @@ package "Gestión de Usuarios " as users {
 package "Gestión de Sistemas " as systems {
 }
 
-package "Gestión de ESP32 " as esp32 {
+package "Gestión de Controladores " as esp32 {
 }
 
 package "Gestión de Tanques " as tanks {
