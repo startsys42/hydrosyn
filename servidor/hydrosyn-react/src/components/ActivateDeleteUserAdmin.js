@@ -160,9 +160,14 @@ const ActivateDeleteUserAdmin = () => {
             filterable: false,
             width: 150,
             renderCell: (params) => (
-                <button style={{ padding: '4px 16px' }} onClick={() => handleDeleteClick(params.row)}>
+                <Button
+                    variant="outlined"
+                    color="error"
+                    size="small"
+                    onClick={() => handleDeleteClick(params.row)}
+                >
                     {texts.delete}
-                </button>
+                </Button>
             )
         }
     ];
