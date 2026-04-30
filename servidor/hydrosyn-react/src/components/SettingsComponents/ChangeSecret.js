@@ -28,6 +28,7 @@ import {
     Typography,
     Stack
 } from "@mui/material";
+import InputAdornment from '@mui/material/InputAdornment';
 
 
 export default function ChangeSecretAccordion({ systemId, secret: initialSecret, refreshSecret, error, setError }) {
