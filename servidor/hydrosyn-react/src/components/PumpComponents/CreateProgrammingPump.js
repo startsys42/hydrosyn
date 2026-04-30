@@ -32,7 +32,7 @@ import {
     Typography,
     Stack
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import AddIcon from "@mui/icons-material/Add";
 
 export default function CreateProgrammingPump({
