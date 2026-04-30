@@ -12,6 +12,30 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import dayjs from "dayjs";
 import { StyledEngineProvider } from "@mui/material/styles";
+import {
+    Accordion,
+    AccordionSummary,
+    AccordionDetails,
+    Button,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    TextField,
+    Grid,
+    Alert,
+    Switch,
+    FormControlLabel,
+    Box,
+    Typography,
+    Stack
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import AddIcon from "@mui/icons-material/Add";
 
 export default function CreateProgrammingPump({
     pumpList,
@@ -110,6 +134,105 @@ export default function CreateProgrammingPump({
     };
 
     return (
+
+
+        <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6" component="h3">
+                    {texts.createProgrammingPump}
+                </Typography>
+            </AccordionSummary>
+
+            <AccordionDetails>
+                <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 1 }}>
+                    <FormControl fullWidth disabled={loading}>
+                        <InputLabel id="pump-select-label">{texts.selectPump}</InputLabel>
+                        <Select
+                            labelId="pump-select-label"
+                            value={selectedPump}
+                            label={texts.selectPump}
+                            onChange={(e) => setSelectedPump(e.target.value)}
+                        >
+                            {pumpList.map(p => (
+                                <MenuItem key={p.id} value={p.id}>
+                                    {p.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    <FormControl fullWidth disabled={loading}>
+                        <InputLabel id="day-select-label">{texts.days}</InputLabel>
+                        <Select
+                            labelId="day-select-label"
+                            value={day}
+                            label={texts.days}
+                            onChange={(e) => setDay(e.target.value)}
+                        >
+                            {DAYS.map(d => (
+                                <MenuItem key={d.value} value={d.value}>
+                                    {d.label}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <TimePicker
+                            label={texts.time}
+                            value={timeValue}
+                            onChange={(newValue) => setTimeValue(newValue)}
+                            ampm={false}
+                            minutesStep={1}
+                            disabled={loading}
+                            sx={{ width: '100%' }}
+                        />
+                    </LocalizationProvider>
+
+                    <Stack direction="row" spacing={2}>
+                        <TextField
+                            label={texts.volume}
+                            type="number"
+                            value={volume}
+                            onChange={(e) => setVolume(e.target.value)}
+                            disabled={loading}
+                            required
+                            fullWidth
+                            inputProps={{ step: "0.001", min: "0.001", max: "999.999" }}
+                        />
+
+                        <FormControl disabled={loading} sx={{ minWidth: 100 }}>
+                            <InputLabel id="unit-select-label">{texts.units}</InputLabel>
+                            <Select
+                                labelId="unit-select-label"
+                                value={unit}
+                                label={texts.units}
+                                onChange={(e) => setUnit(e.target.value)}
+                            >
+                                <MenuItem value="L">L</MenuItem>
+                                <MenuItem value="mL">mL</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Stack>
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={loading}
+                        fullWidth
+                    >
+                        {loading ? texts.creating : texts.createProgramming}
+                    </Button>
+
+                    {error && (
+                        <Typography color="error" variant="body2" align="center">
+                            {texts[error] || error}
+                        </Typography>
+                    )}
+                </Box>
+            </AccordionDetails>
+        </Accordion>
 
         /* 
         <Accordion>
