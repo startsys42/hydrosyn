@@ -154,9 +154,13 @@ export default function Dashboard() {
             sortable: false,
             disableColumnMenu: true,
             renderCell: (params) => (
-                <button style={{ padding: '4px 16px' }} onClick={() => navigate(`/system/${params.row.id}`)}>
+                <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => navigate(`/system/${params.row.id}`)}
+                >
                     {t.enter}
-                </button>
+                </Button>
             ),
         },
     ];
