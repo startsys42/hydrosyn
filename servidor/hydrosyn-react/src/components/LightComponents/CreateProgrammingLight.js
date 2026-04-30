@@ -19,6 +19,9 @@ import {
     Switch,
     FormControlLabel,
 } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Add as AddIcon } from "@mui/icons-material";
