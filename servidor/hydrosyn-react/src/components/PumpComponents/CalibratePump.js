@@ -6,6 +6,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
+import { Box, FormControl, InputLabel, Select, MenuItem, TextField, Stack, Button, Typography, Alert } from "@mui/material";
 
 
 export default function CalibratePump({ systemId, pumpList, refresh, error, setError }) {
@@ -114,6 +115,91 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6" component="h3">
+                    {texts.calibratePump}
+                </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 1 }}>
+
+                    <FormControl fullWidth disabled={loading}>
+                        <InputLabel id="calibrate-pump-select-label">{texts.selectPump}</InputLabel>
+                        <Select
+                            labelId="calibrate-pump-select-label"
+                            value={selectedPump || ''}
+                            label={texts.selectPump}
+                            onChange={(e) => setSelectedPump(e.target.value)}
+                        >
+                            <MenuItem value='' disabled>{texts.selectPump}</MenuItem>
+                            {pumpList.map(pump => (
+                                <MenuItem key={pump.id} value={pump.id}>{pump.name}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    <Stack direction="row" spacing={2}>
+                        <TextField
+                            label={texts.volume}
+                            type="number"
+                            value={volume}
+                            onChange={(e) => setVolume(e.target.value)}
+                            placeholder="Ej: 100.5"
+                            disabled={loading}
+                            required
+                            fullWidth
+                            inputProps={{ step: "0.001", min: "0.001", max: "999.999" }}
+                        />
+
+                        <FormControl disabled={loading} sx={{ minWidth: 100 }}>
+                            <InputLabel id="calibrate-unit-select-label">{texts.units}</InputLabel>
+                            <Select
+                                labelId="calibrate-unit-select-label"
+                                value={unit}
+                                label={texts.units}
+                                onChange={(e) => setUnit(e.target.value)}
+                            >
+                                <MenuItem value="mL">mL</MenuItem>
+                                <MenuItem value="L">L</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Stack>
+
+                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                        <Button
+                            type="button"
+                            variant="outlined"
+                            color="primary"
+                            onClick={handleInsertCalibration}
+                            disabled={loading}
+                            fullWidth
+                        >
+                            {loading ? texts.creating : texts.calibrate}
+                        </Button>
+
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            onClick={() => setAction("calibrate")}
+                            disabled={loading}
+                            fullWidth
+                        >
+                            {loading ? texts.creating : texts.saveCalibration}
+                        </Button>
+                    </Stack>
+
+                    {error && (
+                        <Alert severity="error">
+                            {texts[error] || error}
+                        </Alert>
+                    )}
+                </Box>
+            </AccordionDetails>
+        </Accordion>
+
+        /*
+        <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <h3>{texts.calibratePump}</h3>
             </AccordionSummary>
             <AccordionDetails>
@@ -173,5 +259,6 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
 
             </AccordionDetails>
         </Accordion>
+        */
     );
 }

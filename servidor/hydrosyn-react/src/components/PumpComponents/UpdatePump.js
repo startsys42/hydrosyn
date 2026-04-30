@@ -6,6 +6,7 @@ import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { Box, FormControl, InputLabel, Select, MenuItem, TextField, Button, Typography, Alert } from "@mui/material";
 
 
 
@@ -181,6 +182,91 @@ export default function UpdatePump({ systemId, pumpList, refresh, error, setErro
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6" component="h3">
+                    {texts.updatePump}
+                </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <Box component="form" onSubmit={handleUpdatePump} sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 1 }}>
+                    <FormControl fullWidth disabled={loading}>
+                        <InputLabel id="update-pump-select-label">{texts.selectPump}</InputLabel>
+                        <Select
+                            labelId="update-pump-select-label"
+                            value={selectedPump || ''}
+                            label={texts.selectPump}
+                            onChange={(e) => setSelectedPump(Number(e.target.value))}
+                        >
+                            <MenuItem value='' disabled>{texts.selectPump}</MenuItem>
+                            {pumpList.map(p => (
+                                <MenuItem key={p.id} value={p.id}>
+                                    {p.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    <TextField
+                        label={texts.newName}
+                        value={newName}
+                        onChange={(e) => setNewName(e.target.value)}
+                        disabled={loading}
+                        fullWidth
+                        placeholder={texts.newName}
+                        inputProps={{ minLength: 3, maxLength: 30 }}
+                    />
+
+                    <FormControl fullWidth disabled={loading}>
+                        <InputLabel id="update-origin-select-label">{texts.originTank}</InputLabel>
+                        <Select
+                            labelId="update-origin-select-label"
+                            value={newOrigin}
+                            label={texts.originTank}
+                            onChange={(e) => setNewOrigin(Number(e.target.value))}
+                        >
+                            <MenuItem value="" disabled>{texts.selectOriginTank}</MenuItem>
+                            {tankList.map(t => (
+                                <MenuItem key={t.id} value={t.id}>{t.name}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    <FormControl fullWidth disabled={loading}>
+                        <InputLabel id="update-dest-select-label">{texts.destinationTank}</InputLabel>
+                        <Select
+                            labelId="update-dest-select-label"
+                            value={newDestination}
+                            label={texts.destinationTank}
+                            onChange={(e) => setNewDestination(Number(e.target.value))}
+                        >
+                            <MenuItem value="" disabled>{texts.selectDestinationTank}</MenuItem>
+                            {tankList.map(t => (
+                                <MenuItem key={t.id} value={t.id}>{t.name}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={loading || !selectedPump}
+                        fullWidth
+                    >
+                        {loading ? texts.updating : texts.update}
+                    </Button>
+
+                    {error && (
+                        <Alert severity="error">
+                            {texts[error] || error}
+                        </Alert>
+                    )}
+                </Box>
+            </AccordionDetails>
+        </Accordion>
+
+        /*
+        <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <h3>{texts.updatePump}</h3>
             </AccordionSummary>
             <AccordionDetails>
@@ -239,5 +325,6 @@ export default function UpdatePump({ systemId, pumpList, refresh, error, setErro
 
             </AccordionDetails>
         </Accordion>
+        */
     );
 }
