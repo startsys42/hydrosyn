@@ -138,6 +138,68 @@ export default function CreateSystem() {
     };
 
     return (
+        <Container maxWidth="sm">
+            <Paper
+                elevation={3}
+                sx={{
+                    mt: 8,
+                    p: 4,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    minHeight: 400,
+                    justifyContent: 'center'
+                }}
+            >
+                <Typography variant="h4" component="h1" gutterBottom align="center">
+                    {texts.newSystem}
+                </Typography>
+
+                <Box component="form" onSubmit={handleCreateSystem} sx={{ mt: 2, width: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <TextField
+                        variant="outlined"
+                        fullWidth
+                        label={texts.nameSystem}
+                        value={systemName}
+                        onChange={(e) => setSystemName(e.target.value)}
+                        placeholder={texts.nameSystem}
+                        required
+                        disabled={loading}
+                        inputProps={{ minLength: 3, maxLength: 30 }}
+                    />
+
+                    <TextField
+                        variant="outlined"
+                        fullWidth
+                        label={texts.codeESP}
+                        value={systemCode}
+                        onChange={(e) => setSystemCode(e.target.value)}
+                        placeholder={texts.codeESP}
+                        required
+                        disabled={loading}
+                        inputProps={{ minLength: 10, maxLength: 30 }}
+                    />
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        fullWidth
+                        disabled={loading}
+                        sx={{ mt: 1 }}
+                    >
+                        {loading ? texts.verify : texts.newSystem}
+                    </Button>
+
+                    {error && (
+                        <Alert severity="error">
+                            {texts[error] || error}
+                        </Alert>
+                    )}
+                </Box>
+            </Paper>
+        </Container>
+
+        /*
         <div className='div-main-login'>
             <h1>{texts.newSystem}</h1>
             <form onSubmit={handleCreateSystem} className="form-container">
@@ -169,5 +231,6 @@ export default function CreateSystem() {
 
             {error && <p style={{ color: 'red' }}>{texts[error]}</p>}
         </div>
+        */
     );
 }
