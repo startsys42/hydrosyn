@@ -6,8 +6,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
-
-
+import { Box, FormControl, InputLabel, Select, MenuItem, TextField, Button, Typography, Alert } from "@mui/material";
 
 export default function CreatePump({ systemId, pumpList, refresh, error, setError }) {
 
@@ -172,84 +171,142 @@ export default function CreatePump({ systemId, pumpList, refresh, error, setErro
         }
     };
     return (
+        <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6" component="h3">
+                    {texts.addPump}
+                </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <Box component="form" onSubmit={handleCreatePump} sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 1 }}>
 
+                    <TextField
+                        label={texts.namePump}
+                        value={pumpName}
+                        onChange={(e) => setPumpName(e.target.value)}
+                        required
+                        fullWidth
+                        disabled={loading}
+                        placeholder={texts.namePump}
+                        inputProps={{ minLength: 3, maxLength: 30 }}
+                    />
 
+                    <FormControl fullWidth required disabled={loading}>
+                        <InputLabel id="esp32-select-label">{texts.esp32}</InputLabel>
+                        <Select
+                            labelId="esp32-select-label"
+                            value={esp32Id}
+                            label={texts.esp32}
+                            onChange={(e) => setEsp32Id(e.target.value)}
+                            required
+                        >
+                            <MenuItem value="" disabled>{texts.selectESP32}</MenuItem>
+                            {esp32List.map((esp) => (
+                                <MenuItem key={esp.id} value={esp.id}>{esp.name}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
 
+                    <FormControl fullWidth required disabled={loading}>
+                        <InputLabel id="gpio-select-label">{texts.GPIO}</InputLabel>
+                        <Select
+                            labelId="gpio-select-label"
+                            value={gpio}
+                            label={texts.GPIO}
+                            onChange={(e) => setGpio(e.target.value)}
+                            required
+                        >
+                            <MenuItem value="" disabled>{texts.selectGPIO}</MenuItem>
+                            {availableGpios.map((pin) => (
+                                <MenuItem key={pin} value={pin}>{pin}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    <FormControl fullWidth required disabled={loading}>
+                        <InputLabel id="origin-select-label">{texts.originTank}</InputLabel>
+                        <Select
+                            labelId="origin-select-label"
+                            value={originTank}
+                            label={texts.originTank}
+                            onChange={(e) => setOriginTank(e.target.value)}
+                            required
+                        >
+                            <MenuItem value="" disabled>{texts.selectOriginTank}</MenuItem>
+                            {tankList.map((tank) => (
+                                <MenuItem key={tank.id} value={tank.id}>{tank.name}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    <FormControl fullWidth required disabled={loading}>
+                        <InputLabel id="dest-select-label">{texts.destinationTank}</InputLabel>
+                        <Select
+                            labelId="dest-select-label"
+                            value={destinationTank}
+                            label={texts.destinationTank}
+                            onChange={(e) => setDestinationTank(e.target.value)}
+                            required
+                        >
+                            <MenuItem value="" disabled>{texts.selectDestinationTank}</MenuItem>
+                            {tankList.map((tank) => (
+                                <MenuItem key={tank.id} value={tank.id}>{tank.name}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={loading}
+                        fullWidth
+                    >
+                        {texts.addPump}
+                    </Button>
+
+                    {error && (
+                        <Alert severity="error">
+                            {texts[error] || error}
+                        </Alert>
+                    )}
+                </Box>
+            </AccordionDetails>
+        </Accordion>
+
+        /*
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <h3>{texts.addPump}</h3>
             </AccordionSummary>
             <AccordionDetails>
                 <form onSubmit={handleCreatePump} className='form-container'>
-                    <label>
-                        {texts.namePump}
-                    </label>
-                    <input
-                        type="text"
-                        value={pumpName}
-                        onChange={(e) => setPumpName(e.target.value)}
-                        required
-                        minLength={3} maxLength={30}
-
-                        placeholder={texts.namePump}
-                    />
-
+                    <label>{texts.namePump}</label>
+                    <input type="text" value={pumpName} onChange={(e) => setPumpName(e.target.value)}
+                        required minLength={3} maxLength={30} placeholder={texts.namePump} />
 
                     <label>{texts.esp32}</label>
-                    <select
-                        value={esp32Id}
-                        onChange={(e) => setEsp32Id(e.target.value)}
-                        required
-                    >
+                    <select value={esp32Id} onChange={(e) => setEsp32Id(e.target.value)} required>
                         <option value="">{texts.selectESP32}</option>
-                        {esp32List.map((esp) => (
-                            <option key={esp.id} value={esp.id}>
-                                {esp.name}
-                            </option>
-                        ))}
+                        {esp32List.map((esp) => (<option key={esp.id} value={esp.id}>{esp.name}</option>))}
                     </select>
 
                     <label>{texts.GPIO}</label>
-
-                    <select
-                        value={gpio}
-                        onChange={(e) => setGpio(e.target.value)}
-                        required
-                    >
+                    <select value={gpio} onChange={(e) => setGpio(e.target.value)} required>
                         <option value="">{texts.selectGPIO}</option>
-                        {availableGpios.map((pin) => (
-                            <option key={pin} value={pin}>
-                                {pin}
-                            </option>
-                        ))}
+                        {availableGpios.map((pin) => (<option key={pin} value={pin}>{pin}</option>))}
                     </select>
 
                     <label>{texts.originTank}</label>
-                    <select
-                        value={originTank}
-                        onChange={(e) => setOriginTank(e.target.value)}
-                        required
-                    >
+                    <select value={originTank} onChange={(e) => setOriginTank(e.target.value)} required>
                         <option value="">{texts.selectOriginTank}</option>
-                        {tankList.map((tank) => (
-                            <option key={tank.id} value={tank.id}>
-                                {tank.name}
-                            </option>
-                        ))}
+                        {tankList.map((tank) => (<option key={tank.id} value={tank.id}>{tank.name}</option>))}
                     </select>
 
                     <label>{texts.destinationTank}</label>
-                    <select
-                        value={destinationTank}
-                        onChange={(e) => setDestinationTank(e.target.value)}
-                        required
-                    >
+                    <select value={destinationTank} onChange={(e) => setDestinationTank(e.target.value)} required>
                         <option value="">{texts.selectDestinationTank}</option>
-                        {tankList.map((tank) => (
-                            <option key={tank.id} value={tank.id}>
-                                {tank.name}
-                            </option>
-                        ))}
+                        {tankList.map((tank) => (<option key={tank.id} value={tank.id}>{tank.name}</option>))}
                     </select>
 
                     <button type="submit" disabled={loading}>{texts.addPump}</button>
@@ -257,8 +314,6 @@ export default function CreatePump({ systemId, pumpList, refresh, error, setErro
                 {error && <p style={{ color: 'red' }}>{texts[error] || error}</p>}
             </AccordionDetails>
         </Accordion>
-
+        */
     );
-
-
-}
+}

@@ -6,6 +6,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
+import { Box, FormControl, InputLabel, Select, MenuItem, TextField, Stack, Button, Typography, Alert } from "@mui/material";
 
 export default function InsertPumping({ systemId, pumpList, refresh, error, setError }) {
     const texts = useTexts();
@@ -91,6 +92,78 @@ export default function InsertPumping({ systemId, pumpList, refresh, error, setE
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6" component="h3">
+                    {texts.insertPump}
+                </Typography>
+            </AccordionSummary>
+
+            <AccordionDetails>
+                <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 1 }}>
+
+                    <FormControl fullWidth disabled={loading}>
+                        <InputLabel id="pump-select-label">{texts.selectPump}</InputLabel>
+                        <Select
+                            labelId="pump-select-label"
+                            value={selectedPump}
+                            label={texts.selectPump}
+                            onChange={(e) => setSelectedPump(e.target.value)}
+                        >
+                            {pumpList.map(pump => (
+                                <MenuItem key={pump.id} value={pump.id}>
+                                    {pump.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    <Stack direction="row" spacing={2}>
+                        <TextField
+                            label={texts.volume}
+                            type="number"
+                            value={volume}
+                            onChange={(e) => setVolume(e.target.value)}
+                            disabled={loading}
+                            required
+                            fullWidth
+                            inputProps={{ step: "0.001", min: "0.001", max: "999.999" }}
+                        />
+
+                        <FormControl disabled={loading} sx={{ minWidth: 100 }}>
+                            <InputLabel id="unit-select-label">{texts.units}</InputLabel>
+                            <Select
+                                labelId="unit-select-label"
+                                value={unit}
+                                label={texts.units}
+                                onChange={(e) => setUnit(e.target.value)}
+                            >
+                                <MenuItem value="L">L</MenuItem>
+                                <MenuItem value="mL">mL</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Stack>
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={loading}
+                        fullWidth
+                    >
+                        {loading ? texts.creating : texts.createPumping}
+                    </Button>
+
+                    {error && (
+                        <Alert severity="error">
+                            {texts[error] || error}
+                        </Alert>
+                    )}
+                </Box>
+            </AccordionDetails>
+        </Accordion>
+
+        /*
+        <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <h3>{texts.insertPump}</h3>
             </AccordionSummary>
 
@@ -133,10 +206,7 @@ export default function InsertPumping({ systemId, pumpList, refresh, error, setE
                         <option value="L">L</option>
                     </select>
 
-                    <button type="submit"
-
-                        disabled={loading}
-                    >
+                    <button type="submit" disabled={loading}>
                         {loading ? texts.creating : texts.createPumping}
                     </button>
 
@@ -148,5 +218,6 @@ export default function InsertPumping({ systemId, pumpList, refresh, error, setE
                 </form>
             </AccordionDetails>
         </Accordion>
+        */
     );
 }

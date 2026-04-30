@@ -6,6 +6,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
+import { Box, TextField, Button, Typography, Alert, MenuItem } from "@mui/material";
 
 
 export default function RenameTank({ systemId, tankList, refresh, error, setError }) {
@@ -108,6 +109,64 @@ export default function RenameTank({ systemId, tankList, refresh, error, setErro
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6" component="h3">
+                    {texts.renameTank}
+                </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <Box
+                    component="form"
+                    onSubmit={handleRename}
+                    sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 400, width: '100%' }}
+                >
+                    <TextField
+                        select
+                        label={texts.selectTank}
+                        value={selectedTank || ''}
+                        onChange={(e) => setSelectedTank(e.target.value)}
+                        required
+                        fullWidth
+                        disabled={loading}
+                    >
+                        <MenuItem value="" disabled>{texts.selectTank}</MenuItem>
+                        {tankList.map(tank => (
+                            <MenuItem key={tank.id} value={tank.id}>{tank.name}</MenuItem>
+                        ))}
+                    </TextField>
+
+                    <TextField
+                        label={texts.newName}
+                        placeholder={texts.newName}
+                        value={newName}
+                        onChange={(e) => setNewName(e.target.value)}
+                        required
+                        fullWidth
+                        disabled={loading}
+                        inputProps={{ minLength: 3, maxLength: 30 }}
+                    />
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={loading || !selectedTank || !newName}
+                        fullWidth
+                    >
+                        {loading ? texts.renaming : texts.rename}
+                    </Button>
+
+                    {error && (
+                        <Alert severity="error">
+                            {texts[error] || error}
+                        </Alert>
+                    )}
+                </Box>
+            </AccordionDetails>
+        </Accordion>
+
+        /*
+        <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <h3>{texts.renameTank}</h3>
             </AccordionSummary>
             <AccordionDetails>
@@ -131,16 +190,13 @@ export default function RenameTank({ systemId, tankList, refresh, error, setErro
                         placeholder={texts.newName}
                         minLength={3} maxLength={30}
                     />
-
                     <button type="submit" disabled={loading || !selectedTank || !newName}>
                         {loading ? texts.renaming : texts.rename}
                     </button>
-
-
                 </form>
                 {error && <p style={{ color: 'red' }}>{texts[error] || error}</p>}
-
             </AccordionDetails>
         </Accordion>
+        */
     );
 }

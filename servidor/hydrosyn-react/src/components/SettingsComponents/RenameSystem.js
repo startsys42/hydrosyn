@@ -6,6 +6,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
+import { Box, TextField, Button, Typography, Alert } from "@mui/material";
 
 export default function RenameSystem({ systemId, systemName, refresh, error, setError }) {
     const texts = useTexts();
@@ -93,11 +94,52 @@ export default function RenameSystem({ systemId, systemName, refresh, error, set
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6" component="h3">
+                    {texts.renameSystem}
+                </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <Box
+                    component="form"
+                    onSubmit={handleRename}
+                    sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 400, width: '100%' }}
+                >
+                    <TextField
+                        label={texts.newName}
+                        placeholder={texts.newName}
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                        fullWidth
+                        disabled={loading}
+                        inputProps={{ minLength: 3, maxLength: 30 }}
+                    />
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={loading}
+                        fullWidth
+                    >
+                        {texts.renameSystem}
+                    </Button>
+
+                    {error && (
+                        <Alert severity="error">
+                            {texts[error] || error}
+                        </Alert>
+                    )}
+                </Box>
+            </AccordionDetails>
+        </Accordion>
+
+        /*
+        <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <h3>{texts.renameSystem}</h3>
             </AccordionSummary>
             <AccordionDetails>
-
-
                 <form onSubmit={handleRename} className='form-container'>
                     <label>
                         {texts.newName}
@@ -114,9 +156,9 @@ export default function RenameSystem({ systemId, systemName, refresh, error, set
                     <button type="submit">{texts.renameSystem}</button>
                 </form>
                 {error && <p style={{ color: 'red' }}>{texts[error]}</p>}
-
             </AccordionDetails>
         </Accordion>
+        */
     );
 
 }

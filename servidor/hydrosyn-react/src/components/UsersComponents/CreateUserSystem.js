@@ -6,11 +6,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
+import { Box, TextField, Button, Typography, Alert } from "@mui/material";
 
 
 export default function CreateUserSystem({ systemId, refreshUsers, refreshAvailable, error: externalError, setError: setExternalError, loading: externalLoading }) {
@@ -114,7 +110,49 @@ export default function CreateUserSystem({ systemId, refreshUsers, refreshAvaila
 
     return (
         <>
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography variant="h6" component="h3">
+                        {texts.createUser}
+                    </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Box
+                        component="form"
+                        onSubmit={handleSubmit}
+                        sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 400, width: '100%' }}
+                    >
+                        <TextField
+                            label={texts.email}
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            fullWidth
+                            disabled={loading}
+                            placeholder={texts.email}
+                        />
 
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            disabled={loading}
+                            fullWidth
+                        >
+                            {loading ? texts.creating : texts.createUser}
+                        </Button>
+
+                        {externalError && (
+                            <Alert severity="error">
+                                {texts[externalError] || externalError}
+                            </Alert>
+                        )}
+                    </Box>
+                </AccordionDetails>
+            </Accordion>
+
+            {/*
             <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <h3>{texts.createUser}</h3>
@@ -131,17 +169,14 @@ export default function CreateUserSystem({ systemId, refreshUsers, refreshAvaila
                             required
                             placeholder={texts.email}
                         />
-
                         <button type="submit" disabled={loading}>
                             {loading ? texts.creating : texts.createUser}
                         </button>
                     </form>
-
                     {externalError && <p style={{ color: 'red' }}>{texts[externalError] || externalError}</p>}
                 </AccordionDetails>
             </Accordion>
-
-
+            */}
         </>
     );
 }

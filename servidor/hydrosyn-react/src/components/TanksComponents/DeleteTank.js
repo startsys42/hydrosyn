@@ -157,6 +157,81 @@ export default function DeleteTank({ systemId, tankList, refresh, loading, error
         <>
             <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography variant="h6" component="h3">
+                        {texts.removeTank}
+                    </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <div style={{ height: 500, width: '100%' }}>
+                        <DataGrid 
+                            className="datagrid"
+                            rows={rows}
+                            columns={[
+                                { field: "name", headerName: texts.tanks, width: 250 },
+                                {
+                                    field: "type",
+                                    headerName: texts.type,
+                                    width: 200,
+                                    renderCell: (params) => {
+                                        switch (params.value) {
+                                            case "water": return texts.water;
+                                            case "rotifers": return texts.rotifers;
+                                            case "copepods": return texts.copepods;
+                                            case "artemias": return texts.artemias;
+                                            case "microalga": return texts.microalga;
+                                            case "nutrients": return texts.nutrients;
+                                            default: return params.value;
+                                        }
+                                    }
+                                },
+                                {
+                                    field: "delete",
+                                    headerName: texts.delete,
+                                    width: 150,
+                                    sortable: false,
+                                    disableColumnMenu: true,
+                                    filterable: false,
+                                    renderCell: (params) => (
+                                        <Button
+                                            onClick={() => handleOpenDialog(params.row)}
+                                            variant="contained"
+                                            color="error"
+                                            size="small"
+                                        >
+                                            {texts.delete}
+                                        </Button>
+                                    ),
+                                },
+                            ]}
+                            loading={loading}
+                            pagination
+                            pageSize={pageSize}
+                            onPageSizeChange={setPageSize}
+                            sortingMode="client"
+                            disableSelectionOnClick
+                        />
+                    </div>
+
+                    {error && <Typography color="error" mt={2}>{error}</Typography>}
+                </AccordionDetails>
+            </Accordion>
+
+            <Dialog open={openDialog} onClose={handleCloseDialog}>
+                <DialogTitle>{texts.confirmation}</DialogTitle>
+                <DialogContent>
+                    <Typography>
+                        {`${texts.deleteTankQuestion} ${selectedTank?.name}? ${texts.actionIrreversible}`}
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog} color="inherit">{texts.no}</Button>
+                    <Button onClick={handleDelete} variant="contained" color="error" disabled={loading}>{texts.yes}</Button>
+                </DialogActions>
+            </Dialog>
+
+            {/*
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <h3>{texts.removeTank}</h3>
                 </AccordionSummary>
                 <AccordionDetails>
@@ -195,6 +270,7 @@ export default function DeleteTank({ systemId, tankList, refresh, loading, error
                     <Button onClick={handleDelete} variant="contained" color="error" disabled={loading}>{texts.yes}</Button>
                 </DialogActions>
             </Dialog>
+            */}
         </>
     );
 }
