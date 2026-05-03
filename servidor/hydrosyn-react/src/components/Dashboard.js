@@ -204,14 +204,14 @@ export default function Dashboard() {
                             {isOwner && (
                                 <Box sx={{ display: 'flex', gap: 2 }}>
                                     <Button
-                                        variant="outlined"
+                                        variant="contained"
                                         onClick={exportData}
                                     >
                                         {t.export}
                                     </Button>
 
                                     <Button
-                                        variant="outlined"
+                                        variant="contained"
                                         onClick={() => navigate('/create-system')}
                                     >
                                         {t.newSystem}
