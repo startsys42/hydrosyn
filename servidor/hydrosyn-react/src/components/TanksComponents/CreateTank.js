@@ -146,7 +146,6 @@ export default function CreateTank({ systemId, tankList, refresh, error, setErro
                         display: 'flex',
                         flexDirection: 'column',
                         gap: 2,
-                        maxWidth: 400,
                         width: '100%'
                     }}
                 >
@@ -194,7 +193,7 @@ export default function CreateTank({ systemId, tankList, refresh, error, setErro
                         type="submit"
                         variant="contained"
                         color="primary"
-                        disabled={loading}
+                        disabled={loading || !tankName || !tankType}
                     >
                         {texts.addTank}
                     </Button>

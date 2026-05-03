@@ -168,11 +168,11 @@ export default function DeleteTank({ systemId, tankList, refresh, loading, error
                             className="datagrid"
                             rows={rows}
                             columns={[
-                                { field: "name", headerName: texts.tanks, width: 250 },
+                                { field: "name", headerName: texts.tanks, flex: 1 },
                                 {
                                     field: "type",
                                     headerName: texts.type,
-                                    width: 200,
+                                    flex: 1,
                                     renderCell: (params) => {
                                         switch (params.value) {
                                             case "water": return texts.water;
@@ -188,7 +188,7 @@ export default function DeleteTank({ systemId, tankList, refresh, loading, error
                                 {
                                     field: "delete",
                                     headerName: texts.delete,
-                                    width: 80,
+                                    flex: 0.5,
                                     sortable: false,
                                     disableColumnMenu: true,
                                     filterable: false,

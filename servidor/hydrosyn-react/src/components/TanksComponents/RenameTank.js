@@ -117,7 +117,7 @@ export default function RenameTank({ systemId, tankList, refresh, error, setErro
                 <Box
                     component="form"
                     onSubmit={handleRename}
-                    sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 400, width: '100%' }}
+                    sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}
                 >
                     <TextField
                         select
