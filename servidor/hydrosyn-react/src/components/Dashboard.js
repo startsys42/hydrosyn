@@ -155,7 +155,8 @@ export default function Dashboard() {
             disableColumnMenu: true,
             renderCell: (params) => (
                 <Button
-                    variant="outlined"
+                    variant="contained"
+                    color="primary"
                     size="small"
                     onClick={() => navigate(`/system/${params.row.id}`)}
                 >
