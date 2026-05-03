@@ -203,7 +203,7 @@ export default function CreateProgrammingLight({
                         type="submit"
                         variant="contained"
                         color="primary"
-                        disabled={loading}
+                        disabled={loading || !formData.light_id || !formData.start_time || !formData.end_time || !formData.day_of_week}
                         fullWidth
                     >
                         {loading ? texts.creating : texts.createProgramming}

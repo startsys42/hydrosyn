@@ -151,57 +151,64 @@ export default function ListProgrammingLights({ lightList, programmingList, refr
                     <DialogTitle>{texts.updateProgrammingLight}</DialogTitle>
                     <DialogContent>
                         {editFormData && (
-                            <form className="form-container">
-                                <label>{texts.selectLight}</label>
-                                <select
-                                    value={editFormData.light_id}
-                                    onChange={(e) => setEditFormData({ ...editFormData, light_id: Number(e.target.value) })}
-                                >
-                                    {lightList.map((l) => (
-                                        <option key={l.id} value={l.id}>{l.name}</option>
-                                    ))}
-                                </select>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 1 }}>
+                                <FormControl fullWidth>
+                                    <InputLabel id="edit-light-label">{texts.selectLight}</InputLabel>
+                                    <Select
+                                        labelId="edit-light-label"
+                                        label={texts.selectLight}
+                                        value={editFormData.light_id}
+                                        onChange={(e) => setEditFormData({ ...editFormData, light_id: Number(e.target.value) })}
+                                    >
+                                        {lightList.map((l) => (
+                                            <MenuItem key={l.id} value={l.id}>{l.name}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
 
-                                <label>{texts.days}</label>
-                                <select
-                                    value={editFormData.day_of_week}
-                                    onChange={(e) => setEditFormData({ ...editFormData, day_of_week: e.target.value })}
-                                >
-                                    {DAYS.map((d) => (
-                                        <option key={d.value} value={d.value}>{d.label}</option>
-                                    ))}
-                                </select>
+                                <FormControl fullWidth>
+                                    <InputLabel id="edit-day-label">{texts.days}</InputLabel>
+                                    <Select
+                                        labelId="edit-day-label"
+                                        label={texts.days}
+                                        value={editFormData.day_of_week}
+                                        onChange={(e) => setEditFormData({ ...editFormData, day_of_week: e.target.value })}
+                                    >
+                                        {DAYS.map((d) => (
+                                            <MenuItem key={d.value} value={d.value}>{d.label}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
 
-                                <label>{texts.startTime}</label>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <TimePicker
-                                        value={editFormData.start_time ? dayjs(editFormData.start_time, "HH:mm:ss") : null}
-                                        onChange={(newValue) => {
-                                            if (newValue) {
-                                                setEditFormData({ ...editFormData, start_time: newValue.format("HH:mm:ss") });
-                                            }
-                                        }}
-                                        ampm={false}
-                                    />
+                                    <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
+                                        <TimePicker
+                                            label={texts.startTime}
+                                            value={editFormData.start_time ? dayjs(editFormData.start_time, "HH:mm:ss") : null}
+                                            onChange={(newValue) => {
+                                                if (newValue) {
+                                                    setEditFormData({ ...editFormData, start_time: newValue.format("HH:mm:ss") });
+                                                }
+                                            }}
+                                            ampm={false}
+                                            sx={{ flex: 1 }}
+                                        />
+                                        <TimePicker
+                                            label={texts.endTime}
+                                            value={editFormData.end_time ? dayjs(editFormData.end_time, "HH:mm:ss") : null}
+                                            onChange={(newValue) => {
+                                                if (newValue) {
+                                                    setEditFormData({ ...editFormData, end_time: newValue.format("HH:mm:ss") });
+                                                }
+                                            }}
+                                            ampm={false}
+                                            sx={{ flex: 1 }}
+                                        />
+                                    </Stack>
                                 </LocalizationProvider>
 
-                                <label>{texts.endTime}</label>
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <TimePicker
-                                        value={editFormData.end_time ? dayjs(editFormData.end_time, "HH:mm:ss") : null}
-                                        onChange={(newValue) => {
-                                            if (newValue) {
-                                                setEditFormData({ ...editFormData, end_time: newValue.format("HH:mm:ss") });
-                                            }
-                                        }}
-                                        ampm={false}
-                                    />
-                                </LocalizationProvider>
-
-
-
-                                {error && <p style={{ color: "red" }}>{texts[error] || error}</p>}
-                            </form>
+                                {error && <Typography color="error">{texts[error] || error}</Typography>}
+                            </Box>
                         )}
                     </DialogContent>
                     <DialogActions>
@@ -256,7 +263,7 @@ export default function ListProgrammingLights({ lightList, programmingList, refr
                                 }
                             }}
                             variant="contained"
-                            disabled={loading}
+                            disabled={loading || !editFormData?.light_id || !editFormData?.day_of_week || !editFormData?.start_time || !editFormData?.end_time}
                         >
                             {loading ? texts.updating : texts.update}
                         </Button>
