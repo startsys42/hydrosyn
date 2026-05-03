@@ -15,6 +15,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import Typography from '@mui/material/Typography';
 
 export default function AssociateUserSystem({
     systemId,
@@ -147,13 +148,15 @@ export default function AssociateUserSystem({
             disableColumnMenu: true,
             width: 150,
             renderCell: (params) => (
-                <button
+                <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
                     onClick={() => handleOpenDialog(params.row)}
-                    style={{ padding: "4px 12px" }}
                     disabled={loading || externalLoading}
                 >
                     {texts.associate}
-                </button>
+                </Button>
             ),
 
         }
@@ -164,25 +167,27 @@ export default function AssociateUserSystem({
 
             <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <h3>{texts.associateUser}</h3>
+                    <Typography variant="h6" component="h3">{texts.associateUser}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <DataGrid
-                        rows={(availableUsers || []).map(u => ({
-                            id: u.user_id,
-                            user_id: u.user_id,
-                            email: u.email
-                        }))}
-                        columns={columns}
-                        loading={loading || externalLoading}
-                        pagination
-                        pageSize={pageSize}
-                        onPageSizeChange={setPageSize}
-                        sortingMode="client"
+                    <div style={{ height: 500, width: '100%' }}>
+                        <DataGrid
+                            rows={(availableUsers || []).map(u => ({
+                                id: u.user_id,
+                                user_id: u.user_id,
+                                email: u.email
+                            }))}
+                            columns={columns}
+                            loading={loading || externalLoading}
+                            pagination
+                            pageSize={pageSize}
+                            onPageSizeChange={setPageSize}
+                            sortingMode="client"
 
 
-                        disableSelectionOnClick
-                    />
+                            disableSelectionOnClick
+                        />
+                    </div>
 
                     {externalError && <p style={{ color: 'red' }}>{texts[externalError] || externalError}</p>}
                 </AccordionDetails>

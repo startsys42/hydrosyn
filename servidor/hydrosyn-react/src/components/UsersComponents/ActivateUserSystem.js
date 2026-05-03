@@ -10,6 +10,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import Typography from "@mui/material/Typography";
 import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
@@ -54,9 +55,9 @@ export default function ActivateUserSystem({
             filterable: false,
             width: 150,
             renderCell: (params) => (
-                <button style={{ padding: '4px 16px' }} onClick={() => handleOpenDialog(params.row, "deactivateAll")}>
+                <Button variant="outlined" color="error" size="small" onClick={() => handleOpenDialog(params.row, "deactivateAll")}>
                     {texts.deactivate}
-                </button>
+                </Button>
             )
         }
     ];
@@ -153,28 +154,30 @@ export default function ActivateUserSystem({
 
 
 
-                    <h3>{texts.activateUser}</h3>
+                    <Typography variant="h6" component="h3">{texts.activateUser}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
 
-                    <DataGrid className="datagrid"
-                        rows={users.map(u => ({
-                            id: u.user_id,
-                            user_id: u.user_id,
-                            email: u.email,
-                            is_active: u.is_active
-                        }))}
-                        columns={columns}
-                        loading={loading || externalLoading}
-                        pagination
-                        pageSize={pageSize}
-                        onPageSizeChange={setPageSize}
-                        sortingMode="client"
-                        disableRowSelectionOnClick
+                    <div style={{ height: 500, width: '100%' }}>
+                        <DataGrid className="datagrid"
+                            rows={users.map(u => ({
+                                id: u.user_id,
+                                user_id: u.user_id,
+                                email: u.email,
+                                is_active: u.is_active
+                            }))}
+                            columns={columns}
+                            loading={loading || externalLoading}
+                            pagination
+                            pageSize={pageSize}
+                            onPageSizeChange={setPageSize}
+                            sortingMode="client"
+                            disableRowSelectionOnClick
 
 
-                        disableSelectionOnClick
-                    />
+                            disableSelectionOnClick
+                        />
+                    </div>
                 </AccordionDetails>
             </Accordion>
 

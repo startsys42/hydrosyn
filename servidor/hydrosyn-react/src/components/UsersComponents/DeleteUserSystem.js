@@ -12,6 +12,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import Typography from '@mui/material/Typography';
 
 export default function DeleteUserSystem({
     systemId,
@@ -55,9 +56,9 @@ export default function DeleteUserSystem({
             filterable: false,
             width: 150,
             renderCell: (params) => (
-                <button style={{ padding: '4px 16px' }} onClick={() => handleOpenDialog(params.row, false)}>
+                <Button variant="outlined" color="error" size="small" onClick={() => handleOpenDialog(params.row, false)}>
                     {texts.delete}
-                </button>
+                </Button>
             )
         },
         {
@@ -68,9 +69,9 @@ export default function DeleteUserSystem({
             filterable: false,
             width: 150,
             renderCell: (params) => (
-                <button style={{ padding: '4px 16px' }} onClick={() => handleOpenDialog(params.row, true)}>
+                <Button variant="contained" color="error" size="small" onClick={() => handleOpenDialog(params.row, true)}>
                     {texts.deleteAllSystems}
-                </button>
+                </Button>
             )
         }
     ];
@@ -138,26 +139,28 @@ export default function DeleteUserSystem({
 
             <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <h3>{texts.deleteUser}</h3>
+                    <Typography variant="h6" component="h3">{texts.deleteUser}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <DataGrid className="datagrid"
-                        rows={users.map(u => ({
-                            id: u.id,
-                            userId: u.user_id,
-                            email: u.email,
-                            is_active: u.is_active
-                        }))}
-                        columns={columns}
-                        loading={loading || externalLoading}
-                        pagination
-                        pageSize={pageSize}
-                        onPageSizeChange={setPageSize}
-                        sortingMode="client"
+                    <div style={{ height: 500, width: '100%' }}>
+                        <DataGrid className="datagrid"
+                            rows={users.map(u => ({
+                                id: u.id,
+                                userId: u.user_id,
+                                email: u.email,
+                                is_active: u.is_active
+                            }))}
+                            columns={columns}
+                            loading={loading || externalLoading}
+                            pagination
+                            pageSize={pageSize}
+                            onPageSizeChange={setPageSize}
+                            sortingMode="client"
 
 
-                        disableSelectionOnClick
-                    />
+                            disableSelectionOnClick
+                        />
+                    </div>
                 </AccordionDetails>
             </Accordion>
             <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>

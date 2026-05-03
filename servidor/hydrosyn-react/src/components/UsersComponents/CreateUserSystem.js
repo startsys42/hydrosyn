@@ -120,7 +120,7 @@ export default function CreateUserSystem({ systemId, refreshUsers, refreshAvaila
                     <Box
                         component="form"
                         onSubmit={handleSubmit}
-                        sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 400, width: '100%' }}
+                        sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}
                     >
                         <TextField
                             label={texts.email}
