@@ -94,7 +94,50 @@ export default function Login() {
 
 
     return (
+        /*
+        <div className="div-main">
+            <h1>{t.login}</h1>
 
+
+
+            <form onSubmit={handleLogin} className="form-container">
+                <label>{t.email}</label>
+                <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder={t.email}
+                    required
+                />
+                <label>{t.password}</label>
+
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder={t.password}
+                    required
+                />
+                <div className="button-group">
+                    <button type="submit" disabled={loading}>
+                        {loading ? t.verify : t.login}
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => navigate('/recover-password')}
+                    >
+                        {t.recoverPassword}
+                    </button>
+                </div>
+
+            </form>
+
+            {error && <p style={{ color: 'red' }}>Error</p>}
+
+        </div>
+
+        */
         <Container maxWidth="sm">
             <Paper
                 elevation={3}

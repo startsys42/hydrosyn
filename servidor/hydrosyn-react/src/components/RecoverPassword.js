@@ -117,7 +117,7 @@ export default function RecoverPassword() {
                     />
 
                     <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
-                        <Button type="submit" variant="contained" disabled={loading} fullWidth>
+                        <Button type="submit" variant="contained" disabled={loading || !email} fullWidth>
                             {loading ? t.sending : t?.recoverPassword}
                         </Button>
                         <Button variant="contained" onClick={() => navigate('/')} fullWidth>
@@ -127,13 +127,12 @@ export default function RecoverPassword() {
                 </Box>
 
                 {message && (
-                    <div style={{ color: 'green', marginTop: '10px' }}>
+                    <Alert severity="success" sx={{ mt: 2, width: '100%' }}>
                         {t.messageRecover}
-                    </div>
+                    </Alert>
                 )}
 
-                {/* Error sigue comentado exactamente como en el original */}
-                {/* {error && <p style={{ color: 'red' }}>Error</p>} */}
+
             </Paper>
         </Container>
     );
