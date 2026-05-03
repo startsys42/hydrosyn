@@ -8,7 +8,8 @@ import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
 
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, IconButton } from "@mui/material";
+import { Delete as DeleteIcon } from "@mui/icons-material";
 
 
 
@@ -104,24 +105,22 @@ export default function DeletePump({ systemId, pumpList, refresh, loading, error
     };
 
     const columns = [
-        { field: "name", headerName: texts.pumps, width: 180 },
-        { field: "esp32Name", headerName: texts.esp32, width: 150 },
-        { field: "originName", headerName: texts.originTank, width: 150 },
-        { field: "destinationName", headerName: texts.destinationTank, width: 150 },
+        { field: "name", headerName: texts.pumps, flex: 1, minWidth: 130 },
+        { field: "esp32Name", headerName: texts.esp32, flex: 1, minWidth: 120 },
+        { field: "originName", headerName: texts.originTank, flex: 1, minWidth: 120 },
+        { field: "destinationName", headerName: texts.destinationTank, flex: 1, minWidth: 120 },
         {
             field: "delete",
             headerName: texts.delete,
-            width: 150,
+            flex: 0.5,
+            minWidth: 80,
             sortable: false,
             disableColumnMenu: true,
             filterable: false,
             renderCell: (params) => (
-                <button
-                    onClick={() => handleOpenDialog(params.row)}
-                    style={{ padding: "4px 12px" }}
-                >
-                    {texts.delete}
-                </button>
+                <IconButton size="small" color="error" onClick={() => handleOpenDialog(params.row)}>
+                    <DeleteIcon />
+                </IconButton>
             ),
         },
     ];
@@ -138,7 +137,7 @@ export default function DeletePump({ systemId, pumpList, refresh, loading, error
         <>
             <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <h3>{texts.removePump}</h3>
+                    <Typography variant="h6" component="h3">{texts.removePump}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <div style={{ height: 500, width: '100%' }}>

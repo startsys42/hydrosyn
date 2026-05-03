@@ -4,7 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../../utils/supabaseClient';
 import useTexts from '../../utils/UseTexts';
 import { DataGrid } from '@mui/x-data-grid';
-import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, Typography, IconButton } from '@mui/material';
+import { Delete as DeleteIcon } from '@mui/icons-material';
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -131,7 +132,7 @@ export default function ListRecords({
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <h3>{texts.listRecords}</h3>
+                <Typography variant="h6" component="h3">{texts.listRecords}</Typography>
             </AccordionSummary>
             <AccordionDetails>
 
@@ -153,17 +154,19 @@ export default function ListRecords({
                                 renderInput={(params) => <TextField {...params} size="small" />}
                             />
 
-                            <button
-
+                            <Button
+                                variant="contained"
+                                color="error"
+                                startIcon={<DeleteIcon />}
                                 disabled={!fromDate || !toDate}
                                 onClick={() => setOpenDialog(true)}
                             >
                                 {texts.delete ?? 'Delete'}
-                            </button>
+                            </Button>
                         </div>
                     </LocalizationProvider>
                 )}
-                <div style={{ height: 500, width: 'auto' }}>
+                <div style={{ height: 500, width: '100%' }}>
                     <DataGrid className="datagrid"
                         rows={rows}
                         columns={columns}

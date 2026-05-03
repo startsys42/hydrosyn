@@ -6,6 +6,8 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import { Delete as DeleteIcon } from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -90,12 +92,17 @@ export default function DeleteSystem({ systemId, refresh, error, setError }) {
         <>
             <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <h3>{texts.deleteSystem}</h3>
+                    <Typography variant="h6" component="h3">{texts.deleteSystem}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <button onClick={handleOpenDialog}>
+                    <Button
+                        variant="contained"
+                        color="error"
+                        startIcon={<DeleteIcon />}
+                        onClick={handleOpenDialog}
+                    >
                         {texts.deleteSystem}
-                    </button>
+                    </Button>
 
 
                 </AccordionDetails>
