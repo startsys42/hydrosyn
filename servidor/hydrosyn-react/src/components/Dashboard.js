@@ -123,6 +123,29 @@ export default function Dashboard() {
         }
     }, [loadingAdmin, loadingOwner]);
 
+    useEffect(() => {
+        if (loadingAdmin || loadingOwner) return;
+
+        const systemsSub = supabase
+            .channel('systems-dashboard-changes')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'systems' }, () => {
+                fetchSystems();
+            })
+            .subscribe();
+
+        const systemsUsersSub = supabase
+            .channel('systems-users-dashboard-changes')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'systems_users' }, () => {
+                fetchSystems();
+            })
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(systemsSub);
+            supabase.removeChannel(systemsUsersSub);
+        };
+    }, [loadingAdmin, loadingOwner]);
+
     const columns = [
 
         { field: 'name', headerName: t.system, flex: 1, minWidth: 200, headerClassName: 'data-grid-header' },

@@ -66,6 +66,21 @@ export default function ESP32Accordion({ systemId }) {
         fetchESP32();
     }, [systemId]);
 
+    useEffect(() => {
+        if (!systemId) return;
+
+        const esp32Sub = supabase
+            .channel('esp32-changes')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'esp32', filter: `system=eq.${systemId}` }, () => {
+                fetchESP32();
+            })
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(esp32Sub);
+        };
+    }, [systemId]);
+
     return (
         <>
             <h2>{texts.esp32}</h2>

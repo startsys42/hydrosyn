@@ -48,6 +48,29 @@ export default function SettingsAccordion({ systemId }) {
         fetchSystem();
     }, [systemId]);
 
+    useEffect(() => {
+        if (!systemId) return;
+
+        const systemsSub = supabase
+            .channel('systems-settings-changes')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'systems', filter: `id=eq.${systemId}` }, () => {
+                fetchSystem();
+            })
+            .subscribe();
+
+        const secretsSub = supabase
+            .channel('system-secrets-changes')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'system_secrets', filter: `system=eq.${systemId}` }, () => {
+                fetchSystem();
+            })
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(systemsSub);
+            supabase.removeChannel(secretsSub);
+        };
+    }, [systemId]);
+
 
     const setRenameError = (message) => setErrors({ rename: message, secret: '', delete: '' });
     const setSecretError = (message) => setErrors({ rename: '', secret: message, delete: '' });

@@ -58,6 +58,21 @@ export default function TanksAccordion({ systemId }) {
         fetchTanks();
     }, [systemId]);
 
+    useEffect(() => {
+        if (!systemId) return;
+
+        const tanksSub = supabase
+            .channel('tanks-changes')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'tanks', filter: `system=eq.${systemId}` }, () => {
+                fetchTanks();
+            })
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(tanksSub);
+        };
+    }, [systemId]);
+
     return (
         <>
             <h2>{texts.tanks}</h2>
