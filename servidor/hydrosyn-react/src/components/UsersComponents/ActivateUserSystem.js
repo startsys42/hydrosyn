@@ -6,6 +6,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { DataGrid } from "@mui/x-data-grid";
 import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import BlockIcon from "@mui/icons-material/Block";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -35,7 +37,7 @@ export default function ActivateUserSystem({
     const [actionType, setActionType] = useState(null);
 
     const columns = [
-        { field: 'email', headerName: texts.email, width: 250 },
+        { field: 'email', headerName: texts.email, flex: 1, minWidth: 250 },
         {
             field: 'is_active',
             headerName: texts.active,
@@ -55,9 +57,9 @@ export default function ActivateUserSystem({
             filterable: false,
             width: 150,
             renderCell: (params) => (
-                <Button variant="outlined" color="error" size="small" onClick={() => handleOpenDialog(params.row, "deactivateAll")}>
-                    {texts.deactivate}
-                </Button>
+                <IconButton color="warning" onClick={() => handleOpenDialog(params.row, "deactivateAll")} title={texts.deactivate}>
+                    <BlockIcon />
+                </IconButton>
             )
         }
     ];
