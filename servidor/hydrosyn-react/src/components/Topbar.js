@@ -20,7 +20,7 @@ export default function Topbar() {
 
 
                 <Button
-                    variant="outlined"
+                    variant="contained"
                     color="inherit"
                     onClick={toggleTheme}
                     sx={{ mr: 2 }}
