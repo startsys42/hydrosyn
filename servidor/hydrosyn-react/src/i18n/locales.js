@@ -109,8 +109,8 @@ const texts = {
         logout: 'Cerrar sesión',
 
         verify: 'Verificando...',
-        createAdmin: 'Crear administrador',
-        activateDeleteAdmin: 'Activar/Eliminar administrador',
+        createAdmin: 'Crear propietario',
+        activateDeleteAdmin: 'Activar/Eliminar propietario',
         username: 'Usuario',
 
         usersManage: 'Gestión de usuarios',
@@ -381,8 +381,8 @@ const texts = {
 
         logout: 'Logout',
         verify: 'Verifying...',
-        createAdmin: 'Create admin',
-        activateDeleteAdmin: 'Activate/Delete admin',
+        createAdmin: 'Create owner',
+        activateDeleteAdmin: 'Activate/Delete owner',
 
 
 
