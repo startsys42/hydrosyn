@@ -93,7 +93,7 @@ export default function CreateUserAdmin() {
                         type="submit"
                         variant="contained"
                         fullWidth
-                        disabled={loading}
+                        disabled={loading || !email}
                         sx={{ mt: 3, mb: 2 }}
                     >
                         {loading ? <CircularProgress size={24} /> : texts.createAdmin}

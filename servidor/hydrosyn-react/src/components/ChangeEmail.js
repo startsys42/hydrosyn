@@ -169,7 +169,7 @@ export default function ChangeEmail() {
                         type="submit"
                         variant="contained"
                         fullWidth
-                        disabled={loading}
+                        disabled={loading || !newEmail || !confirmEmail}
                         sx={{ mt: 3, mb: 2 }}
                     >
                         {loading ? <CircularProgress size={24} /> : texts.changeEmail}

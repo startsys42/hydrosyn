@@ -18,6 +18,7 @@ const ActivateDeleteUserAdmin = () => {
     const [pageSize, setPageSize] = useState(10);
     const [currentUser, setCurrentUser] = useState(null);
     const [toggleValue, setToggleValue] = useState(false);
+    const [actionLoading, setActionLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -57,6 +58,7 @@ const ActivateDeleteUserAdmin = () => {
 
     const handleToggleConfirm = async () => {
         if (!currentUser) return;
+        setActionLoading(true);
         try {
 
             const { error } = await supabase.rpc('change_admin_user_status', {
@@ -81,6 +83,8 @@ const ActivateDeleteUserAdmin = () => {
 
             setConfirmOpen(false);
             setCurrentUser(null);
+        } finally {
+            setActionLoading(false);
         }
     };
     const handleDeleteClick = async (user) => {
@@ -112,6 +116,7 @@ const ActivateDeleteUserAdmin = () => {
     };
     const handleDeleteConfirm = async () => {
         if (!currentUser) return;
+        setActionLoading(true);
 
         try {
             const { data: { session } } = await supabase.auth.getSession();
@@ -132,6 +137,8 @@ const ActivateDeleteUserAdmin = () => {
             setCurrentUser(null);
         } catch (err) {
             console.error(err);
+        } finally {
+            setActionLoading(false);
         }
 
 
@@ -226,7 +233,7 @@ const ActivateDeleteUserAdmin = () => {
                 <DialogActions>
                     <Button onClick={() => setConfirmOpen(false)}>{texts.no}</Button>
 
-                    <Button onClick={handleToggleConfirm} variant="contained">{texts.yes}</Button>
+                    <Button onClick={handleToggleConfirm} variant="contained" disabled={actionLoading}>{texts.yes}</Button>
                 </DialogActions>
             </Dialog>
 
@@ -241,7 +248,7 @@ const ActivateDeleteUserAdmin = () => {
                 <DialogActions>
                     <Button onClick={() => setDeleteOpen(false)}>{texts.no}</Button>
 
-                    <Button onClick={handleDeleteConfirm} variant="contained" color="error">{texts.yes}</Button>
+                    <Button onClick={handleDeleteConfirm} variant="contained" color="error" disabled={actionLoading}>{texts.yes}</Button>
                 </DialogActions>
             </Dialog>
 

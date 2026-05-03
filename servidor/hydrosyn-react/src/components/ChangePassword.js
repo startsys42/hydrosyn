@@ -4,7 +4,8 @@ import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Paper, Box, Typography, TextField, Button, CircularProgress, Alert } from '@mui/material';
+import { Container, Paper, Box, Typography, TextField, Button, CircularProgress, Alert, IconButton, InputAdornment } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 export default function ChangePassword() {
     const [newPassword, setNewPassword] = useState('');
@@ -12,6 +13,8 @@ export default function ChangePassword() {
     const [message, setMessage] = useState({ text: '', type: '' });
     const [messageKey, setMessageKey] = useState('');
     const [loading, setLoading] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const texts = useTexts();
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
@@ -119,36 +122,58 @@ export default function ChangePassword() {
                         fullWidth
                         margin="normal"
                         label={texts.newPassword}
-                        type="password"
+                        type={showNewPassword ? "text" : "password"}
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
                         placeholder={texts.newPassword}
                         required
                         disabled={loading}
-
                         inputProps={{ minLength: 10 }}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        onClick={() => setShowNewPassword((show) => !show)}
+                                        edge="end"
+                                    >
+                                        {showNewPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            )
+                        }}
                     />
 
                     <TextField
                         variant="outlined"
                         fullWidth
                         margin="normal"
-
                         label={texts.newPassword}
-                        type="password"
+                        type={showConfirmPassword ? "text" : "password"}
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         placeholder={texts.newPassword}
                         required
                         disabled={loading}
                         inputProps={{ minLength: 10 }}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        onClick={() => setShowConfirmPassword((show) => !show)}
+                                        edge="end"
+                                    >
+                                        {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            )
+                        }}
                     />
 
                     <Button
                         type="submit"
                         variant="contained"
                         fullWidth
-                        disabled={loading}
+                        disabled={loading || !newPassword || !confirmPassword}
                         sx={{ mt: 3, mb: 2 }}
                     >
                         {loading ? <CircularProgress size={24} /> : texts.changePassword}
