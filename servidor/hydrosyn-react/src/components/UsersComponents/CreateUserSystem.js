@@ -137,7 +137,7 @@ export default function CreateUserSystem({ systemId, refreshUsers, refreshAvaila
                             type="submit"
                             variant="contained"
                             color="primary"
-                            disabled={loading}
+                            disabled={loading || !email}
                             fullWidth
                         >
                             {loading ? texts.creating : texts.createUser}
