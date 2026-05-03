@@ -360,8 +360,7 @@ export default function PumpsAccordion({ systemId }) {
 
     return (
         <>
-            <div style={{ maxWidth: 800 }}>
-                <h2>{texts.pumps}</h2>
+            <h2>{texts.pumps}</h2>
                 {role === 'owner' && (
                     <>
 
@@ -462,9 +461,6 @@ export default function PumpsAccordion({ systemId }) {
                     setError={(msg) => setComponentError("programList", msg)}
                     userRole={role}
                 />
-
-            </div>
-
 
         </>
 

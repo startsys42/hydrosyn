@@ -144,9 +144,8 @@ export default function LightAccordion({ systemId }) {
 
 
     return (
-        <div style={{ maxWidth: 800 }}>
-            <h2> {texts.lights}
-            </h2>
+        <>
+            <h2>{texts.lights}</h2>
 
             {role === 'owner' && (
                 <>
@@ -208,6 +207,6 @@ export default function LightAccordion({ systemId }) {
                 setError={(msg) => setComponentError("records", msg)}
             />
 
-        </div>
+        </>
     );
 }

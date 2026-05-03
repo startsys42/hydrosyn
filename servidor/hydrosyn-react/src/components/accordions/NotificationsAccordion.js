@@ -76,16 +76,15 @@ export default function NotificationsAccordion({ systemId }) {
     };
 
     const columns = [
-        { field: 'user_email', headerName: 'Email', flex: 1, minWidth: 220 },
+        { field: 'user_email', headerName: 'Email', flex: 1 },
         {
-            field: 'reason', headerName: texts.reason, flex: 1, minWidth: 220, renderCell: (params) => {
+            field: 'reason', headerName: texts.reason, flex: 1, renderCell: (params) => {
                 return translateReason(params.value);
             }
         },
         {
             field: 'attempt_created_at',
             headerName: texts.dateTime,
-            minWidth: 150,
             flex: 1,
             renderCell: (params) => {
                 if (!params.value) {
@@ -120,18 +119,18 @@ export default function NotificationsAccordion({ systemId }) {
 
 
 
-            <DataGrid className="datagrid"
-                rows={attempts.map((a, index) => ({ id: index, ...a }))}
-                columns={columns}
-                loading={loading}
-                pagination
-                pageSize={pageSize}
-                onPageSizeChange={setPageSize}
-                sortingMode="client"
-
-
-                disableSelectionOnClick
-            />
+            <div style={{ height: 500, width: '100%' }}>
+                <DataGrid className="datagrid"
+                    rows={attempts.map((a, index) => ({ id: index, ...a }))}
+                    columns={columns}
+                    loading={loading}
+                    pagination
+                    pageSize={pageSize}
+                    onPageSizeChange={setPageSize}
+                    sortingMode="client"
+                    disableSelectionOnClick
+                />
+            </div>
 
 
             {error && <p style={{ color: 'red' }}>{error}</p>}
