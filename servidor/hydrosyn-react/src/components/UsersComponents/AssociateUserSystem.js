@@ -185,7 +185,7 @@ export default function AssociateUserSystem({
                                 email: u.email
                             }))}
                             columns={columns}
-                            loading={loading || externalLoading}
+                            loading={externalLoading}
                             pagination
                             pageSize={pageSize}
                             onPageSizeChange={setPageSize}

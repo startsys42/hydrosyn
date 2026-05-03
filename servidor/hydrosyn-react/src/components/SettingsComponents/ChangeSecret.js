@@ -26,9 +26,11 @@ import {
     FormControlLabel,
     Box,
     Typography,
-    Stack
+    Stack,
+    IconButton
 } from "@mui/material";
 import InputAdornment from '@mui/material/InputAdornment';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 
 export default function ChangeSecretAccordion({ systemId, secret: initialSecret, refreshSecret, error, setError }) {
@@ -160,9 +162,9 @@ export default function ChangeSecretAccordion({ systemId, secret: initialSecret,
                             readOnly: true,
                             endAdornment: (
                                 <InputAdornment position="end">
-                                    <Button onClick={toggleShowCurrentSecret} color="inherit" size="small">
-                                        {showCurrentSecret ? texts.hide : texts.show}
-                                    </Button>
+                                    <IconButton onClick={toggleShowCurrentSecret} edge="end">
+                                        {showCurrentSecret ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
                                 </InputAdornment>
                             ),
                         }}
@@ -180,9 +182,9 @@ export default function ChangeSecretAccordion({ systemId, secret: initialSecret,
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
-                                    <Button onClick={toggleShowNewSecret} color="inherit" size="small">
-                                        {showNewSecret ? texts.hide : texts.show}
-                                    </Button>
+                                    <IconButton onClick={toggleShowNewSecret} edge="end">
+                                        {showNewSecret ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
                                 </InputAdornment>
                             ),
                         }}
@@ -209,48 +211,5 @@ export default function ChangeSecretAccordion({ systemId, secret: initialSecret,
             </AccordionDetails>
         </Accordion>
 
-        /*
-        <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <h3>{texts.changeSecret}</h3>
-            </AccordionSummary>
-            <AccordionDetails>
-
-
-
-                <form onSubmit={handleSecretChange} className='form-container'>
-                    <label>{texts.currentSecret}</label>
-                    <input
-                        type={showSecret ? "text" : "password"}
-                        value={secret}
-                        required
-                        minLength={10}
-                        maxLength={30}
-                        placeholder={texts.currentSecret}
-                        readOnly
-                    />
-
-                    <label>{texts.newSecret}</label>
-                    <input
-                        type={showSecret ? "text" : "password"}
-                        value={newSecret}
-                        onChange={(e) => setNewSecret(e.target.value)}
-                        required
-                        minLength={10}
-                        maxLength={30}
-                        placeholder={texts.newSecret}
-                    />
-                    <button type="button" onClick={toggleShowSecret}>
-                        {showSecret ? texts.hide : texts.show}
-                    </button>
-
-                    <button type="submit" disabled={loading}>{texts.newSecret}</button>
-
-                </form>
-
-                {error && <p style={{ color: 'red' }}>{texts[error]}</p>}
-            </AccordionDetails>
-        </Accordion>
-        */
     );
 }

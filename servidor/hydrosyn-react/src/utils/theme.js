@@ -27,6 +27,13 @@ export const lightTheme = createTheme({
                 },
             },
         },
+        MuiButton: {
+            styleOverrides: {
+                textPrimary: {
+                    color: '#555555', // Neutral dark grey for text buttons like 'Cancel/No'
+                },
+            },
+        },
     },
 });
 
@@ -54,6 +61,13 @@ export const darkTheme = createTheme({
                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                         borderColor: '#6402c0',
                     },
+                },
+            },
+        },
+        MuiButton: {
+            styleOverrides: {
+                textPrimary: {
+                    color: '#e0e0e0', // Light grey/white for better visibility on dark backgrounds
                 },
             },
         },
