@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../../utils/supabaseClient';
 import useTexts from '../../utils/UseTexts';
 import { DataGrid } from '@mui/x-data-grid';
-import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material';
+import { Delete as DeleteIcon } from '@mui/icons-material';
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -100,27 +101,19 @@ export default function ListCalibration({ systemId, calibrationList, refresh, us
 
 
     const columns = [
-        { field: 'pump_name', headerName: texts.pumps, flex: 1, minWidth: 180 },
-        { field: 'user_email', headerName: texts.email, flex: 1, minWidth: 220 },
-        { field: 'success', headerName: texts.success, flex: 1, minWidth: 120 },
+        { field: 'pump_name', headerName: texts.pumps, flex: 1 },
+        { field: 'user_email', headerName: texts.email, flex: 1 },
+        { field: 'success', headerName: texts.success, flex: 1 },
         {
             field: 'created_at',
             headerName: texts.dateTime,
-            minWidth: 150,
             flex: 1,
             renderCell: (params) => {
-                if (!params.value) {
-                    return '--';
-                }
+                if (!params.value) return '--';
                 try {
-
-
                     const date = new Date(params.value);
-
                     if (isNaN(date.getTime())) { return 'Date invalid'; }
-
                     return date.toLocaleString(undefined, {
-
                         year: 'numeric',
                         month: '2-digit',
                         day: '2-digit',
@@ -128,9 +121,7 @@ export default function ListCalibration({ systemId, calibrationList, refresh, us
                         minute: '2-digit',
                         second: '2-digit'
                     });
-
                 } catch (error) {
-
                     return 'Error date';
                 }
             }
@@ -140,9 +131,7 @@ export default function ListCalibration({ systemId, calibrationList, refresh, us
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-
-
-                <h3>{texts.listCalibrations}</h3>
+                <Typography variant="h6" component="h3">{texts.listCalibrations}</Typography>
             </AccordionSummary>
             <AccordionDetails>
 
@@ -164,17 +153,19 @@ export default function ListCalibration({ systemId, calibrationList, refresh, us
                                 renderInput={(params) => <TextField {...params} size="small" />}
                             />
 
-                            <button
-
-                                disabled={!fromDate || !toDate}
+                            <Button
+                                variant="contained"
+                                color="error"
+                                startIcon={<DeleteIcon />}
+                                disabled={!fromDate || !toDate || deleting}
                                 onClick={() => setOpenDialog(true)}
                             >
                                 {texts.delete ?? 'Delete'}
-                            </button>
+                            </Button>
                         </div>
                     </LocalizationProvider>
                 )}
-                <div style={{ height: 500, width: 'auto' }}>
+                <div style={{ height: 500, width: '100%' }}>
                     <DataGrid className="datagrid"
                         rows={rows}
                         columns={columns}

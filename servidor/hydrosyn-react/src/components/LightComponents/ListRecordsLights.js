@@ -132,19 +132,16 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
         {
             field: 'light_name',
             headerName: texts.lights,
-            flex: 1,
-            minWidth: 150
+            flex: 1
         },
         {
             field: 'action',
             headerName: texts.onOff,
-            flex: 0.8,
-            minWidth: 120
+            flex: 1
         },
         {
             field: 'created_at',
             headerName: texts.dateTime,
-            minWidth: 180,
             flex: 1,
             renderCell: (params) => {
                 if (!params.value) return '--';
@@ -175,7 +172,7 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
 
                 {userRole === 'owner' && (
                     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={language}>
-                        <div style={{ display: 'flex', gap: 16, marginBottom: 16, alignItems: 'center' }}>
+                        <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
                             <DateTimePicker
                                 label={texts.fromDate ?? 'From'}
                                 value={fromDate}
@@ -200,8 +197,6 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
                         </div>
                     </LocalizationProvider>
                 )}
-
-
                 <div style={{ height: 500, width: '100%' }}>
                     <DataGrid
                         className="datagrid"
@@ -212,8 +207,6 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
                         pageSize={pageSize}
                         onPageSizeChange={setPageSize}
                         sortingMode="client"
-
-
                         disableSelectionOnClick
                     />
                 </div>
