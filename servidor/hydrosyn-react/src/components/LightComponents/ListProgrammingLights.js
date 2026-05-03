@@ -94,11 +94,11 @@ export default function ListProgrammingLights({ lightList, programmingList, refr
 
     if (userRole === "owner") {
         columns.push({
-            field: "delete", headerName: texts.delete, width: 80, sortable: false,
+            field: "delete", headerName: texts.delete, flex: 0.5, minWidth: 70, sortable: false,
             renderCell: (params) => <IconButton size="small" color="error" onClick={() => handleDeleteClick(params.row.originalData)}><DeleteIcon /></IconButton>
         });
         columns.push({
-            field: "edit", headerName: texts.update, width: 80, sortable: false,
+            field: "edit", headerName: texts.update, flex: 0.5, minWidth: 70, sortable: false,
             renderCell: (params) => <IconButton size="small" color="primary" onClick={() => handleEditClick(params.row.originalData)}><EditIcon /></IconButton>
         });
     }
@@ -116,7 +116,7 @@ export default function ListProgrammingLights({ lightList, programmingList, refr
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <h3>{texts.listProgrammingLight}</h3>
+                <Typography variant="h6" component="h3">{texts.listProgrammingLight}</Typography>
             </AccordionSummary>
             <AccordionDetails>
                 <div style={{ height: 500, width: "100%" }}>

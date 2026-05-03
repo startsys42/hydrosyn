@@ -4,7 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../../utils/supabaseClient';
 import useTexts from '../../utils/UseTexts';
 import { DataGrid } from '@mui/x-data-grid';
-import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material';
+import { Delete as DeleteIcon } from '@mui/icons-material';
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Accordion from "@mui/material/Accordion";
@@ -168,7 +169,7 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <h3>{texts.lightsHistory}</h3>
+                <Typography variant="h6" component="h3">{texts.lightsHistory}</Typography>
             </AccordionSummary>
             <AccordionDetails>
 
@@ -190,6 +191,7 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
                             <Button
                                 variant="contained"
                                 color="error"
+                                startIcon={<DeleteIcon />}
                                 disabled={!fromDate || !toDate || deleting}
                                 onClick={() => setOpenDialog(true)}
                             >
