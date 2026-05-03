@@ -14,6 +14,7 @@ import { useLanguage } from '../utils/LanguageContext';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import { Container, Paper, Typography, Stack, Alert, Box } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 dayjs.extend(utc);
@@ -196,7 +197,7 @@ export default function NotificationsAdmin() {
                     <Stack
                         direction={{ xs: 'column', sm: 'row' }}
                         spacing={2}
-                        sx={{ mt: 2, mb: 3, alignItems: 'center', justifyContent: 'center' }}
+                        sx={{ mt: 2, mb: 3, alignItems: 'center', justifyContent: 'flex-start' }}
                     >
                         <DateTimePicker
                             label={texts.fromDate ?? 'From'}
@@ -217,7 +218,7 @@ export default function NotificationsAdmin() {
                             color="error"
                             disabled={!fromDate || !toDate}
                             onClick={() => setOpenDialog(true)}
-                            sx={{ minWidth: 120, height: 40 }}
+                            startIcon={<DeleteIcon />}
                         >
                             {texts.delete ?? 'Delete'}
                         </Button>

@@ -136,7 +136,8 @@ export default function Dashboard() {
             renderCell: (params) => (
                 <Checkbox
                     checked={params.value}
-                    disabled
+                    readOnly
+                    disableRipple
                 />
             )
         },
