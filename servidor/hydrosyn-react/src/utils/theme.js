@@ -31,7 +31,10 @@ export const lightTheme = createTheme({
             styleOverrides: {
                 root: {
                     '& .MuiButton-text': {
-                        color: '#555555', // Neutral dark grey for 'Cancel/No' buttons in dialogs
+                        color: '#555555',
+                        '&:hover': {
+                            backgroundColor: 'rgba(0, 0, 0, 0.08)',
+                        }
                     },
                 },
             },
@@ -70,7 +73,10 @@ export const darkTheme = createTheme({
             styleOverrides: {
                 root: {
                     '& .MuiButton-text': {
-                        color: '#e0e0e0', // Light grey/white for 'Cancel/No' buttons in dialogs
+                        color: '#e0e0e0',
+                        '&:hover': {
+                            backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                        }
                     },
                 },
             },
