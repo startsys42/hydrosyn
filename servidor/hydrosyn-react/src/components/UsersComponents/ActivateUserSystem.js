@@ -41,7 +41,7 @@ export default function ActivateUserSystem({
         {
             field: 'is_active',
             headerName: texts.active,
-            width: 150,
+            flex: 1,
             renderCell: (params) => (
                 <Checkbox
                     checked={params.value}
@@ -55,7 +55,7 @@ export default function ActivateUserSystem({
             sortable: false,
             disableColumnMenu: true,
             filterable: false,
-            width: 150,
+            flex: 1,
             renderCell: (params) => (
                 <IconButton color="warning" onClick={() => handleOpenDialog(params.row, "deactivateAll")} title={texts.deactivate}>
                     <BlockIcon />

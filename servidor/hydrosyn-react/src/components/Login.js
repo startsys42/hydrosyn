@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
 
-import { Container, Paper, Box, Typography, TextField, Button, Stack, CircularProgress, Alert } from '@mui/material';
+import { Container, Paper, Box, Typography, TextField, Button, Stack, CircularProgress, Alert, InputAdornment, IconButton } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 
 
@@ -13,6 +14,7 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [showResetPassword, setShowResetPassword] = useState(false);
     const [resetEmail, setResetEmail] = useState('');
     const [resetSent, setResetSent] = useState(false);
@@ -92,50 +94,7 @@ export default function Login() {
 
 
     return (
-        /*
-        <div className="div-main">
-            <h1>{t.login}</h1>
 
-
-
-            <form onSubmit={handleLogin} className="form-container">
-                <label>{t.email}</label>
-                <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder={t.email}
-                    required
-                />
-                <label>{t.password}</label>
-
-                <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder={t.password}
-                    required
-                />
-                <div className="button-group">
-                    <button type="submit" disabled={loading}>
-                        {loading ? t.verify : t.login}
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={() => navigate('/recover-password')}
-                    >
-                        {t.recoverPassword}
-                    </button>
-                </div>
-
-            </form>
-
-            {error && <p style={{ color: 'red' }}>Error</p>}
-
-        </div>
-
-        */
         <Container maxWidth="sm">
             <Paper
                 elevation={3}
@@ -167,24 +126,37 @@ export default function Login() {
                     />
 
                     <TextField
-                        id="outlined-basic"
+                        id="outlined-password"
                         variant="outlined"
                         fullWidth
                         margin="normal"
                         label={t.password}
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder={t.password}
                         required
                         disabled={loading}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        edge="end"
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            )
+                        }}
                     />
 
                     <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
                         <Button
                             type="submit"
                             variant="contained"
-                            disabled={loading}
+                            disabled={loading || !email || !password}
                             fullWidth
                         >
                             {loading ? <CircularProgress size={24} /> : t.login}

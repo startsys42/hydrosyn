@@ -11,6 +11,9 @@ import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { DataGrid } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
+import IconButton from '@mui/material/IconButton';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -139,24 +142,23 @@ export default function AssociateUserSystem({
     };
 
     const columns = [
-        { field: "email", headerName: texts.email, width: 250 },
+        { field: "email", headerName: texts.email, flex: 1, minWidth: 250 },
         {
             field: "associate",
             headerName: texts.associate,
             sortable: false,
             filterable: false,
             disableColumnMenu: true,
-            width: 150,
+            flex: 1,
             renderCell: (params) => (
-                <Button
-                    variant="contained"
+                <IconButton
                     color="primary"
-                    size="small"
                     onClick={() => handleOpenDialog(params.row)}
                     disabled={loading || externalLoading}
+                    title={texts.associate}
                 >
-                    {texts.associate}
-                </Button>
+                    <PersonAddIcon />
+                </IconButton>
             ),
 
         }
@@ -170,6 +172,11 @@ export default function AssociateUserSystem({
                     <Typography variant="h6" component="h3">{texts.associateUser}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
+                    {externalError && (
+                        <Alert severity="error" sx={{ mb: 2 }}>
+                            {texts[externalError] || externalError}
+                        </Alert>
+                    )}
                     <div style={{ height: 500, width: '100%' }}>
                         <DataGrid
                             rows={(availableUsers || []).map(u => ({
@@ -188,8 +195,6 @@ export default function AssociateUserSystem({
                             disableSelectionOnClick
                         />
                     </div>
-
-                    {externalError && <p style={{ color: 'red' }}>{texts[externalError] || externalError}</p>}
                 </AccordionDetails>
             </Accordion>
             <Dialog open={openDialog} onClose={handleCloseDialog}>
