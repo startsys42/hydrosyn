@@ -185,7 +185,7 @@ export default function CreateSystem() {
                         type="submit"
                         variant="contained"
                         fullWidth
-                        disabled={loading}
+                        disabled={loading || !systemName || !systemCode}
                         sx={{ mt: 1 }}
                     >
                         {loading ? texts.verify : texts.newSystem}
