@@ -7,7 +7,6 @@ import { useOwnerStatus } from '../utils/OwnerContext';
 import { useNavigate } from 'react-router-dom';
 import { TextField, CircularProgress } from '@mui/material';
 
-import { CheckBox, CheckBoxOutlineBlank, Padding } from '@mui/icons-material';
 import Checkbox from '@mui/material/Checkbox';
 
 import { DataGrid } from '@mui/x-data-grid';
@@ -138,10 +137,6 @@ export default function Dashboard() {
                 <Checkbox
                     checked={params.value}
                     disabled
-                    icon={<CheckBoxOutlineBlank />}
-                    checkedIcon={<CheckBox />}
-
-
                 />
             )
         },
