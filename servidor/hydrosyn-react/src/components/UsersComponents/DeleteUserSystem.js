@@ -13,6 +13,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
+import { IconButton, Radio, RadioGroup, FormControlLabel, FormControl } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function DeleteUserSystem({
     systemId,
@@ -33,9 +35,9 @@ export default function DeleteUserSystem({
     const navigate = useNavigate();
 
 
-    const handleOpenDialog = (user, deleteAll) => {
+    const handleOpenDialog = (user) => {
         setCurrentUser(user);
-        setDeleteAllSystems(deleteAll);
+        setDeleteAllSystems(false);
         setOpenDialog(true);
         setExternalError("");
     };
@@ -47,31 +49,18 @@ export default function DeleteUserSystem({
     };
 
     const columns = [
-        { field: "email", headerName: texts.email, width: 250 },
+        { field: "email", headerName: texts.email, flex: 1, minWidth: 250 },
         {
-            field: 'thisSystem',
+            field: 'actions',
             headerName: texts.delete,
             sortable: false,
             disableColumnMenu: true,
             filterable: false,
-            width: 150,
+            width: 100,
             renderCell: (params) => (
-                <Button variant="outlined" color="error" size="small" onClick={() => handleOpenDialog(params.row, false)}>
-                    {texts.delete}
-                </Button>
-            )
-        },
-        {
-            field: 'allSystems',
-            headerName: texts.deleteAllSystems,
-            sortable: false,
-            disableColumnMenu: true,
-            filterable: false,
-            width: 150,
-            renderCell: (params) => (
-                <Button variant="contained" color="error" size="small" onClick={() => handleOpenDialog(params.row, true)}>
-                    {texts.deleteAllSystems}
-                </Button>
+                <IconButton color="error" onClick={() => handleOpenDialog(params.row)}>
+                    <DeleteIcon />
+                </IconButton>
             )
         }
     ];
@@ -166,10 +155,24 @@ export default function DeleteUserSystem({
             <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
                 <DialogTitle>{texts.confirmation}</DialogTitle>
                 <DialogContent>
-                    {deleteAllSystems
-                        ? `${texts.deleteUserAllSystemsQuestion} ${currentUser?.email}? ${texts.actionIrreversible}`
-                        : `${texts.deleteUserQuestion} ${currentUser?.email}? ${texts.actionIrreversible}`
-                    }
+                    <Typography gutterBottom>
+                        {deleteAllSystems
+                            ? `${texts.deleteUserAllSystemsQuestion} ${currentUser?.email}?`
+                            : `${texts.deleteUserQuestion} ${currentUser?.email}?`
+                        }
+                    </Typography>
+                    <FormControl component="fieldset" sx={{ mt: 2 }}>
+                        <RadioGroup
+                            value={deleteAllSystems ? "all" : "this"}
+                            onChange={(e) => setDeleteAllSystems(e.target.value === "all")}
+                        >
+                            <FormControlLabel value="this" control={<Radio />} label={texts.delete} />
+                            <FormControlLabel value="all" control={<Radio />} label={texts.deleteAllSystems} />
+                        </RadioGroup>
+                    </FormControl>
+                    <Typography color="error" variant="body2" sx={{ mt: 2, fontWeight: 'bold' }}>
+                        {texts.actionIrreversible}
+                    </Typography>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseDialog}>{texts.no}</Button>
