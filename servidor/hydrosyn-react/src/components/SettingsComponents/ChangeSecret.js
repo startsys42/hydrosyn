@@ -41,7 +41,7 @@ export default function ChangeSecretAccordion({ systemId, secret: initialSecret,
     const [showNewSecret, setShowNewSecret] = useState(false);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    
+
     const toggleShowCurrentSecret = () => setShowCurrentSecret(!showCurrentSecret);
     const toggleShowNewSecret = () => setShowNewSecret(!showNewSecret);
 
