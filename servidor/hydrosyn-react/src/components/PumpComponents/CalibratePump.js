@@ -170,7 +170,7 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
                             variant="outlined"
                             color="primary"
                             onClick={handleInsertCalibration}
-                            disabled={loading}
+                            disabled={loading || !selectedPump}
                             fullWidth
                         >
                             {loading ? texts.creating : texts.calibrate}
@@ -181,7 +181,7 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
                             variant="contained"
                             color="primary"
                             onClick={() => setAction("calibrate")}
-                            disabled={loading}
+                            disabled={loading || !selectedPump || !volume}
                             fullWidth
                         >
                             {loading ? texts.creating : texts.saveCalibration}

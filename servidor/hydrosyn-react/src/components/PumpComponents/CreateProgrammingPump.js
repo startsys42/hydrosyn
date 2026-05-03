@@ -217,7 +217,7 @@ export default function CreateProgrammingPump({
                         type="submit"
                         variant="contained"
                         color="primary"
-                        disabled={loading}
+                        disabled={loading || !selectedPump || !day || !timeValue || !volume}
                         fullWidth
                     >
                         {loading ? texts.creating : texts.createProgramming}

@@ -259,7 +259,7 @@ export default function CreatePump({ systemId, pumpList, refresh, error, setErro
                         type="submit"
                         variant="contained"
                         color="primary"
-                        disabled={loading}
+                        disabled={loading || !pumpName || !esp32Id || !gpio || !originTank || !destinationTank}
                         fullWidth
                     >
                         {texts.addPump}
