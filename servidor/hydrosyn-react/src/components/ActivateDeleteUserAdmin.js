@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { supabase } from '../utils/supabaseClient';
 import useTexts from '../utils/UseTexts';
 
-import { Checkbox, Button, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material';
+import { Checkbox, Button, Dialog, DialogTitle, DialogContent, DialogActions, Typography, IconButton } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
 import { Container, Paper, Box } from '@mui/material';
@@ -147,7 +148,7 @@ const ActivateDeleteUserAdmin = () => {
 
 
     const columns = [
-        { field: 'email', headerName: texts.email, width: 250 },
+        { field: 'email', headerName: texts.email, flex: 1, minWidth: 250 },
         {
             field: 'is_active',
             headerName: texts.active,
@@ -165,16 +166,14 @@ const ActivateDeleteUserAdmin = () => {
             sortable: false,
             disableColumnMenu: true,
             filterable: false,
-            width: 150,
+            width: 100,
             renderCell: (params) => (
-                <Button
-                    variant="outlined"
+                <IconButton
                     color="error"
-                    size="small"
                     onClick={() => handleDeleteClick(params.row)}
                 >
-                    {texts.delete}
-                </Button>
+                    <DeleteIcon />
+                </IconButton>
             )
         }
     ];

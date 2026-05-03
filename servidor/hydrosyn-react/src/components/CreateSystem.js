@@ -3,7 +3,8 @@ import useTexts from '../utils/UseTexts';
 
 import { useState } from 'react';
 import { supabase } from '../utils/supabaseClient';
-import { Container, Paper, Box, Typography, TextField, Button, Alert } from '@mui/material';
+import { Container, Paper, Box, Typography, TextField, Button, Alert, IconButton, InputAdornment } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 export default function CreateSystem() {
     const navigate = useNavigate();
@@ -11,6 +12,7 @@ export default function CreateSystem() {
     const [systemName, setSystemName] = useState('');
     const [systemCode, setSystemCode] = useState('');
     const [loading, setLoading] = useState(false);
+    const [showSystemCode, setShowSystemCode] = useState(false);
     const [error, setError] = useState('');
 
     const handleCreateSystem = async (e) => {
@@ -173,12 +175,25 @@ export default function CreateSystem() {
                         variant="outlined"
                         fullWidth
                         label={texts.codeESP}
+                        type={showSystemCode ? "text" : "password"}
                         value={systemCode}
                         onChange={(e) => setSystemCode(e.target.value)}
                         placeholder={texts.codeESP}
                         required
                         disabled={loading}
                         inputProps={{ minLength: 10, maxLength: 30 }}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        onClick={() => setShowSystemCode((show) => !show)}
+                                        edge="end"
+                                    >
+                                        {showSystemCode ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            )
+                        }}
                     />
 
                     <Button
