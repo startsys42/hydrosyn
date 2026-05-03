@@ -102,7 +102,7 @@ export default function RenameSystem({ systemId, systemName, refresh, error, set
                 <Box
                     component="form"
                     onSubmit={handleRename}
-                    sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 400, width: '100%' }}
+                    sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}
                 >
                     <TextField
                         label={texts.newName}
@@ -119,7 +119,7 @@ export default function RenameSystem({ systemId, systemName, refresh, error, set
                         type="submit"
                         variant="contained"
                         color="primary"
-                        disabled={loading}
+                        disabled={loading || !name}
                         fullWidth
                     >
                         {texts.renameSystem}

@@ -121,7 +121,6 @@ export default function RenameESP32({ systemId, espList, refresh, error, setErro
                         display: 'flex',
                         flexDirection: 'column',
                         gap: 2,
-                        maxWidth: 400,
                         width: '100%'
                     }}
                 >

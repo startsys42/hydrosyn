@@ -107,12 +107,11 @@ export default function DeleteESP32({ systemId, espList, refresh, loading, error
     };
 
     const columns = [
-        { field: "name", headerName: texts.esp32, flex: 1, minWidth: 150 },
+        { field: "name", headerName: texts.esp32, flex: 1 },
         {
             field: "delete",
             headerName: texts.delete,
             flex: 0.5,
-            minWidth: 80,
             sortable: false,
             disableColumnMenu: true,
             filterable: false,

@@ -35,10 +35,13 @@ export default function ChangeSecretAccordion({ systemId, secret: initialSecret,
     const texts = useTexts();
     const [secret, setSecret] = useState(initialSecret || "");
     const [newSecret, setNewSecret] = useState("");
-    const [showSecret, setShowSecret] = useState(false);
+    const [showCurrentSecret, setShowCurrentSecret] = useState(false);
+    const [showNewSecret, setShowNewSecret] = useState(false);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const toggleShowSecret = () => setShowSecret(!showSecret);
+    
+    const toggleShowCurrentSecret = () => setShowCurrentSecret(!showCurrentSecret);
+    const toggleShowNewSecret = () => setShowNewSecret(!showNewSecret);
 
     useEffect(() => {
         setSecret(initialSecret || "");
@@ -149,7 +152,7 @@ export default function ChangeSecretAccordion({ systemId, secret: initialSecret,
                 <Box component="form" onSubmit={handleSecretChange} sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 1 }}>
                     <TextField
                         label={texts.currentSecret}
-                        type={showSecret ? "text" : "password"}
+                        type={showCurrentSecret ? "text" : "password"}
                         value={secret}
                         required
                         fullWidth
@@ -157,8 +160,8 @@ export default function ChangeSecretAccordion({ systemId, secret: initialSecret,
                             readOnly: true,
                             endAdornment: (
                                 <InputAdornment position="end">
-                                    <Button onClick={toggleShowSecret} color="inherit" size="small">
-                                        {showSecret ? texts.hide : texts.show}
+                                    <Button onClick={toggleShowCurrentSecret} color="inherit" size="small">
+                                        {showCurrentSecret ? texts.hide : texts.show}
                                     </Button>
                                 </InputAdornment>
                             ),
@@ -169,7 +172,7 @@ export default function ChangeSecretAccordion({ systemId, secret: initialSecret,
 
                     <TextField
                         label={texts.newSecret}
-                        type={showSecret ? "text" : "password"}
+                        type={showNewSecret ? "text" : "password"}
                         value={newSecret}
                         onChange={(e) => setNewSecret(e.target.value)}
                         required
@@ -177,8 +180,8 @@ export default function ChangeSecretAccordion({ systemId, secret: initialSecret,
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
-                                    <Button onClick={toggleShowSecret} color="inherit" size="small">
-                                        {showSecret ? texts.hide : texts.show}
+                                    <Button onClick={toggleShowNewSecret} color="inherit" size="small">
+                                        {showNewSecret ? texts.hide : texts.show}
                                     </Button>
                                 </InputAdornment>
                             ),
@@ -191,7 +194,7 @@ export default function ChangeSecretAccordion({ systemId, secret: initialSecret,
                         type="submit"
                         variant="contained"
                         color="primary"
-                        disabled={loading}
+                        disabled={loading || !newSecret}
                         fullWidth
                     >
                         {texts.newSecret}

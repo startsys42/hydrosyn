@@ -139,7 +139,6 @@ export default function CreateESP32({ systemId, espList, refresh, error, setErro
                         display: 'flex',
                         flexDirection: 'column',
                         gap: 2,
-                        maxWidth: 400,
                         width: '100%'
                     }}
                 >
@@ -164,6 +163,7 @@ export default function CreateESP32({ systemId, espList, refresh, error, setErro
                         type="submit"
                         variant="contained"
                         color="primary"
+                        disabled={loading || !ESP32Name}
                     >
                         {texts.addESP32}
                     </Button>
