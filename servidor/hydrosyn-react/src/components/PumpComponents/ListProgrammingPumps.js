@@ -143,7 +143,8 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
         columns.push({
             field: 'actions',
             headerName: texts.delete,
-            width: 80,
+            flex: 0.5,
+            minWidth: 70,
             sortable: false,
             filterable: false,
             renderCell: (params) => (
@@ -156,7 +157,8 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
             columns.push({
                 field: 'edit',
                 headerName: texts.update,
-                width: 80,
+                flex: 0.5,
+                minWidth: 70,
                 sortable: false,
                 filterable: false,
                 renderCell: (params) => (
@@ -184,7 +186,7 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <h3>{texts.listProgrammingPumps}</h3>
+                <Typography variant="h6" component="h3">{texts.listProgrammingPumps}</Typography>
             </AccordionSummary>
             <AccordionDetails>
 

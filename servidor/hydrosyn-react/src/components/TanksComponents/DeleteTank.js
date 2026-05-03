@@ -7,7 +7,8 @@ import useTexts from "../../utils/UseTexts";
 import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from "@mui/material";
+import { IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from "@mui/material";
+import { Delete as DeleteIcon } from "@mui/icons-material";
 
 
 
@@ -187,19 +188,14 @@ export default function DeleteTank({ systemId, tankList, refresh, loading, error
                                 {
                                     field: "delete",
                                     headerName: texts.delete,
-                                    width: 150,
+                                    width: 80,
                                     sortable: false,
                                     disableColumnMenu: true,
                                     filterable: false,
                                     renderCell: (params) => (
-                                        <Button
-                                            onClick={() => handleOpenDialog(params.row)}
-                                            variant="contained"
-                                            color="error"
-                                            size="small"
-                                        >
-                                            {texts.delete}
-                                        </Button>
+                                        <IconButton size="small" color="error" onClick={() => handleOpenDialog(params.row)}>
+                                            <DeleteIcon />
+                                        </IconButton>
                                     ),
                                 },
                             ]}
