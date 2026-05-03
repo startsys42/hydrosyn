@@ -211,7 +211,7 @@ export default function Dashboard() {
                                     </Button>
 
                                     <Button
-                                        variant="contained"
+                                        variant="outlined"
                                         onClick={() => navigate('/create-system')}
                                     >
                                         {t.newSystem}
