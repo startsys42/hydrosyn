@@ -194,11 +194,7 @@ export default function NotificationsAdmin() {
 
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={language}>
 
-                    <Stack
-                        direction={{ xs: 'column', sm: 'row' }}
-                        spacing={2}
-                        sx={{ mt: 2, mb: 3, alignItems: 'center', justifyContent: 'flex-start' }}
-                    >
+                    <div style={{ display: 'flex', gap: 16, marginBottom: 16, marginTop: 16 }}>
                         <DateTimePicker
                             label={texts.fromDate ?? 'From'}
                             value={fromDate}
@@ -222,7 +218,7 @@ export default function NotificationsAdmin() {
                         >
                             {texts.delete ?? 'Delete'}
                         </Button>
-                    </Stack>
+                    </div>
                 </LocalizationProvider>
 
 
