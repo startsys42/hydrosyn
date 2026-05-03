@@ -8,7 +8,8 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material';
+import { Delete as DeleteIcon } from '@mui/icons-material';
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
@@ -138,7 +139,7 @@ export default function ListRecordsPump({ systemId, recordPumpList, refresh, use
         <>
             <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <h3>{texts.listRecordsPump}</h3>
+                    <Typography variant="h6" component="h3">{texts.listRecordsPump}</Typography>
                 </AccordionSummary>
 
                 <AccordionDetails>
@@ -161,17 +162,19 @@ export default function ListRecordsPump({ systemId, recordPumpList, refresh, use
                                     renderInput={(params) => <TextField {...params} size="small" />}
                                 />
 
-                                <button
-
-                                    disabled={!fromDate || !toDate}
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    startIcon={<DeleteIcon />}
+                                    disabled={!fromDate || !toDate || deleting}
                                     onClick={() => setOpenDialog(true)}
                                 >
                                     {texts.delete ?? 'Delete'}
-                                </button>
+                                </Button>
                             </div>
                         </LocalizationProvider>
                     )}
-                    <div style={{ height: 500, width: 'auto' }}>
+                    <div style={{ height: 500, width: '100%' }}>
                         <DataGrid className="datagrid"
                             rows={rows}
                             columns={columns}

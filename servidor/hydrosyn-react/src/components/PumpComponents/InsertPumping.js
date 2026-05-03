@@ -146,7 +146,7 @@ export default function InsertPumping({ systemId, pumpList, refresh, error, setE
                         type="submit"
                         variant="contained"
                         color="primary"
-                        disabled={loading}
+                        disabled={loading || !selectedPump || !volume}
                         fullWidth
                     >
                         {loading ? texts.creating : texts.createPumping}

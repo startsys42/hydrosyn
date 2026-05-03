@@ -228,39 +228,39 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
                     <DialogTitle>{texts.updateProgrammingPump}</DialogTitle>
                     <DialogContent>
                         {editFormData && (
-                            <form className="form-container">
-                                <label>{texts.selectPump}</label>
-                                <select
-                                    value={editFormData.pump_id}
-                                    onChange={(e) =>
-                                        setEditFormData({
-                                            ...editFormData,
-                                            pump_id: Number(e.target.value),
-                                        })
-                                    }
-                                >
-                                    {pumpList.map((p) => (
-                                        <option key={p.id} value={p.id}>
-                                            {p.name}
-                                        </option>
-                                    ))}
-                                </select>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 1 }}>
+                                <FormControl fullWidth disabled={loading}>
+                                    <InputLabel id="edit-pump-select-label">{texts.selectPump}</InputLabel>
+                                    <Select
+                                        labelId="edit-pump-select-label"
+                                        label={texts.selectPump}
+                                        value={editFormData.pump_id}
+                                        onChange={(e) => setEditFormData({ ...editFormData, pump_id: Number(e.target.value) })}
+                                    >
+                                        {pumpList.map((p) => (
+                                            <MenuItem key={p.id} value={p.id}>
+                                                {p.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
 
-                                <label>{texts.days}</label>
-                                <select
-                                    value={editFormData.day_of_week}
-                                    onChange={(e) =>
-                                        setEditFormData({ ...editFormData, day_of_week: e.target.value })
-                                    }
-                                >
-                                    {DAYS.map((d) => (
-                                        <option key={d.value} value={d.value}>
-                                            {d.label}
-                                        </option>
-                                    ))}
-                                </select>
+                                <FormControl fullWidth disabled={loading}>
+                                    <InputLabel id="edit-day-select-label">{texts.days}</InputLabel>
+                                    <Select
+                                        labelId="edit-day-select-label"
+                                        label={texts.days}
+                                        value={editFormData.day_of_week}
+                                        onChange={(e) => setEditFormData({ ...editFormData, day_of_week: e.target.value })}
+                                    >
+                                        {DAYS.map((d) => (
+                                            <MenuItem key={d.value} value={d.value}>
+                                                {d.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
 
-                                <label>{texts.time}</label>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <TimePicker
                                         label={texts.time}
@@ -274,33 +274,42 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
                                         ampm={false}
                                         minutesStep={1}
                                         disabled={loading}
+                                        sx={{ width: '100%' }}
+                                    />
+                                </LocalizationProvider>
+
+                                <Stack direction="row" spacing={2}>
+                                    <TextField
+                                        label={texts.volume}
+                                        type="number"
+                                        value={editFormData.volume}
+                                        onChange={(e) => setEditFormData({ ...editFormData, volume: e.target.value })}
+                                        disabled={loading}
+                                        required
+                                        fullWidth
+                                        inputProps={{ step: "0.001", min: "0.001", max: "999.999" }}
                                     />
 
-                                </LocalizationProvider>
-                                <label>{texts.volume}</label>
-                                <input
-                                    type="number"
-                                    value={editFormData.volume}
-                                    min="0.001"
-                                    step="0.001"
-                                    max="999.999"
-                                    onChange={(e) =>
-                                        setEditFormData({ ...editFormData, volume: e.target.value })
-                                    }
-                                />
-                                <label>{texts.units}</label>
-                                <select
-                                    value={editFormData.unit || "L"}
-                                    onChange={(e) =>
-                                        setEditFormData({ ...editFormData, unit: e.target.value })
-                                    }
-                                >
-                                    <option value="L">L</option>
-                                    <option value="mL">mL</option>
-                                </select>
+                                    <FormControl disabled={loading} sx={{ minWidth: 100 }}>
+                                        <InputLabel id="edit-unit-select-label">{texts.units}</InputLabel>
+                                        <Select
+                                            labelId="edit-unit-select-label"
+                                            value={editFormData.unit || "L"}
+                                            label={texts.units}
+                                            onChange={(e) => setEditFormData({ ...editFormData, unit: e.target.value })}
+                                        >
+                                            <MenuItem value="L">L</MenuItem>
+                                            <MenuItem value="mL">mL</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Stack>
 
-                                {error && <p style={{ color: "red" }}>{texts[error] || error}</p>}
-                            </form>
+                                {error && (
+                                    <Typography color="error" variant="body2" align="center">
+                                        {texts[error] || error}
+                                    </Typography>
+                                )}
+                            </Box>
                         )}
                     </DialogContent>
                     <DialogActions>
@@ -358,7 +367,7 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
                                 }
                             }}
                             variant="contained"
-                            disabled={loading}
+                            disabled={loading || !editFormData?.pump_id || !editFormData?.day_of_week || !editFormData?.clock || !editFormData?.volume}
                         >
                             {loading ? texts.updating : texts.update}
                         </Button>
