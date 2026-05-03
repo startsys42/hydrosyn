@@ -199,7 +199,6 @@ export default function CreateLight({ systemId, lightList, refresh, error, setEr
                         display: 'flex',
                         flexDirection: 'column',
                         gap: 2,
-                        maxWidth: 400,
                         width: '100%'
                     }}
                 >
@@ -263,7 +262,7 @@ export default function CreateLight({ systemId, lightList, refresh, error, setEr
                         type="submit"
                         variant="contained"
                         color="primary"
-                        disabled={loading}
+                        disabled={loading || !lightName || !esp32Id || !gpio}
                     >
                         {loading ? (texts.creating || "Creando...") : (texts.addLight || "Agregar Luz")}
                     </Button>

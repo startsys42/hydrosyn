@@ -223,7 +223,6 @@ export default function UpdateLight({ systemId, lightList, refresh, error, setEr
                         display: 'flex',
                         flexDirection: 'column',
                         gap: 2,
-                        maxWidth: 400,
                         width: '100%'
                     }}
                 >

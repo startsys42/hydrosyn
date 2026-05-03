@@ -186,7 +186,6 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
                         display: 'flex',
                         flexDirection: 'column',
                         gap: 2,
-                        maxWidth: 400,
                         width: '100%'
                     }}
                 >
@@ -258,7 +257,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
                         type="submit"
                         variant="contained"
                         color="primary"
-                        disabled={loading}
+                        disabled={loading || !selectedTank || !volume}
                     >
                         {loading ? texts.creating : texts.addRecord}
                     </Button>
