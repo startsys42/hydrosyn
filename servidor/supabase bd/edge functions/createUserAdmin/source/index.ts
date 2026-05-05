@@ -111,7 +111,7 @@ serve(async (req) => {
     }
 
     const userData = await authResponse.json();
-    console.log('Usuario validado:', userData.id);
+    
 
     
     const { data: roleData, error: roleError } = await supabaseAdmin
@@ -168,7 +168,7 @@ if (fetchUserError) {
 let existingUser = null;
 if (authUsers && authUsers.users) {
   existingUser = authUsers.users.find(user => user.email === email);
-  console.log('Usuario encontrado?', !!existingUser);
+  
 }
 
 
@@ -176,19 +176,19 @@ if (authUsers && authUsers.users) {
       
       isNewUser = true;
       password = generarPassword();
-      console.log('Nueva contraseña:', password);
+      
 
       const { data: newUserData, error: createError } = await supabaseAdmin.auth.admin.createUser({
         email,
         password,
         email_confirm: true
       });
-console.log('=== RESULTADO CREATEUSER ===');
-console.log('¿Tiene error?', !!createError);
-console.log('Error:', createError);
-console.log('¿Tiene data?', !!newUserData);
-console.log('Data completa:', JSON.stringify(newUserData, null, 2));
-console.log('Keys en data:', newUserData ? Object.keys(newUserData) : 'no data');
+
+
+
+
+
+
       if (createError) {
         return new Response(JSON.stringify({
           error: `Error al crear usuario: ${createError.message}`
@@ -392,7 +392,7 @@ console.log('Keys en data:', newUserData ? Object.keys(newUserData) : 'no data')
             
             emailSent = false;
           } else {
-            console.log('Email enviado exitosamente vía Resend a:', email);
+            
           }
         } catch (emailError) {
           console.error('Error en envío de email con Resend:', emailError);

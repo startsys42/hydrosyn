@@ -39,7 +39,7 @@ serve(async (req) => {
             });
         }
 
-        console.log("Usuario:", user.email);
+        
 
         
         const supabaseAdmin = createClient(
@@ -73,7 +73,7 @@ serve(async (req) => {
            const exportData = [];
 
         for (const system of systems) {
-            console.log(`Exportando sistema: ${system.name} (${system.id})`);
+            
 
             
             const { data: esp32 } = await supabaseAdmin
@@ -278,7 +278,7 @@ serve(async (req) => {
         });
 
         const emailResult = await emailResponse.json();
-        console.log("Email enviado:", emailResult);
+        
 
         return new Response(JSON.stringify({ 
             success: true, 

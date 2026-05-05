@@ -156,6 +156,6 @@ async function sendEmailNotification(nuevoEmail: string, viejoEmail: string) {
     })
 
   } catch (error) {
-    console.log('Error email:', error)
+    
   }
 }

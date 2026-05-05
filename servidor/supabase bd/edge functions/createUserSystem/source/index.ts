@@ -105,7 +105,7 @@ serve(async (req) => {
     }
 
     const userData = await authResponse.json();
-    console.log('Usuario validado:', userData.id);
+    
 
     
     const { email, system_id } = await req.json();
@@ -194,7 +194,7 @@ serve(async (req) => {
 
     
     if (roleCheckError || !roleCheck) {
-      console.log('Admin NO está en roles - aplicando límite de 5 usuarios');
+      
       
       
       const { data: adminSystems, error: systemsError } = await supabaseAdmin
@@ -251,7 +251,7 @@ serve(async (req) => {
         }
       }
     } else {
-      console.log('Admin ESTÁ en roles - SIN límite de usuarios');
+      
     }
     
     let userId: string;
@@ -274,15 +274,15 @@ if (fetchUsersError) {
 let existingUser = null;
 if (allUsers && allUsers.users) {
   existingUser = allUsers.users.find(user => user.email === email);
-  console.log('Buscando usuario con email:', email);
-  console.log('Usuario encontrado?', !!existingUser);
+  
+  
 }
 
     if (!existingUser) {
       
       isNewUser = true;
       password = generarPassword();
-      console.log('Nueva contraseña:', password);
+      
 
       const { data: newUserData, error: createError } = await supabaseAdmin.auth.admin.createUser({
         email,
@@ -478,7 +478,7 @@ if (allUsers && allUsers.users) {
             console.error('Error al enviar email con Resend:', error);
             emailSent = false;
           } else {
-            console.log('Email enviado exitosamente vía Resend a:', email);
+            
           }
         } catch (emailError) {
           console.error('Error en envío de email con Resend:', emailError);
