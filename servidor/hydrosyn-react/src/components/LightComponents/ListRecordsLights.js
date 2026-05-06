@@ -87,7 +87,6 @@ export default function ListRecordsLights({ systemId, recordList, refresh, userR
             setToDate(null);
 
 
-            fetchRecords();
             if (refresh) refresh();
 
         } catch (err) {
