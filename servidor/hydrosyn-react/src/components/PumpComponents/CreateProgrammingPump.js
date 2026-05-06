@@ -37,6 +37,7 @@ import AddIcon from "@mui/icons-material/Add";
 
 export default function CreateProgrammingPump({
     pumpList,
+    calibrateList,
     programmingList,
     refresh,
     error,
@@ -80,6 +81,13 @@ export default function CreateProgrammingPump({
         setError("");
 
         if (!selectedPump) return setError("selectPump");
+
+        const isCalibrated = calibrateList.some(c => Number(c.pump_id) === Number(selectedPump));
+        if (!isCalibrated) {
+            setError("pumpNotCalibrated");
+            return;
+        }
+
         if (!timeValue) return setError("selectHour");
         if (!volume) return setError("invalidVolume");
 

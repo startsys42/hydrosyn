@@ -23,7 +23,7 @@ import timezone from 'dayjs/plugin/timezone';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export default function ListRecordsLights({ systemId, refresh, userRole, error, setError }) {
+export default function ListRecordsLights({ systemId, recordList, refresh, userRole, error, setError }) {
     const texts = useTexts();
     const { language } = useLanguage();
 
@@ -40,47 +40,18 @@ export default function ListRecordsLights({ systemId, refresh, userRole, error, 
     }, [language]);
 
 
-    const fetchRecords = async () => {
-        setLoading(true);
-        try {
-            const session = await supabase.auth.getSession();
-            const userId = session?.data?.session?.user?.id;
-
-            if (!userId) {
-                throw new Error('User not authenticated');
-            }
-
-            const { data, error } = await supabase
-                .rpc('get_lights_history', {
-                    p_system_id: systemId,
-                    p_current_user: userId
-                });
-
-            if (error) throw error;
-
-            const formattedRows = (data || []).map(record => ({
-                id: record.id,
-                light_name: record.light_name,
-                action: record.action === 1 ? (texts.turnedOn) : (texts.turnedOff),
-                action_value: record.action,
-                created_at: record.created_at
-            }));
-
-            setRows(formattedRows);
-        } catch (err) {
-
-            if (setError) setError("Error" || err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-
     useEffect(() => {
-        if (systemId) {
-            fetchRecords();
-        }
-    }, [systemId]);
+        const formattedRows = (recordList || []).map(record => ({
+            id: record.id,
+            light_name: record.light_name,
+            action: record.action === 1 ? (texts.turnedOn) : (texts.turnedOff),
+            action_value: record.action,
+            created_at: record.created_at
+        }));
+
+        setRows(formattedRows);
+        setLoading(false);
+    }, [recordList, texts]);
 
 
     const handleDelete = async () => {

@@ -8,7 +8,7 @@ import { supabase } from "../../utils/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { Box, FormControl, InputLabel, Select, MenuItem, TextField, Stack, Button, Typography, Alert } from "@mui/material";
 
-export default function InsertPumping({ systemId, pumpList, refresh, error, setError }) {
+export default function InsertPumping({ systemId, pumpList, calibrateList, refresh, error, setError }) {
     const texts = useTexts();
     const navigate = useNavigate();
 
@@ -54,6 +54,12 @@ export default function InsertPumping({ systemId, pumpList, refresh, error, setE
         try {
             const userId = await checkUserActive();
             if (!userId) return navigate("/dashboard", { replace: true });
+
+            const isCalibrated = calibrateList.some(c => Number(c.pump_id) === Number(selectedPump));
+            if (!isCalibrated) {
+                setError("pumpNotCalibrated");
+                return;
+            }
 
             let vol = parseFloat(volume);
             if (unit === "mL") vol = vol / 1000;

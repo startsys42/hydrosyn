@@ -59,6 +59,7 @@ const texts = {
         listCalibrations: "Ejecución de las calibraciones",
         listRecordsPump: "Lista de bombeos",
         insertPump: "Añadir bombeo manual",
+        pumpNotCalibrated: "La bomba seleccionada no ha sido calibrada aún. Por favor, calíbrela antes de realizar bombeos o programaciones.",
 
         updatePump: "Modificar bomba",
         listRecords: "Lista de registros",
@@ -336,6 +337,7 @@ const texts = {
         listCalibrations: "Execution of calibrations",
         listRecordsPump: "List of pumpings",
         insertPump: "Add manual pumping",
+        pumpNotCalibrated: "The selected pump has not been calibrated yet. Please calibrate it before performing pumpings or programmings.",
         updatePump: "Update pump",
         listRecords: "List of records",
         invalidVolume: 'Invalid volume. Must be a positive number.',

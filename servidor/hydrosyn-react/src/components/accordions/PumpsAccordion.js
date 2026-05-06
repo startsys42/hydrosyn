@@ -361,106 +361,108 @@ export default function PumpsAccordion({ systemId }) {
     return (
         <>
             <h2>{texts.pumps}</h2>
-                {role === 'owner' && (
-                    <>
+            {role === 'owner' && (
+                <>
 
-                        <CreatePump
-                            systemId={systemId}
-                            pumpList={pumpList}
-                            refresh={fetchPumps}
-                            error={errors.create}
-                            setError={(msg) => setComponentError("create", msg)}
-                        />
+                    <CreatePump
+                        systemId={systemId}
+                        pumpList={pumpList}
+                        refresh={fetchPumps}
+                        error={errors.create}
+                        setError={(msg) => setComponentError("create", msg)}
+                    />
 
-                        <UpdatePump
-                            systemId={systemId}
-                            pumpList={pumpList}
-                            refresh={fetchPumps}
-                            error={errors.update}
-                            setError={(msg) => setComponentError("update", msg)}
-                        />
-
-
-                        <DeletePump
-                            systemId={systemId}
-                            pumpList={pumpList}
-                            refresh={fetchPumps}
-                            loading={loading}
-                            error={errors.delete}
-                            setError={(msg) => setComponentError("delete", msg)} />
-                    </>
-                )}
+                    <UpdatePump
+                        systemId={systemId}
+                        pumpList={pumpList}
+                        refresh={fetchPumps}
+                        error={errors.update}
+                        setError={(msg) => setComponentError("update", msg)}
+                    />
 
 
-                <CalibratePump
-
-                    systemId={systemId}
-                    pumpList={pumpList}
-                    refresh={refreshCalibrations}
-                    error={errors.calibrate}
-                    setError={(msg) => setComponentError("calibrate", msg)}
-                />
-
-                <ListCalibrate
-                    systemId={systemId}
-                    calibrateList={calibrateList}
-                    refresh={fetchCalibrateList}
-                    userRole={role}
-                    error={errors.calibrateList}
-                    setError={(msg) => setComponentError("calibrateList", msg)}
-                />
-
-                <ListCalibration
-                    systemId={systemId}
-                    calibrationList={calibrationList}
-                    refresh={fetchCalibrationList}
-                    userRole={role}
-                    error={errors.calibration}
-                    setError={(msg) => setComponentError("calibration", msg)}
-                />
-
-                <InsertPumping
-                    systemId={systemId}
-                    pumpList={pumpList}
-                    refresh={fetchRecordsPump}
-                    error={errors.record}
-                    setError={(msg) => setComponentError("record", msg)}
-                />
+                    <DeletePump
+                        systemId={systemId}
+                        pumpList={pumpList}
+                        refresh={fetchPumps}
+                        loading={loading}
+                        error={errors.delete}
+                        setError={(msg) => setComponentError("delete", msg)} />
+                </>
+            )}
 
 
-                <ListRecordsPump
-                    systemId={systemId}
-                    recordPumpList={recordPumpList}
-                    refresh={fetchRecordsPump}
-                    userRole={role}
-                    error={errors.recordList}
-                    setError={(msg) => setComponentError("recordList", msg)}
+            <CalibratePump
 
-                />
+                systemId={systemId}
+                pumpList={pumpList}
+                refresh={refreshCalibrations}
+                error={errors.calibrate}
+                setError={(msg) => setComponentError("calibrate", msg)}
+            />
+
+            <ListCalibrate
+                systemId={systemId}
+                calibrateList={calibrateList}
+                refresh={fetchCalibrateList}
+                userRole={role}
+                error={errors.calibrateList}
+                setError={(msg) => setComponentError("calibrateList", msg)}
+            />
+
+            <ListCalibration
+                systemId={systemId}
+                calibrationList={calibrationList}
+                refresh={fetchCalibrationList}
+                userRole={role}
+                error={errors.calibration}
+                setError={(msg) => setComponentError("calibration", msg)}
+            />
+
+            <InsertPumping
+                systemId={systemId}
+                pumpList={pumpList}
+                calibrateList={calibrateList}
+                refresh={fetchRecordsPump}
+                error={errors.record}
+                setError={(msg) => setComponentError("record", msg)}
+            />
 
 
-                {role === 'owner' && (
-                    <>
-                        <CreateProgrammingPump
-                            pumpList={pumpList}
-                            programmingList={programmingList}
-                            refresh={fetchProgrammingList}
-                            error={errors.program}
-                            setError={(msg) => setComponentError("program", msg)}
-                        />
+            <ListRecordsPump
+                systemId={systemId}
+                recordPumpList={recordPumpList}
+                refresh={fetchRecordsPump}
+                userRole={role}
+                error={errors.recordList}
+                setError={(msg) => setComponentError("recordList", msg)}
+
+            />
 
 
-                    </>
-                )}
+            {role === 'owner' && (
+                <>
+                    <CreateProgrammingPump
+                        pumpList={pumpList}
+                        calibrateList={calibrateList}
+                        programmingList={programmingList}
+                        refresh={fetchProgrammingList}
+                        error={errors.program}
+                        setError={(msg) => setComponentError("program", msg)}
+                    />
 
-                <ListProgrammingPumps
-                    pumpList={pumpList}
-                    programmingList={programmingList}
-                    refresh={fetchProgrammingList}
-                    error={errors.programList}
-                    setError={(msg) => setComponentError("programList", msg)}
-                    userRole={role}
-                />
+
+                </>
+            )}
+
+            <ListProgrammingPumps
+                pumpList={pumpList}
+                programmingList={programmingList}
+                refresh={fetchProgrammingList}
+                error={errors.programList}
+                setError={(msg) => setComponentError("programList", msg)}
+                userRole={role}
+            />
 
         </>
 

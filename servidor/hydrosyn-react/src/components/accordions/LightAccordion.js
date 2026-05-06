@@ -31,6 +31,7 @@ export default function LightAccordion({ systemId }) {
 
     const [lightList, setLightList] = useState([]);
     const [programmingList, setProgrammingList] = useState([]);
+    const [recordList, setRecordList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentUserId, setCurrentUserId] = useState(null);
     const [errors, setErrors] = useState({
@@ -70,6 +71,7 @@ export default function LightAccordion({ systemId }) {
     useEffect(() => {
         if (!currentUserId || !systemId) return;
         fetchProgrammingList();
+        fetchRecordsLights();
     }, [currentUserId, systemId]);
 
     const fetchLights = async () => {
@@ -115,11 +117,22 @@ export default function LightAccordion({ systemId }) {
             setLoading(false);
         }
     };
+
     const fetchRecordsLights = async () => {
+        setLoading(true);
+        try {
+            const { data, error } = await supabase.rpc('get_lights_history', {
+                p_system_id: systemId,
+                p_current_user: currentUserId
+            });
 
-
-
-        // Este fetch es para actualizar el historial después de eliminar un registro, no es necesario mostrar errores aquí
+            if (error) throw error;
+            setRecordList(data || []);
+        } catch (err) {
+            setComponentError("records", err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -135,9 +148,15 @@ export default function LightAccordion({ systemId }) {
             .on('postgres_changes', { event: '*', schema: 'public', table: 'programming_lights' }, () => fetchProgrammingList())
             .subscribe();
 
+        const historySub = supabase
+            .channel('lights-history-changes')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'lights_history' }, () => fetchRecordsLights())
+            .subscribe();
+
         return () => {
             supabase.removeChannel(lightsSub);
             supabase.removeChannel(programmingSub);
+            supabase.removeChannel(historySub);
         };
     }, [currentUserId, systemId]);
 
@@ -201,6 +220,7 @@ export default function LightAccordion({ systemId }) {
             <ListRecordsLights
                 systemId={systemId}
                 currentUserId={currentUserId}
+                recordList={recordList}
                 refresh={fetchRecordsLights}
                 userRole={role}
                 error={errors.records}

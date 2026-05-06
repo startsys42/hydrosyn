@@ -116,7 +116,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
             return;
         }
 
-        if (!volume || parseFloat(volume) <= 0) {
+        if (!volume) {
             setError("invalidVolume");
             setLoading(false);
             return;
@@ -131,6 +131,12 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
 
         if (unit === "mL") {
             volumeNum = volumeNum / 1000;
+        }
+
+        if (volumeNum < 0.001) {
+            setError("invalidVolume");
+            setLoading(false);
+            return;
         }
 
         if (volumeNum > 999.999) {
@@ -234,7 +240,7 @@ export default function CreateRecord({ systemId, tankList, refresh, error, setEr
                             disabled={loading}
                             inputProps={{
                                 step: "0.001",
-                                min: "0.001",
+                                min: unit === "mL" ? "1" : "0.001",
                                 max: "999.999"
                             }}
                         />
