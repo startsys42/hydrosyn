@@ -134,7 +134,7 @@ void checkCalibrationRPC() {
   String jsonParams;
   serializeJson(params, jsonParams);
   
-  // ✅ LLAMADA RPC CON HTTPClient
+  
   String resultado = callSupabaseRPC("get_pending_calibrations", jsonParams);
   
   Serial.print("Respuesta: ");
@@ -180,7 +180,7 @@ void checkManualRecordRPC() {
   String jsonParams;
   serializeJson(params, jsonParams);
   
-  // ✅ LLAMADA RPC CON HTTPClient
+
   String resultado = callSupabaseRPC("get_pending_manual_records", jsonParams);
   
   Serial.print("Respuesta: ");
@@ -233,7 +233,7 @@ void checkProgramRecordRPC() {
   params["p_system_name"] = SYSTEM_NAME;
   params["p_esp_name"] = ESP_NAME;
   params["p_code"] = ESP_CODE;
-  params["p_esp_time"] = timeStr;  // 👈 AÑADIR ESTO
+  params["p_esp_time"] = timeStr;  
 
   
   String jsonParams;
@@ -442,7 +442,7 @@ void checkLightProgramRPC() {
   params["p_system_name"] = SYSTEM_NAME;
   params["p_esp_name"] = ESP_NAME;
   params["p_code"] = ESP_CODE;
-  params["p_esp_time"] = timeStr;  // 👈 AÑADIR ESTO
+  params["p_esp_time"] = timeStr;  
 
   String jsonParams;
   serializeJson(params, jsonParams);

@@ -167,7 +167,7 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                         <Button
                             type="button"
-                            variant="outlined"
+                            variant="contained"
                             color="primary"
                             onClick={handleInsertCalibration}
                             disabled={loading || !selectedPump}
