@@ -64,7 +64,7 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
 
             let vol = parseFloat(volume);
             if (unit === "mL") vol = vol / 1000;
-            if (vol <= 0) {
+            if (vol < 0.001) {
                 setError("invalidVolume");
                 return;
             }
@@ -147,7 +147,7 @@ export default function CalibratePump({ systemId, pumpList, refresh, error, setE
                             disabled={loading}
                             required
                             fullWidth
-                            inputProps={{ step: "0.001", min: "0.001", max: "999.999" }}
+                            inputProps={{ step: "0.001", min: unit === "mL" ? "1" : "0.001", max: "999.999" }}
                         />
 
                         <FormControl disabled={loading} sx={{ minWidth: 100 }}>

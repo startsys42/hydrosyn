@@ -287,7 +287,7 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
                                         disabled={loading}
                                         required
                                         fullWidth
-                                        inputProps={{ step: "0.001", min: "0.001", max: "999.999" }}
+                                        inputProps={{ step: "0.001", min: editFormData.unit === "mL" ? "1" : "0.001", max: "999.999" }}
                                     />
 
                                     <FormControl disabled={loading} sx={{ minWidth: 100 }}>
@@ -326,6 +326,8 @@ export default function ListProgrammingPumps({ pumpList, programmingList, refres
 
                                 let vol = Number(editFormData.volume);
                                 if (editFormData.unit === "mL") vol = vol / 1000;
+
+                                if (vol < 0.001) return setError("invalidVolume");
                                 if (vol > 999.999) return setError("volumeTooHigh");
 
 
